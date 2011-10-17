@@ -1,26 +1,34 @@
-FIRST, cd to the root of the project:
-e.g. for
-tennis-trader/
-  lib/
-  src/
-  README
+To CHECKOUT project from github:
 
+set .ssh key as described here - http://help.github.com/linux-set-up-git/
+then
+
+mkdir tennis-trader
 cd tennis-trader
+git init
+git remote add origin git@github.com:paul-g/tennis-trader.git
+git pull -u origin master
 
-THEN:
+To RUN:
 
-   FOR 32 bit JVM on LINUX:
+  FOR 32 bit JVM on LINUX:
      Set Makefile.local LIN_VER = 32
 
   FOR 64 BIT JVM ON LINUX:
      Set Makefile.local LIN_VER = 64
 
-BUILD:
-	make build
+  THEN
+    cd tennis-trader
+    make
+    
+  BUILD:
+	  make build
 
-RUN:
-	make run
+  RUN:
+	  make run
 	
-If everything is OK, you should see an empty window pop up.
+If everything is OK, you should see a window with a tree list pop up.
 
 p.s. ANT SCRIPT IS COMING....
+
+
