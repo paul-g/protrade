@@ -29,6 +29,12 @@ To RUN:
 	
 If everything is OK, you should see a window with a tree list pop up.
 
+
+To CHECKIN:
+
+git push -u origin master
+
+
 p.s. ANT SCRIPT IS COMING....
 
 
