@@ -1,0 +1,27 @@
+FIRST, cd to the root of the project:
+e.g. for
+tennis-trader/
+  lib/
+  src/
+  README
+
+cd tennis-trader
+
+THEN:
+
+   FOR 32 bit JVM:
+     BUILD: 
+     matrix12% javac -cp lib/swt-32/swt.jar:. src/HelloWorld.java 
+     RUN:
+     matrix12% java  -cp lib/swt-32/swt.jar:. src.HelloWorld
+
+  FOR 64 BIT JVM:
+     BUILD:
+     matrix12% javac -cp lib/swt-64/swt.jar:. src/HelloWorld.java 
+
+     RUN:
+     matrix12% java  -cp lib/swt-64/swt.jar:. src.HelloWorld
+
+If everything is OK, you should see an empty window pop up.
+
+p.s. ANT SCRIPT IS COMING....
