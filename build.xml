@@ -1,0 +1,138 @@
+<project name="SimpleProject">
+  <property name="build.dir" value="build"/>
+  <property name="build.prod.dir" value="${build.dir}/prod"/>
+  <property name="build.test.dir" value="${build.dir}/test"/>
+  <property name="build.jar.dir" value="${build.dir}/jar"/>
+  <property name="src.dir" value="src"/>
+  <property name="unit.test.dir" value="unit-test"/>
+  <property name="system.test.dir" value="system-test"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="lin.ver" value="64" />
+  <property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
+    
+  <!--
+  <property name="test.report.dir" value="${build.dir}/junitreport"/>
+  <property name="unit.test.report.dir"
+    value="${build.dir}/junitreport/unit-test"/>
+  <property name="system.test.report.dir"
+    value="${build.dir}/junitreport/system-test"/>
+  -->
+    
+  <!-- Set the CLASSPATH -->
+  <path id="classpath">
+    <pathelement location="${build.prod.dir}"/>
+    <pathelement location="${build.test.dir}"/>   
+    <fileset dir="${lib.dir}" includes="*.jar"/>
+    <fileset dir="${lib.swt.dir}" includes="*.jar" />
+  </path>
+  
+  <!-- Create the folders for required for build -->
+  <target name="prepare">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.prod.dir}" />
+    <mkdir dir="${build.test.dir}" />
+  </target>
+
+  <!-- COMPILE task -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src.dir}"
+      destdir="${build.prod.dir}" classpathref="classpath"/>
+  </target>
+    
+  <!-- RUN task - for now runs a class, but should run a jar in the future -->
+  <target name="run" depends="compile">
+    <java classname="src.HelloWorld" fork="true" classpathref="classpath"/>
+  </target>
+  
+  <!-- JAR and RUN tasks to create & run a jar, running the tests first -->
+  <!--  
+  <target name="jar" depends="compile,run-unit-tests,run-system-tests"> 
+    <jar destfile="${build.jar.dir}/HelloWorld.jar" basedir="${build.prod.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="src.HelloWorld"/>
+      </manifest>
+    </jar>
+  </target>    
+  
+  <target name="run" depends="jar">
+    <java jar="${build.jar.dir}/HelloWorld.jar" fork="true"/>
+  </target>
+  -->  
+  
+  <!-- CLEAN task -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${build.prod.dir}" />
+    <delete dir="${build.test.dir}" />
+  </target>
+
+  <!-- COMPILE all tests -->
+  <target name="compile-tests" depends="compile">
+    <javac srcdir="${unit.test.dir}" destdir="${build.test.dir}"
+      classpathref="classpath" />
+    <javac srcdir="${system.test.dir}" destdir="${build.test.dir}"
+      classpathref="classpath" />    
+  </target>
+  
+  <!--
+  <target name="run-unit-tests" depends="compile,compile-tests">
+    <junit printsummary="yes" errorProperty="test.failed" 
+      failureProperty="test.failed">
+      <classpath refid="classpath"/>
+      <formatter type="brief" usefile="false"/>
+      <batchtest fork="yes" todir="${unit.test.report.dir}">
+        <fileset dir="unit-test/" includes="**/*Test.java"/>
+      </batchtest>      
+    </junit>
+    <fail message="Unit tests failed. Check log and/or reports."
+        if="test.failed"/>
+  </target>
+  -->
+  
+  <!-- RUN unit tests -->
+  <target name="run-unit-tests" depends="compile,compile-tests">
+    <mkdir dir="${test.report.dir}"/>
+    <mkdir dir="${unit.test.report.dir}"/>      
+    <!--
+    <formatter type="xml"/>
+    -->    
+    <junit printsummary="yes" errorProperty="test.failed" 
+      failureProperty="test.failed">
+      <classpath refid="classpath"/>
+      <formatter type="brief" usefile="false"/>
+      <batchtest fork="yes" todir="${unit.test.report.dir}">
+        <fileset dir="unit-test/" includes="**/*Test.java"/>
+      </batchtest>      
+    </junit>
+    <junitreport todir="${unit.test.report.dir}">
+      <fileset dir="${unit.test.report.dir}" includes="TEST-*.xml"/>
+      <report todir="${unit.test.report.dir}"/>
+    </junitreport>
+    <fail message="Unit tests failed. Check log and/or reports."
+      if="test.failed"/>
+  </target>
+  
+  <!-- RUN system tests -->
+  <target name="run-system-tests" depends="compile,compile-tests">
+    <mkdir dir="${test.report.dir}"/>
+    <mkdir dir="${system.test.report.dir}"/>      
+    <!--
+    <formatter type="xml"/>
+    -->    
+    <junit printsummary="yes" errorProperty="test.failed" 
+      failureProperty="test.failed">
+      <classpath refid="classpath"/>
+      <formatter type="brief" usefile="false"/>
+      <batchtest fork="yes" todir="${system.test.report.dir}">
+        <fileset dir="system-test/" includes="**/*Test.java"/>
+      </batchtest>      
+    </junit>
+    <junitreport todir="${system.test.report.dir}">
+      <fileset dir="${system.test.report.dir}" includes="TEST-*.xml"/>
+      <report todir="${system.test.report.dir}"/>
+    </junitreport>
+    <fail message="System tests failed. Check log and/or reports."
+      if="test.failed"/>
+  </target>
+  
+</project>
