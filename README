@@ -10,51 +10,32 @@ To CHECKOUT project from github:
     git pull -u origin master
 
 
-To RUN - you can use Makefile or Ant
+To RUN you can use Ant (make sure you have it installed properly):
 
-  Makefile:
+    First create a file called build.properties in the project root.
+    (Simply copy tennis-trader/examples/build.properties.example to tennis-trader/build.properties)
+    Then set lin.ver to either 32 or 64, based on your linux version(32-bit/64-bit) and you're good to go.
 
-    FOR 32 bit JVM on LINUX:
-       Set Makefile.local LIN_VER = 32
-         
-    FOR 64 BIT JVM ON LINUX:
-       Set Makefile.local LIN_VER = 64
-  
-    THEN
-      cd tennis-trader
-      make
-      
-    BUILD:
-  	  make build
-  
-    RUN:
-  	  make run
-  	
-  If everything is OK, you should see a window with a tree list pop up.
-
-  Ant:
-  
-    FOR 32 bit JVM on LINUX:
-       <property name="lin.ver" value="32" />
-  
-    FOR 64 BIT JVM ON LINUX:
-       <property name="lin.ver" value="64" />
-  
+   Available targets are:
     ant clean
     ant compile - to build all classes under src/ in build/prod/
     ant run - to run the src.HelloWorld class
     
-  Again, if everything is OK, you should see a window with a tree list pop up.
+   If everything is OK, you should see a window with a tree list pop up.
 
 
 To COMMIT:
-  run a 'make clean' or 'ant clean' to delete the *.class
+  
+  NOTE!!!!!! 
+  Please do not commit any local configuration files, build outputs, test outputs etc. to the respository.
+
+  ant clean                -> removes build output
   git status               -> shows a list of changed / added files
   git add <file1> <file2>  -> list all the files you want to commit
   git commit -m "<Comment for commit>"
 
 
-To CHECKIN:
+To CHECKIN to github:
   git push -u origin master
 
 

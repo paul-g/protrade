@@ -6,8 +6,8 @@
   <property name="src.dir" value="src"/>
   <property name="unit.test.dir" value="unit-test"/>
   <property name="system.test.dir" value="system-test"/>
+  <property file="build.properties" />
   <property name="lib.dir" value="lib"/>
-  <property name="lin.ver" value="64" />
   <property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
     
   <!--

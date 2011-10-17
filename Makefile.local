@@ -1,3 +1,0 @@
-# your linux version
-# set to 64 for 64 bit version or 32 for 32 bit version
-LIN_VER = 64
