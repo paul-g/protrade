@@ -9,19 +9,18 @@ cd tennis-trader
 
 THEN:
 
-   FOR 32 bit JVM:
-     BUILD: 
-     matrix12% javac -cp lib/swt-32/swt.jar:. src/HelloWorld.java 
-     RUN:
-     matrix12% java  -cp lib/swt-32/swt.jar:. src.HelloWorld
+   FOR 32 bit JVM on LINUX:
+     Set Makefile.local LIN_VER = 32
 
-  FOR 64 BIT JVM:
-     BUILD:
-     matrix12% javac -cp lib/swt-64/swt.jar:. src/HelloWorld.java 
+  FOR 64 BIT JVM ON LINUX:
+     Set Makefile.local LIN_VER = 64
 
-     RUN:
-     matrix12% java  -cp lib/swt-64/swt.jar:. src.HelloWorld
+BUILD:
+	make build
 
+RUN:
+	make run
+	
 If everything is OK, you should see an empty window pop up.
 
 p.s. ANT SCRIPT IS COMING....
