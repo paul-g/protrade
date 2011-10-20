@@ -23,9 +23,6 @@ public class DisplayPanel implements Listener{
   public void handleEvent(Event event) {
     TreeItem ti = (TreeItem) event.item;
     
-    if (ti != null)
-      System.out.println(ti.getText());
-    
     TabItem[] items = tabFolder.getItems();
     int pos = -1;
     
