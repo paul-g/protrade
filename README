@@ -1,13 +1,12 @@
 To CHECKOUT project from github:
 
   set .ssh key as described here - http://help.github.com/linux-set-up-git/
-  then
 
-    mkdir tennis-trader
-    cd tennis-trader
-    git init
-    git remote add origin git@github.com:paul-g/tennis-trader.git
-    git pull -u origin master
+  mkdir tennis-trader
+  cd tennis-trader
+  git init
+  git remote add origin git@github.com:paul-g/tennis-trader.git
+  git pull -u origin master
 
 
 To RUN you can use Ant (make sure you have it installed properly):
