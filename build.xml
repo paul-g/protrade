@@ -41,7 +41,7 @@
     
   <!-- RUN task - for now runs a class, but should run a jar in the future -->
   <target name="run" depends="compile">
-    <java classname="src.HelloWorld" fork="true" classpathref="classpath"/>
+    <java classname="src.Main" fork="true" classpathref="classpath"/>
   </target>
   
   <!-- JAR and RUN tasks to create & run a jar, running the tests first -->
