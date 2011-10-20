@@ -26,17 +26,16 @@ public class HelloWorld {
 public static void main (String [] args) {
 	final Display display = new Display ();
 	final Color black = display.getSystemColor (SWT.COLOR_BLACK);
+
 	Shell shell = new Shell (display);
 	shell.setLayout (new FillLayout ());
+	shell.setText("Tennis Trader");
+	
 	final Tree tree = new Tree (shell, SWT.BORDER);
-	for (int i=0; i<16; i++) {
-		TreeItem itemI = new TreeItem (tree, SWT.NONE);
-		itemI.setText ("Item " + i);
-		for (int j=0; j<16; j++) {
-			TreeItem itemJ = new TreeItem (itemI, SWT.NONE);
-			itemJ.setText ("Item " + j);
-		}
-	}
+
+	loadTennisMatches(tree);
+
+
 	final TreeItem [] lastItem = new TreeItem [1];
 	final TreeEditor editor = new TreeEditor (tree);
 	tree.addListener (SWT.Selection, new Listener () {
@@ -101,6 +100,19 @@ public static void main (String [] args) {
 			lastItem [0] = item;
 		}
 	});
+	
+	final TabFolder tabFolder = new TabFolder (shell, SWT.BORDER);
+	Rectangle clientArea = shell.getClientArea ();
+	tabFolder.setLocation (clientArea.x, clientArea.y);
+	for (int i=0; i<6; i++) {
+		TabItem item = new TabItem (tabFolder, SWT.NONE);
+		item.setText ("TabItem " + i);
+		Button button = new Button (tabFolder, SWT.PUSH);
+		button.setText ("Page " + i);
+		item.setControl (button);
+	}
+	tabFolder.pack ();
+	
 	shell.pack ();
 	shell.open ();
 	while (!shell.isDisposed()) {
@@ -108,4 +120,23 @@ public static void main (String [] args) {
 	}
 	display.dispose ();
 }
+
+	private static void loadTennisMatches(Tree tree){
+
+		// Wimbledon
+		TreeItem wimb = new TreeItem (tree, SWT.NONE);
+		wimb.setText ("Wimbledon ");
+		TreeItem feddjo = new TreeItem (wimb, SWT.NONE);
+		feddjo.setText ("Federer vs Djokovic ");
+		TreeItem nadmur = new TreeItem (wimb, SWT.NONE);
+		nadmur.setText ("Nadal vs Murray ");
+
+		// Piatra-Neamt
+		TreeItem pno = new TreeItem (tree, SWT.NONE);
+		pno.setText ("Piatra-Neamt Open");
+		TreeItem paco = new TreeItem (pno, SWT.NONE);
+		paco.setText ("Paul vs Corina");
+		TreeItem fena = new TreeItem (pno, SWT.NONE);
+		fena.setText ("Ferrer vs Nalbandian ");
+	}
 }
