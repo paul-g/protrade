@@ -1,0 +1,9 @@
+# Compiled source #
+###################
+*.class
+
+# Eclipse Stuff #
+#################
+build.properties
+.classpath
+.project
