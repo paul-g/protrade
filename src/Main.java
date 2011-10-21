@@ -35,7 +35,7 @@ public class Main {
 
 	private static void createLoginShell() {
 
-		Shell loginShell = new Shell(display, SWT.MAX);
+		final Shell loginShell = new Shell(display, SWT.MAX);
 
 		/*
 		 * Monitor primary = display.getPrimaryMonitor(); Rectangle bounds =
@@ -62,13 +62,13 @@ public class Main {
 		Label loginLabel = new Label(loginShell, SWT.NONE);
 		loginLabel.setText("Username: ");
 
-		Text username = new Text(loginShell, SWT.NONE);
+		final Text username = new Text(loginShell, SWT.NONE);
 		username.setLayoutData(gridData);
 
 		Label passLabel = new Label(loginShell, SWT.NONE);
 		passLabel.setText("Password: ");
 
-		Text password = new Text(loginShell, SWT.PASSWORD);
+		final Text password = new Text(loginShell, SWT.PASSWORD);
 		password.setLayoutData(gridData);
 
 		// just for alignment
@@ -82,13 +82,21 @@ public class Main {
 
 		Button reset = new Button(loginShell, SWT.None);
 		reset.setText("Reset");
+		reset.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				username.setText("");
+				password.setText("");
+			}			
+		});
 
 		button.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				// TODO Auto-generated method stub
-				if (checkLogin())
-					launchApp(display);
+				if (checkLogin(username.getText(), password.getText())) {
+					loginShell.dispose();
+					launchApp(display);					
+				}
 			}
 		});
 
@@ -126,13 +134,7 @@ public class Main {
 		display.dispose();
 	}
 
-	private static boolean checkLogin() {
-		// TODO: impement logic for checking login here
-
-		// check a trivial login using Betfair API
-		String username = "corina409";
-		String password = "ureanidiot1";
-
+	private static boolean checkLogin(String username, String password) {
 		// Perform the login
 		try {
 			BetfairConnectionHandler.login(username, password);
@@ -145,18 +147,23 @@ public class Main {
 
 		// get list of tournaments (events and markets of tennis type event id)
 		/*
-		 * List<Tournament> tournaments =
-		 * BetfairConnectionHandler.getTournamentsData();
-		 * System.out.println("List of events under \' tennis event type id \': "
-		 * ); for (Tournament t : tournaments) {
-		 * System.out.println(t.toString()); for (Match m : t.getMatches()) {
-		 * System.out.println("\t " + m.toString()); } }
-		 */
+		List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
+		System.out.println("List of events under \' tennis event type id \': ");
+		for (Tournament t : tournaments) {
+			System.out.println(t.toString());
+			for (Match m : t.getMatches()) {
+				System.out.println("\t " + m.toString());
+			}
+		}
+		*/
 
 		// Perform logout
 		/*
-		 * try { BetfairConnectionHandler.logout(); } catch (Exception e){
-		 * System.out.println(e.getMessage()); System.exit(-1); }
+		 * try { 
+		 * 	BetfairConnectionHandler.logout(); 
+		 * } catch (Exception e){
+		 * 	System.out.println(e.getMessage()); System.exit(-1); 
+		 * }
 		 * System.out.println("Logout succesful");
 		 */
 

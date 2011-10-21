@@ -16,7 +16,7 @@ import src.generated.global.BFGlobalServiceStub.MarketSummary;
 
 public class BetfairConnectionHandler {
 	private static APIContext apiContext = new APIContext();
-	//private static int tennisEventID = 32; // event type id for tennis market
+	private static final String TENNIS_EVENT_NAME = "TENNIS";
 	
 	public static void login(String username, String password) throws LoginFailedException{
 		try {
@@ -115,7 +115,7 @@ public class BetfairConnectionHandler {
 		int eventId = -1;		
 		EventType[] types = GlobalAPI.getActiveEventTypes(apiContext);		
 		for (EventType et : types) {
-			if (et.getName().compareTo("Tennis") == 0)
+			if (et.getName().toUpperCase().compareTo(TENNIS_EVENT_NAME) == 0)
 				eventId = et.getId();
 		}		
 		if (eventId == -1)
