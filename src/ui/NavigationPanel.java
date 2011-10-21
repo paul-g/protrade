@@ -46,7 +46,6 @@ public class NavigationPanel {
     tree.setLayoutData(new RowData(300, 600));
 
     searchBox.addModifyListener(new ModifyListener() {
-      @Override
       public void modifyText(ModifyEvent me) {
         String text = searchBox.getText();
         filterTree(text);
