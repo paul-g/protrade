@@ -49,7 +49,6 @@ public class NavigationPanel {
       @Override
       public void modifyText(ModifyEvent me) {
         String text = searchBox.getText();
-        System.out.println(text);
         filterTree(text);
         prevSearchBoxText = text;
       }
@@ -76,23 +75,19 @@ public class NavigationPanel {
       for (int i = 0; i < items.length; i++) {
         TreeItem children[] = items[i].getItems();
         for (int j = 0; j < children.length; j++) {
-          System.out.println(children[j].getText());
           String txt = children[j].getText();
           if (!txt.contains(text)) {
             removedPairs.add(new Pair<String, Pair<Integer,Integer>>(children[j].getText(), new Pair<Integer, Integer>(i,j)));
             children[j].dispose();
           }
         }
-       System.out.println(removedPairs.toString());
       }
       treeStates.push(removedPairs);
     } else {
       // char removed - go back to previous tree state
-      System.out.println("Adding back..");
       List<Pair<String, Pair<Integer, Integer>>> previousState = treeStates.pop();
       for (Pair<String, Pair<Integer, Integer>> p : previousState){
         TreeItem ti = new TreeItem(items[p.getJ().getI()], SWT.NONE, p.getJ().getJ());
-        System.out.println(p.getI());
         ti.setText(p.getI());
       }
       
