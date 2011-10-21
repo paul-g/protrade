@@ -15,15 +15,15 @@ public class Main {
     final Display display = new Display();
 
     Shell shell = new Shell(display);
+    shell.setMaximized(true);
     shell.setLayout(new FillLayout());
     shell.setText(TITLE);
-
+    
     NavigationPanel np = new NavigationPanel(shell);
     DisplayPanel    dp = new DisplayPanel(shell);
     
     np.addListener(dp);
 
-    shell.pack();
     shell.open();
     
     while (!shell.isDisposed()) {

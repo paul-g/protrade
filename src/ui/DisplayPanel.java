@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.TreeItem;
 public class DisplayPanel implements Listener{
   
   final TabFolder tabFolder;
-    
+
   public DisplayPanel(Shell shell){
     tabFolder = new TabFolder(shell, SWT.BORDER);
     Rectangle clientArea = shell.getClientArea();
@@ -33,6 +33,7 @@ public class DisplayPanel implements Listener{
     if (pos==-1) {
       TabItem item = new TabItem(tabFolder, SWT.NONE);
       item.setText(ti.getText());
+      tabFolder.setSelection(item);
     } else 
      tabFolder.setSelection(pos);
   }
