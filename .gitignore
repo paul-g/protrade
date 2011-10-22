@@ -1,9 +1,14 @@
 # Compiled source #
 ###################
 *.class
+build/*
 
 # Eclipse Stuff #
 #################
 build.properties
 .classpath
 .project
+
+# Log info #
+############
+*.log

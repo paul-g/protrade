@@ -37,8 +37,9 @@
 
   <!-- COMPILE task -->
   <target name="compile" depends="prepare">
-    <javac srcdir="${src.dir}"
+    <javac srcdir="${src.dir}" includeantruntime="false"
       destdir="${build.prod.dir}" classpathref="classpath"/>
+    <copy todir="${build.prod.dir}" file="log4j.properties"/>
   </target>
     
   <!-- RUN task - for now runs a class, but should run a jar in the future -->

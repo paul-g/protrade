@@ -1,7 +1,6 @@
 package src;
 
-import java.util.List;
-
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -14,8 +13,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import src.domain.Match;
-import src.domain.Tournament;
 import src.exceptions.LoginFailedException;
 import src.service.BetfairConnectionHandler;
 import src.ui.DisplayPanel;
@@ -26,6 +23,8 @@ public class Main {
 	private static final String TITLE = "Tennis Trader";
 
 	private static final Display display = new Display();
+	
+	private static Logger log = Logger.getLogger(Main.class);
 
 	public static void main(String[] args) {
 
@@ -80,18 +79,16 @@ public class Main {
 		button.setText("Login");
 		button.setLayoutData(buttonData);
 
-		Button reset = new Button(loginShell, SWT.None);
+		Button reset = new Button(loginShell, SWT.NONE);
 		reset.setText("Reset");
 		reset.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
+		  public void handleEvent(Event arg0) {
 				username.setText("");
 				password.setText("");
 			}			
 		});
 
 		button.addListener(SWT.Selection, new Listener() {
-			@Override
 			public void handleEvent(Event event) {
 				if (checkLogin(username.getText(), password.getText())) {
 					loginShell.dispose();
@@ -99,6 +96,17 @@ public class Main {
 				}
 			}
 		});
+		
+		// TODO: for testing only
+		Button bypass = new Button(loginShell, SWT.NONE);
+		bypass.setText("Bypass");
+		
+    bypass.addListener(SWT.Selection, new Listener() {
+      public void handleEvent(Event event) {
+          loginShell.dispose();
+          launchApp(display);         
+      }
+    });
 
 		loginShell.pack();
 
@@ -139,20 +147,21 @@ public class Main {
 		try {
 			BetfairConnectionHandler.login(username, password);
 		} catch (LoginFailedException e) {
-			System.out.println(e.getMessage());
+			log.info(e.getMessage());
 			return false;
 		}
-		System.out.println("Login succeeded with token - "
+		
+		log.info("Login succeeded with token - "
 				+ BetfairConnectionHandler.getApiContext().getToken());
 
 		// get list of tournaments (events and markets of tennis type event id)
 		/*
 		List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
-		System.out.println("List of events under \' tennis event type id \': ");
+		log.info("List of events under \' tennis event type id \': ");
 		for (Tournament t : tournaments) {
-			System.out.println(t.toString());
+			log.info(t.toString());
 			for (Match m : t.getMatches()) {
-				System.out.println("\t " + m.toString());
+				log.info("\t " + m.toString());
 			}
 		}
 		*/
@@ -162,9 +171,9 @@ public class Main {
 		 * try { 
 		 * 	BetfairConnectionHandler.logout(); 
 		 * } catch (Exception e){
-		 * 	System.out.println(e.getMessage()); System.exit(-1); 
+		 * 	log.info(e.getMessage()); System.exit(-1); 
 		 * }
-		 * System.out.println("Logout succesful");
+		 * log.info("Logout succesful");
 		 */
 
 		return true;
