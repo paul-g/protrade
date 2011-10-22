@@ -6,6 +6,7 @@ import java.util.List;
 import src.demo.handler.GlobalAPI;
 import src.demo.util.APIContext;
 import src.demo.util.Display;
+import src.domain.EventMarketBetfair;
 import src.domain.Match;
 import src.domain.Tournament;
 import src.exceptions.LoginFailedException;
@@ -33,8 +34,22 @@ public class BetfairConnectionHandler {
 	}
 	
 	
-	public static List<Tournament> getTournamentsData() {			
+	public static List<EventMarketBetfair> getTournamentsData() {			
 		List<Tournament> tournaments = new ArrayList<Tournament>();
+		List<EventMarketBetfair> events = new ArrayList<EventMarketBetfair>();;
+		
+		try {
+			int tennisEventID = getTennisEventID();	
+			events = getEventData(tennisEventID);
+			for (EventMarketBetfair emb : events)
+				tournaments.add( (Tournament) emb );
+			
+		} catch (Exception e){
+			
+		}
+		
+		
+		/*
 		try {
 			int tennisEventID = getTennisEventID();	
 			GetEventsResp resp = GlobalAPI.getEvents(apiContext, tennisEventID);			
@@ -54,10 +69,11 @@ public class BetfairConnectionHandler {
 			}
 			for (BFEvent e : events) {
 				Tournament newTournament= new Tournament(e.getEventName());
-				newTournament.setMatches(getMatchesData(e.getEventId()));
+				newTournament.getChildren().addAll(getMatchesData(e.getEventId()));
+				//newTournament.setChildren(getMatchesData(e.getEventId()));
 				
 				tournaments.add(newTournament);
-			}		
+			}		 
 			
 			/*
 			// add the list of possible markets
@@ -68,11 +84,58 @@ public class BetfairConnectionHandler {
 			for (MarketSummary ms : markets) {
 				tournaments.add(new Tournament(ms.getMarketName()));
 			}		
-			*/	
+			*/	/*
 		} catch (Exception e){
 			System.out.println("Error getting list of tournaments - " + e.getMessage());
 		}
-		return tournaments;		
+		*/
+		
+		return events;		
+	}
+	
+	
+	public static List<EventMarketBetfair> getEventData(int eventId) {
+		List<EventMarketBetfair> tournaments = new ArrayList<EventMarketBetfair>();
+		
+		try {	
+			GetEventsResp resp = GlobalAPI.getEvents(apiContext, eventId);			
+			// add the list of possible events
+			BFEvent[] events = resp.getEventItems().getBFEvent();			
+			if (events == null) {
+				events = new BFEvent[] {};
+			} else {
+				// we remove Coupons, since they don't contain markets
+				ArrayList<BFEvent> nonCouponEvents = new ArrayList<BFEvent>(events.length);
+				for(BFEvent e: events) {
+					if(!e.getEventName().equals("Coupons")) {
+						nonCouponEvents.add(e);
+					}
+				}
+				events = (BFEvent[]) nonCouponEvents.toArray(new BFEvent[]{});
+			}
+			for (BFEvent e : events) {
+				Tournament newTournament= new Tournament(e.getEventName());
+				//newTournament.getChildren().addAll(getMatchesData(e.getEventId()));
+				//newTournament.setChildren(getMatchesData(e.getEventId()));
+				newTournament.getChildren().addAll(getEventData(e.getEventId()));
+				
+				tournaments.add(newTournament);
+			}		 
+			
+			
+			// add the list of possible markets
+			MarketSummary[] markets = resp.getMarketItems().getMarketSummary();
+			if (markets == null) {
+				markets = new MarketSummary[] {};
+			}
+			for (MarketSummary ms : markets) {
+				tournaments.add(new Match(ms.getMarketName(), "snd player"));
+			}		
+				
+		} catch (Exception e){
+			System.out.println("Error getting list of tournaments - " + e.getMessage());
+		}
+		return tournaments;
 	}
 
 	public static List<Match> getMatchesData(int tournamentEventId) {

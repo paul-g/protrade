@@ -1,5 +1,7 @@
 package src;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -20,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import src.domain.*;
 import src.exceptions.LoginFailedException;
 import src.service.BetfairConnectionHandler;
 import src.ui.DisplayPanel;
@@ -172,13 +175,12 @@ public class Main {
 
 		// get list of tournaments (events and markets of tennis type event id)
 		/*
-		List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
+		//List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
+		List<EventMarketBetfair> tournaments = BetfairConnectionHandler.getTournamentsData();
 		log.info("List of events under \' tennis event type id \': ");
-		for (Tournament t : tournaments) {
-			log.info(t.toString());
-			for (Match m : t.getMatches()) {
-				log.info("\t " + m.toString());
-			}
+		
+		for (EventMarketBetfair emb : tournaments) {
+			printEvents(0, emb);
 		}
 		*/
 
@@ -205,12 +207,32 @@ public class Main {
 	    
 	}
 	
-	private static void addToolBar(Shell shell) {
+	private static void printEvents(int level, EventMarketBetfair event) {
+			String msg = "";
+			for(int i = 0 ; i < level; i++)
+				msg += "\t";
+			msg += event.toString();
+			log.info(msg);
+			for (EventMarketBetfair e : event.getChildren()) {
+				printEvents(level + 1, e);
+			}
+		
+		/*
+		for (Tournament t : tournaments) {
+			log.info(t.toString());
+			for (EventMarketBetfair m : t.getChildren()) {
+				log.info("\t " + m.toString());
+			}
+		}
+		*/
+	}
 	
+	private static void addToolBar(Shell shell){
+
 	  // Setting span throughout the columns
 	  GridData gridData = new GridData();
 	  gridData.horizontalSpan = ((GridLayout) shell.getLayout()).numColumns;
-	
+
 	  // Setting up the toolbar with the placeholders - due to the number of columns
 	  final ToolBar toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
 	  toolbar.setLayoutData(gridData);

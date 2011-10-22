@@ -8,6 +8,8 @@ build/*
 build.properties
 .classpath
 .project
+.settings/
+bin/
 
 # Log info #
 ############
