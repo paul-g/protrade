@@ -1,3 +1,4 @@
+package src.score;
 
 public class Player {
 	
