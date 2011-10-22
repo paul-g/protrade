@@ -5,6 +5,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -109,7 +110,6 @@ public class Main {
     });
 
 		loginShell.pack();
-
 		loginShell.open();
 
 		while (!loginShell.isDisposed()) {
@@ -124,9 +124,17 @@ public class Main {
 	private static void launchApp(Display display) {
 		Shell shell = new Shell(display);
 		shell.setMaximized(true);
-		shell.setLayout(new FillLayout());
+		
+		GridLayout layout = new GridLayout();
+		layout.horizontalSpacing = 10;
+		layout.verticalSpacing   = 10;
+		layout.numColumns = 3;
+	  layout.makeColumnsEqualWidth = true;
+		//layout.justify = true;
+		
+		shell.setLayout(layout);
 		shell.setText(TITLE);
-
+		
 		NavigationPanel np = new NavigationPanel(shell);
 		DisplayPanel dp = new DisplayPanel(shell);
 
@@ -177,6 +185,10 @@ public class Main {
 		 */
 
 		return true;
+	}
+	
+	private static void addToolBar(){
+	  
 	}
 
 }

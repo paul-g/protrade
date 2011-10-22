@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -21,7 +23,7 @@ import src.Pair;
 
 public class NavigationPanel {
 
-  private final Composite composite;
+  private final CTabFolder folder;
   private Tree tree;
   private final Text searchBox;
   private Stack<List<Pair<String, Pair<Integer, Integer>>>> treeStates = new Stack<List<Pair<String, Pair<Integer, Integer>>>>();
@@ -31,19 +33,53 @@ public class NavigationPanel {
   private String prevSearchBoxText = "";
 
   public NavigationPanel(Shell shell) {
-    this.composite = new Composite(shell, SWT.NONE);
-    RowLayout rowLayout = new RowLayout();
-    rowLayout.type = SWT.VERTICAL;
-    rowLayout.pack = true;
-    rowLayout.fill = true;
-    composite.setLayout(rowLayout);
+    this.folder = new CTabFolder(shell,  SWT.RESIZE | SWT.BORDER);
+    folder.setSimple(false);
+
+    GridData gridData = new GridData();
+    gridData.horizontalAlignment = GridData.FILL;
+    gridData.horizontalSpan = 1;
+    gridData.verticalAlignment = GridData.FILL;
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.grabExcessVerticalSpace   = true;
+    
+    folder.setLayoutData(gridData);
+    
+    CTabItem navigation = new CTabItem(folder, SWT.CLOSE);
+    navigation.setText("Match Navigator");
+
+    Composite composite = new Composite(folder, SWT.NONE);
+    GridLayout layout = new GridLayout();
+    composite.setLayout(layout);
+    
     this.searchBox = new Text(composite, SWT.NONE);
+    
+    GridData sgridData = new GridData();
+    sgridData.horizontalAlignment = GridData.FILL;
+    sgridData.verticalAlignment = GridData.FILL;
+    sgridData.grabExcessHorizontalSpace = true;
+    searchBox.setLayoutData(sgridData);
+    
+    folder.setLayoutData(gridData);
     this.tree = new Tree(composite, SWT.NONE);
     loadTennisMatches(tree);
     TreeItem ty= new TreeItem(tree.getItems()[0], SWT.NONE, 1);
     ty.setText("Test item");
     listeners = new ArrayList<Listener>();
-    tree.setLayoutData(new RowData(300, 600));
+    
+    GridData tgridData = new GridData();
+    tgridData.horizontalAlignment = GridData.FILL;
+    tgridData.verticalAlignment = GridData.FILL;
+    tgridData.grabExcessHorizontalSpace = true;
+    tgridData.grabExcessVerticalSpace   = true;
+    tree.setLayoutData(tgridData);
+    
+    folder.setLayoutData(gridData);
+    
+    navigation.setControl(composite);
+    
+    folder.setMinimizeVisible(true);
+    folder.setMaximizeVisible(true);
 
     searchBox.addModifyListener(new ModifyListener() {
       public void modifyText(ModifyEvent me) {
@@ -60,6 +96,8 @@ public class NavigationPanel {
           l.handleEvent(event);
       }
     });
+    
+    
   }
 
   public void addListener(Listener listener) {
