@@ -1,22 +1,23 @@
 package src.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Tournament {
+public class Tournament extends EventMarketBetfair{
 	private String name;
-	private List<Match> matches;
+	//private List<Match> matches;
 	
 	public Tournament(String name) {
+		super();
 		this.name = name;
-		this.matches = new ArrayList<Match>();
 	}
 	
-	public Tournament (String name, List<Match> matches) {
+	public Tournament (String name, List<EventMarketBetfair> matches) {
+		super();
 		this.name = name;
-		this.matches = matches;
+		this.children = matches;
 	}
 	
+	/*
 	public void addMatch(Match newMatch) {
 		this.matches.add(newMatch);
 	}
@@ -28,9 +29,9 @@ public class Tournament {
 	public void setMatches(List<Match> matches) {
 		this.matches = matches;
 	}
+	*/
 	
 	public String toString() {
 		return this.name;
 	}
-
 }
