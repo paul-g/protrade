@@ -14,7 +14,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -32,7 +31,7 @@ public class NavigationPanel {
 
   private String prevSearchBoxText = "";
 
-  public NavigationPanel(Shell shell) {
+  public NavigationPanel(Composite shell) {
     this.folder = new CTabFolder(shell,  SWT.RESIZE | SWT.BORDER);
     folder.setSimple(false);
 

@@ -2,6 +2,7 @@ package src;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -128,15 +129,22 @@ public class Main {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = 10;
 		layout.verticalSpacing   = 10;
-		layout.numColumns = 3;
 	  layout.makeColumnsEqualWidth = true;
 		//layout.justify = true;
 		
 		shell.setLayout(layout);
 		shell.setText(TITLE);
 		
-		NavigationPanel np = new NavigationPanel(shell);
-		DisplayPanel dp = new DisplayPanel(shell);
+		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL);
+		GridData layoutData = new GridData();
+		layoutData.grabExcessHorizontalSpace = true;
+		layoutData.grabExcessVerticalSpace = true;
+		layoutData.horizontalAlignment = GridData.FILL;
+		layoutData.horizontalSpan = 2;
+		layoutData.verticalAlignment = GridData.FILL;
+		sashForm.setLayoutData(layoutData);
+		NavigationPanel np = new NavigationPanel(sashForm);
+		DisplayPanel dp = new DisplayPanel(sashForm);
 
 		np.addListener(dp);
 

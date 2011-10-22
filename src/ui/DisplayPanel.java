@@ -4,9 +4,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -14,9 +14,8 @@ public class DisplayPanel implements Listener{
   
   final CTabFolder folder;
 
-  public DisplayPanel(Shell shell){
-    folder = new CTabFolder(shell, SWT.RESIZE | SWT.BORDER);
-  //  Rectangle clientArea = shell.getClientArea();
+  public DisplayPanel(Composite parent){
+    folder = new CTabFolder(parent, SWT.RESIZE | SWT.BORDER);
     folder.setSimple(false);
     folder.setMinimizeVisible(true);
     folder.setMaximizeVisible(true);
@@ -29,7 +28,6 @@ public class DisplayPanel implements Listener{
     gridData.grabExcessVerticalSpace   = true;
     
     folder.setLayoutData(gridData);
-    //tabFolder.setLocation(clientArea.x, clientArea.y);
   }
 
   public void handleEvent(Event event) {
