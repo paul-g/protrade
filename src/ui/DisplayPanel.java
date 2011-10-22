@@ -47,7 +47,11 @@ public class DisplayPanel implements Listener{
       text.setText("Tab content for " + ti.getText());
       item.setControl(text);
       folder.setSelection(item);
+      ChartDrawer chart_draw = new ChartDrawer(folder,ti.getText());
+      ChartDrawer.showChart();
+      item.setControl(ChartDrawer.chart);
     } else 
      folder.setSelection(pos);
+    
   }
 }
