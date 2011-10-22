@@ -141,7 +141,8 @@ public class Main {
 		shell.setLayout(layout);
 		shell.setText(TITLE);
 		
-		addToolBar(shell);
+//		addToolBar(shell);
+		addMenuBar(shell);
 		NavigationPanel np = new NavigationPanel(shell);
 		DisplayPanel dp = new DisplayPanel(shell);
 
@@ -194,12 +195,25 @@ public class Main {
 		return true;
 	}
 	
-	private static void addToolBar(Shell shell){
+	private static void addMenuBar(Shell shell) {
+		
+		// Menu bar of the application
+		Menu menuBar = new Menu(shell, SWT.BAR);
+	    MenuItem fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+	    fileMenuHeader.setText("&File");
+	    shell.setMenuBar(menuBar);
+	    
+	}
+	
+	private static void addToolBar(Shell shell) {
+	
+	  // Setting span throughout the columns
+	  GridData gridData = new GridData();
+	  gridData.horizontalSpan = ((GridLayout) shell.getLayout()).numColumns;
 	
 	  // Setting up the toolbar with the placeholders - due to the number of columns
 	  final ToolBar toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-	  new ToolBar(shell, SWT.FLAT | SWT.RIGHT).pack();
-	  new ToolBar(shell, SWT.FLAT | SWT.RIGHT).pack();
+	  toolbar.setLayoutData(gridData);
 	  
 	  // Main menu
 	  final ToolItem itemMainMenu = new ToolItem(toolbar,SWT.DROP_DOWN);
