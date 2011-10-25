@@ -27,11 +27,13 @@ public class ChartDrawer {
 	
 	public ChartDrawer(Composite panel,String title){
 		chart = new Chart(panel,SWT.NONE);
-		chart.setSize(1000, 400);
+		chart.setSize(50, 100);
 		chart.getTitle().setText(title);
 		chart.getAxisSet().getXAxis(0).getTitle().setText("Time in minutes");
 		chart.getAxisSet().getYAxis(0).getTitle().setText("Back Odds on Nadal");
 	}
+	
+	
 	
 	public static void showChart(){
 		Random randomGenerator = new Random();
