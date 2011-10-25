@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import src.Main;
+
 public class ToolBarPanel {
 
 	public ToolBarPanel (Shell shell) {
@@ -82,6 +84,26 @@ public class ToolBarPanel {
 				}
 			}
 		});
+		
+		// Log out/profile menu
+		final ToolItem profileItem = new ToolItem(toolbar,SWT.DROP_DOWN);
+        // TODO: this is a slight hack
+		profileItem.setText("Logged in as: " + Main.USER);
+        itemAboutMenu.setToolTipText("Click to view your profile");
+	    final Menu profileDropDown = new Menu(shell,SWT.POP_UP);
+	    new MenuItem(profileDropDown,SWT.PUSH).setText("Log out");
+	    new MenuItem(profileDropDown,SWT.PUSH).setText("Profile");
+	    new MenuItem(profileDropDown,SWT.PUSH).setText("Preferences");   
+	    profileItem.addListener(SWT.Selection, new Listener() {
+	        public void handleEvent(Event event) {
+	            if(event.detail == SWT.ARROW) {
+	                Rectangle bounds = profileItem.getBounds();
+	                Point point = toolbar.toDisplay(bounds.x + bounds.width, bounds.y + bounds.height);
+	                profileDropDown.setLocation(point);
+	                profileDropDown.setVisible(true);
+	             }
+	         }
+	     });
 
 		toolbar.pack();
 	}

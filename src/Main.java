@@ -31,6 +31,11 @@ public class Main {
   private static final Display display = new Display();
   
   private static Logger log = Logger.getLogger(Main.class);
+  
+  private static final String SUCCESS = "Login successful! Please wait...";
+  private static final String FAIL    = "Login failed! Please try again...";
+  
+  public static String USER = "";
 
   public static void main(String[] args) {
 
@@ -55,14 +60,14 @@ public class Main {
     loginShell.setText("Login to tennis trader");
 
     GridLayout gridLayout = new GridLayout();
-    gridLayout.makeColumnsEqualWidth = true;
-    gridLayout.numColumns = 3;
+    //gridLayout.makeColumnsEqualWidth = true;
+    gridLayout.numColumns = 5;
 
     loginShell.setLayout(gridLayout);
 
     GridData gridData = new GridData();
     gridData.horizontalAlignment = GridData.FILL;
-    gridData.horizontalSpan = 2;
+    gridData.horizontalSpan = 4;
 
     Label loginLabel = new Label(loginShell, SWT.NONE);
     loginLabel.setText("Username: ");
@@ -94,15 +99,6 @@ public class Main {
       }     
     });
 
-    button.addListener(SWT.Selection, new Listener() {
-      public void handleEvent(Event event) {
-        if (checkLogin(username.getText(), password.getText())) {
-          loginShell.dispose();
-          launchApp(display);         
-        }
-      }
-    });
-    
     // TODO: for testing only
     Button bypass = new Button(loginShell, SWT.NONE);
     bypass.setText("Bypass");
@@ -113,7 +109,44 @@ public class Main {
           launchApp(display);         
       }
     });
+    
+    Button testAccount = new Button(loginShell, SWT.NONE);
+    testAccount.setText("Use Test Account");
+    
+    final Label result = new Label(loginShell, SWT.NONE);
+    result.setText(FAIL);
+    result.setVisible(false);
+    testAccount.addListener(SWT.Selection, new Listener() {
+      @Override
+      public void handleEvent(Event arg0) {
+          Main.USER = "corina409";
+          result.setText(SUCCESS);
+          result.setVisible(true);
+          result.update();
+          loginShell.update();
+          try {
+            Thread.sleep(2000);
+          } catch (Exception e){}
+          loginShell.dispose();
+          launchApp(display);
+      }
+      
+    });
 
+    button.addListener(SWT.Selection, new Listener() {
+      public void handleEvent(Event event) {
+        String user = username.getText();
+        if (checkLogin(user, password.getText())) {
+          Main.USER = user; 
+          loginShell.dispose();
+          launchApp(display);
+          result.setText(SUCCESS);
+        } else
+          result.setText(FAIL);
+      }
+    });
+    
+    
     loginShell.pack();
     loginShell.open();
 

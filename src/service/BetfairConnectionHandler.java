@@ -45,7 +45,7 @@ public class BetfairConnectionHandler {
 	}
 	
 	
-	public static List<EventMarketBetfair> getTournamentsData() {			
+	public static List<Tournament> getTournamentsData() {			
 		////List<Tournament> tournaments = new ArrayList<Tournament>();
 		List<EventMarketBetfair> events = new ArrayList<EventMarketBetfair>();;
 		
@@ -114,7 +114,7 @@ public class BetfairConnectionHandler {
 		}
 		*/
 		
-		return events;		
+		return tours;		
 	}
 	
 	

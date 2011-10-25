@@ -19,6 +19,9 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import src.Pair;
+import src.domain.EventMarketBetfair;
+import src.domain.Tournament;
+import src.service.BetfairConnectionHandler;
 
 public class NavigationPanel {
 
@@ -62,8 +65,6 @@ public class NavigationPanel {
     folder.setLayoutData(gridData);
     this.tree = new Tree(composite, SWT.NONE);
     loadTennisMatches(tree);
-    TreeItem ty= new TreeItem(tree.getItems()[0], SWT.NONE, 1);
-    ty.setText("Test item");
     listeners = new ArrayList<Listener>();
     
     GridData tgridData = new GridData();
@@ -131,8 +132,18 @@ public class NavigationPanel {
   }
 
   private static void loadTennisMatches(Tree tree) {
+    List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
+    for (Tournament t : tours){
+      TreeItem item = new TreeItem(tree, SWT.NONE);
+      item.setText(t.toString());
+      
+      for (EventMarketBetfair emb : t.getChildren()){
+        TreeItem child = new TreeItem(item, SWT.NONE);
+        child.setText(emb.toString());
+      }
+    }
     // Wimbledon
-    TreeItem wimb = new TreeItem(tree, SWT.NONE);
+    /*TreeItem wimb = new TreeItem(tree, SWT.NONE);
     wimb.setText("Wimbledon - In progress");
     TreeItem feddjo = new TreeItem(wimb, SWT.NONE);
     feddjo.setText("Federer vs Djokovic - 60 60 60");
@@ -146,6 +157,10 @@ public class NavigationPanel {
     paco.setText("Paul vs Corina - Pending");
     TreeItem fena = new TreeItem(pno, SWT.NONE);
     fena.setText("Ferrer vs Nalbandian - Pending");
+    */
   }
+  
+  
+  
   
 }
