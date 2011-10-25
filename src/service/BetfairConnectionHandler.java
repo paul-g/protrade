@@ -182,7 +182,7 @@ public class BetfairConnectionHandler {
 	
 	public static boolean isMatch(EventMarketBetfair emb) {
 		return ( (emb instanceof Tournament) && 
-				 ((Tournament)emb).toString().contains(" c ") );	
+				 ((Tournament)emb).toString().contains(" v ") );	
 	}
 	
 	public static Match getMatchData(EventMarketBetfair emb) {
