@@ -138,8 +138,11 @@ public class Main {
     shell.setLayout(layout);
     shell.setText(TITLE);
 
+    // Menu and Tool bar set-up
     ToolBarPanel tp = new ToolBarPanel(shell);
+    MenuPanel mp = new MenuPanel(shell);
     
+    // Sashform set-up
     SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL);
     GridData layoutData = new GridData();
     layoutData.grabExcessHorizontalSpace = true;
@@ -150,7 +153,6 @@ public class Main {
     sashForm.setLayoutData(layoutData);
     sashForm.setLayout(layout);
 
-    MenuPanel mp = new MenuPanel(shell);
     
     sashForm.setFocus();
     
