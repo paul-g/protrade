@@ -33,20 +33,44 @@ public class BetfairConnectionHandler {
 		GlobalAPI.logout(apiContext);
 	}
 	
+	private static void printEvents(int level, EventMarketBetfair event) {
+	      String msg = "";
+	      for(int i = 0 ; i < level; i++)
+	        msg += "\t";
+	      msg += event.toString();
+	      System.out.println(msg);
+	      for (EventMarketBetfair e : event.getChildren()) {
+	        printEvents(level + 1, e);
+	      }
+	}
+	
 	
 	public static List<EventMarketBetfair> getTournamentsData() {			
-		List<Tournament> tournaments = new ArrayList<Tournament>();
+		////List<Tournament> tournaments = new ArrayList<Tournament>();
 		List<EventMarketBetfair> events = new ArrayList<EventMarketBetfair>();;
 		
 		try {
 			int tennisEventID = getTennisEventID();	
 			events = getEventData(tennisEventID);
-			for (EventMarketBetfair emb : events)
-				tournaments.add( (Tournament) emb );
+			//for (EventMarketBetfair emb : events)
+				//tournaments.add( (Tournament) emb );
 			
 		} catch (Exception e){
 			
 		}
+		
+		List<Tournament> tours = new ArrayList<Tournament>();
+		for (EventMarketBetfair emb: events) {
+			if (emb instanceof Tournament) {
+				Tournament newTournament = (Tournament) emb;
+				filterMatches(newTournament);
+				
+				tours.add(newTournament);
+			}
+		}
+		for(Tournament t: tours)
+			printEvents(0, t);
+		
 		
 		
 		/*
@@ -138,6 +162,35 @@ public class BetfairConnectionHandler {
 		return tournaments;
 	}
 
+	public static void filterMatches(Tournament tournament) {
+		List<Match> matches = new ArrayList<Match>();
+		matches = getMatches(matches, tournament);
+		tournament.setChildren(new ArrayList<EventMarketBetfair>());
+		tournament.getChildren().addAll(matches);
+	}
+	
+	public static List<Match> getMatches(List<Match> matches, Tournament tournament) {
+		for (EventMarketBetfair emb : tournament.getChildren()) {
+			if (isMatch(emb))
+				matches.add(getMatchData(emb));
+			else if (emb instanceof Tournament)
+				matches = getMatches(matches, (Tournament)emb);
+		}
+		
+		return matches;
+	}
+	
+	public static boolean isMatch(EventMarketBetfair emb) {
+		return ( (emb instanceof Tournament) && 
+				 ((Tournament)emb).toString().contains(" c ") );	
+	}
+	
+	public static Match getMatchData(EventMarketBetfair emb) {
+		return new Match(((Tournament)emb).toString(), "");
+	}
+	
+	
+	/*
 	public static List<Match> getMatchesData(int tournamentEventId) {
 		List<Match> matches = new ArrayList<Match>();
 		try {
@@ -167,12 +220,13 @@ public class BetfairConnectionHandler {
 			 * resp.getMarketItems().getMarketSummary(); if (markets == null) {
 			 * markets = new MarketSummary[] {}; } for (MarketSummary ms :
 			 * markets) { tournaments.add(new Tournament(ms.getMarketName())); }
-			 */	
+			 */	/*
 		} catch (Exception e){
 			System.out.println("Error getting list of tournaments - " + e.getMessage());
 		}	
 		return matches;
 	}
+	*/
 	
 	private static int getTennisEventID() throws Exception{
 		int eventId = -1;		
