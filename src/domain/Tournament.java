@@ -6,15 +6,17 @@ public class Tournament extends EventMarketBetfair{
 	private String name;
 	//private List<Match> matches;
 	
-	public Tournament(String name) {
+	public Tournament(String name, int id) {
 		super();
 		this.name = name;
+		this.betfairId = id;
 	}
 	
-	public Tournament (String name, List<EventMarketBetfair> matches) {
+	public Tournament (String name, List<EventMarketBetfair> matches, int id) {
 		super();
 		this.name = name;
 		this.children = matches;
+		this.betfairId = id;
 	}
 	
 	/*
