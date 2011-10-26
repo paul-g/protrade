@@ -7,10 +7,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
@@ -20,6 +24,9 @@ import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
+
+import src.score.PredictionGui;
+import src.service.BetfairConnectionHandler;
 
 public class DisplayPanel implements Listener{
   
@@ -59,14 +66,34 @@ public class DisplayPanel implements Listener{
     if (pos==-1) {
       CTabItem item = new CTabItem(folder, SWT.CLOSE);
       item.setText(ti.getText());
-      Text text = new Text(folder, SWT.NONE);
-      text.setText("Tab content for " + ti.getText());
-      item.setControl(text);
       folder.setSelection(item);
-      Chart chart = new Chart(folder,SWT.NONE);
+      
+      Composite comp = new Composite(folder, SWT.NONE);
+      GridLayout gridLayout = new GridLayout();
+      gridLayout.numColumns = 2;
+      RowLayout rowLayout = new RowLayout();
+      rowLayout.type = SWT.VERTICAL;
+      FillLayout fillLayout = new FillLayout();
+      fillLayout.type = SWT.VERTICAL;
+      comp.setLayout(fillLayout);
+      
+      Chart chart = new Chart(comp,SWT.NONE);
       chart.getTitle().setText(ti.getText());
+      GridData chartData = new GridData();
+      chartData.horizontalSpan = 2;
+      //chartData.horizontalAlignment = SWT.FILL;
+      //chart.setLayoutData(chartData);
       charts.add(chart);
-      item.setControl(chart);
+
+      addPredictionGui(comp, ti.getText());
+      
+      item.setControl(comp);
+      
+      Label marketData = new Label(comp, SWT.NONE);
+      marketData.setText(BetfairConnectionHandler.getMarketOdds(NavigationPanel.getMatch(ti)));
+      
+      comp.update();
+      
       // temporarily for filling charts with random data
   	  double [] xSeries = new double[60];
 	  double [] ySeries = new double[60];
@@ -94,6 +121,9 @@ public class DisplayPanel implements Listener{
 		final IAxisSet axisSet = chart.getAxisSet();	
 		axisSet.adjustRange();
       // end filling charts
+	
+	   
+	
       
     } else 
      folder.setSelection(pos);
@@ -103,6 +133,10 @@ public class DisplayPanel implements Listener{
   public void addTab(String text){
     CTabItem cti =  new CTabItem(folder, SWT.CLOSE);
     folder.setSelection(cti);
+  }
+  
+  private void addPredictionGui(Composite composite, String title){
+    new PredictionGui(composite, title);
   }
   
 }

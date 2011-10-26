@@ -1,6 +1,7 @@
 package src.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import src.Pair;
 import src.domain.EventMarketBetfair;
+import src.domain.Match;
 import src.domain.Tournament;
 import src.service.BetfairConnectionHandler;
 
@@ -33,6 +35,8 @@ public class NavigationPanel {
   private List<Listener> listeners;
 
   private String prevSearchBoxText = "";
+  
+  private static HashMap<TreeItem, Match> matchMap = new HashMap<TreeItem, Match>();
 
   public NavigationPanel(Composite shell) {
     this.folder = new CTabFolder(shell,  SWT.RESIZE | SWT.BORDER);
@@ -131,7 +135,7 @@ public class NavigationPanel {
     }
   }
 
-  private static void loadTennisMatches(Tree tree) {
+  private void loadTennisMatches(Tree tree) {
     List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
     for (Tournament t : tours){
       TreeItem item = new TreeItem(tree, SWT.NONE);
@@ -140,24 +144,9 @@ public class NavigationPanel {
       for (EventMarketBetfair emb : t.getChildren()){
         TreeItem child = new TreeItem(item, SWT.NONE);
         child.setText(emb.toString());
+        matchMap.put(child, (Match)emb);
       }
     }
-    // Wimbledon
-    /*TreeItem wimb = new TreeItem(tree, SWT.NONE);
-    wimb.setText("Wimbledon - In progress");
-    TreeItem feddjo = new TreeItem(wimb, SWT.NONE);
-    feddjo.setText("Federer vs Djokovic - 60 60 60");
-    TreeItem nadmur = new TreeItem(wimb, SWT.NONE);
-    nadmur.setText("Nadal vs Murray - 75 62 31");
-
-    // Piatra-Neamt
-    TreeItem pno = new TreeItem(tree, SWT.NONE);
-    pno.setText("Piatra-Neamt Open - Pending");
-    TreeItem paco = new TreeItem(pno, SWT.NONE);
-    paco.setText("Paul vs Corina - Pending");
-    TreeItem fena = new TreeItem(pno, SWT.NONE);
-    fena.setText("Ferrer vs Nalbandian - Pending");
-    */
   }
   
   public void addTab(String text){
@@ -166,5 +155,8 @@ public class NavigationPanel {
     cti.setText(text);
   }
   
+  public static Match getMatch(TreeItem treeItem){
+    return matchMap.get(treeItem);
+  }
   
 }

@@ -1,13 +1,41 @@
 package src.score;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.custom.*;
-import java.io.*;
 
-public class Prediction_GUI {
+public class PredictionGui {
+  private String match;
+  
+  public PredictionGui(Composite composite, String match){
+    this.match = match;
+
+    Composite comp = new Composite(composite, SWT.NONE);
+    comp.setLayout(null);
+   // composite.setText("Tennis Predictor");
+    //shell.setBounds(new Rectangle(0, 0, 400, 400));
+    //shell.setSize(new Point(500,500));
+    //composite.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+    
+
+    createScoreContents(comp);
+    createProbabilityContents(comp);
+    
+/*  
+ *   shell.pack();
+    shell.open();
+    // Set up the event loop.
+    while (!shell.isDisposed()) {
+      if (!display.readAndDispatch()) {
+        // If no more entries in the event queue
+        display.sleep();
+      }
+    }
+    display.dispose();
+     */
+  }
+  /*
   public void run() {
     Display display = new Display();
     Shell shell = new Shell(display);
@@ -18,8 +46,8 @@ public class Prediction_GUI {
     shell.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
     
 
-    createScoreContents(shell, display);
-    createProbabilityContents(shell, display);
+    createScoreContents(shell);
+    createProbabilityContents(shell);
     
     shell.pack();
     shell.open();
@@ -32,24 +60,24 @@ public class Prediction_GUI {
     }
     display.dispose();
 	
-  }
+  }*/
   
-  private void createScoreContents(Composite composite, Display display) 
+  private void createScoreContents(Composite composite) 
   {
 	  Button server1= new Button(composite, SWT.RADIO);
       server1.setBounds(new Rectangle(300, 45, 22, 20));
-      server1.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+      //server1.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
       Button server2 = new Button(composite, SWT.RADIO);
       server2.setBounds(new Rectangle(300, 65, 22, 20));
-      server2.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+      //server2.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
       
 	  Label server = new Label(composite, SWT.NONE);
 	  server.setBounds(new Rectangle(282, 10, 48, 30));
       server.setText("Server");
       server.setAlignment(SWT.CENTER);
-      server.setBackground(display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+      //server.setBackground(display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 	  
-	  final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
+	  /*final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
 	  toolBar.setBounds(new Rectangle(331, 8, 100, 30));
 	  
 	  final Menu menu = new Menu((Shell)composite, SWT.POP_UP);
@@ -60,7 +88,7 @@ public class Prediction_GUI {
 	  match = new MenuItem(menu, SWT.PUSH);
 	  match.setText("best of 5 set tiebreaker");
 	  match = new MenuItem(menu, SWT.PUSH);
-	  match.setText("best of 5 set advantage");
+	  match.setText("best of 5 set ad(vantage");
 	      
 	    final ToolItem dropdown = new ToolItem(toolBar, SWT.DROP_DOWN);
 	    dropdown.setText("Match Type");
@@ -75,17 +103,18 @@ public class Prediction_GUI {
 	        }
 	      }
 	    });
+      */
       
 	  final Table table = new Table(composite, SWT.NONE);
 	  table.setBounds(new Rectangle(10, 10, 270, 90));
 	  table.setHeaderVisible(true);
-	  table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+	  //table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
 	  table.setLinesVisible(true);
 	  TableColumn[] column = new TableColumn[4];
 	  column[0] = new TableColumn(table, SWT.NONE);
 	  column[0].setText("Score:");
 	  StyleRange ScoreStyle = new StyleRange();
-	  ScoreStyle.background = display.getSystemColor(SWT.COLOR_BLUE);
+	  //ScoreStyle.background = display.getSystemColor(SWT.COLOR_BLUE);
 	  
 	  
 	  column[1] = new TableColumn(table, SWT.NONE);
@@ -119,12 +148,12 @@ public class Prediction_GUI {
       }
    }
   
-  private void createProbabilityContents(Composite composite, Display display) 
+  private void createProbabilityContents(Composite composite) 
   {
 	  final Table table = new Table(composite, SWT.NONE);
 	  table.setBounds(new Rectangle(10, 110, 370, 90));
 	  table.setHeaderVisible(true);
-	  table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+	  //table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
 	  table.setLinesVisible(true);
 	  TableColumn[] column = new TableColumn[5];	
 	  
@@ -170,15 +199,16 @@ public class Prediction_GUI {
       }
    }
    
-   public static void main(String[] args) {
+/*   public static void main(String[] args) {
 	  new Prediction_GUI().run();
 	  
 	  
 	  ///// IO STUFF - TO BE REPLACED BY INTERFACE 
 		System.out.println("What are the serve percentages of the two players?");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	    int serve1 = 0, serve2 = 0;
-	    int serving = 0;
+		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    
+		int serve1 = 55, serve2 = 65;
+	    int serving = 1;
 	    try {
 	      serve1 = Integer.parseInt(br.readLine());
 	      serve2 = Integer.parseInt(br.readLine());
@@ -202,4 +232,5 @@ public class Prediction_GUI {
 		
 		Game game = new Game(player1, player2, 0, 0);
    }
+   */
 }

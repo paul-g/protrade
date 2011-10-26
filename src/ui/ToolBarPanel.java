@@ -68,7 +68,7 @@ public class ToolBarPanel{
 		// Log out/profile menu
 		final ToolItem profileItem = new ToolItem(toolbar,SWT.DROP_DOWN);
         // TODO: this is a slight hack
-		profileItem.setText("User: " + Main.USER);
+		profileItem.setText(Main.USER);
         profileItem.setToolTipText("Click to view your profile");
 	    final Menu profileDropDown = new Menu(shell,SWT.POP_UP);
 	    new MenuItem(profileDropDown,SWT.PUSH).setText("Log out");
