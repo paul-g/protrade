@@ -1,4 +1,4 @@
-<project name="SimpleProject">
+<project name="tennis-trader">
   <property name="build.dir" value="build"/>
   <property name="build.prod.dir" value="${build.dir}/prod"/>
   <property name="build.test.dir" value="${build.dir}/test"/>
