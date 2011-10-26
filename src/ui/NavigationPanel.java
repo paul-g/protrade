@@ -151,12 +151,20 @@ public class NavigationPanel {
   
   public void addTab(String text){
     CTabItem cti =  new CTabItem(folder, SWT.CLOSE);
-    folder.setSelection(cti);
     cti.setText(text);
+    folder.setSelection(cti);
   }
   
   public static Match getMatch(TreeItem treeItem){
     return matchMap.get(treeItem);
+  }
+  
+  public boolean isTabPresent(String title) {
+	  CTabItem[] ctis = folder.getItems();
+	  for (CTabItem cti : ctis) {
+		  if (cti.getText().equals(title)) return true;
+	  }
+	  return false;
   }
   
 }

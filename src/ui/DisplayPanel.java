@@ -132,6 +132,7 @@ public class DisplayPanel implements Listener{
   
   public void addTab(String text){
     CTabItem cti =  new CTabItem(folder, SWT.CLOSE);
+    cti.setText(text);
     folder.setSelection(cti);
   }
   
