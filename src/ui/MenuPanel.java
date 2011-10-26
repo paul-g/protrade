@@ -1,15 +1,24 @@
 package src.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 public class MenuPanel {
 
+	private MainWindow mw;
+	private Shell shell;
 
 	/** The constructor and setter of the menu of the application */
-	public MenuPanel (Shell shell) {
+	public MenuPanel (MainWindow mw) {
+		
+		this.mw = mw;
+		shell = mw.getShell();
 
 		// Main menu of the application
 		Menu menuBar = new Menu(shell, SWT.BAR);
@@ -25,9 +34,11 @@ public class MenuPanel {
 
 	    MenuItem fileCreateItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileCreateItem.setText("New &Widget");
+	    fileCreateItem.addSelectionListener(new CreateListener());
 
 	    MenuItem fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("E&xit");
+	    fileExitItem.addSelectionListener(new FileExitListener());
 
 		// Edit button
 		MenuItem editMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -53,5 +64,26 @@ public class MenuPanel {
 
 	    MenuItem aboutEditItem = new MenuItem(aboutMenu, SWT.PUSH);
 	    aboutEditItem.setText("&Creators");
+	}
+	
+	private class CreateListener implements SelectionListener {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			mw.addNewTab();
+		}
+	}
+	
+	private class FileExitListener implements  SelectionListener {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			shell.close();
+		}
 	}
 }
