@@ -55,7 +55,6 @@ public class DisplayPanel implements Listener{
     	  pos = i;
     	  
       }
-         
 
     if (pos==-1) {
       CTabItem item = new CTabItem(folder, SWT.CLOSE);
@@ -100,4 +99,10 @@ public class DisplayPanel implements Listener{
      folder.setSelection(pos);
     
   }
+  
+  public void addTab(String text){
+    CTabItem cti =  new CTabItem(folder, SWT.CLOSE);
+    folder.setSelection(cti);
+  }
+  
 }
