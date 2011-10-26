@@ -83,6 +83,14 @@ public class ToolBarPanel{
         final Menu widgetDropDown = new Menu(shell,SWT.POP_UP);
         MenuItem matchNavigator = new MenuItem(widgetDropDown,SWT.PUSH);
         matchNavigator.setText("Match Navigator");
+        matchNavigator.addListener(SWT.Selection, new Listener(){
+            @Override
+            public void handleEvent(Event arg0) {
+              log.info("Opened match navigator");
+              mainWindow.addMatchNavigator();
+            }
+            
+          });
         
         MenuItem activeBets = new MenuItem(widgetDropDown,SWT.PUSH);
         activeBets.setText("Active Bets Display");

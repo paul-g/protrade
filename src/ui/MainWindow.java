@@ -37,7 +37,7 @@ public class MainWindow {
     ToolBarPanel tp = new ToolBarPanel(this);
     
     @SuppressWarnings("unused")
-    MenuPanel mp = new MenuPanel(shell);
+    MenuPanel mp = new MenuPanel(this);
     
     // Sashform set-up
     this.sashForm = new SashForm(shell, SWT.HORIZONTAL);
@@ -69,7 +69,15 @@ public class MainWindow {
   }
   
   public void addActiveBetsDisplay(){
-    np.addTab("Active Bets Display");
+	if (!np.isTabPresent("Active Bets Display")) np.addTab("Active Bets Display");
+  }
+  
+  public void addMatchNavigator(){
+	if (!np.isTabPresent("Match Navigator")) np.addTab("Match Navigator");
+  }
+  
+  public void addNewTab() {
+	dp.addTab("New Tab");
   }
   
   public Shell getShell(){
