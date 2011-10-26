@@ -87,7 +87,6 @@ public class ToolBarPanel{
         MenuItem activeBets = new MenuItem(widgetDropDown,SWT.PUSH);
         activeBets.setText("Active Bets Display");
         activeBets.addListener(SWT.Selection, new Listener(){
-          @Override
           public void handleEvent(Event arg0) {
             log.info("Opened an active bets display tab");
             mainWindow.addActiveBetsDisplay();
@@ -97,8 +96,6 @@ public class ToolBarPanel{
         
         new MenuItem(widgetDropDown,SWT.PUSH).setText("Match Statistics"); 
         widgetItem.addListener(SWT.Selection, new DropDownListener(widgetItem, widgetDropDown));
-        
-        
 	    
 		toolbar.pack();
 	}

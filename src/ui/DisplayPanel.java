@@ -85,12 +85,12 @@ public class DisplayPanel implements Listener{
       //chart.setLayoutData(chartData);
       charts.add(chart);
 
+      Label marketData = new Label(comp, SWT.NONE);
+      marketData.setText(BetfairConnectionHandler.getMarketOdds(NavigationPanel.getMatch(ti)));
+      
       addPredictionGui(comp, ti.getText());
       
       item.setControl(comp);
-      
-      Label marketData = new Label(comp, SWT.NONE);
-      marketData.setText(BetfairConnectionHandler.getMarketOdds(NavigationPanel.getMatch(ti)));
       
       comp.update();
       

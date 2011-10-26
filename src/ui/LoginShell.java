@@ -91,7 +91,6 @@ public class LoginShell{
     result.setVisible(false);
     
     testAccount.addListener(SWT.Selection, new Listener() {
-      @Override
       public void handleEvent(Event arg0) {
           Main.USER = "corina409";
           updateResult(SUCCESS);

@@ -77,10 +77,10 @@ public class PredictionGui {
       server.setAlignment(SWT.CENTER);
       //server.setBackground(display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 	  
-	  /*final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
+	  final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
 	  toolBar.setBounds(new Rectangle(331, 8, 100, 30));
 	  
-	  final Menu menu = new Menu((Shell)composite, SWT.POP_UP);
+	  final Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
 	  MenuItem match = new MenuItem(menu, SWT.PUSH);
 	  match.setText("best of 3 set tiebreaker");
 	  match = new MenuItem(menu, SWT.PUSH);
@@ -103,7 +103,7 @@ public class PredictionGui {
 	        }
 	      }
 	    });
-      */
+      
       
 	  final Table table = new Table(composite, SWT.NONE);
 	  table.setBounds(new Rectangle(10, 10, 270, 90));
