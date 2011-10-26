@@ -160,7 +160,11 @@ public class NavigationPanel {
     */
   }
   
-  
+  public void addTab(String text){
+    CTabItem cti =  new CTabItem(folder, SWT.CLOSE);
+    folder.setSelection(cti);
+    cti.setText(text);
+  }
   
   
 }
