@@ -27,6 +27,7 @@ import org.swtchart.ISeries.SeriesType;
 
 import src.score.PredictionGui;
 import src.service.BetfairConnectionHandler;
+import src.service.BetfairExchangeHandler;
 
 public class DisplayPanel implements Listener{
   
@@ -86,7 +87,7 @@ public class DisplayPanel implements Listener{
       charts.add(chart);
 
       Label marketData = new Label(comp, SWT.NONE);
-      marketData.setText(BetfairConnectionHandler.getMarketOdds(NavigationPanel.getMatch(ti)));
+      marketData.setText(BetfairExchangeHandler.getMarketOdds( NavigationPanel.getMatch(ti).getEventBetfair() ));
       
       addPredictionGui(comp, ti.getText());
       

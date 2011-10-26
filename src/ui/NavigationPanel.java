@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import src.Pair;
 import src.domain.EventMarketBetfair;
+import src.domain.MarketBetfair;
+import src.domain.EventBetfair;
 import src.domain.Match;
 import src.domain.Tournament;
 import src.service.BetfairConnectionHandler;
@@ -140,11 +142,12 @@ public class NavigationPanel {
     for (Tournament t : tours){
       TreeItem item = new TreeItem(tree, SWT.NONE);
       item.setText(t.toString());
+      matchMap.put(item, new Match("pl1", "Pl 2", null)); // to avoid NullPointerException
       
-      for (EventMarketBetfair emb : t.getChildren()){
+      for (Match m : t.getMatches()){
         TreeItem child = new TreeItem(item, SWT.NONE);
-        child.setText(emb.toString());
-        matchMap.put(child, (Match)emb);
+        child.setText(m.toString());
+        matchMap.put(child, m);
       }
     }
   }

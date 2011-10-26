@@ -1,5 +1,7 @@
 package src.ui;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -14,8 +16,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import src.Main;
+import src.domain.Tournament;
 import src.exceptions.LoginFailedException;
 import src.service.BetfairConnectionHandler;
+import src.service.BetfairExchangeHandler;
 
 public class LoginShell{
   
@@ -143,11 +147,11 @@ public class LoginShell{
         + BetfairConnectionHandler.getApiContext().getToken());
 
     // get list of tournaments (events and markets of tennis type event id)
-    /*
-    //List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
-    List<EventMarketBetfair> tournaments = BetfairConnectionHandler.getTournamentsData();
-    log.info("List of events under \' tennis event type id \': ");
     
+    List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
+    //List<EventMarketBetfair> tournaments = BetfairConnectionHandler.getTournamentsData();
+    log.info("List of events under \' tennis event type id \': ");
+    /*
     for (EventMarketBetfair emb : tournaments) {
       printEvents(0, emb);
     }

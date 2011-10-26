@@ -5,9 +5,16 @@ import java.util.List;
 
 public abstract class EventMarketBetfair {
 	protected List<EventMarketBetfair> children; // size() > 0 if event, no children if market
+	protected String name;
 	protected int betfairId;
 	
 	public EventMarketBetfair() {
+		this.children = new ArrayList<EventMarketBetfair>();
+	}
+	
+	public EventMarketBetfair(String name, int betfairId) {
+		this.name = name;
+		this.betfairId = betfairId;
 		this.children = new ArrayList<EventMarketBetfair>();
 	}
 	
@@ -29,5 +36,17 @@ public abstract class EventMarketBetfair {
 	
 	public int getBetfairId() {
 		return this.betfairId;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String toString() {
+		return this.name;
 	}
 }
