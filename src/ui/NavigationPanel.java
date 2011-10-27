@@ -151,6 +151,10 @@ public class NavigationPanel {
       }
     }
   }
+
+  public CTabFolder getFolder(){
+    return this.folder;
+  }
   
   public void addTab(String text){
     CTabItem cti =  new CTabItem(folder, SWT.CLOSE);
@@ -163,11 +167,18 @@ public class NavigationPanel {
   }
   
   public boolean isTabPresent(String title) {
-	  CTabItem[] ctis = folder.getItems();
-	  for (CTabItem cti : ctis) {
-		  if (cti.getText().equals(title)) return true;
-	  }
-	  return false;
+	  return getTab(title) != null;
   }
+  
+  public CTabItem getTab(String title){
+    CTabItem item = null;
+    CTabItem[] ctis = folder.getItems();
+    for (int i = 0; item == null && i < ctis.length; i++) {
+        if (ctis[i].getText().equals(title)) item = ctis[i];
+    }
+
+    return item;
+  }  
+  
   
 }

@@ -102,7 +102,20 @@ public class ToolBarPanel{
           
         });
         
-        new MenuItem(widgetDropDown,SWT.PUSH).setText("Match Statistics"); 
+        new MenuItem(widgetDropDown,SWT.PUSH).setText("Match Statistics");
+        
+        MenuItem playerStats = new MenuItem(widgetDropDown, SWT.PUSH);
+        playerStats.setText("Player Statistics");
+        playerStats.addListener(SWT.Selection, new Listener(){
+
+          @Override
+          public void handleEvent(Event arg0) {
+            mainWindow.addPlayerStatistics();
+          }
+          
+        });
+        
+        
         widgetItem.addListener(SWT.Selection, new DropDownListener(widgetItem, widgetDropDown));
 	    
 		toolbar.pack();
