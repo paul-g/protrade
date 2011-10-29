@@ -1,4 +1,4 @@
-package src.utils;
+package src.authentication;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

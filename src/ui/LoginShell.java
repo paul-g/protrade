@@ -60,7 +60,23 @@ public class LoginShell{
     // just for alignment
     @SuppressWarnings("unused")
     Label blankLabel = new Label(loginShell, SWT.NONE);
-
+    
+    Button rememberMe = new Button(loginShell, SWT.CHECK);
+    GridData rmData = new GridData();
+    rmData.horizontalSpan = 4; 
+    rememberMe.setText("Remember Me");
+    rememberMe.setLayoutData(rmData);
+    rememberMe.addListener(SWT.Selection, new Listener() {
+      
+      @Override
+      public void handleEvent(Event arg0) {
+       log.info("Remember Me selected"); 
+        
+      }
+    });
+    
+    @SuppressWarnings("unused")
+    Label blankLabel2 = new Label(loginShell, SWT.NONE); 
 
     Button login = new Button(loginShell, SWT.PUSH);
     GridData buttonData = new GridData();
