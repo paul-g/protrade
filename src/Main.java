@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Display;
 
 import src.domain.*;
 import src.ui.LoginShell;
-import src.utils.Encrypt;
+import src.authentication.Encrypt;
 
 public class Main {
 
