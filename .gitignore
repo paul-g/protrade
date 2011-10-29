@@ -15,6 +15,10 @@ bin/
 ############
 *.log
 
+# All local properties #
+########################
+*.local
+
 # SSH key #
 tennis_trade
 tennis_trade.pub
