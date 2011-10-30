@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -16,6 +17,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.swtchart.Chart;
 import org.swtchart.IAxisSet;
@@ -24,6 +28,7 @@ import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
+import src.domain.MOddsMarketData;
 import src.score.PredictionGui;
 import src.service.BetfairExchangeHandler;
 
@@ -83,13 +88,28 @@ public class DisplayPanel implements Listener {
       // chartData.horizontalAlignment = SWT.FILL;
       // chart.setLayoutData(chartData);
       charts.add(chart);
-
-      Label marketData = new Label(comp, SWT.NONE);
-      marketData.setText(BetfairExchangeHandler.getMarketOdds(NavigationPanel
-          .getMatch(ti).getEventBetfair()));
+    
+      //Label marketData = new Label(comp, SWT.NONE);
+      //marketData.setText(BetfairExchangeHandler.getMarketOdds(NavigationPanel
+      //     .getMatch(ti).getEventBetfair()));
+      MOddsMarketData modds = BetfairExchangeHandler.getMarketOdds(NavigationPanel
+              .getMatch(ti).getEventBetfair());
+      MarketDataGrid mdGrid;
+	try {
+		mdGrid = createMarketGrid(comp,ti.getText());
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return;
+	}
+     mdGrid.fillButtons(1, 1, modds.getPl1Back());
+     mdGrid.fillButtons(1, 2, modds.getPl1Lay());
+     mdGrid.fillButtons(2, 1, modds.getPl2Back());
+     mdGrid.fillButtons(2, 2, modds.getPl2Lay());
 
       addPredictionGui(comp, ti.getText());
-
+      
+      
       item.setControl(comp);
 
       // temporarily for filling charts with random data
@@ -136,6 +156,10 @@ public class DisplayPanel implements Listener {
 
   private void addPredictionGui(Composite composite, String title) {
     new PredictionGui(composite, title);
+  }
+  
+  private  MarketDataGrid createMarketGrid(Composite composite, String title) throws Exception{
+	  return new MarketDataGrid(composite,title);
   }
 
 }
