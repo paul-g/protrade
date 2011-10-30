@@ -20,13 +20,13 @@ import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
-public class GraphUpdater implements Runnable {
+public class BetfairDataUpdater implements Runnable {
 	private Chart chart;
 	private Composite comp;
 	private List<EventBetfair> events;
-	private static Logger log = Logger.getLogger(GraphUpdater.class);
+	private static Logger log = Logger.getLogger(BetfairDataUpdater.class);
 
-	public GraphUpdater(/*String chartTitle,*/ Composite comp) {
+	public BetfairDataUpdater(/*String chartTitle,*/ Composite comp) {
 		/*
 		chart = new Chart(comp, SWT.NONE);
 		chart.getTitle().setText(chartTitle);
@@ -64,7 +64,7 @@ public class GraphUpdater implements Runnable {
 		});
 		*/
 		
-		comp.getDisplay().timerExec(5000, new Runnable() {
+		comp.getDisplay().timerExec(0, new Runnable() {
 			@Override
 			public void run() {
 				
@@ -89,7 +89,7 @@ public class GraphUpdater implements Runnable {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				log.error("GraphUpdater interrupted " + e.getMessage());
+				log.error("BetfairDataUpdater interrupted " + e.getMessage());
 			}
 		}
 		*/

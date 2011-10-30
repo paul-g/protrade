@@ -14,21 +14,21 @@ import src.domain.Match;
 import src.domain.UpdatableWidget;
 
 public class LiveDataFetcher {
-	private static GraphUpdater gu = null;
+	private static BetfairDataUpdater betfairDataUpdater = null;
 	private static HashMap<Integer, UpdatableWidget> listeners = new HashMap<Integer, UpdatableWidget>();
 	private static Logger log = Logger.getLogger(LiveDataFetcher.class);
 	
 	public static void register(UpdatableWidget widget, Match match, Composite comp) {
 		boolean first = false;
-		if (gu == null) {
-			gu = new GraphUpdater(comp);
+		if (betfairDataUpdater == null) {
+			betfairDataUpdater = new BetfairDataUpdater(comp);
 			first = true;
 		}
-		gu.addEvent(match.getEventBetfair());
+		betfairDataUpdater.addEvent(match.getEventBetfair());
 		listeners.put(match.getEventBetfair().getBetfairId(), widget);
 		log.info("go to run thread");
 		if (first) {
-			gu.run();
+			betfairDataUpdater.run();
 		}
 		log.info("after run in thread");
 		

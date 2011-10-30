@@ -39,7 +39,7 @@ import src.domain.MOddsMarketData;
 import src.domain.UpdatableChart;
 import src.score.PredictionGui;
 import src.service.BetfairExchangeHandler;
-import src.service.GraphUpdater;
+import src.service.BetfairDataUpdater;
 import src.service.LiveDataFetcher;
 
 public class DisplayPanel implements Listener {
@@ -202,7 +202,7 @@ public class DisplayPanel implements Listener {
 			
 			Logger log = Logger.getLogger(DisplayPanel.class);
 			log.info("created chart, now got o register");
-			//GraphUpdater gu = new GraphUpdater(ti.getText(), comp);
+			//BetfairDataUpdater gu = new BetfairDataUpdater(ti.getText(), comp);
 			LiveDataFetcher.register(chart, NavigationPanel.getMatch(ti), comp);
 			log.info("Out of register");
 			// temporarily for filling charts with random data
