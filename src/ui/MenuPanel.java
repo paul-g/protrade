@@ -51,8 +51,9 @@ public class MenuPanel {
 	    aboutHelpItem.setText("&Help");
 	    aboutHelpItem.addSelectionListener(new HelpListener());
 	    
-	    MenuItem aboutEditItem = new MenuItem(aboutMenu, SWT.PUSH);
-	    aboutEditItem.setText("&Creators");
+	    MenuItem aboutCreatorsItem = new MenuItem(aboutMenu, SWT.PUSH);
+	    aboutCreatorsItem.setText("&Creators");
+	    aboutCreatorsItem.addSelectionListener(new CreatorsListener());
 	}
 	
 	private class SettingsListener implements SelectionListener {
@@ -79,6 +80,15 @@ public class MenuPanel {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			mw.addNewTab("Help");
+		}
+	}
+	
+	private class CreatorsListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			mw.addNewTab("Creators");
 		}
 	}
 }

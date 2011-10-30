@@ -25,8 +25,8 @@ import src.service.BetfairConnectionHandler;
 
 public class ToolBarPanel{
 
-	private CoolBar toolbar;
-	private CoolBar login;
+	private ToolBar toolbar;
+	private ToolBar login;
 
 	private static Logger log = Logger.getLogger(ToolBarPanel.class);
 
@@ -37,11 +37,11 @@ public class ToolBarPanel{
 		gridData.horizontalSpan = 2;
 
 		// Setting up the toolbar with the placeholders - due to the number of columns
-		this.toolbar = new CoolBar (shell, SWT.FLAT | SWT.RIGHT);
+		this.toolbar = new ToolBar (shell, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(gridData);		
 
 		// New widget menu
-		final CoolItem widgetItem = new CoolItem(toolbar,SWT.DROP_DOWN);
+		final ToolItem widgetItem = new ToolItem(toolbar,SWT.DROP_DOWN);
 		Image img = new Image(shell.getDisplay(),"images/plus_item.png");
 		widgetItem.setImage(img);
 		final Menu widgetDropDown = new Menu(shell,SWT.POP_UP);
@@ -77,7 +77,7 @@ public class ToolBarPanel{
 		toolbar.pack();
 
 		// Play button
-		final CoolItem playButtonItem = new CoolItem(toolbar,SWT.DROP_DOWN);
+		final ToolItem playButtonItem = new ToolItem(toolbar,SWT.DROP_DOWN);
 		Image play = new Image(shell.getDisplay(),"images/play.png");
 		playButtonItem.setImage(play);
 		final Menu playDropDown = new Menu(shell,SWT.POP_UP);
@@ -99,10 +99,10 @@ public class ToolBarPanel{
 		GridData loginData = new GridData();
 		loginData.horizontalSpan = 1;
 		loginData.horizontalAlignment = SWT.RIGHT;
-		this.login = new CoolBar (shell, SWT.FLAT | SWT.RIGHT);
+		this.login = new ToolBar (shell, SWT.FLAT | SWT.RIGHT);
 		login.setLayoutData(loginData);
 		// Log out/profile menu
-		final CoolItem profileItem = new CoolItem(login,SWT.DROP_DOWN);
+		final ToolItem profileItem = new ToolItem(login,SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
 		final Menu profileDropDown = new Menu(shell,SWT.POP_UP);
@@ -132,10 +132,10 @@ public class ToolBarPanel{
 
 	private class LeftDropDownListener implements Listener {
 
-		private CoolItem item; 
+		private ToolItem item; 
 		private Menu menu;
 
-		public LeftDropDownListener(CoolItem item, Menu menu){
+		public LeftDropDownListener(ToolItem item, Menu menu){
 			this.item = item;
 			this.menu = menu;
 		}
@@ -153,10 +153,10 @@ public class ToolBarPanel{
 
 	private class RightDropDownListener implements Listener {
 
-		private CoolItem item; 
+		private ToolItem item; 
 		private Menu menu;
 
-		public RightDropDownListener(CoolItem item, Menu menu){
+		public RightDropDownListener(ToolItem item, Menu menu){
 			this.item = item;
 			this.menu = menu;
 		}
