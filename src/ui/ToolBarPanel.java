@@ -169,7 +169,6 @@ public class ToolBarPanel{
 				menu.setVisible(true);
 			}
 		}
-
 	}
 
 }

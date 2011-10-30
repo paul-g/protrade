@@ -151,6 +151,7 @@ public class MarketDataGrid {
 	}
 
 	public void fillButtons(int pl, int backOrLay, ArrayList<Pair<Double,Double>> data) {
+		if (data == null) return;
 		if (pl == 1){
 			if (backOrLay == 1){
 				for (int i =0; i<data.size() && i<3; i++){
