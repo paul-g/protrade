@@ -34,7 +34,7 @@ public class PredictionGui {
   
   private void createScoreContents(Composite composite, String matchName) 
   {
-	  Image ball = new Image(composite.getDisplay(), "/home/radu/tennis-trader/lib/ball.gif");
+	  Image ball = new Image(composite.getDisplay(), "images/ball.gif");
 	  
 	  final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
 	  toolBar.setBounds(new Rectangle(331, 8, 100, 30));
