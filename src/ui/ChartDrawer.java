@@ -23,7 +23,7 @@ public class ChartDrawer {
 	static double [] xSeries2 = new double[60];
 	static double [] ySeries2 = new double[60];
 	static int i = 0;
-	
+	  
 	public ChartDrawer(Composite panel,String title){
 		chart = new Chart(panel,SWT.NONE);
 		chart.setSize(50, 100);
@@ -31,7 +31,6 @@ public class ChartDrawer {
 		chart.getAxisSet().getXAxis(0).getTitle().setText("Time in minutes");
 		chart.getAxisSet().getYAxis(0).getTitle().setText("Back Odds on Nadal");
 	}
-	
 	
 	
 	public static void showChart(){

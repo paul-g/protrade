@@ -11,7 +11,7 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
 
-import src.domain.*;
+import src.service.FracsoftReader;
 import src.ui.LoginShell;
 import src.utils.Encrypt;
 
@@ -27,6 +27,13 @@ public class Main {
   public static void main(String[] args) {
     // read the config file
     readConfigFile();
+    
+    // create a fracsoft reader
+    try { 
+        new FracsoftReader("fracsoft-data/fracsoft1.csv");
+    } catch (Exception e){
+      log.error(e.getMessage());
+    }
     
     // start up the app
     final Display display = new Display();
@@ -70,25 +77,4 @@ public class Main {
     log.info("username set to \'" + USERNAME + "\' password set to \'" + PASSWORD + "\'" );
   }
 
-  private static void printEvents(int level, EventMarketBetfair event) {
-      String msg = "";
-      for(int i = 0 ; i < level; i++)
-        msg += "\t";
-      msg += event.toString();
-      log.info(msg);
-      for (EventMarketBetfair e : event.getChildren()) {
-        printEvents(level + 1, e);
-      }
-    
-    /*
-    for (Tournament t : tournaments) {
-      log.info(t.toString());
-      for (EventMarketBetfair m : t.getChildren()) {
-        log.info("\t " + m.toString());
-      }
-    }
-    */
-  }
- 
- 
 }
