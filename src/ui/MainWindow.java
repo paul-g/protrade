@@ -105,8 +105,8 @@ public class MainWindow {
     item.setControl(browser);
   }
 
-  public void addNewTab() {
-    dp.addTab("New Tab");
+  public void addNewTab(String text) {
+    dp.addTab(text);
   }
 
   public Shell getShell(){
@@ -159,6 +159,10 @@ public class MainWindow {
         shell.close();
       }
     });
+  }
+  
+  public void dispose() {
+	  shell.dispose();
   }
 
 }
