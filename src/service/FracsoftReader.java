@@ -21,6 +21,7 @@ public class FracsoftReader {
   private List<FracsoftMatchData> matchDataList = new ArrayList<FracsoftMatchData>();
 
   public FracsoftReader(String filename) throws FileNotFoundException {
+    log.info("Creating fracsoft reader from file " + filename);
     String line;
     Scanner scanner = null;
       
@@ -37,14 +38,13 @@ public class FracsoftReader {
         line = scanner.nextLine();
         String[] lines = line.split(",");
 
-        log.info("split " + lines[0] + " " + lines[4] + " " + lines[5]);
+        //log.info("split " + lines[0] + " " + lines[4] + " " + lines[5]);
         
         matchDataList.add(new FracsoftMatchData(lines[0], lines[4], lines[5]));
 
       }
     } catch (FileNotFoundException e) {
       log.error(e.getMessage());
-      log.error("HAVE YOU ADDED A config.local FILE IN THE PROJECT ROOT?");
     }
 
     finally {
