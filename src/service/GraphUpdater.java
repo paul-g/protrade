@@ -32,13 +32,13 @@ public class GraphUpdater implements Runnable {
 	
 	@Override
 	public void run() {
-		comp.getDisplay().timerExec(2000, new Runnable() {
+		comp.getDisplay().timerExec(0, new Runnable() {
 			@Override
 			public void run() {
 				fillChartData(chart);
 				chart.redraw();
-				comp.update();
-				comp.getDisplay().timerExec(2000, this);
+				if (!comp.isDisposed()) comp.update();
+				comp.getDisplay().timerExec(1000, this);
 			}
 		});
 	}
