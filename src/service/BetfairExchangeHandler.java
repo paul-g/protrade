@@ -42,7 +42,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				// tournaments.add(new Match(ms.getMarketName(), "snd player",
 				// ms.getMarketId()));
 				if (ms.getMarketName().equals("Match Odds")) {
-					System.out.println("YES");
+					//System.out.println("YES");
 					marketOdds = ms;
 				}
 			}			
@@ -64,7 +64,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				//msg = showMarket(selectedExchange, selectedMarket, prices);				
 			}			
 		} catch (Exception e) {
-			log.info("Error fetching market info for the match");
+			log.info("Error fetching market info for the match - " + e.getMessage());
 		}
 		return modds;
 		//return msg;

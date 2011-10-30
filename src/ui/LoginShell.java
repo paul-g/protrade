@@ -1,6 +1,9 @@
 package src.ui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -86,6 +89,19 @@ public class LoginShell{
     
     Button testAccount = new Button(loginShell, SWT.NONE);
     testAccount.setText("Use Test Account");
+    testAccount.addListener(SWT.Selection, new Listener() {
+      public void handleEvent(Event arg0) {
+        String username = Main.USERNAME;
+        String password = Main.PASSWORD;
+        log.info("username " + username + " password " + password);
+       if (checkLogin(username, password )) {
+          updateResult(SUCCESS);
+          loginShell.dispose();
+          launchApp(display);
+        } else
+          updateResult(FAIL);
+      }
+    });
     
     GridData resultData = new GridData();
     resultData.horizontalSpan = 5; 
@@ -94,21 +110,13 @@ public class LoginShell{
     result.setText(FAIL.length() > SUCCESS.length() ? FAIL : SUCCESS);
     result.setVisible(false);
     
-    testAccount.addListener(SWT.Selection, new Listener() {
-      public void handleEvent(Event arg0) {
-          Main.USER = "corina409";
-          updateResult(SUCCESS);
-          loginShell.dispose();
-          launchApp(display);
-      }
-      
-    });
+
 
     login.addListener(SWT.Selection, new Listener() {
       public void handleEvent(Event event) {
         String user = username.getText();
         if (checkLogin(user, password.getText())) {
-          Main.USER = user; 
+          Main.USERNAME = user; 
           updateResult(SUCCESS);
           loginShell.dispose();
           launchApp(display);
@@ -186,4 +194,5 @@ public class LoginShell{
     new MainWindow(display);
   }
   
+
 }

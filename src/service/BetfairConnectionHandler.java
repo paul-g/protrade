@@ -76,7 +76,7 @@ public class BetfairConnectionHandler {
 			int tennisEventID = getTennisEventID();	
 			events = getEventData(tennisEventID);			
 		} catch (Exception e){
-			log.info("Failed to get Tennis Event ID");
+			log.info("Failed to get Tennis Event ID - " + e.getMessage());
 		}
 		// filter data to get tournaments and matches only
 		List<EventBetfair> tours = new ArrayList<EventBetfair>();
@@ -148,12 +148,6 @@ public class BetfairConnectionHandler {
 
 	// filter events to get only the list of matches
 	public static void filterMatches(Tournament tournament) {
-		/*
-		List<MarketBetfair> matches = new ArrayList<MarketBetfair>();
-		matches = getMatches(matches, eventBetfair);
-		eventBetfair.setChildren(new ArrayList<EventMarketBetfair>());
-		eventBetfair.getChildren().addAll(matches);
-		*/
 		List<Match> matches = new ArrayList<Match>();
 		matches = getMatches(matches, tournament.getEventBetfair());
 		tournament.setMatches(matches);
@@ -174,7 +168,7 @@ public class BetfairConnectionHandler {
 	}
 	
 	public static boolean isMatch(EventBetfair emb) {
-		return ((EventBetfair)emb).toString().contains(" v ");	
+		return emb.toString().contains(" v ");	
 	}
 	
 	public static Match getMatch(EventBetfair eb) {
