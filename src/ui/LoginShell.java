@@ -44,7 +44,7 @@ public class LoginShell{
     GridData gridData = new GridData();
     gridData.horizontalAlignment = GridData.FILL;
     gridData.horizontalSpan = 4;
-
+    
     Label loginLabel = new Label(loginShell, SWT.NONE);
     loginLabel.setText("Username: ");
 

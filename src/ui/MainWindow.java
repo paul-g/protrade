@@ -8,6 +8,7 @@ import org.eclipse.swt.browser.CloseWindowListener;
 import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.VisibilityWindowListener;
 import org.eclipse.swt.browser.WindowEvent;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
@@ -25,6 +26,9 @@ public class MainWindow {
   private Shell shell;
 
   private SashForm sashForm;
+  
+  
+  private SashForm sashFormLeft;
 
   private DisplayPanel dp;
 
@@ -64,10 +68,11 @@ public class MainWindow {
     sashForm.setLayoutData(layoutData);
     sashForm.setLayout(layout);
 
-
+    this.sashFormLeft = new SashForm(sashForm, SWT.VERTICAL);
+    
     sashForm.setFocus();
 
-    this.np = new NavigationPanel(sashForm);
+    this.np = new NavigationPanel(sashFormLeft);
     this.dp = new DisplayPanel(sashForm);
 
     np.addListener(dp);
@@ -91,18 +96,25 @@ public class MainWindow {
   }
 
   public void addPlayerStatistics(){
-    if (!np.isTabPresent("Player Statistics")) np.addTab("Player Statistics");
-    CTabItem item = np.getTab("Player Statistics");
+   
+    CTabFolder tabFolder = new CTabFolder(sashFormLeft, SWT.BORDER);
+    CTabItem cti = new CTabItem(tabFolder, SWT.CLOSE);
+    tabFolder.setSimple(false);
+    tabFolder.setMinimizeVisible(true);
+    tabFolder.setMaximizeVisible(true);
+
+    cti.setText("Player Statistics");
     final Browser browser;
     try {
-      browser = new Browser(np.getFolder(), SWT.NONE);
+      browser = new Browser(tabFolder, SWT.NONE);
     } catch (SWTError e) {
       log.error("Could not instantiate Browser: " + e.getMessage());
       return;
     }
+    cti.setControl(browser);
+    tabFolder.setSelection(cti);
     browser.setUrl("http://www.atpworldtour.com/Rankings/Singles.aspx");
-
-    item.setControl(browser);
+    sashFormLeft.layout();
   }
 
   public void addNewTab() {
@@ -113,7 +125,7 @@ public class MainWindow {
     return this.shell;
   }
 
-  static void initialize(final Display display, Browser browser) {
+ /* static void initialize(final Display display, Browser browser) {
     browser.addOpenWindowListener(new OpenWindowListener() {
       public void open(WindowEvent event) {
         Shell shell = new Shell(display);
@@ -133,7 +145,7 @@ public class MainWindow {
       public void show(WindowEvent event) {
         Browser browser = (Browser)event.widget;
         final Shell shell = browser.getShell();
-        /* popup blocker - ignore windows with no style */
+        // popup blocker - ignore windows with no style
         boolean isOSX = SWT.getPlatform().equals ("cocoa") || SWT.getPlatform().equals ("carbon");
         if (!event.addressBar && !event.statusBar && !event.toolBar && (!event.menuBar || isOSX)) {
           System.out.println("Popup blocked.");
@@ -159,6 +171,6 @@ public class MainWindow {
         shell.close();
       }
     });
-  }
+  }*/
 
 }
