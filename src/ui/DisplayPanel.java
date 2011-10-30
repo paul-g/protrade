@@ -6,6 +6,7 @@ import java.util.Random;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -13,6 +14,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -111,6 +113,61 @@ public class DisplayPanel implements Listener {
 			 * chartData.horizontalAlignment = SWT.FILL; //
 			 * chart.setLayoutData(chartData); charts.add(chart);
 			 */
+			
+			
+			//item.setControl(backs);
+			
+			Table table = new Table(comp, SWT.NONE);
+			
+			 table.setLinesVisible(true);
+			 table.setHeaderVisible(true);
+			 for (int i =0; i<3; i++){
+				 TableColumn column = new TableColumn(table,SWT.NONE);
+				 column.setText("Lay");
+			 }
+			 
+			 for (int i=0; i<2; i++){
+				 new TableItem(table, SWT.NONE);
+			 }
+			 table.addListener(SWT.MeasureItem, new Listener() {
+				   public void handleEvent(Event event) {
+				      // height cannot be per row so simply set
+				      event.height = 67;
+				   }
+				});
+			 TableItem[] tabitems = table.getItems();
+			 for (int i=0; i<2; i++){
+				 TableEditor editor = new TableEditor(table);
+				 Composite c = new Composite(table, SWT.NONE);
+				 c.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+				 
+				 GridLayout gl = new GridLayout(3,true);
+//				 gl.horizontalSpacing =0;
+//				 gl.marginWidth = 0;
+				 c.setLayout(gl);
+//				    
+//				 GridData gd = new GridData();
+//				
+////				 gd.verticalSpan = 2;
+////				 gd.verticalAlignment = GridData.FILL;
+				 Button b1 = new Button(c, SWT.PUSH);
+////				 b1.setLayoutData(gd);
+				 Button b2 = new Button(c, SWT.PUSH);
+				 Button b3  = new Button(c, SWT.PUSH);
+				 b1.setText("Button One");
+				 b2.setText("Button Two");
+				 b3.setText("Button Three");
+				 c.pack();
+				 editor.minimumWidth = c.getSize().x;
+				 
+			     editor.horizontalAlignment = SWT.LEFT;
+			     editor.setEditor(c, tabitems[i], 2);
+			 }
+			 
+			 for (int i = 0; i < 3; i++) {
+			      table.getColumn(i).pack();
+			    }
+	//		    table.setSize(table.computeSize(SWT.DEFAULT, 200));
 
 			MOddsMarketData modds = BetfairExchangeHandler
 					.getMarketOdds(NavigationPanel.getMatch(ti)
@@ -128,9 +185,7 @@ public class DisplayPanel implements Listener {
 			mdGrid.fillButtons(2, 1, modds.getPl2Back());
 			mdGrid.fillButtons(2, 2, modds.getPl2Lay());
 
-			addPredictionGui(comp, ti.getText());
-
-			item.setControl(comp);
+		
 			addPredictionGui(comp, ti.getText());
 
 			item.setControl(comp);
@@ -148,29 +203,29 @@ public class DisplayPanel implements Listener {
 			// just bring the required tab under focus
 			folder.setSelection(pos);
 	}
-	
+
 	private void setOnClickMenu() {
 		Menu popup = new Menu(folder);
-		MenuItem openItem = new MenuItem(popup,SWT.NONE);
+		MenuItem openItem = new MenuItem(popup, SWT.NONE);
 		openItem.setText("Open in a new window");
-		MenuItem closeItem = new MenuItem(popup,SWT.NONE);
+		MenuItem closeItem = new MenuItem(popup, SWT.NONE);
 		closeItem.setText("Close");
 		folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
 	}
-	
+
 	private class RightClickListener implements Listener {
 		private Menu menu;
-		
-		public RightClickListener (Menu menu) {
+
+		public RightClickListener(Menu menu) {
 			this.menu = menu;
 		}
 
 		@Override
 		public void handleEvent(Event event) {
-			Point click = new Point(event.x,event.y);
-			Point point = folder.getDisplay().map(null, folder, click); 
+			Point click = new Point(event.x, event.y);
+			Point point = folder.getDisplay().map(null, folder, click);
 			CTabItem item = folder.getItem(point);
-			if (item != null) { 
+			if (item != null) {
 				menu.setLocation(click);
 				menu.setVisible(true);
 			}
