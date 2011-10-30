@@ -1,7 +1,13 @@
 package src.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+import src.domain.EventBetfair;
+import src.domain.MOddsMarketData;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -17,8 +23,11 @@ import org.swtchart.ISeries.SeriesType;
 public class GraphUpdater implements Runnable {
 	private Chart chart;
 	private Composite comp;
+	private List<EventBetfair> events;
+	private static Logger log = Logger.getLogger(GraphUpdater.class);
 
-	public GraphUpdater(String chartTitle, Composite comp) {
+	public GraphUpdater(/*String chartTitle,*/ Composite comp) {
+		/*
 		chart = new Chart(comp, SWT.NONE);
 		chart.getTitle().setText(chartTitle);
 		GridData chartData = new GridData();
@@ -27,11 +36,23 @@ public class GraphUpdater implements Runnable {
 		// chart.setLayoutData(chartData);
 		//charts.add(chart);
 		//this.chart = chart;
-		this.comp = comp;		
+		 * */
+		this.comp = comp;
+				
+		events = new ArrayList<EventBetfair>();
+	}
+	
+	public void addEvent(EventBetfair eb) {
+		events.add(eb);
+	}
+	
+	public List<EventBetfair> getEvents() {
+		return events;
 	}
 	
 	@Override
 	public void run() {
+		/*
 		comp.getDisplay().timerExec(0, new Runnable() {
 			@Override
 			public void run() {
@@ -41,8 +62,40 @@ public class GraphUpdater implements Runnable {
 				comp.getDisplay().timerExec(1000, this);
 			}
 		});
+		*/
+		
+		comp.getDisplay().timerExec(5000, new Runnable() {
+			@Override
+			public void run() {
+				
+				HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
+				for (EventBetfair eb : events) {
+					newMap.put(eb, BetfairExchangeHandler.getMarketOdds(eb));
+				}
+				LiveDataFetcher.handleEvent(newMap);
+				
+				comp.getDisplay().timerExec(5000, this);
+			}
+		});
+		
+		/*
+		while (true) {
+			HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
+			for (EventBetfair eb : events) {
+				newMap.put(eb, BetfairExchangeHandler.getMarketOdds(eb));
+			}
+			LiveDataFetcher.handleEvent(newMap);
+			log.info("done reading values once");
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				log.error("GraphUpdater interrupted " + e.getMessage());
+			}
+		}
+		*/
 	}
 	
+	/*
 	private void fillChartData(Chart chart) {
 		// temporarily for filling charts with random data
 		double[] xSeries = new double[60];
@@ -74,5 +127,5 @@ public class GraphUpdater implements Runnable {
 		axisSet.adjustRange();
 		// end filling charts
 	}
-
+	*/
 }

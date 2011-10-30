@@ -117,60 +117,15 @@ public class MainWindow {
     sashFormLeft.layout();
   }
 
-  public void addNewTab() {
-    dp.addTab("New Tab");
+  public void addNewTab(String text) {
+    dp.addTab(text);
   }
 
   public Shell getShell(){
     return this.shell;
   }
 
- /* static void initialize(final Display display, Browser browser) {
-    browser.addOpenWindowListener(new OpenWindowListener() {
-      public void open(WindowEvent event) {
-        Shell shell = new Shell(display);
-        shell.setText("New Window");
-        shell.setLayout(new FillLayout());
-        Browser browser = new Browser(shell, SWT.NONE);
-        initialize(display, browser);
-        event.browser = browser;
-      }
-    });
-    browser.addVisibilityWindowListener(new VisibilityWindowListener() {
-      public void hide(WindowEvent event) {
-        Browser browser = (Browser)event.widget;
-        Shell shell = browser.getShell();
-        shell.setVisible(false);
-      }
-      public void show(WindowEvent event) {
-        Browser browser = (Browser)event.widget;
-        final Shell shell = browser.getShell();
-        // popup blocker - ignore windows with no style
-        boolean isOSX = SWT.getPlatform().equals ("cocoa") || SWT.getPlatform().equals ("carbon");
-        if (!event.addressBar && !event.statusBar && !event.toolBar && (!event.menuBar || isOSX)) {
-          System.out.println("Popup blocked.");
-          event.display.asyncExec(new Runnable() {
-            public void run() {
-              shell.close();
-            }
-          });
-          return;
-        }
-        if (event.location != null) shell.setLocation(event.location);
-        if (event.size != null) {
-          Point size = event.size;
-          shell.setSize(shell.computeSize(size.x, size.y));
-        }
-        shell.open();
-      }
-    });
-    browser.addCloseWindowListener(new CloseWindowListener() {
-      public void close(WindowEvent event) {
-        Browser browser = (Browser)event.widget;
-        Shell shell = browser.getShell();
-        shell.close();
-      }
-    });
-  }*/
-
+  public void dispose() {
+	  shell.dispose();
+  }
 }

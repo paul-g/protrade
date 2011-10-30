@@ -3,6 +3,7 @@ package src.ui;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -33,9 +34,11 @@ import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
 import src.domain.MOddsMarketData;
+import src.domain.UpdatableChart;
 import src.score.PredictionGui;
 import src.service.BetfairExchangeHandler;
 import src.service.GraphUpdater;
+import src.service.LiveDataFetcher;
 
 public class DisplayPanel implements Listener {
 
@@ -135,14 +138,24 @@ public class DisplayPanel implements Listener {
 
 			item.setControl(comp);
 
-			GraphUpdater gu = new GraphUpdater(ti.getText(), comp);
-
+			UpdatableChart chart = new UpdatableChart(comp, SWT.NONE);
+			chart.getTitle().setText(ti.getText()); 
+			GridData chartData = new GridData(); 
+			chartData.horizontalSpan = 2; 
+			//chartData.horizontalAlignment = SWT.FILL;
+			//chart.setLayoutData(chartData); charts.add(chart);
+			
+			Logger log = Logger.getLogger(DisplayPanel.class);
+			log.info("created chart, now got o register");
+			//GraphUpdater gu = new GraphUpdater(ti.getText(), comp);
+			LiveDataFetcher.register(chart, NavigationPanel.getMatch(ti), comp);
+			log.info("Out of register");
 			// temporarily for filling charts with random data
 			// fillChartData2(chart);
 
 			comp.update();
 
-			gu.run();
+			//gu.run();
 
 		} else
 			// just bring the required tab under focus
