@@ -73,8 +73,8 @@ public class GraphUpdater implements Runnable {
 					newMap.put(eb, BetfairExchangeHandler.getMarketOdds(eb));
 				}
 				LiveDataFetcher.handleEvent(newMap);
-				
-				comp.getDisplay().timerExec(5000, this);
+				if (!comp.isDisposed())
+					comp.getDisplay().timerExec(5000, this);
 			}
 		});
 		
