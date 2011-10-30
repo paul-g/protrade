@@ -1,5 +1,7 @@
 package src.ui;
 
+import java.io.FileNotFoundException;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -22,6 +25,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import src.Main;
 import src.service.BetfairConnectionHandler;
+import src.service.FracsoftReader;
 
 public class ToolBarPanel{
 
@@ -31,7 +35,7 @@ public class ToolBarPanel{
 	private static Logger log = Logger.getLogger(ToolBarPanel.class);
 
 	public ToolBarPanel (final MainWindow mainWindow) {
-		Shell shell = mainWindow.getShell();
+		final Shell shell = mainWindow.getShell();
 		// Setting span throughout the columns
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 2;
@@ -88,8 +92,27 @@ public class ToolBarPanel{
 			@Override
 			public void handleEvent(Event arg0) {
 				
-				/* PAUL -> YOUR CODE GOES HERE */
-				
+			  FileDialog dialog = new FileDialog (shell, SWT.SAVE);
+			  String [] filterNames = new String [] {"CSV Files", "All Files (*)"};
+			  String [] filterExtensions = new String [] {"*.csv", "*"};
+			  String filterPath = "/";
+			  String platform = SWT.getPlatform();
+			  if (platform.equals("win32") || platform.equals("wpf")) {
+			    filterNames = new String [] {"CSV Files", "All Files (*.*)"};
+			    filterExtensions = new String [] {"*.csv", "*.*"};
+			    filterPath = "c:\\";
+			  }
+			  dialog.setFilterNames (filterNames);
+			  dialog.setFilterExtensions (filterExtensions);
+			  dialog.setFilterPath (filterPath);
+			  dialog.setFileName ("myfile");
+			  
+			  // TODO: link with thread updater
+			  try {
+			    new FracsoftReader(dialog.open());
+			  } catch (FileNotFoundException e){
+			    log.error(e.getMessage());
+			  }
 			}
 			
 		});
