@@ -9,6 +9,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -23,8 +25,8 @@ import src.service.BetfairConnectionHandler;
 
 public class ToolBarPanel{
 
-	private ToolBar toolbar;
-	private ToolBar login;
+	private CoolBar toolbar;
+	private CoolBar login;
 
 	private static Logger log = Logger.getLogger(ToolBarPanel.class);
 
@@ -35,14 +37,13 @@ public class ToolBarPanel{
 		gridData.horizontalSpan = 2;
 
 		// Setting up the toolbar with the placeholders - due to the number of columns
-		this.toolbar = new ToolBar (shell, SWT.FLAT | SWT.RIGHT);
+		this.toolbar = new CoolBar (shell, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(gridData);		
 
 		// New widget menu
-		final ToolItem widgetItem = new ToolItem(toolbar,SWT.DROP_DOWN);
+		final CoolItem widgetItem = new CoolItem(toolbar,SWT.DROP_DOWN);
 		Image img = new Image(shell.getDisplay(),"images/plus_item.png");
 		widgetItem.setImage(img);
-		widgetItem.setToolTipText("Click to view your profile");
 		final Menu widgetDropDown = new Menu(shell,SWT.POP_UP);
 		MenuItem matchNavigator = new MenuItem(widgetDropDown,SWT.PUSH);
 		matchNavigator.setText("Match Navigator");
@@ -76,10 +77,9 @@ public class ToolBarPanel{
 		toolbar.pack();
 
 		// Play button
-		final ToolItem playButtonItem = new ToolItem(toolbar,SWT.DROP_DOWN);
+		final CoolItem playButtonItem = new CoolItem(toolbar,SWT.DROP_DOWN);
 		Image play = new Image(shell.getDisplay(),"images/play.png");
 		playButtonItem.setImage(play);
-		playButtonItem.setToolTipText("Click to view your profile");
 		final Menu playDropDown = new Menu(shell,SWT.POP_UP);
 		MenuItem playItem = new MenuItem(playDropDown,SWT.PUSH);
 		playItem.setText("From File");
@@ -99,13 +99,12 @@ public class ToolBarPanel{
 		GridData loginData = new GridData();
 		loginData.horizontalSpan = 1;
 		loginData.horizontalAlignment = SWT.RIGHT;
-		this.login = new ToolBar (shell, SWT.FLAT | SWT.RIGHT);
+		this.login = new CoolBar (shell, SWT.FLAT | SWT.RIGHT);
 		login.setLayoutData(loginData);
 		// Log out/profile menu
-		final ToolItem profileItem = new ToolItem(login,SWT.DROP_DOWN);
+		final CoolItem profileItem = new CoolItem(login,SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
-		profileItem.setToolTipText("Click to view your profile");
 		final Menu profileDropDown = new Menu(shell,SWT.POP_UP);
 		MenuItem logout = new MenuItem(profileDropDown,SWT.PUSH);
 		logout.setText("Log out");
@@ -133,10 +132,10 @@ public class ToolBarPanel{
 
 	private class LeftDropDownListener implements Listener {
 
-		private ToolItem item; 
+		private CoolItem item; 
 		private Menu menu;
 
-		public LeftDropDownListener(ToolItem item, Menu menu){
+		public LeftDropDownListener(CoolItem item, Menu menu){
 			this.item = item;
 			this.menu = menu;
 		}
@@ -154,10 +153,10 @@ public class ToolBarPanel{
 
 	private class RightDropDownListener implements Listener {
 
-		private ToolItem item; 
+		private CoolItem item; 
 		private Menu menu;
 
-		public RightDropDownListener(ToolItem item, Menu menu){
+		public RightDropDownListener(CoolItem item, Menu menu){
 			this.item = item;
 			this.menu = menu;
 		}
