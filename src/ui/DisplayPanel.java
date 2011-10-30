@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -17,6 +18,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -52,6 +56,7 @@ public class DisplayPanel implements Listener {
 		gridData.grabExcessVerticalSpace = true;
 
 		folder.setLayoutData(gridData);
+		setOnClickMenu();
 
 		charts = new ArrayList<Chart>();
 	}
@@ -142,6 +147,34 @@ public class DisplayPanel implements Listener {
 		} else
 			// just bring the required tab under focus
 			folder.setSelection(pos);
+	}
+	
+	private void setOnClickMenu() {
+		Menu popup = new Menu(folder);
+		MenuItem openItem = new MenuItem(popup,SWT.NONE);
+		openItem.setText("Open in a new window");
+		MenuItem closeItem = new MenuItem(popup,SWT.NONE);
+		closeItem.setText("Close");
+		folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
+	}
+	
+	private class RightClickListener implements Listener {
+		private Menu menu;
+		
+		public RightClickListener (Menu menu) {
+			this.menu = menu;
+		}
+
+		@Override
+		public void handleEvent(Event event) {
+			Point click = new Point(event.x,event.y);
+			Point point = folder.getDisplay().map(null, folder, click); 
+			CTabItem item = folder.getItem(point);
+			if (item != null) { 
+				menu.setLocation(click);
+				menu.setVisible(true);
+			}
+		}
 	}
 
 	/*

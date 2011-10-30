@@ -31,13 +31,13 @@ public class MenuPanel {
 	    fileMenuHeader.setMenu(fileMenu);
 
 	    MenuItem fileCreateItem = new MenuItem(fileMenu, SWT.PUSH);
-	    fileCreateItem.setText("New &Widget");
+	    fileCreateItem.setText("New &Tab");
 	    fileCreateItem.addSelectionListener(new CreateListener());
 
 	    MenuItem fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("E&xit");
 	    fileExitItem.addSelectionListener(new FileExitListener());
-
+/*
 		// Edit button
 		MenuItem editMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		editMenuHeader.setText("&Edit");
@@ -49,7 +49,7 @@ public class MenuPanel {
 
 	    MenuItem fileEditItem = new MenuItem(editMenu, SWT.PUSH);
 	    fileEditItem.setText("E&dit");
-
+*/
 		
 		// About button
 		MenuItem aboutMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
