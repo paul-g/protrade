@@ -91,18 +91,16 @@ public class LoginShell{
         password.setText("");
       }     
     });
-
-    // TODO: for testing only
+    /*
     Button bypass = new Button(loginShell, SWT.NONE);
-    bypass.setText("Bypass");
-    
+    bypass.setText("Bypass");    
     bypass.addListener(SWT.Selection, new Listener() {
       public void handleEvent(Event event) {
           loginShell.dispose();
           launchApp(display);         
       }
     });
-    
+    */
     Button testAccount = new Button(loginShell, SWT.NONE);
     testAccount.setText("Use Test Account");
     testAccount.addListener(SWT.Selection, new Listener() {

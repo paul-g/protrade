@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 
 import src.Main;
@@ -26,7 +27,7 @@ public class PredictionGui {
 
     
     Composite comp = new Composite(composite, SWT.BORDER);
-    comp.setLayout(new GridLayout());
+    comp.setLayout(new FillLayout());
     // comp.setBounds(0, 0, 500, 500);
     // comp.update();
     
@@ -38,8 +39,10 @@ public class PredictionGui {
     // System.out.println(match.substring(match.indexOf("n")));
     } catch (Exception e){
       // if something goes wrong
-      log.error(e.getMessage());
-    }
+      log.error(e.getMessage() + " ");
+      e.printStackTrace();
+      //throw new RuntimeException();
+   }     
 
   }
 
@@ -123,7 +126,7 @@ public class PredictionGui {
     } else {
       c++;
     }
-
+/*
     scores = scores.substring(matchIndex, scores.length());
     String player1 = scores.substring(0, scores.indexOf(")") + 1);
     scores = scores.substring(scores.indexOf("\n") + 1, scores.length());
@@ -185,7 +188,7 @@ public class PredictionGui {
     item2.setText(c++, scores.substring(0, 2));
 
     // //////////////END of Player 2 data
-
+*/
     table.setRedraw(true);
 
     for (int i = 0, n = column.length; i < n; i++) {

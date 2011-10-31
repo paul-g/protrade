@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import src.domain.MOddsMarketData;
 import src.domain.UpdatableChart;
+import src.domain.UpdatableMarketDataGrid;
 import src.score.PredictionGui;
 import src.service.BetfairExchangeHandler;
 import src.service.LiveDataFetcher;
@@ -73,7 +74,7 @@ public class DisplayPanel implements Listener {
         TreeItem ti = (TreeItem) event.item;
 
         // if it's not a match, don't display
-        if ( !MatchUtils.isMatch(ti.getText()))
+        if ( !MatchUtils.isMatch(ti.getText()) )
             return;
 
         CTabItem[] items = folder.getItems();
@@ -86,7 +87,6 @@ public class DisplayPanel implements Listener {
 
         // check new tab has been open
         if (pos == -1) {
-
             CTabItem item = new CTabItem(folder, SWT.CLOSE);
             item.setText(ti.getText());
             folder.setSelection(item);
@@ -97,6 +97,7 @@ public class DisplayPanel implements Listener {
             addMatchData(comp, ti);
             
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
+            horizontal.setLayout(new FillLayout());
             addMarketDataGrid(horizontal, ti);
 
             if (MatchUtils.inPlay(ti))
@@ -158,54 +159,12 @@ public class DisplayPanel implements Listener {
      * @param ti
      */
     private void addMarketDataGrid(Composite comp, TreeItem ti) {
-        Table table = new Table(comp, SWT.BORDER);
-
-        table.setLinesVisible(true);
-        table.setHeaderVisible(true);
-        for (int i = 0; i < 3; i++) {
-            TableColumn column = new TableColumn(table, SWT.NONE);
-            column.setText("Lay");
-        }
-
-        for (int i = 0; i < 2; i++) {
-            new TableItem(table, SWT.NONE);
-        }
-        table.addListener(SWT.MeasureItem, new Listener() {
-            public void handleEvent(Event event) {
-                // height cannot be per row so simply set
-                event.height = 67;
-            }
-        });
-        TableItem[] tabitems = table.getItems();
-        for (int i = 0; i < 2; i++) {
-            TableEditor editor = new TableEditor(table);
-            Composite c = new Composite(table, SWT.NONE);
-            c.setBackground(Display.getCurrent()
-                    .getSystemColor(SWT.COLOR_WHITE));
-
-            GridLayout gl = new GridLayout(3, true);
-            c.setLayout(gl);
-
-            Button b1 = new Button(c, SWT.PUSH);
-            Button b2 = new Button(c, SWT.PUSH);
-            Button b3 = new Button(c, SWT.PUSH);
-            b1.setText("Button One");
-            b2.setText("Button Two");
-            b3.setText("Button Three");
-            c.pack();
-            editor.minimumWidth = c.getSize().x;
-
-            editor.horizontalAlignment = SWT.LEFT;
-            editor.setEditor(c, tabitems[i], 2);
-        }
-
-        for (int i = 0; i < 3; i++) {
-            table.getColumn(i).pack();
-        }
-
+        //Table table = new Table(comp, SWT.BORDER);
+    	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
+        /*
         MOddsMarketData modds = BetfairExchangeHandler
                 .getMarketOdds(NavigationPanel.getMatch(ti).getEventBetfair());
-       /* MarketDataGrid mdGrid;
+        MarketDataGrid mdGrid;
         try {
             mdGrid = createMarketGrid(comp, ti.getText());
         } catch (Exception e) {

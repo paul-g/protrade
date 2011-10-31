@@ -2,12 +2,9 @@ package src.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
-
 import src.Pair;
 
 public class MOddsMarketData {
-
 	ArrayList<Pair<Double,Double>> pl1Lay;
 	ArrayList<Pair<Double,Double>> pl1Back;
 	ArrayList<Pair<Double,Double>> pl2Lay;
@@ -18,8 +15,8 @@ public class MOddsMarketData {
 	String location;
 	int delay;
 	
-	public MOddsMarketData(){
-		
+	public MOddsMarketData(){	
+		this.delay = 0;
 	}
 
 	public ArrayList<Pair<Double,Double>> getPl1Lay() {

@@ -2,24 +2,20 @@ package src.domain;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.swtchart.Chart;
-import org.swtchart.IAxisSet;
 import org.swtchart.ILineSeries;
-import org.swtchart.ISeries;
 import org.swtchart.ISeriesSet;
-import org.swtchart.Range;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
     private ILineSeries firstSeries;
     // private ILineSeries secondSeries;
-    private int sampleSize = 5;
+    private int sampleSize = 30;
 
     public UpdatableChart(Composite parent, int style) {
         super(parent, style);
@@ -47,16 +43,14 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
      * Populates the chart with the given market data
      */
     public void fillData(MOddsMarketData data) {
-
         Date[] newXSeries;
-        double[] newYSeries;
-        
+        double[] newYSeries;        
         int i = 0;
-
+        // if graph already displaying values
         if (firstSeries.getYSeries() != null) {
             Date[] prevXSeries = firstSeries.getXDateSeries();
             double[] prevYSeries = firstSeries.getYSeries();
-
+            // if not reached max sample size
             if (prevXSeries.length < sampleSize) {
                 newXSeries = new Date[prevXSeries.length + 1];
                 newYSeries = new double[prevXSeries.length + 1];
@@ -64,8 +58,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
                     newXSeries[i] = prevXSeries[i];
                     newYSeries[i] = prevYSeries[i];
                 }
-            } else {
-                
+            } else { // discard least recent value
                 newXSeries = new Date[sampleSize];
                 newYSeries = new double[sampleSize];
                 for (i = 1; i < sampleSize; i++) {
@@ -78,20 +71,22 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
             newXSeries = new Date[1];
             newYSeries = new double[1];
         }
-
+        
         newXSeries[i] = Calendar.getInstance().getTime();
-        if ( data.getPl1Back() != null)
+        // if data has been read from Betfair
+        if (data.getPl1Back() != null)
             newYSeries[i] = data.getPl1Back().get(0).getI();
         else
-            if ( i > 0 )
+            if ( i > 0 ) // keep previous value if it exists
                 newYSeries[i] = newYSeries[i-1];
-            else
+            else // put zero if no previous value
                 newYSeries[i] = 0;
 
         // set first series values
         firstSeries.setXDateSeries(newXSeries);
         firstSeries.setYSeries(newYSeries);
-        this.getAxisSet().adjustRange();
+        if (!this.isDisposed())
+        	this.getAxisSet().adjustRange();
     }
 
     /*
@@ -110,7 +105,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
                         chart.redraw();
                     if (!comp.isDisposed())
                         comp.update();
-                    // comp.getDisplay().timerExec(1000, this);
                 }
             });
         }

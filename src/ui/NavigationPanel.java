@@ -146,8 +146,7 @@ public class NavigationPanel {
 		for (Tournament t : tours) {
 			TreeItem item = new TreeItem(tree, SWT.NONE);
 			item.setText(t.toString());
-			matchMap.put(item, new Match("pl1", "Pl 2", null)); // to avoid
-																// NullPointerException
+			matchMap.put(item, new Match("pl1", "Pl 2", null)); // to avoid NullPointerException
 
 			for (Match m : t.getMatches()) {
 				TreeItem child = new TreeItem(item, SWT.NONE);

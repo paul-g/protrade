@@ -24,7 +24,7 @@ public class LiveDataFetcher {
 			betfairDataUpdater = new BetfairDataUpdater(comp);
 			first = true;
 		}
-		betfairDataUpdater.addEvent(match.getEventBetfair());
+		betfairDataUpdater.addEvent(match);
 		listeners.put(match.getEventBetfair().getBetfairId(), widget);
 		log.info("go to run thread");
 		if (first) {
