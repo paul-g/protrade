@@ -1,8 +1,13 @@
 package src.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import src.Pair;
 import src.demo.handler.ExchangeAPI;
 import src.demo.handler.GlobalAPI;
 import src.demo.handler.ExchangeAPI.Exchange;
@@ -10,6 +15,7 @@ import src.demo.util.InflatedMarketPrices;
 import src.demo.util.InflatedMarketPrices.InflatedPrice;
 import src.demo.util.InflatedMarketPrices.InflatedRunner;
 import src.domain.EventBetfair;
+import src.domain.MOddsMarketData;
 import src.domain.MarketBetfair;
 import src.generated.exchange.BFExchangeServiceStub.Market;
 import src.generated.exchange.BFExchangeServiceStub.Runner;
@@ -20,8 +26,8 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);
 	
 	// returns a string with Match Odds info
-	public static String getMarketOdds(EventBetfair m) {
-		String msg = "";
+	public static MOddsMarketData getMarketOdds(EventBetfair m) {
+		MOddsMarketData modds = new MOddsMarketData();
 		try {
 			GetEventsResp resp = GlobalAPI.getEvents(apiContext, m
 					.getBetfairId());
@@ -46,12 +52,22 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				Market selectedMarket = ExchangeAPI.getMarket(selectedExchange, apiContext, marketOdds.getMarketId());			
 				InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(selectedExchange, apiContext, selectedMarket.getMarketId());				
 				//Display.showMarket(selectedExchange, selectedMarket, prices);
-				msg = showMarket(selectedExchange, selectedMarket, prices);				
+				modds.setExchange(selectedExchange.toString());
+				modds.setDate(selectedMarket.getMarketTime().getTime());
+				modds.setMatchStatus(selectedMarket.getMarketStatus().toString());
+				modds.setLocation(selectedMarket.getCountryISO3());
+				modds.setPl1Back(setBack(prices,1));
+				modds.setPl2Back(setBack(prices,2));
+				modds.setPl1Lay(setLay(prices,1));
+				modds.setPl2Lay(setLay(prices,2));
+				
+				//msg = showMarket(selectedExchange, selectedMarket, prices);				
 			}			
 		} catch (Exception e) {
 			log.info("Error fetching market info for the match - " + e.getMessage());
 		}
-		return msg;
+		return modds;
+		//return msg;
 	}
 	
 	// Returns the string containing the given market info
@@ -91,4 +107,32 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		msg += ("") + "\n";
 		return msg;
 	}
+	
+		public static ArrayList<Pair<Double,Double>> setBack(InflatedMarketPrices prices, int nr){
+			if (prices.getRunners().size() >= 2){
+				InflatedRunner r = prices.getRunners().get(nr-1);
+				ArrayList<Pair<Double,Double>>result = new ArrayList<Pair<Double,Double>>();
+				for( InflatedPrice p : r.getBackPrices()){
+					result.add(new Pair<Double,Double>(p.getPrice(),p.getAmountAvailable()));
+				}
+				return result;
+			} 
+			return null;
+		}
+		
+		public static ArrayList<Pair<Double,Double>> setLay(InflatedMarketPrices prices, int nr){
+			if (prices.getRunners().size() >= 2){
+				InflatedRunner r = prices.getRunners().get(nr-1);
+				ArrayList<Pair<Double,Double>>result = new ArrayList<Pair<Double,Double>>();
+				for( InflatedPrice p : r.getLayPrices()){
+					result.add(new Pair<Double,Double>(p.getPrice(),p.getAmountAvailable()));
+				}
+				return result;
+			} 
+			return null;
+		}
+		
+		
+	
+	
 }

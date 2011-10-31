@@ -3,19 +3,30 @@ package src.ui;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.swtchart.Chart;
 import org.swtchart.IAxisSet;
@@ -24,9 +35,12 @@ import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
+import src.domain.MOddsMarketData;
+import src.domain.UpdatableChart;
 import src.score.PredictionGui;
 import src.service.BetfairExchangeHandler;
-import src.service.GraphUpdater;
+import src.service.BetfairDataUpdater;
+import src.service.LiveDataFetcher;
 
 public class DisplayPanel implements Listener {
 
@@ -47,8 +61,24 @@ public class DisplayPanel implements Listener {
 		gridData.grabExcessVerticalSpace = true;
 
 		folder.setLayoutData(gridData);
+		setOnClickMenu();
 
 		charts = new ArrayList<Chart>();
+	}
+
+	public void addTab(String text) {
+		CTabItem cti = new CTabItem(folder, SWT.CLOSE);
+		cti.setText(text);
+		folder.setSelection(cti);
+	}
+
+	private void addPredictionGui(Composite composite, String title) {
+		new PredictionGui(composite, title);
+	}
+
+	private MarketDataGrid createMarketGrid(Composite composite, String title)
+			throws Exception {
+		return new MarketDataGrid(composite, title);
 	}
 
 	public void handleEvent(Event event) {
@@ -80,80 +110,158 @@ public class DisplayPanel implements Listener {
 			comp.setLayout(fillLayout);
 
 			/*
-			Chart chart = new Chart(comp, SWT.NONE);
-			chart.getTitle().setText(ti.getText());
-			GridData chartData = new GridData();
-			chartData.horizontalSpan = 2;
-			// chartData.horizontalAlignment = SWT.FILL;
-			// chart.setLayoutData(chartData);
-			charts.add(chart);
-			*/
+			 * Chart chart = new Chart(comp, SWT.NONE);
+			 * chart.getTitle().setText(ti.getText()); GridData chartData = new
+			 * GridData(); chartData.horizontalSpan = 2; //
+			 * chartData.horizontalAlignment = SWT.FILL; //
+			 * chart.setLayoutData(chartData); charts.add(chart);
+			 */
+			
+			
+			//item.setControl(backs);
+			
+			Table table = new Table(comp, SWT.NONE);
+			
+			 table.setLinesVisible(true);
+			 table.setHeaderVisible(true);
+			 for (int i =0; i<3; i++){
+				 TableColumn column = new TableColumn(table,SWT.NONE);
+				 column.setText("Lay");
+			 }
+			 
+			 for (int i=0; i<2; i++){
+				 new TableItem(table, SWT.NONE);
+			 }
+			 table.addListener(SWT.MeasureItem, new Listener() {
+				   public void handleEvent(Event event) {
+				      // height cannot be per row so simply set
+				      event.height = 67;
+				   }
+				});
+			 TableItem[] tabitems = table.getItems();
+			 for (int i=0; i<2; i++){
+				 TableEditor editor = new TableEditor(table);
+				 Composite c = new Composite(table, SWT.NONE);
+				 c.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+				 
+				 GridLayout gl = new GridLayout(3,true);
+//				 gl.horizontalSpacing =0;
+//				 gl.marginWidth = 0;
+				 c.setLayout(gl);
+//				    
+//				 GridData gd = new GridData();
+//				
+////				 gd.verticalSpan = 2;
+////				 gd.verticalAlignment = GridData.FILL;
+				 Button b1 = new Button(c, SWT.PUSH);
+////				 b1.setLayoutData(gd);
+				 Button b2 = new Button(c, SWT.PUSH);
+				 Button b3  = new Button(c, SWT.PUSH);
+				 b1.setText("Button One");
+				 b2.setText("Button Two");
+				 b3.setText("Button Three");
+				 c.pack();
+				 editor.minimumWidth = c.getSize().x;
+				 
+			     editor.horizontalAlignment = SWT.LEFT;
+			     editor.setEditor(c, tabitems[i], 2);
+			 }
+			 
+			 for (int i = 0; i < 3; i++) {
+			      table.getColumn(i).pack();
+			    }
+	//		    table.setSize(table.computeSize(SWT.DEFAULT, 200));
 
-			Label marketData = new Label(comp, SWT.NONE);
-			marketData.setText(BetfairExchangeHandler
+			MOddsMarketData modds = BetfairExchangeHandler
 					.getMarketOdds(NavigationPanel.getMatch(ti)
-							.getEventBetfair()));
+							.getEventBetfair());
+			MarketDataGrid mdGrid;
+			try {
+				mdGrid = createMarketGrid(comp, ti.getText());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			mdGrid.fillButtons(1, 1, modds.getPl1Back());
+			mdGrid.fillButtons(1, 2, modds.getPl1Lay());
+			mdGrid.fillButtons(2, 1, modds.getPl2Back());
+			mdGrid.fillButtons(2, 2, modds.getPl2Lay());
 
+		
 			addPredictionGui(comp, ti.getText());
 
-			item.setControl(comp);		
-									
-			GraphUpdater gu = new GraphUpdater(ti.getText(), comp);
-						
-			// temporarily for filling charts with random data
-			//fillChartData2(chart);
+			item.setControl(comp);
 
-			comp.update();			
+			UpdatableChart chart = new UpdatableChart(comp, SWT.NONE);
+			chart.getTitle().setText(ti.getText()); 
+			GridData chartData = new GridData(); 
+			chartData.horizontalSpan = 2; 
+			//chartData.horizontalAlignment = SWT.FILL;
+			//chart.setLayoutData(chartData); charts.add(chart);
 			
-			gu.run();
-			
+			Logger log = Logger.getLogger(DisplayPanel.class);
+			log.info("created chart, now got o register");
+			//BetfairDataUpdater gu = new BetfairDataUpdater(ti.getText(), comp);
+			LiveDataFetcher.register(chart, NavigationPanel.getMatch(ti), comp);
+			log.info("Out of register");
+			// temporarily for filling charts with random data
+			// fillChartData2(chart);
+
+			comp.update();
+
+			//gu.run();
+
 		} else
 			// just bring the required tab under focus
-			folder.setSelection(pos);		
+			folder.setSelection(pos);
+	}
+
+	private void setOnClickMenu() {
+		Menu popup = new Menu(folder);
+		MenuItem openItem = new MenuItem(popup, SWT.NONE);
+		openItem.setText("Open in a new window");
+		MenuItem closeItem = new MenuItem(popup, SWT.NONE);
+		closeItem.setText("Close");
+		folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
+	}
+
+	private class RightClickListener implements Listener {
+		private Menu menu;
+
+		public RightClickListener(Menu menu) {
+			this.menu = menu;
+		}
+
+		@Override
+		public void handleEvent(Event event) {
+			Point click = new Point(event.x, event.y);
+			Point point = folder.getDisplay().map(null, folder, click);
+			CTabItem item = folder.getItem(point);
+			if (item != null) {
+				menu.setLocation(click);
+				menu.setVisible(true);
+			}
+		}
 	}
 
 	/*
-	private void fillChartData2(Chart chart) {
-		// temporarily for filling charts with random data
-		double[] xSeries = new double[60];
-		double[] ySeries = new double[60];
-		double[] xSeries2 = new double[60];
-		double[] ySeries2 = new double[60];
-		Random randomGenerator = new Random();
-		for (int i = 0; i < 60; i++) {
-			xSeries[i] = i;
-			xSeries2[i] = i;
-			ySeries[i] = randomGenerator.nextDouble() + 1;
-			ySeries2[i] = (Math.cos(i) + 2) / 2;
-		}
-		ISeriesSet seriesSet = chart.getSeriesSet();
-		ILineSeries series = (ILineSeries) seriesSet.createSeries(
-				SeriesType.LINE, "back odds");
-		series.setXSeries(xSeries);
-		series.setYSeries(ySeries);
-		Color color = new Color(Display.getDefault(), 255, 0, 0);
-		series.setLineColor(color);
-		series.setSymbolSize(4);
-		ILineSeries series2 = (ILineSeries) seriesSet.createSeries(
-				SeriesType.LINE, "MA-Fast");
-		series2.setXSeries(xSeries2);
-		series2.setYSeries(ySeries2);
-		series.setSymbolType(PlotSymbolType.CROSS);
-		series2.setSymbolType(PlotSymbolType.DIAMOND);
-		final IAxisSet axisSet = chart.getAxisSet();
-		axisSet.adjustRange();
-		// end filling charts
-	}
-	*/
-
-	public void addTab(String text) {
-		CTabItem cti = new CTabItem(folder, SWT.CLOSE);
-		cti.setText(text);
-		folder.setSelection(cti);
-	}
-
-	private void addPredictionGui(Composite composite, String title) {
-		new PredictionGui(composite, title);
-	}
+	 * private void fillChartData2(Chart chart) { // temporarily for filling
+	 * charts with random data double[] xSeries = new double[60]; double[]
+	 * ySeries = new double[60]; double[] xSeries2 = new double[60]; double[]
+	 * ySeries2 = new double[60]; Random randomGenerator = new Random(); for
+	 * (int i = 0; i < 60; i++) { xSeries[i] = i; xSeries2[i] = i; ySeries[i] =
+	 * randomGenerator.nextDouble() + 1; ySeries2[i] = (Math.cos(i) + 2) / 2; }
+	 * ISeriesSet seriesSet = chart.getSeriesSet(); ILineSeries series =
+	 * (ILineSeries) seriesSet.createSeries( SeriesType.LINE, "back odds");
+	 * series.setXSeries(xSeries); series.setYSeries(ySeries); Color color = new
+	 * Color(Display.getDefault(), 255, 0, 0); series.setLineColor(color);
+	 * series.setSymbolSize(4); ILineSeries series2 = (ILineSeries)
+	 * seriesSet.createSeries( SeriesType.LINE, "MA-Fast");
+	 * series2.setXSeries(xSeries2); series2.setYSeries(ySeries2);
+	 * series.setSymbolType(PlotSymbolType.CROSS);
+	 * series2.setSymbolType(PlotSymbolType.DIAMOND); final IAxisSet axisSet =
+	 * chart.getAxisSet(); axisSet.adjustRange(); // end filling charts }
+	 */
 
 }

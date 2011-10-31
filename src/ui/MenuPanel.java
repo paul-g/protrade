@@ -22,34 +22,21 @@ public class MenuPanel {
 		Menu menuBar = new Menu(shell, SWT.BAR);
 		
 		// File button
-		MenuItem fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		fileMenuHeader.setText("&File");
+		MenuItem appMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		appMenuHeader.setText("&Application");
 		shell.setMenuBar(menuBar);
 		
 		// File drop down menu
-		Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
-	    fileMenuHeader.setMenu(fileMenu);
+		Menu appMenu = new Menu(shell, SWT.DROP_DOWN);
+	    appMenuHeader.setMenu(appMenu);
 
-	    MenuItem fileCreateItem = new MenuItem(fileMenu, SWT.PUSH);
-	    fileCreateItem.setText("New &Widget");
-	    fileCreateItem.addSelectionListener(new CreateListener());
+	    MenuItem appSettingsItem = new MenuItem(appMenu, SWT.PUSH);
+	    appSettingsItem.setText("&Settings");
+	    appSettingsItem.addSelectionListener(new SettingsListener());
 
-	    MenuItem fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
-	    fileExitItem.setText("E&xit");
-	    fileExitItem.addSelectionListener(new FileExitListener());
-
-		// Edit button
-		MenuItem editMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		editMenuHeader.setText("&Edit");
-		shell.setMenuBar(menuBar);
-		
-		// Edit drop down menu
-		Menu editMenu = new Menu(shell, SWT.DROP_DOWN);
-	    editMenuHeader.setMenu(editMenu);
-
-	    MenuItem fileEditItem = new MenuItem(editMenu, SWT.PUSH);
-	    fileEditItem.setText("E&dit");
-
+	    MenuItem appExitItem = new MenuItem(appMenu, SWT.PUSH);
+	    appExitItem.setText("E&xit");
+	    appExitItem.addSelectionListener(new ExitListener());
 		
 		// About button
 		MenuItem aboutMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -60,28 +47,48 @@ public class MenuPanel {
 		Menu aboutMenu = new Menu(shell, SWT.DROP_DOWN);
 	    aboutMenuHeader.setMenu(aboutMenu);
 
-	    MenuItem aboutEditItem = new MenuItem(aboutMenu, SWT.PUSH);
-	    aboutEditItem.setText("&Creators");
+	    MenuItem aboutHelpItem = new MenuItem(aboutMenu, SWT.PUSH);
+	    aboutHelpItem.setText("&Help");
+	    aboutHelpItem.addSelectionListener(new HelpListener());
+	    
+	    MenuItem aboutCreatorsItem = new MenuItem(aboutMenu, SWT.PUSH);
+	    aboutCreatorsItem.setText("&Creators");
+	    aboutCreatorsItem.addSelectionListener(new CreatorsListener());
 	}
 	
-	private class CreateListener implements SelectionListener {
+	private class SettingsListener implements SelectionListener {
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
+		public void widgetDefaultSelected(SelectionEvent e) {}
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			mw.addNewTab();
+			mw.addNewTab("Settings");
 		}
 	}
 	
-	private class FileExitListener implements  SelectionListener {
+	private class ExitListener implements  SelectionListener {
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
+		public void widgetDefaultSelected(SelectionEvent e) {}
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			shell.close();
+		}
+	}
+	
+	private class HelpListener implements SelectionListener {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {}
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			mw.addNewTab("Help");
+		}
+	}
+	
+	private class CreatorsListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			mw.addNewTab("Creators");
 		}
 	}
 }
