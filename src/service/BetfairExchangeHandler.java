@@ -60,7 +60,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				modds.setPl2Back(setBack(prices,2));
 				modds.setPl1Lay(setLay(prices,1));
 				modds.setPl2Lay(setLay(prices,2));
-				
+				modds.setDelay(prices.getInPlayDelay());
 				//msg = showMarket(selectedExchange, selectedMarket, prices);				
 			}			
 		} catch (Exception e) {

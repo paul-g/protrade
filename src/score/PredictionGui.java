@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridLayout;
 
 import src.Main;
+import src.utils.MatchUtils;
 
 import java.net.*;
 
@@ -30,7 +31,7 @@ public class PredictionGui {
     // comp.update();
     
     try{
-    if (match.contains(" v ")) {
+    if (MatchUtils.isMatch(match)) {
       createScoreContents(comp, match);
     }
     createProbabilityContents(comp);

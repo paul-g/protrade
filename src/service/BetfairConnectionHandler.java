@@ -28,6 +28,7 @@ import src.generated.global.BFGlobalServiceStub.BFEvent;
 import src.generated.global.BFGlobalServiceStub.EventType;
 import src.generated.global.BFGlobalServiceStub.GetEventsResp;
 import src.generated.global.BFGlobalServiceStub.MarketSummary;
+import src.utils.MatchUtils;
 
 public class BetfairConnectionHandler {
 	protected static APIContext apiContext = new APIContext();
@@ -168,7 +169,7 @@ public class BetfairConnectionHandler {
 	}
 	
 	public static boolean isMatch(EventBetfair emb) {
-		return emb.toString().contains(" v ");	
+		return MatchUtils.isMatch(emb.toString());	
 	}
 	
 	public static Match getMatch(EventBetfair eb) {

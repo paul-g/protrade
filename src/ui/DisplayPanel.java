@@ -29,6 +29,7 @@ import src.domain.UpdatableChart;
 import src.score.PredictionGui;
 import src.service.BetfairExchangeHandler;
 import src.service.LiveDataFetcher;
+import src.utils.MatchUtils;
 
 public class DisplayPanel implements Listener {
 
@@ -71,6 +72,10 @@ public class DisplayPanel implements Listener {
     public void handleEvent(Event event) {
         TreeItem ti = (TreeItem) event.item;
 
+        // if it's not a match, don't display
+        if ( !MatchUtils.isMatch(ti.getText()))
+            return;
+
         CTabItem[] items = folder.getItems();
         int pos = -1;
 
@@ -94,7 +99,13 @@ public class DisplayPanel implements Listener {
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             addMarketDataGrid(horizontal, ti);
 
-            addPredictionGui(horizontal, ti.getText());
+            if (MatchUtils.inPlay(ti))
+                addPredictionGui(horizontal, ti.getText());
+            else {
+                Label score = new Label(horizontal, SWT.BORDER);
+                score.setText("Match is not in progress - No score available");
+            }
+            
             
             addChart(comp, ti);
 
@@ -238,5 +249,4 @@ public class DisplayPanel implements Listener {
             }
         }
     }
-
 }

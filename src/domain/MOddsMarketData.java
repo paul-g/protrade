@@ -16,6 +16,7 @@ public class MOddsMarketData {
 	String Exchange;
 	String matchStatus;
 	String location;
+	int delay;
 	
 	public MOddsMarketData(){
 		
@@ -85,5 +86,12 @@ public class MOddsMarketData {
 		Exchange = exchange;
 	}
 	
+	public void setDelay(int delay){
+	    this.delay = delay;
+	}
+	
+	public int getDelay(){
+        return delay;
+    }
 	
 }

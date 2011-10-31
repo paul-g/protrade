@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 import src.Pair;
+import src.utils.MatchUtils;
 
 public class MarketDataGrid {
 
@@ -29,7 +30,7 @@ public class MarketDataGrid {
 	}
 
 	private void getPlayerNames(String title) throws Exception {
-		if (!title.contains(" v ")) throw new Exception("Invalid match");
+		if (!MatchUtils.isMatch(title)) throw new Exception("Invalid match");
 		String[] str = title.split(" v ");
 		player1 = str[0].trim();
 		player2 = str[1].trim();
