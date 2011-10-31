@@ -88,7 +88,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
 				} else {
 					backButtons[i * 3 + j] = new Button(c, SWT.PUSH);
 					backButtons[i * 3 + j].setLayoutData(gridData);
-					if (j==2 || j==5) layButtons[(i - 2) * 3 + j].setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+					if (j==2 || j==5) backButtons[i * 3 + j].setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 				}
 			}
 			c.pack();
