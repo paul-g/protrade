@@ -24,7 +24,7 @@ public class PredictionGui {
     this.match = match;
 
     
-    Composite comp = new Composite(composite, SWT.NONE);
+    Composite comp = new Composite(composite, SWT.BORDER);
     comp.setLayout(new GridLayout());
     // comp.setBounds(0, 0, 500, 500);
     // comp.update();
@@ -46,7 +46,7 @@ public class PredictionGui {
     Image ball = new Image(composite.getDisplay(), "images/ball.gif");
 
     final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
-    toolBar.setBounds(new Rectangle(331, 8, 100, 30));
+   // toolBar.setBounds(new Rectangle(331, 8, 100, 30));
 
     final Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
     MenuItem match = new MenuItem(menu, SWT.PUSH);
