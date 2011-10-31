@@ -160,7 +160,8 @@ public class DisplayPanel implements Listener {
      */
     private void addMarketDataGrid(Composite comp, TreeItem ti) {
         //Table table = new Table(comp, SWT.BORDER);
-    	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
+    	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp,ti);
+    	LiveDataFetcher.register(table, NavigationPanel.getMatch(ti), comp);
         /*
         MOddsMarketData modds = BetfairExchangeHandler
                 .getMarketOdds(NavigationPanel.getMatch(ti).getEventBetfair());

@@ -1,9 +1,6 @@
 package src.ui;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +56,6 @@ public class MarketDataGrid {
 		lay.setText("Lay                     				  ");
 		lay.setBackground(display.getSystemColor(SWT.COLOR_RED));
 		lay.setEditable(false);
-		lay.setTouchEnabled(false);
 		lay.setDoubleClickEnabled(false);
 		lay.pack();
 

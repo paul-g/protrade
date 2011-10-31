@@ -5,6 +5,8 @@ import java.util.Date;
 import src.Pair;
 
 public class MOddsMarketData {
+	String player1;
+	String player2;
 	ArrayList<Pair<Double,Double>> pl1Lay;
 	ArrayList<Pair<Double,Double>> pl1Back;
 	ArrayList<Pair<Double,Double>> pl2Lay;
@@ -18,6 +20,32 @@ public class MOddsMarketData {
 	public MOddsMarketData(){	
 		this.delay = 0;
 	}
+
+	
+	
+	public String getPlayer1() {
+		return player1;
+	}
+
+
+
+	public void setPlayer1(String player1) {
+		this.player1 = player1;
+	}
+
+
+
+	public String getPlayer2() {
+		return player2;
+	}
+
+
+
+	public void setPlayer2(String player2) {
+		this.player2 = player2;
+	}
+
+
 
 	public ArrayList<Pair<Double,Double>> getPl1Lay() {
 		return pl1Lay;

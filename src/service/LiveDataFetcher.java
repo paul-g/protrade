@@ -15,7 +15,7 @@ import src.domain.UpdatableWidget;
 
 public class LiveDataFetcher {
 	private static BetfairDataUpdater betfairDataUpdater = null;
-	private static HashMap<Integer, UpdatableWidget> listeners = new HashMap<Integer, UpdatableWidget>();
+	private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
 	private static Logger log = Logger.getLogger(LiveDataFetcher.class);
 	
 	public static void register(UpdatableWidget widget, Match match, Composite comp) {
@@ -25,7 +25,17 @@ public class LiveDataFetcher {
 			first = true;
 		}
 		betfairDataUpdater.addEvent(match);
-		listeners.put(match.getEventBetfair().getBetfairId(), widget);
+		if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
+			List<UpdatableWidget> widgets = listeners.get(match.getEventBetfair().getBetfairId());
+			widgets.add(widget);
+			listeners.put(match.getEventBetfair().getBetfairId(), widgets);
+		}
+		else {
+			List<UpdatableWidget> widgets = new ArrayList<UpdatableWidget>();
+			widgets.add(widget);
+			listeners.put(match.getEventBetfair().getBetfairId(), widgets);
+		}
+			
 		log.info("go to run thread");
 		if (first) {
 			betfairDataUpdater.run();
@@ -38,7 +48,10 @@ public class LiveDataFetcher {
 		Iterator<EventBetfair> i = data.keySet().iterator();
 		while (i.hasNext()) {
 			EventBetfair eb = i.next();
-			listeners.get(eb.getBetfairId()).handleUpdate(data.get(eb));
+			List<UpdatableWidget> widgets = listeners.get(eb.getBetfairId());
+			for (UpdatableWidget w : widgets)
+				w.handleUpdate(data.get(eb));
+			//listeners.get(eb.getBetfairId()).handleUpdate(data.get(eb));
 		}
 	}
 
