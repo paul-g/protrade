@@ -74,7 +74,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
         
         newXSeries[i] = Calendar.getInstance().getTime();
         // if data has been read from Betfair
-        if (data.getPl1Back() != null)
+        if (data.getPl1Back() != null && data.getPl1Back().size() > 0)
             newYSeries[i] = data.getPl1Back().get(0).getI();
         else
             if ( i > 0 ) // keep previous value if it exists

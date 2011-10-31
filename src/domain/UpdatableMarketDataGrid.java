@@ -62,6 +62,6 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
     }
 
     public void handleUpdate(MOddsMarketData newData) {
-
+        
     }
 }
