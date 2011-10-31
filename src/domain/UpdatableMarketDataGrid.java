@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -21,16 +22,22 @@ import src.service.BetfairExchangeHandler;
 import src.ui.NavigationPanel;
 
 public class UpdatableMarketDataGrid implements UpdatableWidget {
-
+	private Composite parent;
 	private Button[] backButtons;
 	private Button[] layButtons;
 	private MOddsMarketData modds;
 	private Table table;
+	private Composite buttonComposite;
 
 	public UpdatableMarketDataGrid(Composite parent, TreeItem ti) {
+		this.parent = parent;
 		table = new Table(parent, SWT.BORDER);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
+		
+		// this is just to update buttons - but the layout goes completely wrong
+		table.setLayout(new GridLayout());
+		
 		table.addListener(SWT.MeasureItem, new Listener() {
 			public void handleEvent(Event event) {
 				// height cannot be per row so simply set
@@ -69,12 +76,13 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
 
 		for (int i = 0; i < 4; i++) {
 			TableEditor editor = new TableEditor(table);
-			Composite c = new Composite(table, SWT.NONE);
+			buttonComposite = new Composite(table, SWT.NONE);
+			buttonComposite.setLayout(new GridLayout());
 			// c.setBackground(Display.getCurrent()
 			// .getSystemColor(SWT.COLOR_WHITE));
 
 			GridLayout gl = new GridLayout(3, true);
-			c.setLayout(gl);
+			buttonComposite.setLayout(gl);
 			GridData gridData = new GridData();
 			gridData.verticalSpan = 2;
 			gridData.verticalAlignment = GridData.FILL;
@@ -82,20 +90,20 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
 			gridData.grabExcessVerticalSpace = true;
 			for (int j = 0; j < 3; j++) {
 				if (i >= 2) {
-					layButtons[(i - 2) * 3 + j] = new Button(c, SWT.PUSH);
+					layButtons[(i - 2) * 3 + j] = new Button(buttonComposite, SWT.PUSH);
 					layButtons[(i - 2) * 3 + j].setLayoutData(gridData);
 					if (j==0 || j==3) layButtons[(i - 2) * 3 + j].setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 				} else {
-					backButtons[i * 3 + j] = new Button(c, SWT.PUSH);
+					backButtons[i * 3 + j] = new Button(buttonComposite, SWT.PUSH);
 					backButtons[i * 3 + j].setLayoutData(gridData);
 					if (j==2 || j==5) backButtons[i * 3 + j].setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 				}
 			}
-			c.pack();
-			editor.minimumWidth = c.getSize().x;
+			buttonComposite.pack();
+			editor.minimumWidth = buttonComposite.getSize().x;
 			editor.horizontalAlignment = SWT.LEFT;
 			System.out.println(i % 2 + " " + (i / 2 + 1));
-			editor.setEditor(c, tabitems[i % 2], i / 2 + 1);
+			editor.setEditor(buttonComposite, tabitems[i % 2], i / 2 + 1);
 		}
 
 	}
@@ -151,11 +159,29 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
 			System.out.println("Setting new data");
 			setValues(newData);
 		}
+		/*
 		for (Button b : backButtons) {
-			b.getParent().update();
+			b.redraw();
+			b.update();
 		}
-		table.redraw();
+		for (Button b : layButtons) {
+			b.redraw();
+			b.update();
+		}
+		this.buttonComposite.layout();
+		this.buttonComposite.update();
+		*/
+		
+		//table.redraw();		
+		table.layout();
 		table.update();
-		table.getParent().update();
+		
+		/*
+		parent.layout();
+		parent.update();
+		
+		this.parent.getParent().layout();
+		this.parent.getParent().update();
+		*/
 	}
 }

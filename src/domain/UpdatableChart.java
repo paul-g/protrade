@@ -15,7 +15,7 @@ import org.swtchart.ISeries.SeriesType;
 public class UpdatableChart extends Chart implements UpdatableWidget {
     private ILineSeries firstSeries;
     // private ILineSeries secondSeries;
-    private int sampleSize = 30;
+    private int sampleSize = 100;
 
     public UpdatableChart(Composite parent, int style) {
         super(parent, style);
