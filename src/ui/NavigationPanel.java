@@ -30,7 +30,7 @@ import src.service.BetfairConnectionHandler;
 public class NavigationPanel {
 
 	private final CTabFolder folder;
-	private Tree tree;
+	private static Tree tree;
 	private final Text searchBox;
 	private Stack<List<Pair<String, Pair<Integer, Integer>>>> treeStates = new Stack<List<Pair<String, Pair<Integer, Integer>>>>();
 
@@ -169,7 +169,23 @@ public class NavigationPanel {
 	public static Match getMatch(TreeItem treeItem) {
 		return matchMap.get(treeItem);
 	}
+	
+	public static Match getMatch(String title){
+	    for (TreeItem ti : matchMap.keySet()){
+	        if (getMatch(ti).toString().equals(title))
+	            return getMatch(ti);
+	     }
+	    return null;
+	}
 
+	public static TreeItem getSelection(){
+	    return tree.getSelection()[0];
+	}
+	
+	public static Match getSelectedMatch(){
+	    return getMatch(getSelection());
+	}
+	
 	public boolean isTabPresent(String title) {
 		return getTab(title) != null;
 	}

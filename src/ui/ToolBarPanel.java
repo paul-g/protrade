@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import src.Main;
 import src.service.BetfairConnectionHandler;
 import src.service.FracsoftReader;
+import src.service.LiveDataFetcher;
 
 public class ToolBarPanel{
 
@@ -58,6 +59,7 @@ public class ToolBarPanel{
 				mainWindow.addMatchNavigator();
 			}
 		});
+		
 		MenuItem activeBets = new MenuItem(widgetDropDown,SWT.PUSH);
 		activeBets.setText("Active Bets Display");
 		activeBets.addListener(SWT.Selection, new Listener(){
@@ -109,7 +111,8 @@ public class ToolBarPanel{
 			  
 			  // TODO: link with thread updater
 			  try {
-			    new FracsoftReader(dialog.open());
+			    LiveDataFetcher.setDataUpdater(new FracsoftReader(NavigationPanel.getSelectedMatch(), dialog.open()));
+			    LiveDataFetcher.start();
 			  } catch (FileNotFoundException e){
 			    log.error(e.getMessage());
 			  }
