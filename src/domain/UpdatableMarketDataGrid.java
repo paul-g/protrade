@@ -3,185 +3,120 @@ package src.domain;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeItem;
 
 import src.Pair;
-import src.service.BetfairExchangeHandler;
-import src.ui.NavigationPanel;
 
 public class UpdatableMarketDataGrid implements UpdatableWidget {
-	private Composite parent;
-	private Button[] backButtons;
-	private Button[] layButtons;
-	private MOddsMarketData modds;
-	private Table table;
-	private Composite buttonComposite;
+    private Composite parent;
+    private Composite composite;
+    private OddsButton[] p1BackButtons = new OddsButton[3];
+    private OddsButton[] p1LayButtons = new OddsButton[3];
+    private OddsButton[] p2BackButtons= new OddsButton[3];
+    private OddsButton[] p2LayButtons = new OddsButton[3];
+    private MOddsMarketData modds;
+    private Label player1;
+    private Label player2;
+    //private Composite comp;
+    
+    private class OddsButton{
+        
+        private Composite comp;
+        private Label odds;
+        private Label amount;
+        
+        OddsButton(Composite parent, Color color){
+            comp = new Composite(parent, SWT.BORDER);
+            RowLayout rowLayout = new RowLayout();
+            rowLayout.type = SWT.VERTICAL;
+            GridData gd = new GridData();
+            gd.horizontalAlignment = GridData.FILL;
+            comp.setBackground(color);
+            comp.setLayoutData(gd);
+            comp.setLayout(rowLayout);
+            this.odds = new Label(comp, SWT.NONE);
+            this.amount = new Label(comp, SWT.NONE);
+            odds.setBackground(color);
+            amount.setBackground(color);
+        }
+        
+        void setOdds(String odds){
+            this.odds.setText(odds);
+        }
+        
+        void setAmount(String amount){
+            this.amount.setText("£" + amount);
+        }
+        
+        Composite getComposite(){
+            return comp;
+        }
+        
+        void layout(){
+            comp.layout();
+        }
+    }
 
-	public UpdatableMarketDataGrid(Composite parent, TreeItem ti) {
-		this.parent = parent;
-		table = new Table(parent, SWT.BORDER);
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		
-		// this is just to update buttons - but the layout goes completely wrong
-		table.setLayout(new GridLayout());
-		
-		table.addListener(SWT.MeasureItem, new Listener() {
-			public void handleEvent(Event event) {
-				// height cannot be per row so simply set
-				event.height = 67;
-			}
-		});
-		createHeader();
-		createRows();
-		createButtons(); 
-		for (int i = 0; i < 3; i++) {
-			table.getColumn(i).pack();
+    public UpdatableMarketDataGrid(Composite parent, TreeItem ti) {
+        this.parent = parent;
+        composite = new Composite(parent, SWT.BORDER);
 
-		}
-		//modds = BetfairExchangeHandler
-        //.getMarketOdds(NavigationPanel.getMatch(ti).getEventBetfair());
-		//setValues(modds);
-	}
-	
-	public void setValues(MOddsMarketData modds) {
-		fillSelCol(modds);
-		fillButtons(1, 1, modds.getPl1Back());
-	    fillButtons(1, 2, modds.getPl1Lay());
-	    fillButtons(2, 1, modds.getPl2Back());
-	    fillButtons(2, 2, modds.getPl2Lay());
-	}
+        composite.setLayout(new GridLayout(7, true));
 
-	private void createSelections() {
-		// TODO Auto-generated method stub
+        Label blankLabel = new Label(composite, SWT.NONE);
+        GridData headerData = new GridData();
+        headerData.horizontalSpan = 3;
+        headerData.horizontalAlignment = GridData.FILL;
+        Label back = new Label(composite, SWT.NONE);
+        back.setLayoutData(headerData);
+        back.setText("Back");
+        Label lay = new Label(composite, SWT.NONE);
+        lay.setLayoutData(headerData);
+        lay.setText("Lay");
 
-	}
+        Color cyan  = composite.getDisplay().getSystemColor(SWT.COLOR_CYAN);
+        Color magenta  = composite.getDisplay().getSystemColor(SWT.COLOR_MAGENTA);
+        
+        player1 = new Label(composite, SWT.NONE);
+        for (int i = 0; i < 3; i++)
+            p1BackButtons[i] = new OddsButton(composite, cyan);
+        for (int i = 0; i < 3; i++)
+            p1LayButtons[i] = new OddsButton(composite, magenta);
 
-	private void createButtons() {
-		TableItem[] tabitems = table.getItems();
-		backButtons = new Button[6];
-		layButtons = new Button[6];
+        player2 = new Label(composite, SWT.NONE);
+        for (int i = 0; i < 3; i++) 
+            p2BackButtons[i] = new OddsButton(composite, cyan);
+        for (int i = 0; i < 3; i++)
+            p2LayButtons[i] = new OddsButton(composite, magenta);
 
-		for (int i = 0; i < 4; i++) {
-			TableEditor editor = new TableEditor(table);
-			buttonComposite = new Composite(table, SWT.NONE);
-			buttonComposite.setLayout(new GridLayout());
-			// c.setBackground(Display.getCurrent()
-			// .getSystemColor(SWT.COLOR_WHITE));
-
-			GridLayout gl = new GridLayout(3, true);
-			buttonComposite.setLayout(gl);
-			GridData gridData = new GridData();
-			gridData.verticalSpan = 2;
-			gridData.verticalAlignment = GridData.FILL;
-			gridData.grabExcessHorizontalSpace = true;
-			gridData.grabExcessVerticalSpace = true;
-			for (int j = 0; j < 3; j++) {
-				if (i >= 2) {
-					layButtons[(i - 2) * 3 + j] = new Button(buttonComposite, SWT.PUSH);
-					layButtons[(i - 2) * 3 + j].setLayoutData(gridData);
-					if (j==0 || j==3) layButtons[(i - 2) * 3 + j].setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-				} else {
-					backButtons[i * 3 + j] = new Button(buttonComposite, SWT.PUSH);
-					backButtons[i * 3 + j].setLayoutData(gridData);
-					if (j==2 || j==5) backButtons[i * 3 + j].setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-				}
-			}
-			buttonComposite.pack();
-			editor.minimumWidth = buttonComposite.getSize().x;
-			editor.horizontalAlignment = SWT.LEFT;
-			System.out.println(i % 2 + " " + (i / 2 + 1));
-			editor.setEditor(buttonComposite, tabitems[i % 2], i / 2 + 1);
-		}
-
-	}
-
-	private void fillSelCol(MOddsMarketData modds) {
-		TableItem[] tabitems = table.getItems();
-		tabitems[0].setText(0, modds.getPlayer1());
-		tabitems[1].setText(0, modds.getPlayer2());
-	}
-
-	public void fillButtons(int pl, int backOrLay, ArrayList<Pair<Double,Double>> data) {
-		if (data == null) return;
-		if (pl == 1){
-			if (backOrLay == 1){
-				for (int i =0; i<data.size() && i<3; i++){
-					backButtons[2-i].setText((data.get(i)).getI()+"");
-				}
-			} else {
-				for (int i =0; i<data.size() && i<3; i++){
-					layButtons[i].setText((data.get(i)).getI()+"");
-				}
-			}
-		} else if (pl == 2) {
-			if (backOrLay == 1){
-				for (int i =0; i<data.size() && i<3; i++){
-					backButtons[5-i].setText((data.get(i)).getI()+"");
-				}
-			} else {
-				for (int i =0; i<data.size() && i<3; i++){
-					layButtons[3+i].setText((data.get(i)).getI()+"");
-				}
-			}
-		}
-	}
-
-	private void createRows() {
-		for (int i = 0; i < 2; i++) {
-			new TableItem(table, SWT.NONE);
-		}
-	}
-
-	private void createHeader() {
-		TableColumn selCol = new TableColumn(table, SWT.NONE);
-		selCol.setText("Selections");
-		TableColumn backCol = new TableColumn(table, SWT.NONE);
-		backCol.setText("Back");
-		TableColumn layCol = new TableColumn(table, SWT.NONE);
-		layCol.setText("Lay");
-	}
-
-	public void handleUpdate(MOddsMarketData newData) {
-		if (newData.getPl1Back() != null) {
-			System.out.println("Setting new data");
-			setValues(newData);
-		}
-		/*
-		for (Button b : backButtons) {
-			b.redraw();
-			b.update();
-		}
-		for (Button b : layButtons) {
-			b.redraw();
-			b.update();
-		}
-		this.buttonComposite.layout();
-		this.buttonComposite.update();
-		*/
-		
-		//table.redraw();		
-		table.layout();
-		table.update();
-		
-		/*
-		parent.layout();
-		parent.update();
-		
-		this.parent.getParent().layout();
-		this.parent.getParent().update();
-		*/
-	}
+       }
+   
+    public void updateButtons(ArrayList<Pair<Double, Double>> valueList, OddsButton[] buttons){
+        int i = 0;
+        for (Pair<Double, Double> p : valueList) {
+            buttons[i].setOdds(p.getI().toString());
+            buttons[i].setAmount(p.getJ().toString());
+            buttons[i].layout();
+            i++;
+        }
+    }
+    
+    public void handleUpdate(MOddsMarketData newData) {
+        if (newData.getPl1Back() != null) {
+            System.out.println("Setting new data");
+            updateButtons(newData.getPl1Back(), p1BackButtons);
+            updateButtons(newData.getPl1Lay(), p1LayButtons);
+            updateButtons(newData.getPl2Back(), p2BackButtons);
+            updateButtons(newData.getPl2Lay(), p2LayButtons);
+            player1.setText(newData.getPlayer1());
+            player2.setText(newData.getPlayer2());
+            composite.layout();
+        }
+    }
 }
