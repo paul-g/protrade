@@ -10,9 +10,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -154,6 +151,21 @@ public class ToolBarPanel{
 		new MenuItem(profileDropDown,SWT.PUSH).setText("Preferences"); 
 		profileItem.addListener(SWT.Selection, new RightDropDownListener(profileItem, profileDropDown));
 
+	}
+	
+	public ToolBarPanel (final MainWindow mainWindow, boolean isTop) {
+		
+		final Shell shell = mainWindow.getShell();
+		// Setting span throughout the columns
+		GridData gridData = new GridData();
+		gridData.horizontalSpan = 3;
+
+		this.toolbar = new ToolBar (shell, SWT.FLAT | SWT.RIGHT);
+		toolbar.setLayoutData(gridData);
+		
+		final ToolItem widgetItem = new ToolItem(toolbar,SWT.POP_UP);
+		Image img = new Image(shell.getDisplay(),"images/plus_item.png");
+		widgetItem.setImage(img);
 	}
 
 	private class LeftDropDownListener implements Listener {
