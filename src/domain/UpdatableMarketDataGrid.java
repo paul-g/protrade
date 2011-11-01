@@ -63,6 +63,8 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         }
     }
 
+    
+    
     public UpdatableMarketDataGrid(Composite parent, TreeItem ti) {
         this.parent = parent;
         composite = new Composite(parent, SWT.BORDER);
@@ -73,15 +75,23 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         GridData headerData = new GridData();
         headerData.horizontalSpan = 3;
         headerData.horizontalAlignment = GridData.FILL;
-        Label back = new Label(composite, SWT.NONE);
+        Label back = new Label(composite, SWT.RIGHT);
         back.setLayoutData(headerData);
         back.setText("Back");
         Label lay = new Label(composite, SWT.NONE);
         lay.setLayoutData(headerData);
         lay.setText("Lay");
 
-        Color cyan  = composite.getDisplay().getSystemColor(SWT.COLOR_CYAN);
-        Color magenta  = composite.getDisplay().getSystemColor(SWT.COLOR_MAGENTA);
+        //Color cyan  = composite.getDisplay().getSystemColor(SWT.COLOR_CYAN);
+        //Color magenta  = composite.getDisplay().getSystemColor(SWT.COLOR_MAGENTA);
+        
+        java.awt.Color colorPink = new java.awt.Color(238, 210, 238);
+        Color magenta = new org.eclipse.swt.graphics.Color(composite.getDisplay(),
+                colorPink.getRed(), colorPink.getGreen(), colorPink.getBlue());
+        
+        java.awt.Color colorBlue = new java.awt.Color(198, 226, 255);
+        Color cyan = new org.eclipse.swt.graphics.Color(composite.getDisplay(),
+                colorBlue.getRed(), colorBlue.getGreen(), colorBlue.getBlue());
         
         player1 = new Label(composite, SWT.NONE);
         for (int i = 0; i < 3; i++)
@@ -97,23 +107,25 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
 
        }
    
-    public void updateButtons(ArrayList<Pair<Double, Double>> valueList, OddsButton[] buttons){
+    public void updateButtons(ArrayList<Pair<Double, Double>> valueList, OddsButton[] buttons, boolean back){
         int i = 0;
+        if (back) i = 3 - i - 1;
         for (Pair<Double, Double> p : valueList) {
             buttons[i].setOdds(p.getI().toString());
             buttons[i].setAmount(p.getJ().toString());
             buttons[i].layout();
-            i++;
+            if (back) i--;
+            else i++;
         }
     }
     
     public void handleUpdate(MOddsMarketData newData) {
         if (newData.getPl1Back() != null) {
             System.out.println("Setting new data");
-            updateButtons(newData.getPl1Back(), p1BackButtons);
-            updateButtons(newData.getPl1Lay(), p1LayButtons);
-            updateButtons(newData.getPl2Back(), p2BackButtons);
-            updateButtons(newData.getPl2Lay(), p2LayButtons);
+            updateButtons(newData.getPl1Back(), p1BackButtons, true);
+            updateButtons(newData.getPl1Lay(), p1LayButtons, false);
+            updateButtons(newData.getPl2Back(), p2BackButtons, true);
+            updateButtons(newData.getPl2Lay(), p2LayButtons, false);
             player1.setText(newData.getPlayer1());
             player2.setText(newData.getPlayer2());
             composite.layout();
