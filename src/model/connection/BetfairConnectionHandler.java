@@ -1,4 +1,4 @@
-package src.service;
+package src.model.connection;
 
 import java.util.ArrayList;
 import java.util.List;

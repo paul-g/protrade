@@ -1,4 +1,4 @@
-package src.service;
+package src.model.connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import src.Pair;
 import src.demo.handler.ExchangeAPI;
 import src.demo.handler.GlobalAPI;
 import src.demo.handler.ExchangeAPI.Exchange;
@@ -22,6 +21,7 @@ import src.generated.exchange.BFExchangeServiceStub.Runner;
 import src.generated.global.BFGlobalServiceStub.GetEventsResp;
 import src.generated.global.BFGlobalServiceStub.MarketSummary;
 import src.utils.MatchUtils;
+import src.utils.Pair;
 
 public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);

@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import src.Pair;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
 import src.domain.Match;
+import src.utils.Pair;
 
 /**
  * Reads data in Fracsoft format from a given file

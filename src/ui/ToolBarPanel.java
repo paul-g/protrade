@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import src.Main;
-import src.service.BetfairConnectionHandler;
+import src.model.connection.BetfairConnectionHandler;
 import src.service.FracsoftReader;
 import src.service.LiveDataFetcher;
 

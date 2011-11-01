@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
 import src.domain.Match;
-import src.domain.UpdatableWidget;
+import src.ui.updatable.UpdatableWidget;
 
 public class LiveDataFetcher {
     private static DataUpdater dataUpdater = null;

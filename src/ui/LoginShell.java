@@ -1,13 +1,7 @@
 package src.ui;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Scanner;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -19,10 +13,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import src.Main;
-import src.domain.Tournament;
 import src.exceptions.LoginFailedException;
-import src.service.BetfairConnectionHandler;
-import src.service.BetfairExchangeHandler;
+import src.model.connection.BetfairConnectionHandler;
 
 public class LoginShell{
   
@@ -91,16 +83,7 @@ public class LoginShell{
         password.setText("");
       }     
     });
-    /*
-    Button bypass = new Button(loginShell, SWT.NONE);
-    bypass.setText("Bypass");    
-    bypass.addListener(SWT.Selection, new Listener() {
-      public void handleEvent(Event event) {
-          loginShell.dispose();
-          launchApp(display);         
-      }
-    });
-    */
+
     Button testAccount = new Button(loginShell, SWT.NONE);
     testAccount.setText("Use Test Account");
     testAccount.addListener(SWT.Selection, new Listener() {
@@ -168,27 +151,6 @@ public class LoginShell{
     log.info("Login succeeded with token - "
         + BetfairConnectionHandler.getApiContext().getToken());
 
-    // get list of tournaments (events and markets of tennis type event id)
-    
-    List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
-    //List<EventMarketBetfair> tournaments = BetfairConnectionHandler.getTournamentsData();
-    log.info("List of events under \' tennis event type id \': ");
-    /*
-    for (EventMarketBetfair emb : tournaments) {
-      printEvents(0, emb);
-    }
-    */
-
-    // Perform logout
-    /*
-     * try { 
-     *  BetfairConnectionHandler.logout(); 
-     * } catch (Exception e){
-     *  log.info(e.getMessage()); System.exit(-1); 
-     * }
-     * log.info("Logout succesful");
-     */
-
     return true;
   }
   
@@ -207,6 +169,4 @@ public class LoginShell{
   private static void launchApp(Display display) {
     new MainWindow(display);
   }
-  
-
 }

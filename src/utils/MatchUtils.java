@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import src.domain.MOddsMarketData;
 import src.domain.Match;
-import src.service.BetfairExchangeHandler;
+import src.model.connection.BetfairExchangeHandler;
 import src.ui.NavigationPanel;
 
 public class MatchUtils {

@@ -11,8 +11,6 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
 
-import src.service.FracsoftReader;
-import src.service.LiveDataFetcher;
 import src.ui.LoginShell;
 import src.authentication.Encrypt;
 
@@ -28,12 +26,6 @@ public class Main {
   public static void main(String[] args) {
     // read the config file
     readConfigFile();
-    
-    // create a fracsoft reader
-    try { 
-    } catch (Exception e){
-      log.error(e.getMessage());
-    }
     
     // start up the app
     final Display display = new Display();
@@ -74,7 +66,7 @@ public class Main {
         scanner.close();
     } 
     
-    log.info("username set to \'" + USERNAME + "\' password set to \'" + PASSWORD + "\'" );
+    log.info("username set to \'" + USERNAME + "\' password set");
   }
 
 }

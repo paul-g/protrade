@@ -29,11 +29,11 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import src.Main;
 import src.domain.MOddsMarketData;
-import src.domain.UpdatableChart;
-import src.domain.UpdatableMarketDataGrid;
+import src.model.connection.BetfairExchangeHandler;
 import src.score.PredictionGui;
-import src.service.BetfairExchangeHandler;
 import src.service.LiveDataFetcher;
+import src.ui.updatable.UpdatableChart;
+import src.ui.updatable.UpdatableMarketDataGrid;
 import src.utils.MatchUtils;
 
 public class DisplayPanel implements Listener {
@@ -69,11 +69,6 @@ public class DisplayPanel implements Listener {
 
     private void addPredictionGui(Composite composite, String title) {
         new PredictionGui(composite, title);
-    }
-
-    private MarketDataGrid createMarketGrid(Composite composite, String title)
-            throws Exception {
-        return new MarketDataGrid(composite, title);
     }
 
     public void handleEvent(Event event) {
@@ -168,22 +163,6 @@ public class DisplayPanel implements Listener {
         //Table table = new Table(comp, SWT.BORDER);
     	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp,ti);
     	LiveDataFetcher.register(table, NavigationPanel.getMatch(ti), comp);
-        /*
-        MOddsMarketData modds = BetfairExchangeHandler
-                .getMarketOdds(NavigationPanel.getMatch(ti).getEventBetfair());
-        MarketDataGrid mdGrid;
-        try {
-            mdGrid = createMarketGrid(comp, ti.getText());
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            log.error(e.getMessage());
-            return;
-        }
-        mdGrid.fillButtons(1, 1, modds.getPl1Back());
-        mdGrid.fillButtons(1, 2, modds.getPl1Lay());
-        mdGrid.fillButtons(2, 1, modds.getPl2Back());
-        mdGrid.fillButtons(2, 2, modds.getPl2Lay());
-        */
     }
 
     private void setOnClickMenu() {

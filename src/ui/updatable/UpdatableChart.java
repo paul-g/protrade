@@ -1,4 +1,4 @@
-package src.domain;
+package src.ui.updatable;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +11,8 @@ import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
+
+import src.domain.MOddsMarketData;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
     private ILineSeries firstSeries;

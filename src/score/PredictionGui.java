@@ -7,10 +7,6 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridLayout;
 
 import src.Main;
-import src.domain.MOddsMarketData;
-import src.domain.Match;
-import src.domain.UpdatableWidget;
-import src.service.LiveDataFetcher;
 import src.utils.MatchUtils;
 
 import java.net.*;
@@ -28,18 +24,13 @@ public class PredictionGui {
 
     private String matchName;
 
-    private Image ball;
-
     private TableColumn[] columns;
-
-    final private Composite parent;
 
     private Table scoreTable;
 
     private String name1, name2;
 
     public PredictionGui(final Composite parent, String match) {
-        this.parent = parent;
         this.matchName = match;
         this.composite = new Composite(parent, SWT.BORDER);
         composite.setLayout(new GridLayout());
@@ -57,8 +48,7 @@ public class PredictionGui {
             // throw new RuntimeException();
         }
 
-        parent.getDisplay().timerExec(1000, new Runnable() {
-
+        parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
             public void run() {
                 handleUpdate();
@@ -69,8 +59,6 @@ public class PredictionGui {
     }
 
     private void createScoreContents(Composite composite, String matchName) {
-        this.ball = new Image(composite.getDisplay(), "images/ball.gif");
-
         final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
         // toolBar.setBounds(new Rectangle(331, 8, 100, 30));
 
@@ -204,7 +192,6 @@ public class PredictionGui {
             // //////////////END of Player 1 data
         }
 
-        // System.out.println(scores.substring(0, 6));
         c = 1;
 
         System.out.println(scores);
@@ -355,20 +342,7 @@ public class PredictionGui {
                 page.wait(500);
             }
         }
-        /*
-         * int j=0; while(j<10){
-         * 
-         * webClient.waitForBackgroundJavaScript(3000); WebRequest request = new
-         * WebRequest(new URL("http://www.livexscores.com/livescore/tennis"));
-         * HtmlPage page = webClient.getPage(request); // try 20 times to wait
-         * .5 second each for filling the page. for (int i = 0; i < 2; i++) {
-         * //page scores = page.getElementById("allzapasy");
-         * 
-         * if (scores.asText() != "") { break; } synchronized (page) {
-         * page.wait(100); } }
-         * 
-         * webClient.getAjaxController().processSynchron(page, request, false);
-         */
+
         scores = page.getElementById("allzapasy");
 
         // Cleverly modify tennis balls gif elements of the website to

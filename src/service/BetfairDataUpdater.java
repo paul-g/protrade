@@ -7,6 +7,7 @@ import java.util.Random;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
 import src.domain.Match;
+import src.model.connection.BetfairExchangeHandler;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;

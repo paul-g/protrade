@@ -1,4 +1,6 @@
-package src.domain;
+package src.ui.updatable;
+
+import src.domain.MOddsMarketData;
 
 public interface UpdatableWidget {
 	/*
