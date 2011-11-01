@@ -6,6 +6,8 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -19,11 +21,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
+import src.Main;
 import src.domain.MOddsMarketData;
 import src.domain.UpdatableChart;
 import src.domain.UpdatableMarketDataGrid;
@@ -35,10 +39,12 @@ import src.utils.MatchUtils;
 public class DisplayPanel implements Listener {
 
     private final CTabFolder folder;
+    private Display display;
 
     private static Logger log = Logger.getLogger(DisplayPanel.class);
 
     public DisplayPanel(Composite parent) {
+    	display = parent.getDisplay();
         folder = new CTabFolder(parent, SWT.RESIZE | SWT.BORDER);
         folder.setSimple(false);
         folder.setMinimizeVisible(true);
@@ -184,6 +190,20 @@ public class DisplayPanel implements Listener {
         Menu popup = new Menu(folder);
         MenuItem openItem = new MenuItem(popup, SWT.NONE);
         openItem.setText("Open in a new window");
+        openItem.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Shell shell = new Shell(display);
+		        shell.setMaximized(true);
+		        GridLayout layout = new GridLayout();
+		        shell.setLayout(layout);
+		        shell.setText("New Window");
+		        shell.open();
+			}
+        });
         MenuItem closeItem = new MenuItem(popup, SWT.NONE);
         closeItem.setText("Close");
         MenuItem closeAll = new MenuItem(popup, SWT.NONE);
