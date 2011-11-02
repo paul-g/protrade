@@ -11,10 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;    /*    Button changeAxisButton = new Button(comp, SWT.LEFT);
-changeAxisButton.setText("Switch odds representation");
-*/
-
+import org.eclipse.swt.widgets.MenuItem;
 import org.swtchart.Chart;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
