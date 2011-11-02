@@ -1,10 +1,5 @@
 package src.ui;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Scanner;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -28,10 +23,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import src.Main;
-import src.domain.Tournament;
 import src.exceptions.LoginFailedException;
-import src.service.BetfairConnectionHandler;
-import src.service.BetfairExchangeHandler;
+import src.model.connection.BetfairConnectionHandler;
 
 public class LoginShell{
   
@@ -121,23 +114,14 @@ public class LoginShell{
         password.setText("");
       }     
     });
-    /*
-    Button bypass = new Button(loginShell, SWT.NONE);
-    bypass.setText("Bypass");    
-    bypass.addListener(SWT.Selection, new Listener() {
-      public void handleEvent(Event event) {
-          loginShell.dispose();
-          launchApp(display);         
-      }
-    });
-    */
+
     Button testAccount = new Button(loginShell, SWT.NONE);
     testAccount.setText("Use Test Account");
     testAccount.addListener(SWT.Selection, new Listener() {
       public void handleEvent(Event arg0) {
         String username = Main.USERNAME;
         String password = Main.PASSWORD;
-        log.info("username " + username + " password " + password);
+        log.info("username " + username);
        if (checkLogin(username, password )) {
           updateResult(SUCCESS);
           loginShell.dispose();
@@ -207,27 +191,6 @@ public class LoginShell{
     log.info("Login succeeded with token - "
         + BetfairConnectionHandler.getApiContext().getToken());
 
-    // get list of tournaments (events and markets of tennis type event id)
-    
-    List<Tournament> tournaments = BetfairConnectionHandler.getTournamentsData();
-    //List<EventMarketBetfair> tournaments = BetfairConnectionHandler.getTournamentsData();
-    log.info("List of events under \' tennis event type id \': ");
-    /*
-    for (EventMarketBetfair emb : tournaments) {
-      printEvents(0, emb);
-    }
-    */
-
-    // Perform logout
-    /*
-     * try { 
-     *  BetfairConnectionHandler.logout(); 
-     * } catch (Exception e){
-     *  log.info(e.getMessage()); System.exit(-1); 
-     * }
-     * log.info("Logout succesful");
-     */
-
     return true;
   }
   
@@ -246,22 +209,4 @@ public class LoginShell{
   private static void launchApp(Display display) {
     new MainWindow(display);
   }
-  
-  static int[] circle(int r, int offsetX, int offsetY) {
-	    int[] polygon = new int[8 * r + 4];
-	    // x^2 + y^2 = r^2
-	    for (int i = 0; i < 2 * r + 1; i++) {
-	      int x = i - r;
-	      int y = (int) Math.sqrt(r * r - x * x);
-	      polygon[2 * i] = offsetX + x;
-	      polygon[2 * i + 1] = offsetY + y;
-	      polygon[8 * r - 2 * i - 2] = offsetX + x;
-	      polygon[8 * r - 2 * i - 1] = offsetY - y;
-	    }
-	    return polygon;
-	  }
-
-
-  
-
-}
+}  

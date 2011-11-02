@@ -1,4 +1,4 @@
-package src;
+package src.utils;
 
 public class Pair<T, K> {
   T i;

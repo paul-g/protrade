@@ -1,4 +1,4 @@
-package src.service;
+package src.model.connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import src.Pair;
 import src.demo.handler.ExchangeAPI;
 import src.demo.handler.GlobalAPI;
 import src.demo.handler.ExchangeAPI.Exchange;
@@ -21,6 +20,8 @@ import src.generated.exchange.BFExchangeServiceStub.Market;
 import src.generated.exchange.BFExchangeServiceStub.Runner;
 import src.generated.global.BFGlobalServiceStub.GetEventsResp;
 import src.generated.global.BFGlobalServiceStub.MarketSummary;
+import src.utils.MatchUtils;
+import src.utils.Pair;
 
 public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);
@@ -61,6 +62,9 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				modds.setPl1Lay(setLay(prices,1));
 				modds.setPl2Lay(setLay(prices,2));
 				modds.setDelay(prices.getInPlayDelay());
+				String[] names = getNames(m.getName());
+				modds.setPlayer1(names[0]);
+				modds.setPlayer2(names[1]);
 				//msg = showMarket(selectedExchange, selectedMarket, prices);				
 			}			
 		} catch (Exception e) {
@@ -107,6 +111,12 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		msg += ("") + "\n";
 		return msg;
 	}
+	
+		public static String[] getNames(String title){
+			if (!MatchUtils.isMatch(title));
+			String[] str = title.split(" v ");
+			return str;
+		}
 	
 		public static ArrayList<Pair<Double,Double>> setBack(InflatedMarketPrices prices, int nr){
 			if (prices.getRunners().size() >= 2){

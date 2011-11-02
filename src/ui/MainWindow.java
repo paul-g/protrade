@@ -76,6 +76,9 @@ public class MainWindow {
         this.dp = new DisplayPanel(sashFormRight);
 
         np.addListener(dp);
+        
+        @SuppressWarnings("unused")
+        ToolBarPanel bottomPanel = new ToolBarPanel(this, false);
 
         shell.open();
 
@@ -144,5 +147,9 @@ public class MainWindow {
 
     public void dispose() {
         shell.dispose();
+    }
+    
+    public DisplayPanel getDisplayPanel(){
+        return dp;
     }
 }

@@ -1,4 +1,4 @@
-package src.service;
+package src.model.connection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,8 @@ import src.demo.util.InflatedMarketPrices.InflatedRunner;
 import src.domain.EventMarketBetfair;
 import src.domain.MarketBetfair;
 import src.domain.EventBetfair;
-import src.domain.Match;
 import src.domain.Tournament;
+import src.domain.match.RealMatch;
 import src.exceptions.LoginFailedException;
 import src.generated.exchange.BFExchangeServiceStub.Market;
 import src.generated.exchange.BFExchangeServiceStub.Runner;
@@ -64,7 +64,7 @@ public class BetfairConnectionHandler {
 	
 	private static void printTours(Tournament tournament) {
 	      log.info(tournament.toString());
-	      for (Match m : tournament.getMatches())
+	      for (RealMatch m : tournament.getMatches())
 	    	  log.info("\t" + m.toString() + " --or-- " + m.getEventBetfair().getName());
 	}	
 	
@@ -149,12 +149,12 @@ public class BetfairConnectionHandler {
 
 	// filter events to get only the list of matches
 	public static void filterMatches(Tournament tournament) {
-		List<Match> matches = new ArrayList<Match>();
+		List<RealMatch> matches = new ArrayList<RealMatch>();
 		matches = getMatches(matches, tournament.getEventBetfair());
 		tournament.setMatches(matches);
 	}
 	
-	public static List<Match> getMatches(List<Match> matches, EventBetfair eventBetfair) {
+	public static List<RealMatch> getMatches(List<RealMatch> matches, EventBetfair eventBetfair) {
 		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof EventBetfair) {
 				if (isMatch((EventBetfair)emb)) {
@@ -172,8 +172,8 @@ public class BetfairConnectionHandler {
 		return MatchUtils.isMatch(emb.toString());	
 	}
 	
-	public static Match getMatch(EventBetfair eb) {
-		return new Match("", "", eb);
+	public static RealMatch getMatch(EventBetfair eb) {
+		return new RealMatch("", "", eb);
 	}
 		
 	public static APIContext getApiContext() {
