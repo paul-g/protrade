@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
-import src.domain.Match;
+import src.domain.match.RealMatch;
 import src.model.connection.BetfairExchangeHandler;
 
 import org.apache.log4j.Logger;
@@ -23,15 +23,15 @@ import org.swtchart.ISeries.SeriesType;
 
 public class BetfairDataUpdater implements DataUpdater {
     private List<EventBetfair> events;
-    private HashMap<EventBetfair, Match> matches;
+    private HashMap<EventBetfair, RealMatch> matches;
     private static Logger log = Logger.getLogger(BetfairDataUpdater.class);
 
     public BetfairDataUpdater() {
-        matches = new HashMap<EventBetfair, Match>();
+        matches = new HashMap<EventBetfair, RealMatch>();
         events = new ArrayList<EventBetfair>();
     }
 
-    public void addEvent(Match match) {
+    public void addEvent(RealMatch match) {
         matches.put(match.getEventBetfair(), match);
         events.add(match.getEventBetfair());
     }

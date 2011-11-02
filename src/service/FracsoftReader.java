@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
-import src.domain.Match;
+import src.domain.match.RealMatch;
 import src.utils.Pair;
 
 /**
@@ -32,7 +31,7 @@ public class FracsoftReader implements DataUpdater {
     
     private int inPlayPointer = -1;
     
-    private Match match;
+    private RealMatch match;
     
     private static final int DELAY_OFFSET = 1;
     private static final int NAME_OFFSET = 4;
@@ -40,7 +39,7 @@ public class FracsoftReader implements DataUpdater {
     private static final int LAY_OFFSET = 11;
     
     
-    public FracsoftReader(Match match, String filename) throws FileNotFoundException {
+    public FracsoftReader(RealMatch match, String filename) throws FileNotFoundException {
         this.match = match;
         log.info("Creating fracsoft reader from file " + filename);
         String line1, line2;
@@ -125,7 +124,7 @@ public class FracsoftReader implements DataUpdater {
     }
 
     @Override
-    public void addEvent(Match match) {
+    public void addEvent(RealMatch match) {
         this.match = match;
     }
 

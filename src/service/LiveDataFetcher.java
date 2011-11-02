@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
-import src.domain.Match;
+import src.domain.match.RealMatch;
 import src.ui.updatable.UpdatableWidget;
 
 public class LiveDataFetcher {
@@ -21,7 +21,7 @@ public class LiveDataFetcher {
     private static Composite comp;
     private static boolean started = false;
 
-    public static void register(UpdatableWidget widget, Match match, Composite composite) {
+    public static void register(UpdatableWidget widget, RealMatch match, Composite composite) {
         comp = composite;
         if (dataUpdater == null)
             try {

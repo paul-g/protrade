@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -22,14 +21,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
-import src.Main;
-import src.domain.MOddsMarketData;
-import src.model.connection.BetfairExchangeHandler;
+import src.domain.match.Match;
+import src.domain.match.RealMatch;
 import src.score.PredictionGui;
 import src.service.LiveDataFetcher;
 import src.ui.updatable.UpdatableChart;
@@ -52,12 +47,12 @@ public class DisplayPanel implements Listener {
 
         GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
-        gridData.horizontalSpan = 2;
         gridData.verticalAlignment = GridData.FILL;
+        gridData.horizontalSpan = 2;
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
-
         folder.setLayoutData(gridData);
+        
         setOnClickMenu();
     }
 
@@ -73,43 +68,52 @@ public class DisplayPanel implements Listener {
 
     public void handleEvent(Event event) {
         TreeItem ti = (TreeItem) event.item;
-
+        
+        String name = ti.getText();
+        
         // if it's not a match, don't display
-        if ( !MatchUtils.isMatch(ti.getText()) )
+        if ( !MatchUtils.isMatch(name) )
             return;
+        
+        Match match = NavigationPanel.getMatch(name);
+        
+        addMatchView(match);
+    }
 
+    public void addMatchView(Match match) {
         CTabItem[] items = folder.getItems();
         int pos = -1;
 
+        String matchName = match.toString();
+        
         for (int i = 0; pos == -1 && i < items.length; i++)
-            if (items[i].getText().equals(ti.getText())) {
+            if (items[i].getText().equals(matchName)) {
                 pos = i;
             }
 
         // check new tab has been open
         if (pos == -1) {
             CTabItem item = new CTabItem(folder, SWT.CLOSE);
-            item.setText(ti.getText());
+            item.setText(matchName);
             folder.setSelection(item);
 
             // Composite comp = new Composite(folder, SWT.NONE);
             SashForm comp = new SashForm(folder, SWT.VERTICAL);
 
-            addMatchData(comp, ti);
+            addMatchData(comp, matchName);
             
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             horizontal.setLayout(new FillLayout());
-            addMarketDataGrid(horizontal, ti);
+            addMarketDataGrid(horizontal, matchName);
 
-            if (MatchUtils.inPlay(ti))
-                addPredictionGui(horizontal, ti.getText());
+            if (match.isInPlay())
+                addPredictionGui(horizontal, matchName);
             else {
                 Label score = new Label(horizontal, SWT.BORDER);
                 score.setText("Match is not in progress - No score available");
             }
             
-            
-            addChart(comp, ti);
+            addChart(comp, matchName);
 
             item.setControl(comp);
 
@@ -123,13 +127,13 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addMatchData(Composite comp, TreeItem ti){
+    private void addMatchData(Composite comp, String matchName){
         Composite composite = new Composite(comp, SWT.BORDER);
         RowLayout rowLayout = new RowLayout();
         rowLayout.type = SWT.HORIZONTAL;
         composite.setLayout(rowLayout);
         Label name = new Label(composite, SWT.BORDER);
-        name.setText("Match : " + ti.getText());
+        name.setText("Match : " + matchName);
         Label status = new Label(composite, SWT.BORDER);
         status.setText("Status: " + " IN PROGRESS");
     }
@@ -140,12 +144,12 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addChart(Composite comp, TreeItem ti) {
+    private void addChart(Composite comp, String matchName) {
     	Button changeAxisButton = new Button(comp, SWT.LEFT);
     	changeAxisButton.setText("Switch odds representation");
     	   	
         final UpdatableChart chart = new UpdatableChart(comp, SWT.BORDER);
-        chart.getTitle().setText(ti.getText());
+        chart.getTitle().setText(matchName);
         GridData chartData = new GridData();
         chartData.horizontalSpan = 2;
         
@@ -158,7 +162,7 @@ public class DisplayPanel implements Listener {
         
         //Logger log = Logger.getLogger(DisplayPanel.class);
         //log.info("created chart, now got to register");
-        LiveDataFetcher.register(chart, NavigationPanel.getMatch(ti), comp);
+        LiveDataFetcher.register(chart, NavigationPanel.getMatch(matchName), comp);
         //log.info("Chart registered successfully!");
         comp.update();
     }
@@ -169,10 +173,10 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addMarketDataGrid(Composite comp, TreeItem ti) {
+    private void addMarketDataGrid(Composite comp, String matchName) {
         //Table table = new Table(comp, SWT.BORDER);
-    	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp,ti);
-    	LiveDataFetcher.register(table, NavigationPanel.getMatch(ti), comp);
+    	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
+    	LiveDataFetcher.register(table, NavigationPanel.getMatch(matchName), comp);
     }
 
     private void setOnClickMenu() {

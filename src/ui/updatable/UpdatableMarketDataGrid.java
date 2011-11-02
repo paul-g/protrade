@@ -10,7 +10,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TreeItem;
 
 import src.domain.MOddsMarketData;
 import src.utils.Pair;
@@ -30,7 +29,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
     private Font oddsFont;
     private Font titleFont;
 
-    public UpdatableMarketDataGrid(Composite parent, TreeItem ti) {
+    public UpdatableMarketDataGrid(Composite parent) {
         composite = new Composite(parent, SWT.BORDER);
         composite.setLayout(new GridLayout(7, true));
 

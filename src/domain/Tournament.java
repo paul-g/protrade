@@ -2,31 +2,33 @@ package src.domain;
 
 import java.util.List;
 
+import src.domain.match.RealMatch;
+
 public class Tournament {
 	private String name;
 	private EventBetfair eventBetfair;
-	private List<Match> matches;
+	private List<RealMatch> matches;
 	
 	public Tournament(String name, EventBetfair eb) {
 		this.name = name;
 		this.setEventBetfair(eb);
 	}
 	
-	public Tournament (String name, List<Match> matches, EventBetfair eb) {
+	public Tournament (String name, List<RealMatch> matches, EventBetfair eb) {
 		this.name = name;
 		this.matches = matches;
 		this.setEventBetfair(eb);
 	}
 
-	public void addMatch(Match newMatch) {
+	public void addMatch(RealMatch newMatch) {
 		this.matches.add(newMatch);
 	}
 	
-	public List<Match> getMatches() {
+	public List<RealMatch> getMatches() {
 		return this.matches;
 	}
 	
-	public void setMatches(List<Match> matches) {
+	public void setMatches(List<RealMatch> matches) {
 		this.matches = matches;
 	}
 	

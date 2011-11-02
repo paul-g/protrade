@@ -144,4 +144,8 @@ public class MainWindow {
     public void dispose() {
         shell.dispose();
     }
+    
+    public DisplayPanel getDisplayPanel(){
+        return dp;
+    }
 }

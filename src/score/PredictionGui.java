@@ -52,9 +52,8 @@ public class PredictionGui {
             @Override
             public void run() {
                 handleUpdate();
-                parent.getDisplay().timerExec(2000, this);
+                parent.getDisplay().timerExec(5000, this);
             }
-
         });
     }
 
@@ -158,6 +157,7 @@ public class PredictionGui {
             item.setText(0, "");
             item2.setText(0, "S");
         }
+        
         int c = 1;
 
         System.out.println(matchIndex + "");
