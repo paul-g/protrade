@@ -101,12 +101,14 @@ public class DisplayPanel implements Listener {
             horizontal.setLayout(new FillLayout());
             addMarketDataGrid(horizontal, ti);
 
+            /*
             if (MatchUtils.inPlay(ti))
                 addPredictionGui(horizontal, ti.getText());
             else {
+            */
                 Label score = new Label(horizontal, SWT.BORDER);
                 score.setText("Match is not in progress - No score available");
-            }
+            //}
             
             
             addChart(comp, ti);
@@ -158,7 +160,7 @@ public class DisplayPanel implements Listener {
         
         //Logger log = Logger.getLogger(DisplayPanel.class);
         //log.info("created chart, now got to register");
-        LiveDataFetcher.register(chart, NavigationPanel.getMatch(ti), comp);
+        LiveDataFetcher.registerLive(chart, NavigationPanel.getMatch(ti), comp);
         //log.info("Chart registered successfully!");
         comp.update();
     }
@@ -172,7 +174,7 @@ public class DisplayPanel implements Listener {
     private void addMarketDataGrid(Composite comp, TreeItem ti) {
         //Table table = new Table(comp, SWT.BORDER);
     	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp,ti);
-    	LiveDataFetcher.register(table, NavigationPanel.getMatch(ti), comp);
+    	LiveDataFetcher.registerLive(table, NavigationPanel.getMatch(ti), comp);
     }
 
     private void setOnClickMenu() {

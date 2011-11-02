@@ -107,15 +107,14 @@ public class FracsoftReader implements DataUpdater {
     
     @Override
     public void run() {
-        
+        /*
         MOddsMarketData newData = getMarketData();
-
-        HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
-        
+        HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();        
         if (newData != null )
-            newMap.put(match.getEventBetfair(), newData);
-        
+            newMap.put(match.getEventBetfair(), newData);        
         LiveDataFetcher.handleEvent(newMap);
+        */
+        LiveDataFetcher.handleFileEvent(this.match, getMarketData());
     }
     
     private MOddsMarketData getMarketData(){

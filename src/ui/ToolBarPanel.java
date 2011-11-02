@@ -107,12 +107,15 @@ public class ToolBarPanel{
 			  dialog.setFileName ("myfile");
 			  
 			  // TODO: link with thread updater
+			  /*
 			  try {
 			    LiveDataFetcher.setDataUpdater(new FracsoftReader(NavigationPanel.getSelectedMatch(), dialog.open()));
 			    LiveDataFetcher.start();
 			  } catch (FileNotFoundException e){
 			    log.error(e.getMessage());
 			  }
+			  */
+			  
 			}
 			
 		});
