@@ -30,16 +30,9 @@ public class LiveDataFetcher {
         comp = composite;
         if (dataUpdater == null)
             dataUpdater = new BetfairDataUpdater();
-            /*
-            try {
-                dataUpdater = new FracsoftReader(match, "fracsoft-data/fracsoft1.csv");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return;
-            }
-            */
         dataUpdater.addEvent(match);
         List<UpdatableWidget> widgets;
+        // add the widget as listener to the given match
         if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
             widgets = listeners.get(match.getEventBetfair().getBetfairId());
         } else {
@@ -47,7 +40,7 @@ public class LiveDataFetcher {
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
-        
+        // start the thread
         if (!started){
             started = true;
             start();
@@ -93,7 +86,7 @@ public class LiveDataFetcher {
             public void run() {
                 dataUpdater.run();
                 if (!comp.isDisposed() )
-                    comp.getDisplay().timerExec(1000, this);
+                    comp.getDisplay().timerExec(5000, this);
             }
         });
         log.info("after run in thread");

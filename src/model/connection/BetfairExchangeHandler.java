@@ -26,7 +26,7 @@ import src.utils.Pair;
 public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);
 	
-	// returns a string with Match Odds info
+	// returns the match odds market data info
 	public static MOddsMarketData getMarketOdds(EventBetfair m) {
 		MOddsMarketData modds = new MOddsMarketData();
 		try {
@@ -140,9 +140,5 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				return result;
 			} 
 			return null;
-		}
-		
-		
-	
-	
+		}	
 }

@@ -50,7 +50,7 @@ public class DisplayPanel implements Listener {
         folder.setMaximizeVisible(true);
         
         /**************/
-        folder.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+        //folder.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
@@ -112,12 +112,14 @@ public class DisplayPanel implements Listener {
             horizontal.setLayout(new FillLayout());
             addMarketDataGrid(horizontal, match);
 
+            
             if (match.isInPlay())
                 addPredictionGui(horizontal, matchName);
             else {
                 Label score = new Label(horizontal, SWT.BORDER);
                 score.setText("Match is not in progress - No score available");
             }
+            
             
             addChart(comp, match);
 

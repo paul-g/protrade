@@ -49,7 +49,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		firstSeries.setSymbolSize(4);
 		firstSeries.setSymbolType(PlotSymbolType.CROSS);
 
-		// /build second series
+		// build second series
 		secondSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
 				"back odds player 2");
 		Color colorSr2 = new Color(Display.getDefault(), 0, 255, 0);
@@ -66,10 +66,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		Date[] newXSeries;
 		int i = 0;
 		// if graph already displaying values
-		if (firstSeries.getYSeries() != null) {
+		if (firstSeries.getYSeries() != null && secondSeries.getYSeries() != null) {
 			Date[] prevXSeries = firstSeries.getXDateSeries();
-			double[] prevPl1YSeries = pl1YSeries;
-			double[] prevPl2YSeries = pl2YSeries;
+			double[] prevPl1YSeries = firstSeries.getYSeries();//pl1YSeries;
+			double[] prevPl2YSeries = secondSeries.getYSeries();//pl2YSeries;
 			// if not reached max sample size
 			if (prevXSeries.length < sampleSize) {
 				newXSeries = new Date[prevXSeries.length + 1];
@@ -98,14 +98,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		}
 
 		newXSeries[i] = Calendar.getInstance().getTime();
-		// if data has been read from Betfair
-		pl1YSeries = addValue(pl1YSeries, data, i, true);
-		pl2YSeries = addValue(pl2YSeries, data, i, false);
+		
+		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
+		pl2YSeries = addValue(pl2YSeries, i, data.getPl2Back());
 
-		// set first series values
-
-		firstSeries.setVisible(pl1Selected);
-		secondSeries.setVisible(pl2Selected);
+		// set serieses values
 		firstSeries.setXDateSeries(newXSeries);
 		firstSeries.setYSeries(pl1YSeries);
 		secondSeries.setXDateSeries(newXSeries);
@@ -114,23 +111,22 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			this.getAxisSet().adjustRange();
 	}
 
-	private double[] addValue(double[] series, MOddsMarketData data, int i,
-			boolean pl1) {
-		ArrayList<Pair<Double, Double>> oddData;
-		oddData = pl1 ? data.getPl1Back() : data.getPl2Back();
+	private double[] addValue(double[] series, int i, ArrayList<Pair<Double, Double>> oddData) {
+		// if data has been read from Betfair
 		if (oddData != null && oddData.size() > 0) {
-			series[i] = oddData.get(0).getI();
-
+			series[i] = oddData.get(0).getI();			
+			if (!decimalOdds) // convert to fractional odds if necessary
+				series[i]--;
 		} else {
 			if (i > 0) // keep previous value if it exists
 				series[i] = series[i - 1];
-			else
-				// put zero if no previous value
+			else // put zero if no previous value				
 				series[i] = 0;
-		}
+		}			
 		return series;
 	}
 
+	// switches between the two odds representations
 	public void invertAxis() {
 		int changeValue = decimalOdds ? (-1) : 1;
 		decimalOdds = !decimalOdds;
@@ -140,17 +136,18 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			this.getAxisSet().getYAxis(0).getTitle().setText(
 					yAxisFractionalTitle);
 
-		resetOddValues(changeValue);
+		firstSeries.setYSeries(adjustSeriesValues(changeValue, firstSeries.getYSeries()));
+		secondSeries.setYSeries(adjustSeriesValues(changeValue, secondSeries.getYSeries()));
+		
 		updateDisplay();
 	}
 
-	private void resetOddValues(int changeValue) {
-		if (firstSeries.getYSeries() != null) {
-			double[] ySeries = firstSeries.getYSeries();
-			for (int i = 0; i < ySeries.length; i++)
-				ySeries[i] += changeValue;
-			firstSeries.setYSeries(ySeries);
+	private double[] adjustSeriesValues(int changeValue, double[] series) {
+		if (series != null) {
+			for (int i = 0; i < series.length; i++)
+				series[i] += changeValue;
 		}
+		return series;
 	}
 
 	/*
@@ -180,6 +177,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	public void changeSelected(int i) {
 		if (i == 1)	pl1Selected = !pl1Selected;
 		else if (i==2) pl2Selected = !pl2Selected;
+		firstSeries.setVisible(pl1Selected);
+		secondSeries.setVisible(pl2Selected);
 		updateDisplay();
 	}
 

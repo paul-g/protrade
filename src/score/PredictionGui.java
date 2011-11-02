@@ -48,11 +48,11 @@ public class PredictionGui {
             // throw new RuntimeException();
         }
 
-        parent.getDisplay().timerExec(5000, new Runnable() {
+        parent.getDisplay().timerExec(10000, new Runnable() {
             @Override
             public void run() {
                 handleUpdate();
-                parent.getDisplay().timerExec(5000, this);
+                parent.getDisplay().timerExec(10000, this);
             }
         });
     }
@@ -127,7 +127,7 @@ public class PredictionGui {
         try {
             scores = extractScores(matchName);
         } catch (Exception exception) {
-            log.error(exception.getMessage());
+            //log.error(exception.getMessage());
             exception.printStackTrace();
         }
 
