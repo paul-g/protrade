@@ -15,8 +15,8 @@ public class MatchUtils {
     
     public static boolean inPlay(TreeItem ti){
     	Match match = NavigationPanel.getMatch(ti);
-    	if (match.getMarketData() == null)
-    		match.setMarketData(BetfairExchangeHandler.getMarketOdds(match.getEventBetfair()));
-        return match.getMarketData().getDelay() > 0;
+    	if (match.getRecentMarketData() == null)
+    		match.addMarketData(BetfairExchangeHandler.getMarketOdds(match.getEventBetfair()));
+        return match.getRecentMarketData().getDelay() > 0;
     }
 }

@@ -1,15 +1,18 @@
 package src.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Match {
 	private String player1, player2;
 	private EventBetfair eventBetfair;
-	MOddsMarketData marketData;
+	private List<MOddsMarketData> marketDatas;
 	
 	public Match(String player1, String player2, EventBetfair eb) {
 		this.player1 = player1;
 		this.player2 = player2;
 		this.setEventBetfair(eb);
-		marketData = null;
+		setMarketDatas(new ArrayList<MOddsMarketData>());
 	}
 	
 	public String toString() {
@@ -25,11 +28,21 @@ public class Match {
 		return eventBetfair;
 	}
 	
-	public void setMarketData(MOddsMarketData marketData) {
-		this.marketData = marketData;
+	public void addMarketData(MOddsMarketData marketData) {
+		this.marketDatas.add(marketData);
 	}
 	
-	public MOddsMarketData getMarketData() {
-		return this.marketData;
+	public MOddsMarketData getRecentMarketData() {
+		if (this.marketDatas.size() == 0)
+			return null;
+		return this.marketDatas.get(this.marketDatas.size() - 1);
+	}
+	
+	public void setMarketDatas(List<MOddsMarketData> marketDatas) {
+		this.marketDatas = marketDatas;
+	}
+
+	public List<MOddsMarketData> getMarketDatas() {
+		return marketDatas;
 	}
 }

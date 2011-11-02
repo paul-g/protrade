@@ -90,7 +90,7 @@ public class LoginShell{
       public void handleEvent(Event arg0) {
         String username = Main.USERNAME;
         String password = Main.PASSWORD;
-        log.info("username " + username + " password " + password);
+        log.info("username " + username);
        if (checkLogin(username, password )) {
           updateResult(SUCCESS);
           loginShell.dispose();

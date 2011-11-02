@@ -141,15 +141,25 @@ public class DisplayPanel implements Listener {
      * @param ti
      */
     private void addChart(Composite comp, TreeItem ti) {
-        UpdatableChart chart = new UpdatableChart(comp, SWT.BORDER);
+    	Button changeAxisButton = new Button(comp, SWT.LEFT);
+    	changeAxisButton.setText("Switch odds representation");
+    	   	
+        final UpdatableChart chart = new UpdatableChart(comp, SWT.BORDER);
         chart.getTitle().setText(ti.getText());
         GridData chartData = new GridData();
         chartData.horizontalSpan = 2;
-
-        Logger log = Logger.getLogger(DisplayPanel.class);
-        log.info("created chart, now got to register");
+        
+        changeAxisButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				chart.invertAxis();
+			}    		
+    	});
+        
+        //Logger log = Logger.getLogger(DisplayPanel.class);
+        //log.info("created chart, now got to register");
         LiveDataFetcher.register(chart, NavigationPanel.getMatch(ti), comp);
-        log.info("Chart registered successfuly!");
+        //log.info("Chart registered successfully!");
         comp.update();
     }
 
