@@ -23,67 +23,55 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 
-
-import src.Main;
-import src.domain.MOddsMarketData;
-import src.model.connection.BetfairExchangeHandler;
 import src.domain.match.Match;
-import src.domain.match.RealMatch;
 import src.score.PredictionGui;
-import src.service.LiveDataFetcher;
 import src.ui.updatable.UpdatableChart;
 import src.ui.updatable.UpdatableMarketDataGrid;
 import src.utils.MatchUtils;
 
 public class DisplayPanel implements Listener {
 
-	private final CTabFolder folder;
-	private Display display;
-	private CTabItem selected;
+    private final CTabFolder folder;
+    private Display display;
+    private CTabItem selected;
 
-	private static Logger log = Logger.getLogger(DisplayPanel.class);
+    private static Logger log = Logger.getLogger(DisplayPanel.class);
 
     public DisplayPanel(Composite parent) {
         folder = new CTabFolder(parent, SWT.RESIZE | SWT.BORDER);
         folder.setSimple(false);
         folder.setMinimizeVisible(true);
         folder.setMaximizeVisible(true);
-        
+
         /**************/
-        //folder.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+        // folder.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 2;
-		gridData.verticalAlignment = GridData.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
+        folder.setLayoutData(makeLayoutData());
 
-		folder.setLayoutData(gridData);
-		setOnClickMenu();
-	}
+        setOnClickMenu();
+    }
 
-	public void addTab(String text) {
-		CTabItem cti = new CTabItem(folder, SWT.CLOSE);
-		cti.setText(text);
-		folder.setSelection(cti);
-	}
+    public void addTab(String text) {
+        CTabItem cti = new CTabItem(folder, SWT.CLOSE);
+        cti.setText(text);
+        folder.setSelection(cti);
+    }
 
-	private void addPredictionGui(Composite composite, String title) {
-		new PredictionGui(composite, title);
-	}
+    private void addPredictionGui(Composite composite, String title) {
+        new PredictionGui(composite, title);
+    }
 
     public void handleEvent(Event event) {
         TreeItem ti = (TreeItem) event.item;
-        
+
         String name = ti.getText();
-        
+
         // if it's not a match, don't display
-        if ( !MatchUtils.isMatch(name) )
+        if (!MatchUtils.isMatch(name))
             return;
-        
+
         Match match = NavigationPanel.getMatch(name);
-        
+
         addMatchView(match);
     }
 
@@ -92,7 +80,7 @@ public class DisplayPanel implements Listener {
         int pos = -1;
 
         String matchName = match.toString();
-        
+
         for (int i = 0; pos == -1 && i < items.length; i++)
             if (items[i].getText().equals(matchName)) {
                 pos = i;
@@ -100,42 +88,45 @@ public class DisplayPanel implements Listener {
 
         // check new tab has been open
         if (pos == -1) {
+            
             CTabItem item = new CTabItem(folder, SWT.CLOSE);
+            
             item.setText(matchName);
-            folder.setSelection(item);
 
             SashForm comp = new SashForm(folder, SWT.VERTICAL);
+            comp.setLayout(new FillLayout());
 
             addMatchData(comp, matchName);
-            
+
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             horizontal.setLayout(new FillLayout());
             addMarketDataGrid(horizontal, match);
 
-            
             if (match.isInPlay())
                 addPredictionGui(horizontal, matchName);
             else {
                 Label score = new Label(horizontal, SWT.BORDER);
                 score.setText("Match is not in progress - No score available");
             }
-            
-            
+
             addChart(comp, match);
 
             item.setControl(comp);
+            
+            folder.setSelection(item);
 
         } else
             // just bring the required tab under focus
             folder.setSelection(pos);
     }
-    
+
     /**
      * Adds an area for displaying match data
+     * 
      * @param comp
      * @param ti
      */
-    private void addMatchData(Composite comp, String matchName){
+    private void addMatchData(Composite comp, String matchName) {
         Composite composite = new Composite(comp, SWT.BORDER);
         RowLayout rowLayout = new RowLayout();
         rowLayout.type = SWT.HORIZONTAL;
@@ -144,6 +135,7 @@ public class DisplayPanel implements Listener {
         name.setText("Match : " + matchName);
         Label status = new Label(composite, SWT.BORDER);
         status.setText("Status: " + " IN PROGRESS");
+        composite.pack();
     }
 
     /**
@@ -153,70 +145,14 @@ public class DisplayPanel implements Listener {
      * @param ti
      */
     private void addChart(Composite comp, Match match) {
-    	Button changeAxisButton = new Button(comp, SWT.LEFT);
-    	changeAxisButton.setText("Switch odds representation");
-    	
-    	// Select values on chart
-    	Composite c = new Composite(comp, SWT.NONE);
-    	GridLayout gridLayout = new GridLayout();
-    	gridLayout.numColumns = 2;
-    	gridLayout.makeColumnsEqualWidth = true;
-    	c.setLayout(gridLayout);
-    	
-    	GridData gridData = new GridData(GridData.VERTICAL_ALIGN_END);
-        gridData.horizontalSpan = 2;
-    	Label chartSelection = new Label(c, SWT.NULL);
-    	chartSelection.setLayoutData(gridData);
-    	chartSelection.setText("Display values for:");
-    	final Button pl1Selection  = new Button(c,SWT.CHECK);
-    	pl1Selection.setText("Player 1");
-    	pl1Selection.setSelection(true);
-    	final Button pl2Selection  = new Button(c,SWT.CHECK);
-    	pl2Selection.setText("Player 2");
-    	
-        final UpdatableChart chart = new UpdatableChart(comp, SWT.BORDER);
+        // Select values on chart
+        Composite c = new Composite(comp, SWT.NONE);
+        c.setLayout(new FillLayout());
+        final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER);
         chart.getTitle().setText(match.getName());
-        GridData chartData = new GridData();
-        chartData.horizontalSpan = 2;
+ 
+        match.registerForUpdate(chart, c);
         
-        Listener checkButton1 = new Listener(){
-			public void handleEvent(Event event) {
-				//cannot deselect both
-				if (!pl1Selection.getSelection()){
-					if (!pl2Selection.getSelection()){
-						pl1Selection.setSelection(true);
-						return;
-					}
-				}
-				chart.changeSelected(1);
-			}
-        	
-        };
-        Listener checkButton2 = new Listener(){
-			public void handleEvent(Event event) {
-				//cannot deselect both
-				if (!pl2Selection.getSelection()){
-					if (!pl1Selection.getSelection()){
-						pl2Selection.setSelection(true);
-						return;
-					}
-				}
-				chart.changeSelected(2);
-			}
-        };
-        
-        pl1Selection.addListener (SWT.Selection, checkButton1);
-        pl2Selection.addListener (SWT.Selection, checkButton2);
-        
-        // end 
-        changeAxisButton.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				chart.invertAxis();
-			}    		
-    	});
-        
-      match.registerForUpdate(chart, comp);
         comp.update();
     }
 
@@ -227,8 +163,8 @@ public class DisplayPanel implements Listener {
      * @param ti
      */
     private void addMarketDataGrid(Composite comp, Match match) {
-    	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
-    	match.registerForUpdate(table, comp);
+        UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
+        match.registerForUpdate(table, comp);
     }
 
     private void setOnClickMenu() {
@@ -236,47 +172,58 @@ public class DisplayPanel implements Listener {
         MenuItem openItem = new MenuItem(popup, SWT.NONE);
         openItem.setText("Open in a new window");
         openItem.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (selected != null) {
-					Shell shell = new Shell(display);
-					CTabItem ni = selected;
-					shell.setText(ni.getText());
-					SashForm sashForm = (SashForm) ni.getControl();
-					sashForm.setFocus();
-					sashForm.setParent(shell);
-					sashForm.pack();
-					shell.open();
-				}
-			}
-		});
-		MenuItem closeItem = new MenuItem(popup, SWT.NONE);
-		closeItem.setText("Close");
-		MenuItem closeAll = new MenuItem(popup, SWT.NONE);
-		closeAll.setText("Close All");
-		folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
-	}
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
 
-	private class RightClickListener implements Listener {
-		private Menu menu;
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (selected != null) {
+                    Shell shell = new Shell(display);
+                    CTabItem ni = selected;
+                    shell.setText(ni.getText());
+                    SashForm sashForm = (SashForm) ni.getControl();
+                    sashForm.setFocus();
+                    sashForm.setParent(shell);
+                    sashForm.pack();
+                    shell.open();
+                }
+            }
+        });
+        MenuItem closeItem = new MenuItem(popup, SWT.NONE);
+        closeItem.setText("Close");
+        MenuItem closeAll = new MenuItem(popup, SWT.NONE);
+        closeAll.setText("Close All");
+        folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
+    }
 
-		public RightClickListener(Menu menu) {
-			this.menu = menu;
-		}
+    private class RightClickListener implements Listener {
+        private Menu menu;
 
-		@Override
-		public void handleEvent(Event event) {
-			Point click = new Point(event.x, event.y);
-			Point point = folder.getDisplay().map(null, folder, click);
-			CTabItem item = folder.getItem(point);
-			if (item != null) {
-				selected = item;
-				menu.setLocation(click);
-				menu.setVisible(true);
-			}
-		}
-	}
+        public RightClickListener(Menu menu) {
+            this.menu = menu;
+        }
+
+        @Override
+        public void handleEvent(Event event) {
+            Point click = new Point(event.x, event.y);
+            Point point = folder.getDisplay().map(null, folder, click);
+            CTabItem item = folder.getItem(point);
+            if (item != null) {
+                selected = item;
+                menu.setLocation(click);
+                menu.setVisible(true);
+            }
+        }
+    }
+
+    private GridData makeLayoutData() {
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.verticalAlignment = GridData.FILL;
+        gridData.horizontalSpan = 2;
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        return gridData;
+    }
 }
