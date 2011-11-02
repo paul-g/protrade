@@ -3,9 +3,13 @@ package src.domain.match;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.widgets.Composite;
+
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
 import src.model.connection.BetfairExchangeHandler;
+import src.service.LiveDataFetcher;
+import src.ui.updatable.UpdatableWidget;
 
 /**
  * An upcoming or in play match
@@ -63,5 +67,9 @@ public class RealMatch implements Match{
 	
 	public String getName(){
 	    return toString();
+	}
+	
+	public void registerForUpdate(UpdatableWidget widget, Composite composite){
+	    LiveDataFetcher.registerLive(widget, this, composite);
 	}
 }

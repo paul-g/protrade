@@ -202,14 +202,8 @@ public class ToolBarPanel {
         if (filename != null) {
 
             // TODO: change the match to a Historical match
-            try {
-                LiveDataFetcher.setDataUpdater(new FracsoftReader(
-                        NavigationPanel.getSelectedMatch(), filename));
-                LiveDataFetcher.start();
-            } catch (FileNotFoundException e) {
-                log.error(e.getMessage());
-            }
-
+            Match match = new HistoricalMatch(filename);
+            mainWindow.getDisplayPanel().addMatchView(match);
         }
     }
 
@@ -233,5 +227,4 @@ public class ToolBarPanel {
             }
         }
     }
-
 }

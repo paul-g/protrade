@@ -33,38 +33,39 @@ import src.utils.MatchUtils;
 
 public class DisplayPanel implements Listener {
 
-    private final CTabFolder folder;
-    private Display display;
+	private final CTabFolder folder;
+	private Display display;
+	private CTabItem selected;
 
-    private static Logger log = Logger.getLogger(DisplayPanel.class);
+	private static Logger log = Logger.getLogger(DisplayPanel.class);
 
-    public DisplayPanel(Composite parent) {
-    	display = parent.getDisplay();
-        folder = new CTabFolder(parent, SWT.RESIZE | SWT.BORDER);
-        folder.setSimple(false);
-        folder.setMinimizeVisible(true);
-        folder.setMaximizeVisible(true);
+	public DisplayPanel(Composite parent) {
+		display = parent.getDisplay();
+		folder = new CTabFolder(parent, SWT.RESIZE | SWT.BORDER);
+		folder.setSimple(false);
+		folder.setMinimizeVisible(true);
+		folder.setMaximizeVisible(true);
 
-        GridData gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.verticalAlignment = GridData.FILL;
-        gridData.horizontalSpan = 2;
-        gridData.grabExcessHorizontalSpace = true;
-        gridData.grabExcessVerticalSpace = true;
-        folder.setLayoutData(gridData);
-        
-        setOnClickMenu();
-    }
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 2;
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
 
-    public void addTab(String text) {
-        CTabItem cti = new CTabItem(folder, SWT.CLOSE);
-        cti.setText(text);
-        folder.setSelection(cti);
-    }
+		folder.setLayoutData(gridData);
+		setOnClickMenu();
+	}
 
-    private void addPredictionGui(Composite composite, String title) {
-        new PredictionGui(composite, title);
-    }
+	public void addTab(String text) {
+		CTabItem cti = new CTabItem(folder, SWT.CLOSE);
+		cti.setText(text);
+		folder.setSelection(cti);
+	}
+
+	private void addPredictionGui(Composite composite, String title) {
+		new PredictionGui(composite, title);
+	}
 
     public void handleEvent(Event event) {
         TreeItem ti = (TreeItem) event.item;
@@ -97,14 +98,13 @@ public class DisplayPanel implements Listener {
             item.setText(matchName);
             folder.setSelection(item);
 
-            // Composite comp = new Composite(folder, SWT.NONE);
             SashForm comp = new SashForm(folder, SWT.VERTICAL);
 
             addMatchData(comp, matchName);
             
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             horizontal.setLayout(new FillLayout());
-            addMarketDataGrid(horizontal, matchName);
+            addMarketDataGrid(horizontal, match);
 
             if (match.isInPlay())
                 addPredictionGui(horizontal, matchName);
@@ -113,7 +113,7 @@ public class DisplayPanel implements Listener {
                 score.setText("Match is not in progress - No score available");
             }
             
-            addChart(comp, matchName);
+            addChart(comp, match);
 
             item.setControl(comp);
 
@@ -144,12 +144,12 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addChart(Composite comp, String matchName) {
+    private void addChart(Composite comp, Match match) {
     	Button changeAxisButton = new Button(comp, SWT.LEFT);
     	changeAxisButton.setText("Switch odds representation");
     	   	
         final UpdatableChart chart = new UpdatableChart(comp, SWT.BORDER);
-        chart.getTitle().setText(matchName);
+        chart.getTitle().setText(match.getName());
         GridData chartData = new GridData();
         chartData.horizontalSpan = 2;
         
@@ -160,10 +160,7 @@ public class DisplayPanel implements Listener {
 			}    		
     	});
         
-        //Logger log = Logger.getLogger(DisplayPanel.class);
-        //log.info("created chart, now got to register");
-        LiveDataFetcher.register(chart, NavigationPanel.getMatch(matchName), comp);
-        //log.info("Chart registered successfully!");
+      match.registerForUpdate(chart, comp);
         comp.update();
     }
 
@@ -173,10 +170,9 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addMarketDataGrid(Composite comp, String matchName) {
-        //Table table = new Table(comp, SWT.BORDER);
+    private void addMarketDataGrid(Composite comp, Match match) {
     	UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
-    	LiveDataFetcher.register(table, NavigationPanel.getMatch(matchName), comp);
+    	match.registerForUpdate(table, comp);
     }
 
     private void setOnClickMenu() {
@@ -189,37 +185,42 @@ public class DisplayPanel implements Listener {
 			}
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Shell shell = new Shell(display);
-		        shell.setMaximized(true);
-		        GridLayout layout = new GridLayout();
-		        shell.setLayout(layout);
-		        shell.setText("New Window");
-		        shell.open();
+				if (selected != null) {
+					Shell shell = new Shell(display);
+					CTabItem ni = selected;
+					shell.setText(ni.getText());
+					SashForm sashForm = (SashForm) ni.getControl();
+					sashForm.setFocus();
+					sashForm.setParent(shell);
+					sashForm.pack();
+					shell.open();
+				}
 			}
-        });
-        MenuItem closeItem = new MenuItem(popup, SWT.NONE);
-        closeItem.setText("Close");
-        MenuItem closeAll = new MenuItem(popup, SWT.NONE);
-        closeAll.setText("Close All");
-        folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
-    }
+		});
+		MenuItem closeItem = new MenuItem(popup, SWT.NONE);
+		closeItem.setText("Close");
+		MenuItem closeAll = new MenuItem(popup, SWT.NONE);
+		closeAll.setText("Close All");
+		folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
+	}
 
-    private class RightClickListener implements Listener {
-        private Menu menu;
+	private class RightClickListener implements Listener {
+		private Menu menu;
 
-        public RightClickListener(Menu menu) {
-            this.menu = menu;
-        }
+		public RightClickListener(Menu menu) {
+			this.menu = menu;
+		}
 
-        @Override
-        public void handleEvent(Event event) {
-            Point click = new Point(event.x, event.y);
-            Point point = folder.getDisplay().map(null, folder, click);
-            CTabItem item = folder.getItem(point);
-            if (item != null) {
-                menu.setLocation(click);
-                menu.setVisible(true);
-            }
-        }
-    }
+		@Override
+		public void handleEvent(Event event) {
+			Point click = new Point(event.x, event.y);
+			Point point = folder.getDisplay().map(null, folder, click);
+			CTabItem item = folder.getItem(point);
+			if (item != null) {
+				selected = item;
+				menu.setLocation(click);
+				menu.setVisible(true);
+			}
+		}
+	}
 }

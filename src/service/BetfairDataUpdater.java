@@ -42,8 +42,10 @@ public class BetfairDataUpdater implements DataUpdater {
         for (EventBetfair eb : events) {
             MOddsMarketData marketData = BetfairExchangeHandler
                     .getMarketOdds(eb);
-            if (marketData.getPl1Back() != null)
+            if (marketData.getPl1Back() != null) {
                 matches.get(eb).addMarketData(marketData);
+                
+            }
             newMap.put(eb, marketData);
         }
         LiveDataFetcher.handleEvent(newMap);
