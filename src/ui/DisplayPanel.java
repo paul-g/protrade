@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import src.Main;
 import src.domain.MOddsMarketData;
+import src.domain.Match;
 import src.model.connection.BetfairExchangeHandler;
 import src.score.PredictionGui;
 import src.service.LiveDataFetcher;
@@ -143,12 +144,61 @@ public class DisplayPanel implements Listener {
     private void addChart(Composite comp, TreeItem ti) {
     	Button changeAxisButton = new Button(comp, SWT.LEFT);
     	changeAxisButton.setText("Switch odds representation");
-    	   	
+    	final Match match = NavigationPanel.getMatch(ti);
+    	
+    	// Select values on chart
+    	Composite c = new Composite(comp, SWT.NONE);
+    	GridLayout gridLayout = new GridLayout();
+    	gridLayout.numColumns = 2;
+    	gridLayout.makeColumnsEqualWidth = true;
+    	c.setLayout(gridLayout);
+    	
+    	GridData gridData = new GridData(GridData.VERTICAL_ALIGN_END);
+        gridData.horizontalSpan = 2;
+    	Label chartSelection = new Label(c, SWT.NULL);
+    	chartSelection.setLayoutData(gridData);
+    	chartSelection.setText("Display values for:");
+    	final Button pl1Selection  = new Button(c,SWT.CHECK);
+    	pl1Selection.setText("Player 1");
+    	pl1Selection.setSelection(true);
+    	final Button pl2Selection  = new Button(c,SWT.CHECK);
+    	pl2Selection.setText("Player 2");
+    	
         final UpdatableChart chart = new UpdatableChart(comp, SWT.BORDER);
         chart.getTitle().setText(ti.getText());
         GridData chartData = new GridData();
         chartData.horizontalSpan = 2;
         
+        Listener checkButton1 = new Listener(){
+			public void handleEvent(Event event) {
+				//cannot deselect both
+				if (!pl1Selection.getSelection()){
+					if (!pl2Selection.getSelection()){
+						pl1Selection.setSelection(true);
+						return;
+					}
+				}
+				chart.changeSelected(1);
+			}
+        	
+        };
+        Listener checkButton2 = new Listener(){
+			public void handleEvent(Event event) {
+				//cannot deselect both
+				if (!pl2Selection.getSelection()){
+					if (!pl1Selection.getSelection()){
+						pl2Selection.setSelection(true);
+						return;
+					}
+				}
+				chart.changeSelected(2);
+			}
+        };
+        
+        pl1Selection.addListener (SWT.Selection, checkButton1);
+        pl2Selection.addListener (SWT.Selection, checkButton2);
+        
+        // end 
         changeAxisButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
