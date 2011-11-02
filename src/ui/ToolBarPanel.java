@@ -166,6 +166,7 @@ public class ToolBarPanel{
 		final ToolItem widgetItem = new ToolItem(toolbar,SWT.POP_UP);
 		Image img = new Image(shell.getDisplay(),"images/plus_item.png");
 		widgetItem.setImage(img);
+		
 	}
 
 	private class LeftDropDownListener implements Listener {
