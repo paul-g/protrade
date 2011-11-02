@@ -2,13 +2,23 @@ package src.ui;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -27,19 +37,40 @@ public class LoginShell{
   private static final String TITLE = "Login to tennis trader"; 
 
   public LoginShell(final Display display){
-    this.loginShell = new Shell(display, SWT.MAX);
+    this.loginShell = new Shell(display, SWT.MAX/*SWT.NO_TRIM|SWT.ON_TOP */ );//SWT.TRANSPARENCY_ALPHA);
+    loginShell.setSize(614,531);
+    
+    final Image logoUp = new Image (loginShell.getDisplay(), "images/logo_modif.jpg");
+    loginShell.setBackgroundImage(logoUp);
+    
+    Rectangle rect = loginShell.getClientArea();
+    
     loginShell.setText(TITLE);
     GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 5;
+    gridLayout.marginRight = 200;
+    gridLayout.marginLeft = 200;
+    gridLayout.marginTop = 300;
+    gridLayout.marginBottom = 5;
+    //gridLayout.
+    
     loginShell.setLayout(gridLayout);
 
-    GridData gridData = new GridData();
-    gridData.horizontalAlignment = GridData.FILL;
-    gridData.horizontalSpan = 4;
+    GridData gridData = new GridData(150,30);
+    gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
+    gridData.horizontalSpan = 10;
     
-    Label loginLabel = new Label(loginShell, SWT.NONE);
+    GridData gridd = new GridData(GridData.FILL_BOTH);
+    //gridd.horizontalAlignment = GridData.;
+    //gridd.horizontalSpan = 10;
+    gridd.minimumHeight = 500;
+    gridd.minimumWidth = 600;
+    
+    
+    
+    Label loginLabel = new Label(loginShell, SWT.NONE);   
     loginLabel.setText("Username: ");
-
+    
     final Text username = new Text(loginShell, SWT.NONE);
     username.setLayoutData(gridData);
 
@@ -120,10 +151,19 @@ public class LoginShell{
         } else
           updateResult(FAIL);
       }
-    });
+    });    
+    
+    //  Center the login screen
+    Monitor primary = display.getPrimaryMonitor ();
+    Rectangle bounds = primary.getBounds();
+    
+    int x = bounds.x + (bounds.width - rect.width)/2;
+    int y = bounds.y + (bounds.height - rect.height)/2;
+    loginShell.setLocation (x, y);
     
     
-    loginShell.pack();
+    
+    
     loginShell.open();
 
     while (!loginShell.isDisposed()) {
@@ -169,4 +209,4 @@ public class LoginShell{
   private static void launchApp(Display display) {
     new MainWindow(display);
   }
-}
+}  

@@ -1,14 +1,27 @@
-package src.domain;
+package src.domain.match;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Match {
+import org.eclipse.swt.widgets.Composite;
+
+import src.domain.EventBetfair;
+import src.domain.MOddsMarketData;
+import src.model.connection.BetfairExchangeHandler;
+import src.service.LiveDataFetcher;
+import src.ui.updatable.UpdatableWidget;
+
+/**
+ * An upcoming or in play match
+ * @author pg1709
+ *
+ */
+public class RealMatch implements Match{
 	private String player1, player2;
 	private EventBetfair eventBetfair;
 	private List<MOddsMarketData> marketDatas;
 	
-	public Match(String player1, String player2, EventBetfair eb) {
+	public RealMatch(String player1, String player2, EventBetfair eb) {
 		this.player1 = player1;
 		this.player2 = player2;
 		this.setEventBetfair(eb);
@@ -44,5 +57,19 @@ public class Match {
 
 	public List<MOddsMarketData> getMarketDatas() {
 		return marketDatas;
+	}
+	
+	public boolean isInPlay(){
+        if (this.getRecentMarketData() == null)
+            this.addMarketData(BetfairExchangeHandler.getMarketOdds(this.getEventBetfair()));
+        return this.getRecentMarketData().getDelay() > 0;
+	}
+	
+	public String getName(){
+	    return toString();
+	}
+	
+	public void registerForUpdate(UpdatableWidget widget, Composite composite){
+	    LiveDataFetcher.registerLive(widget, this, composite);
 	}
 }

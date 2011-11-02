@@ -26,9 +26,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private String yAxisDecimalTitle = "Decimal Odds";
 	private String yAxisFractionalTitle = "Fractional Odds";
 	private boolean pl2Selected;
-	private static boolean pl1Selected;
-	private static double[] pl1YSeries;
-	private static double[] pl2YSeries;
+	private boolean pl1Selected;
+	private double[] pl1YSeries;
+	private double[] pl2YSeries;
 
 	public UpdatableChart(Composite parent, int style) {
 		super(parent, style);
@@ -64,7 +64,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 */
 	public void fillData(MOddsMarketData data) {
 		Date[] newXSeries;
-		double[] newYSeries;
 		int i = 0;
 		// if graph already displaying values
 		if (firstSeries.getYSeries() != null) {

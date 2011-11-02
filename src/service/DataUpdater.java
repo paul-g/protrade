@@ -1,7 +1,7 @@
 package src.service;
 
-import src.domain.Match;
+import src.domain.match.RealMatch;
 
 public interface DataUpdater extends Runnable{
-    public void addEvent(Match match);
+    public void addEvent(RealMatch match);
 }

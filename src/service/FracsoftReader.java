@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
-import src.domain.Match;
+import src.domain.match.Match;
+import src.domain.match.RealMatch;
 import src.utils.Pair;
 
 /**
@@ -107,15 +107,7 @@ public class FracsoftReader implements DataUpdater {
     
     @Override
     public void run() {
-        
-        MOddsMarketData newData = getMarketData();
-
-        HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
-        
-        if (newData != null )
-            newMap.put(match.getEventBetfair(), newData);
-        
-        LiveDataFetcher.handleEvent(newMap);
+        LiveDataFetcher.handleFileEvent(this.match, getMarketData());
     }
     
     private MOddsMarketData getMarketData(){
@@ -125,8 +117,7 @@ public class FracsoftReader implements DataUpdater {
     }
 
     @Override
-    public void addEvent(Match match) {
+    public void addEvent(RealMatch match) {
         this.match = match;
     }
-
 }

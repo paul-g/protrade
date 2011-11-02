@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import src.domain.EventMarketBetfair;
 import src.domain.MarketBetfair;
 import src.domain.EventBetfair;
-import src.domain.Match;
 import src.domain.Tournament;
+import src.domain.match.RealMatch;
 import src.model.connection.BetfairConnectionHandler;
 import src.utils.Pair;
 
@@ -38,11 +38,14 @@ public class NavigationPanel {
 
 	private String prevSearchBoxText = "";
 
-	private static HashMap<TreeItem, Match> matchMap = new HashMap<TreeItem, Match>();
+	private static HashMap<TreeItem, RealMatch> matchMap = new HashMap<TreeItem, RealMatch>();
 
 	public NavigationPanel(Composite shell) {
 		this.folder = new CTabFolder(shell, SWT.RESIZE | SWT.BORDER);
 		folder.setSimple(false);
+		
+		/***********************/
+        folder.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
@@ -147,7 +150,7 @@ public class NavigationPanel {
 			TreeItem item = new TreeItem(tree, SWT.NONE);
 			item.setText(t.toString());
 			
-			for (Match m : t.getMatches()) {
+			for (RealMatch m : t.getMatches()) {
 				TreeItem child = new TreeItem(item, SWT.NONE);
 				child.setText(m.toString());
 				matchMap.put(child, m);
@@ -165,11 +168,11 @@ public class NavigationPanel {
 		folder.setSelection(cti);
 	}
 
-	public static Match getMatch(TreeItem treeItem) {
+	public static RealMatch getMatch(TreeItem treeItem) {
 		return matchMap.get(treeItem);
 	}
 	
-	public static Match getMatch(String title){
+	public static RealMatch getMatch(String title){
 	    for (TreeItem ti : matchMap.keySet()){
 	        if (getMatch(ti).toString().equals(title))
 	            return getMatch(ti);
@@ -181,7 +184,7 @@ public class NavigationPanel {
 	    return tree.getSelection()[0];
 	}
 	
-	public static Match getSelectedMatch(){
+	public static RealMatch getSelectedMatch(){
 	    return getMatch(getSelection());
 	}
 	
