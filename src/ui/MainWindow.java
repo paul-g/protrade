@@ -34,6 +34,9 @@ public class MainWindow {
     public MainWindow(Display display) {
         this.shell = new Shell(display);
         shell.setMaximized(true);
+        
+        /***********************/
+        shell.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
         GridLayout layout = new GridLayout();
         layout.horizontalSpacing = 10;
@@ -67,6 +70,7 @@ public class MainWindow {
         this.sashFormRight = new SashForm(sashForm, SWT.VERTICAL);
 
         sashForm.setFocus();
+        sashForm.setWeights(new int[] { 30, 70 });
 
         this.np = new NavigationPanel(sashFormLeft);
         this.dp = new DisplayPanel(sashFormRight);

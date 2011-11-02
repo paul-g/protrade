@@ -43,6 +43,9 @@ public class NavigationPanel {
 	public NavigationPanel(Composite shell) {
 		this.folder = new CTabFolder(shell, SWT.RESIZE | SWT.BORDER);
 		folder.setSimple(false);
+		
+		/***********************/
+        folder.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;

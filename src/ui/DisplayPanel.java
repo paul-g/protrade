@@ -43,6 +43,9 @@ public class DisplayPanel implements Listener {
         folder.setSimple(false);
         folder.setMinimizeVisible(true);
         folder.setMaximizeVisible(true);
+        
+        /***********************/
+        folder.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 
         GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
