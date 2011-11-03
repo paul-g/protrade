@@ -42,7 +42,7 @@ public class DisplayPanel implements Listener {
         folder.setSimple(false);
         folder.setMinimizeVisible(true);
         folder.setMaximizeVisible(true);
-
+        
         /**************/
         // folder.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 
@@ -94,12 +94,11 @@ public class DisplayPanel implements Listener {
             item.setText(matchName);
 
             SashForm comp = new SashForm(folder, SWT.VERTICAL);
-            comp.setLayout(new FillLayout());
-
+            
             addMatchData(comp, matchName);
 
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
-            horizontal.setLayout(new FillLayout());
+            
             addMarketDataGrid(horizontal, match);
 
             if (match.isInPlay())
@@ -115,6 +114,8 @@ public class DisplayPanel implements Listener {
             
             folder.setSelection(item);
 
+            horizontal.setWeights(new int[]{60, 40});
+            comp.setWeights(new int[]{10,30, 60});
         } else
             // just bring the required tab under focus
             folder.setSelection(pos);
@@ -129,7 +130,7 @@ public class DisplayPanel implements Listener {
     private void addMatchData(Composite comp, String matchName) {
         Composite composite = new Composite(comp, SWT.BORDER);
         RowLayout rowLayout = new RowLayout();
-        rowLayout.type = SWT.HORIZONTAL;
+        rowLayout.type = SWT.VERTICAL;
         composite.setLayout(rowLayout);
         Label name = new Label(composite, SWT.BORDER);
         name.setText("Match : " + matchName);
@@ -179,13 +180,32 @@ public class DisplayPanel implements Listener {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (selected != null) {
-                    Shell shell = new Shell(display);
+                    // create the new shell
+                    Shell shell = new Shell(display, SWT.RESIZE);
+                    shell.setLayout(new FillLayout());
+                    
+                    // get selected tab
                     CTabItem ni = selected;
+                    
                     shell.setText(ni.getText());
                     SashForm sashForm = (SashForm) ni.getControl();
                     sashForm.setFocus();
                     sashForm.setParent(shell);
                     sashForm.pack();
+
+                    /*                    // create new tab
+                    CTabFolder folder = new CTabFolder(shell, SWT.NONE);
+                    folder.setLayout(new FillLayout());
+                    CTabItem item = new CTabItem(folder, SWT.CLOSE);
+                    item.setText(ni.getText());
+                    ni.getControl().setParent(folder);
+                    item.setControl(ni.getControl());
+                    
+                    // remove selected tab
+//                  ni.dispose();
+                    */
+                    
+                    shell.pack();
                     shell.open();
                 }
             }

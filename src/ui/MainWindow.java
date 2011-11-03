@@ -69,8 +69,9 @@ public class MainWindow {
         this.sashFormLeft = new SashForm(sashForm, SWT.VERTICAL);
         this.sashFormRight = new SashForm(sashForm, SWT.VERTICAL);
 
+        
         sashForm.setFocus();
-        sashForm.setWeights(new int[] { 30, 70 });
+        sashForm.setWeights(new int[]{20,80});
 
         this.np = new NavigationPanel(sashFormLeft);
         this.dp = new DisplayPanel(sashFormRight);
@@ -86,7 +87,7 @@ public class MainWindow {
             if (!display.readAndDispatch())
                 display.sleep();
         }
-
+        
         display.dispose();
     }
 
