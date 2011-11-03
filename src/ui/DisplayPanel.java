@@ -93,7 +93,10 @@ public class DisplayPanel implements Listener {
             
             item.setText(matchName);
 
-            SashForm comp = new SashForm(folder, SWT.VERTICAL);
+            Composite control = new Composite(folder, SWT.NONE);
+            control.setLayout(new FillLayout());
+            
+            SashForm comp = new SashForm(control, SWT.VERTICAL);
             
             addMatchData(comp, matchName);
 
@@ -110,7 +113,7 @@ public class DisplayPanel implements Listener {
 
             addChart(comp, match);
 
-            item.setControl(comp);
+            item.setControl(control);
             
             folder.setSelection(item);
 
@@ -188,7 +191,8 @@ public class DisplayPanel implements Listener {
                     CTabItem ni = selected;
                     
                     shell.setText(ni.getText());
-                    SashForm sashForm = (SashForm) ni.getControl();
+                    Composite comp = (Composite) ni.getControl();
+                    SashForm  sashForm = (SashForm)comp.getChildren()[0];
                     sashForm.setFocus();
                     sashForm.setParent(shell);
                     sashForm.pack();
@@ -205,6 +209,8 @@ public class DisplayPanel implements Listener {
 //                  ni.dispose();
                     */
                     
+                    //ni.setControl(new Composite(folder, SWT.NONE));
+                    ni.dispose();
                     shell.pack();
                     shell.open();
                 }
