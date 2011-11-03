@@ -1,7 +1,5 @@
 package src.ui;
 
-import java.io.FileNotFoundException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,15 +17,11 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.widgets.TreeItem;
 
 import src.Main;
 import src.domain.match.HistoricalMatch;
 import src.domain.match.Match;
-import src.domain.match.RealMatch;
 import src.model.connection.BetfairConnectionHandler;
-import src.service.FracsoftReader;
-import src.service.LiveDataFetcher;
 
 public class ToolBarPanel {
 

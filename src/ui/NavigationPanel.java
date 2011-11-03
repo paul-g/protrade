@@ -19,9 +19,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import src.domain.EventMarketBetfair;
-import src.domain.MarketBetfair;
-import src.domain.EventBetfair;
 import src.domain.Tournament;
 import src.domain.match.RealMatch;
 import src.model.connection.BetfairConnectionHandler;
@@ -72,7 +69,7 @@ public class NavigationPanel {
 		searchBox.setLayoutData(sgridData);
 
 		folder.setLayoutData(gridData);
-		this.tree = new Tree(composite, SWT.NONE);
+		NavigationPanel.tree = new Tree(composite, SWT.NONE);
 		loadTennisMatches(tree);
 		listeners = new ArrayList<Listener>();
 

@@ -10,9 +10,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -197,18 +195,6 @@ public class DisplayPanel implements Listener {
                     sashForm.setParent(shell);
                     sashForm.pack();
 
-                    /*                    // create new tab
-                    CTabFolder folder = new CTabFolder(shell, SWT.NONE);
-                    folder.setLayout(new FillLayout());
-                    CTabItem item = new CTabItem(folder, SWT.CLOSE);
-                    item.setText(ni.getText());
-                    ni.getControl().setParent(folder);
-                    item.setControl(ni.getControl());
-                    
-                    // remove selected tab
-//                  ni.dispose();
-                    */
-                    
                     //ni.setControl(new Composite(folder, SWT.NONE));
                     ni.dispose();
                     shell.pack();

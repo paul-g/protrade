@@ -3,14 +3,12 @@ package src.service;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
 import src.domain.match.Match;
 import src.domain.match.RealMatch;
