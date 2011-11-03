@@ -88,6 +88,7 @@ public class PredictionGui {
         this.scoreTable = new Table(composite, SWT.NONE);
         scoreTable.setBounds(new Rectangle(10, 10, 270, 90));
         scoreTable.setHeaderVisible(true);
+        
         // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
         scoreTable.setLinesVisible(true);
         this.columns = new TableColumn[8];
@@ -153,14 +154,12 @@ public class PredictionGui {
             item2.setText(0, "");
         } else {
             // player 2 serves
-            System.out.println("Server 2");
             item.setText(0, "");
             item2.setText(0, "S");
         }
         
         int c = 1;
 
-        System.out.println(matchIndex + "");
         scores = scores.substring(matchIndex, scores.length());
         String player1 = scores.substring(0, scores.indexOf(")") + 1);
         scores = scores.substring(scores.indexOf("\n") + 1, scores.length());
@@ -193,9 +192,6 @@ public class PredictionGui {
         }
 
         c = 1;
-
-        System.out.println(scores);
-        System.out.println("Substring: \'" + scores.substring(0, 6) + "\'");
 
         scores = skipEmptyLines(scores);
         String player2 = scores.substring(0, scores.indexOf(")") + 1);

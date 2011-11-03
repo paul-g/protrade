@@ -22,6 +22,8 @@ import src.Main;
 import src.domain.match.HistoricalMatch;
 import src.domain.match.Match;
 import src.model.connection.BetfairConnectionHandler;
+import src.service.FracsoftReader;
+import src.utils.Pair;
 
 public class ToolBarPanel {
 
@@ -46,6 +48,55 @@ public class ToolBarPanel {
         toolbar.setLayoutData(gridData);
 
         // New widget menu
+        makeNewWidgetMenu(mainWindow, shell);
+
+        // Play button
+        makePlayMenu(shell);
+
+        // Grid for right alignment
+        GridData loginData = new GridData();
+        loginData.horizontalSpan = 1;
+        loginData.horizontalAlignment = SWT.RIGHT;
+        this.login = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
+        login.setLayoutData(loginData);
+        
+        // Log out/profile menu
+        makeProfileMenu(mainWindow, shell);
+
+    }
+
+    private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
+        final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
+        // TODO: this is a slight hack
+        profileItem.setText(Main.USERNAME);
+        final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
+        MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
+        logout.setText("Log out");
+        logout.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                try {
+                    BetfairConnectionHandler.logout();
+                } catch (Exception e1) {
+                    log.error(e1.getMessage());
+                }
+                Display nd = toolbar.getDisplay();
+                mainWindow.dispose();
+                new LoginShell(nd);
+            }
+        });
+        new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
+        new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
+        profileItem.addListener(SWT.Selection, new RightDropDownListener(
+                profileItem, profileDropDown));
+    }
+
+    private void makeNewWidgetMenu(final MainWindow mainWindow,
+            final Shell shell) {
         final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
         Image img = new Image(shell.getDisplay(), "images/plus_item.png");
         widgetItem.setImage(img);
@@ -82,12 +133,25 @@ public class ToolBarPanel {
         widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
                 widgetItem, widgetDropDown));
         toolbar.pack();
+    }
 
-        // Play button
+    private void makePlayMenu(final Shell shell) {
         final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
         Image play = new Image(shell.getDisplay(), "images/play.png");
         playButtonItem.setImage(play);
+
         final Menu playDropDown = new Menu(shell, SWT.POP_UP);
+        
+        MenuItem usOpenFinal = new MenuItem(playDropDown, SWT.PUSH);
+        usOpenFinal.setText("US Open Final 2011");
+        usOpenFinal.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                // TODO Auto-generated method stub
+                openMatchView("fracsoft-data/fracsoft1.csv");
+            }
+        });
+        
         MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
         playItem.setText("From File");
         playItem.addListener(SWT.Selection, new Listener() {
@@ -117,42 +181,6 @@ public class ToolBarPanel {
         });
         playButtonItem.addListener(SWT.Selection, new LeftDropDownListener(
                 playButtonItem, playDropDown));
-
-        // Grid for right alignment
-        GridData loginData = new GridData();
-        loginData.horizontalSpan = 1;
-        loginData.horizontalAlignment = SWT.RIGHT;
-        this.login = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-        login.setLayoutData(loginData);
-        // Log out/profile menu
-        final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
-        // TODO: this is a slight hack
-        profileItem.setText(Main.USERNAME);
-        final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
-        MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
-        logout.setText("Log out");
-        logout.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                try {
-                    BetfairConnectionHandler.logout();
-                } catch (Exception e1) {
-                    log.error(e1.getMessage());
-                }
-                Display nd = toolbar.getDisplay();
-                mainWindow.dispose();
-                new LoginShell(nd);
-            }
-        });
-        new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
-        new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
-        profileItem.addListener(SWT.Selection, new RightDropDownListener(
-                profileItem, profileDropDown));
-
     }
 
     public ToolBarPanel(final MainWindow mainWindow, boolean isTop) {
@@ -197,6 +225,7 @@ public class ToolBarPanel {
 
             // TODO: change the match to a Historical match
             Match match = new HistoricalMatch(filename);
+            
             mainWindow.getDisplayPanel().addMatchView(match);
         }
     }

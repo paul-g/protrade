@@ -22,8 +22,12 @@ public class RealMatch implements Match{
 	private List<MOddsMarketData> marketDatas;
 	
 	public RealMatch(String player1, String player2, EventBetfair eb) {
-		this.player1 = player1;
-		this.player2 = player2;
+	    String name = eb.getName();
+	    String[] names = name.split(" v ");
+	    if ( names.length == 2){
+	        this.player1 = names[0];
+		    this.player2 = names[1];
+	    }
 		this.setEventBetfair(eb);
 		setMarketDatas(new ArrayList<MOddsMarketData>());
 	}
@@ -72,4 +76,14 @@ public class RealMatch implements Match{
 	public void registerForUpdate(UpdatableWidget widget, Composite composite){
 	    LiveDataFetcher.registerLive(widget, this, composite);
 	}
+
+    @Override
+    public String getPlayer1() {
+        return player1;
+    }
+
+    @Override
+    public String getPlayer2() {
+        return player2;
+    }
 }

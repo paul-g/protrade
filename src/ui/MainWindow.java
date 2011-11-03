@@ -30,8 +30,22 @@ public class MainWindow {
     private NavigationPanel np;
 
     private static Logger log = Logger.getLogger(MainWindow.class);
+    
+    private LoginShell loginShell;
+    
+    private final int BAR_INCREMENT = 5;
 
-    public MainWindow(Display display) {
+    public MainWindow(Display display, LoginShell loginShell) {
+        this.loginShell = loginShell;
+        loginShell.updateProgressBar(BAR_INCREMENT);
+        loginShell.setText("Login successful! Starting application...");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
         this.shell = new Shell(display);
         shell.setMaximized(true);
         
@@ -74,15 +88,47 @@ public class MainWindow {
         sashForm.setWeights(new int[]{20,80});
 
         this.np = new NavigationPanel(sashFormLeft);
-        this.dp = new DisplayPanel(sashFormRight);
+        loginShell.setText("Fetching betfair data");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
+        this.dp = new DisplayPanel(sashFormRight);
+        loginShell.updateProgressBar(BAR_INCREMENT);
+        loginShell.setText("Preparing display");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         np.addListener(dp);
         
         @SuppressWarnings("unused")
         ToolBarPanel bottomPanel = new ToolBarPanel(this, false);
+        
+        loginShell.updateProgressBar(BAR_INCREMENT);
+        loginShell.setText("Configuring tooblars");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
+        loginShell.finishProgressBar();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        loginShell.dispose();
         shell.open();
-
+        
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch())
                 display.sleep();

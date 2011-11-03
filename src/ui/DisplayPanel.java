@@ -96,7 +96,7 @@ public class DisplayPanel implements Listener {
             
             SashForm comp = new SashForm(control, SWT.VERTICAL);
             
-            addMatchData(comp, matchName);
+            addMatchData(comp, match);
 
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             
@@ -128,15 +128,19 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addMatchData(Composite comp, String matchName) {
+    private void addMatchData(Composite comp, Match match) {
         Composite composite = new Composite(comp, SWT.BORDER);
         RowLayout rowLayout = new RowLayout();
         rowLayout.type = SWT.VERTICAL;
         composite.setLayout(rowLayout);
+        
         Label name = new Label(composite, SWT.BORDER);
-        name.setText("Match : " + matchName);
+        name.setText("Match : " + match.getName());
+        
         Label status = new Label(composite, SWT.BORDER);
-        status.setText("Status: " + " IN PROGRESS");
+        String st = (match.isInPlay()? "In Progress" : "Not In Progress");
+        status.setText("Status: " + st);
+        
         composite.pack();
     }
 
@@ -150,9 +154,8 @@ public class DisplayPanel implements Listener {
         // Select values on chart
         Composite c = new Composite(comp, SWT.NONE);
         c.setLayout(new FillLayout());
-        final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER);
-        chart.getTitle().setText(match.getName());
- 
+        final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match);
+         
         match.registerForUpdate(chart, c);
         
         comp.update();
@@ -202,10 +205,30 @@ public class DisplayPanel implements Listener {
                 }
             }
         });
+        
+        // close option
         MenuItem closeItem = new MenuItem(popup, SWT.NONE);
         closeItem.setText("Close");
+        closeItem.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                if (selected != null)
+                   selected.dispose();
+            }
+        });
+        
+        // close all option
         MenuItem closeAll = new MenuItem(popup, SWT.NONE);
         closeAll.setText("Close All");
+        closeAll.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                CTabItem[] items = folder.getItems();
+                for (int i = 0; i< items.length; i++)
+                    items[i].dispose();
+            }
+        });
+        
         folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
     }
 

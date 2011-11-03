@@ -19,6 +19,7 @@ import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
 import src.domain.MOddsMarketData;
+import src.domain.match.Match;
 import src.utils.Pair;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
@@ -33,15 +34,17 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     private boolean pl1Selected;
     private double[] pl1YSeries;
     private double[] pl2YSeries;
+    private Match match;
 
-    public UpdatableChart(Composite parent, int style) {
+    public UpdatableChart(Composite parent, int style, Match match) {
         super(parent, style);
         setSeriesStyles();
+        this.match = match;
         decimalOdds = true;
         this.getAxisSet().getXAxis(0).getTitle().setText(xAxisTitle);
         this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
         pl1Selected = true;
-
+        this.getTitle().setText(match.getName());
         makeMenus(parent);
     }
 
@@ -211,12 +214,12 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
         });
 
         final MenuItem player1 = new MenuItem(menu, SWT.CHECK);
-        player1.setText("Player 1");
+        player1.setText(match.getPlayer1());
         this.setMenu(menu);
         this.getPlotArea().setMenu(menu);
 
         final MenuItem player2 = new MenuItem(menu, SWT.CHECK);
-        player2.setText("Player 2");
+        player2.setText(match.getPlayer2());
 
         player1.addListener(SWT.Selection, new Listener() {
             public void handleEvent(Event event) {

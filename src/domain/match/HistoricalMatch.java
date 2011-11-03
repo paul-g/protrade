@@ -6,14 +6,22 @@ import java.util.Scanner;
 
 import org.eclipse.swt.widgets.Composite;
 
+import src.service.FracsoftReader;
 import src.service.LiveDataFetcher;
 import src.ui.updatable.UpdatableWidget;
+import src.utils.Pair;
 
 public class HistoricalMatch implements Match {
     private String name;
     private String filename;
+    private String player1;
+    private String player2;
     
     public HistoricalMatch(String filename){
+        Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
+        this.player1 = p.getI();
+        this.player2 = p.getJ();
+        
         this.filename = filename;
         this.name = getMatchName();
     }
@@ -50,4 +58,14 @@ public class HistoricalMatch implements Match {
 	public String toString() {
 		return getName();
 	}
+
+    @Override
+    public String getPlayer1() {
+        return player1;
+    }
+
+    @Override
+    public String getPlayer2() {
+        return player2;
+    }
 }
