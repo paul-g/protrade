@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
@@ -27,7 +28,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ILineSeries secondSeries;
 	private ILineSeries maPl1Series;
 	private ILineSeries maPl2Series;
-	private int sampleSize = 80;
+	private int sampleSize = 10; 
 	private boolean decimalOdds;
 	private String xAxisTitle = "Time";
 	private String yAxisDecimalTitle = "Decimal Odds";
@@ -40,10 +41,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private double[] pl2YSeries;
 	private double[] maPl1;
 	private double[] maPl2;
+	private Date[] xSeries;
 	private Match match;
+	private Slider slider;
 
-	public UpdatableChart(Composite parent, int style, Match match) {
+	public UpdatableChart(Composite parent, int style, Match match, Slider slider) {
 		super(parent, style);
+		createSlider(slider);
 		setSeriesStyles();
 		this.match = match;
 		decimalOdds = true;
@@ -52,6 +56,20 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
+	}
+
+	private void createSlider(Slider slider) {
+		this.slider=slider;
+		slider.setMinimum(sampleSize-2);
+		slider.setMaximum(1);
+		slider.setSelection(0);
+		
+        slider.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+            	Slider slider = (Slider)event.widget;
+            	if ( slider.getMaximum() > sampleSize) showSeries(slider.getSelection(), true);
+            }
+          });
 	}
 
 	private void setSeriesStyles() {
@@ -97,74 +115,89 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 * Populates the chart with the given market data
 	 */
 	public void fillData(MOddsMarketData data) {
-		Date[] newXSeries;
 		int i = 0;
 		// if graph already displaying values
 		if (firstSeries.getYSeries() != null
 				&& secondSeries.getYSeries() != null
 				&& maPl1Series.getYSeries() != null
 				&& maPl2Series.getYSeries() != null) {
-			Date[] prevXSeries = firstSeries.getXDateSeries();
-			double[] prevPl1YSeries = firstSeries.getYSeries();// pl1YSeries;
-			double[] prevPl2YSeries = secondSeries.getYSeries();// pl2YSeries;
-			double[] prevMaPl1Series = maPl1Series.getYSeries();// pl1YSeries;
-			double[] prevMaPl2Series = maPl2Series.getYSeries();// pl2YSeries;
+			Date[] prevXSeries = xSeries;
+			double[] prevPl1YSeries = pl1YSeries;// pl1YSeries;
+			double[] prevPl2YSeries = pl2YSeries;// pl2YSeries;
+			double[] prevMaPl1Series = maPl1;// pl1YSeries;
+			double[] prevMaPl2Series = maPl2;// pl2YSeries;
 			// if not reached max sample size
-			if (prevXSeries.length < sampleSize) {
-				newXSeries = new Date[prevXSeries.length + 1];
+			//if (prevXSeries.length < sampleSize) {
+				xSeries = new Date[prevXSeries.length + 1];
 				pl1YSeries = new double[prevXSeries.length + 1];
 				pl2YSeries = new double[prevXSeries.length + 1];
 				maPl1 = new double[prevXSeries.length + 1];
 				maPl2 = new double[prevXSeries.length + 1];
 
 				for (i = 0; i < prevXSeries.length; i++) {
-					newXSeries[i] = prevXSeries[i];
+					xSeries[i] = prevXSeries[i];
 					pl1YSeries[i] = prevPl1YSeries[i];
 					pl2YSeries[i] = prevPl2YSeries[i];
 					maPl1[i] = prevMaPl1Series[i];
 					maPl2[i] = prevMaPl2Series[i];
 				}
-			} else { // discard least recent value
-				newXSeries = new Date[sampleSize];
-				pl1YSeries = new double[sampleSize];
-				pl2YSeries = new double[sampleSize];
-				maPl1 = new double[sampleSize];
-				maPl2 = new double[sampleSize];
-				for (i = 1; i < sampleSize; i++) {
-					newXSeries[i - 1] = prevXSeries[i];
-					pl1YSeries[i - 1] = prevPl1YSeries[i];
-					pl2YSeries[i - 1] = prevPl2YSeries[i];
-					maPl1[i - 1] = prevMaPl1Series[i];
-					maPl2[i - 1] = prevMaPl2Series[i];
-				}
-				i--;
-			}
 		} else {
-			newXSeries = new Date[1];
+			xSeries = new Date[1];
 			pl1YSeries = new double[1];
 			pl2YSeries = new double[1];
 			maPl1 = new double[1];
 			maPl2 = new double[1];
 		}
 
-		newXSeries[i] = Calendar.getInstance().getTime();
+		xSeries[i] = Calendar.getInstance().getTime();
 
 		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
 		pl2YSeries = addValue(pl2YSeries, i, data.getPl2Back());
 		maPl1 = addMaValue(maPl1, i, pl1YSeries);
 		maPl2 = addMaValue(maPl2, i, pl2YSeries);
 
+		if (i>=sampleSize) {
+			if (slider.getSelection() == slider.getMaximum()-1){
+				slider.setMaximum(i+1);
+				slider.setSelection(i);
+			}
+			slider.setMaximum(i+1);
+			updateSlide();
+		}
 		// set serieses values
-		firstSeries.setXDateSeries(newXSeries);
-		firstSeries.setYSeries(pl1YSeries);
-		secondSeries.setXDateSeries(newXSeries);
-		secondSeries.setYSeries(pl2YSeries);
-		maPl1Series.setXDateSeries(newXSeries);
-		maPl1Series.setYSeries(maPl1);
-		maPl2Series.setXDateSeries(newXSeries);
-		maPl2Series.setYSeries(maPl2);
+		showSeries(i,false);
 		if (!this.isDisposed())
 			this.getAxisSet().adjustRange();
+	}
+
+	public void showSeries(int i, boolean dragged) {
+		int size = i<sampleSize ? i : sampleSize;
+		Date showXSeries[] = new Date[size];
+		double[] showPl1YSeries = new double[size];
+		double[] showPl2YSeries = new double[size];
+		double[] showMaPl1 = new double[size];
+		double[] showMaPl2 = new double[size];
+		int z = i<sampleSize ? 0 : 1;
+		if (slider.getMaximum() == slider.getSelection()+1 || dragged){
+			for (int a = 0; a<sampleSize && a<i; a++){
+				showXSeries[a] = xSeries[(i-sampleSize+1)*z+a];
+				showPl1YSeries[a] = pl1YSeries[(i-sampleSize+1)*z+a];
+				showPl2YSeries[a] =	pl2YSeries[(i-sampleSize+1)*z+a];
+				showMaPl1[a] = maPl1[(i-sampleSize+1)*z+a];
+				showMaPl2[a] = maPl2[(i-sampleSize+1)*z+a];
+			}
+			firstSeries.setXDateSeries(showXSeries);
+			firstSeries.setYSeries(showPl1YSeries);
+			secondSeries.setXDateSeries(showXSeries);
+			secondSeries.setYSeries(showPl2YSeries);
+			maPl1Series.setXDateSeries(showXSeries);
+			maPl1Series.setYSeries(showMaPl1);
+			maPl2Series.setXDateSeries(showXSeries);
+			maPl2Series.setYSeries(showMaPl2);
+		}
+		
+		
+		
 	}
 
 	private double[] addMaValue(double[] array, int i,
@@ -242,6 +275,21 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				public void run() {
 					if (!chart.isDisposed())
 						chart.redraw();
+					if (!comp.isDisposed())
+						comp.update();
+				}
+			});
+		}
+	}
+	
+	private void updateSlide() {
+		final Composite comp = slider.getParent();
+		if (comp != null) {
+			comp.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!slider.isDisposed())
+						slider.redraw();
 					if (!comp.isDisposed())
 						comp.update();
 				}

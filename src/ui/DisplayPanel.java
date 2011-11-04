@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.TreeItem;
 
 import src.domain.match.Match;
@@ -110,13 +111,15 @@ public class DisplayPanel implements Listener {
             }
 
             addChart(comp, match);
+            
+           
 
             item.setControl(control);
             
             folder.setSelection(item);
 
             horizontal.setWeights(new int[]{60, 40});
-            comp.setWeights(new int[]{10,30, 60});
+            comp.setWeights(new int[]{10,30, 50,10});
         } else
             // just bring the required tab under focus
             folder.setSelection(pos);
@@ -154,8 +157,14 @@ public class DisplayPanel implements Listener {
         // Select values on chart
         Composite c = new Composite(comp, SWT.NONE);
         c.setLayout(new FillLayout());
-        final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match);
+        Composite slideComp = new Composite(comp, SWT.NONE);
+        slideComp.setLayout(new FillLayout());
+        Slider slider = new Slider(slideComp,SWT.HORIZONTAL);
+        slider.setMaximum(1);
+        slider.setValues(0, 0, 1, 0, 0, 0);
+        final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match,slider);
          
+        
         match.registerForUpdate(chart, c);
         
         comp.update();
