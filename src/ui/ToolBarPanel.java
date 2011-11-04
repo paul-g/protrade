@@ -22,8 +22,6 @@ import src.Main;
 import src.domain.match.HistoricalMatch;
 import src.domain.match.Match;
 import src.model.connection.BetfairConnectionHandler;
-import src.service.FracsoftReader;
-import src.utils.Pair;
 
 public class ToolBarPanel {
 

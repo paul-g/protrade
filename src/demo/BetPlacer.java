@@ -89,6 +89,7 @@ public class BetPlacer extends Thread{
     // Place a bet on the specified market.
     public void placeBet() throws Exception {
         
+        @SuppressWarnings("unused")
         Runner[] runners = selectedMarket.getRunners().getRunner();
         
         // Set up the individual bet to be placed

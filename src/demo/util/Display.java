@@ -181,6 +181,7 @@ public final class Display {
 		
 		println("Runners");
 		for (InflatedCompleteRunner r: prices.getRunners()) {
+		    @SuppressWarnings("unused")
 			Runner marketRunner = null;
 			
 			for (Runner mr: m.getRunners().getRunner()) {

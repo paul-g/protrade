@@ -31,12 +31,9 @@ public class MainWindow {
 
     private static Logger log = Logger.getLogger(MainWindow.class);
     
-    private LoginShell loginShell;
-    
     private final int BAR_INCREMENT = 5;
 
     public MainWindow(Display display, LoginShell loginShell) {
-        this.loginShell = loginShell;
         loginShell.updateProgressBar(BAR_INCREMENT);
         loginShell.setText("Login successful! Starting application...");
         try {

@@ -3,27 +3,16 @@ package src.model.connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
-import src.Main;
-import src.demo.handler.ExchangeAPI;
 import src.demo.handler.GlobalAPI;
-import src.demo.handler.ExchangeAPI.Exchange;
 import src.demo.util.APIContext;
-import src.demo.util.Display;
-import src.demo.util.InflatedMarketPrices;
-import src.demo.util.InflatedMarketPrices.InflatedPrice;
-import src.demo.util.InflatedMarketPrices.InflatedRunner;
 import src.domain.EventMarketBetfair;
 import src.domain.MarketBetfair;
 import src.domain.EventBetfair;
 import src.domain.Tournament;
 import src.domain.match.RealMatch;
 import src.exceptions.LoginFailedException;
-import src.generated.exchange.BFExchangeServiceStub.Market;
-import src.generated.exchange.BFExchangeServiceStub.Runner;
 import src.generated.global.BFGlobalServiceStub.BFEvent;
 import src.generated.global.BFGlobalServiceStub.EventType;
 import src.generated.global.BFGlobalServiceStub.GetEventsResp;
@@ -48,6 +37,7 @@ public class BetfairConnectionHandler {
 		GlobalAPI.logout(apiContext);
 	}
 	
+	@SuppressWarnings("unused")
 	private static void printEvents(int level, EventMarketBetfair event) {
 	      String msg = "";
 	      for(int i = 0 ; i < level; i++)
@@ -61,7 +51,8 @@ public class BetfairConnectionHandler {
 	        printEvents(level + 1, e);
 	      }
 	}	
-	
+
+	@SuppressWarnings("unused")
 	private static void printTours(Tournament tournament) {
 	      log.info(tournament.toString());
 	      for (RealMatch m : tournament.getMatches())
@@ -80,7 +71,6 @@ public class BetfairConnectionHandler {
 			log.info("Failed to get Tennis Event ID - " + e.getMessage());
 		}
 		// filter data to get tournaments and matches only
-		List<EventBetfair> tours = new ArrayList<EventBetfair>();
 		for (EventMarketBetfair emb: events) {
 			if (emb instanceof EventBetfair) {
 				Tournament newTournament = new Tournament(emb.getName(), (EventBetfair)emb);

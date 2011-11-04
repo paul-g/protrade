@@ -1,10 +1,7 @@
 package src.model.connection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import src.demo.handler.ExchangeAPI;
@@ -15,7 +12,6 @@ import src.demo.util.InflatedMarketPrices.InflatedPrice;
 import src.demo.util.InflatedMarketPrices.InflatedRunner;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
-import src.domain.MarketBetfair;
 import src.generated.exchange.BFExchangeServiceStub.Market;
 import src.generated.exchange.BFExchangeServiceStub.Runner;
 import src.generated.global.BFGlobalServiceStub.GetEventsResp;
@@ -75,6 +71,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	}
 	
 	// Returns the string containing the given market info
+	@SuppressWarnings("unused")
 	private static String showMarket(Exchange exch, Market m, InflatedMarketPrices prices){
 		String msg = "";
 		msg += ("Market: "+m.getName()+"("+m.getMarketId()+") on the "+exch+" exchange:") + "\n";

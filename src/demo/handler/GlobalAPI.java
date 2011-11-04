@@ -1,7 +1,6 @@
 package src.demo.handler;
 
 import src.demo.util.APIContext;
-import src.demo.util.UsageMap;
 import src.generated.global.BFGlobalServiceStub;
 import src.generated.global.BFGlobalServiceStub.APIRequestHeader;
 import src.generated.global.BFGlobalServiceStub.APIResponseHeader;

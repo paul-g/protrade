@@ -23,8 +23,6 @@ public class PredictionGui {
 
     private Composite composite;
 
-    private String matchName;
-
     private TableColumn[] columns;
 
     private Table scoreTable;
@@ -58,7 +56,6 @@ public class PredictionGui {
 
     public PredictionGui(final Composite parent, String match) {
         this.updateThread = new UpdateThread(match);
-        this.matchName = match;
         this.composite = new Composite(parent, SWT.BORDER);
         composite.setLayout(new GridLayout());
 
@@ -346,7 +343,7 @@ public class PredictionGui {
         @Override
         public void run() {
             // keep updating the score
-            /*while (true ){
+            while (true ){
                 try {
                     this.score = extractScores(match);
                    // System.out.println("Score: " + this.score);
@@ -359,14 +356,15 @@ public class PredictionGui {
                 }catch(Exception e){
                     System.out.println(e.getMessage());
                 }
-            }*/
+            }
             
+            /*
             try {
                 Thread.sleep(40000);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }
+            }*/
         }
         
         public String getScore(){
@@ -378,6 +376,7 @@ public class PredictionGui {
          * browser with javascript and AJAX enabled and fetches score data from
          * website. Finally, it returns the data for further parsing
          */
+        @SuppressWarnings("serial")
         private String extractScores(String match) throws Exception {
 
             // Create a webClient to emulate Firefox browser
@@ -412,6 +411,7 @@ public class PredictionGui {
             webClient.setThrowExceptionOnScriptError(false);
             webClient.setActiveXNative(true);
             webClient.setCssEnabled(true);
+
             webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
                 @Override
                 public boolean processSynchron(HtmlPage page, WebRequest request,
@@ -456,22 +456,12 @@ public class PredictionGui {
             Iterator<DomNode> itr2 = elem.getChildren().iterator();
             DomNode elem2 = (DomNode) itr2.next();
 
-            String allScores = scores.asText();
             String string2 = elem2.asText();
             
             
             System.out.println("Extracted score");
 
-            /*
-             * int first = Math.min(string2.indexOf("WTA"), string2.indexOf("ATP"));
-             * allScores += "\n" + string2.substring(first);
-             */
-            // System.out.println(scores.asXml());
-            // System.out.println(allScores);
-
             return string2;
-
-            // ////////j++;}
         }
     }
 

@@ -13,7 +13,9 @@ import java.util.TreeSet;
 
 // Keep track of the API usage
 public class UsageMap {
+    @SuppressWarnings("unused")
 	private final Date startTime;
+    
 	private final Map<String, Map<Date, Integer>> callCount;
 	private final List<String> methodsCalled;
 	private final SortedSet<Date> minuteBuckets;

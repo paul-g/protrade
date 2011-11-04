@@ -3,27 +3,18 @@ package src.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
 import src.domain.match.RealMatch;
 import src.model.connection.BetfairExchangeHandler;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Display;
-import org.swtchart.Chart;
-import org.swtchart.IAxisSet;
-import org.swtchart.ILineSeries;
-import org.swtchart.ISeriesSet;
-import org.swtchart.ILineSeries.PlotSymbolType;
-import org.swtchart.ISeries.SeriesType;
 
 public class BetfairDataUpdater implements DataUpdater {
     private List<EventBetfair> events;
     private HashMap<EventBetfair, RealMatch> matches;
+    
+    @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(BetfairDataUpdater.class);
 
     public BetfairDataUpdater() {

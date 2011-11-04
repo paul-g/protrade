@@ -296,6 +296,7 @@ public class InflatedMarketPrices {
 	public static class InflatedPrice {
 		private double price;
 		private double amountAvailable;
+		@SuppressWarnings("unused")
 		private String type;
 		private int depth;
 

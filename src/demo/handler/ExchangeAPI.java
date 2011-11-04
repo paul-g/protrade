@@ -3,7 +3,6 @@ package src.demo.handler;
 import src.demo.util.APIContext;
 import src.demo.util.InflatedCompleteMarketPrices;
 import src.demo.util.InflatedMarketPrices;
-import src.demo.util.UsageMap;
 import src.generated.exchange.BFExchangeServiceStub;
 import src.generated.exchange.BFExchangeServiceStub.APIRequestHeader;
 import src.generated.exchange.BFExchangeServiceStub.APIResponseHeader;

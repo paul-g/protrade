@@ -2,7 +2,6 @@ package src.utils;
 
 import org.eclipse.swt.widgets.TreeItem;
 
-import src.domain.MOddsMarketData;
 import src.domain.match.RealMatch;
 import src.model.connection.BetfairExchangeHandler;
 import src.ui.NavigationPanel;

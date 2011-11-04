@@ -34,6 +34,7 @@ public class DisplayPanel implements Listener {
     private Display display;
     private CTabItem selected;
 
+    @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(DisplayPanel.class);
 
     public DisplayPanel(Composite parent) {

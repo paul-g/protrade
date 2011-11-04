@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.sun.corba.se.spi.logging.LogWrapperFactory;
-
 import src.Main;
 import src.exceptions.LoginFailedException;
 import src.model.connection.BetfairConnectionHandler;
