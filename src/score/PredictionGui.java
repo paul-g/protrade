@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 
 import src.Main;
@@ -29,8 +30,34 @@ public class PredictionGui {
     private Table scoreTable;
 
     private String name1, name2;
+    
+    private UpdateThread updateThread;
+    
+    /**
+     * For running the prediction gui separately
+     */
+    public static void main(String args[]){
+        final Display display = new Display();
+        Shell shell = new Shell(display, SWT.SHELL_TRIM);
+        shell.setLayout(new FillLayout());
+        
+        String matchName = "Bartoli v Medina Garrigues Anabel";
+        
+        new PredictionGui(shell, matchName);
+        
+        shell.open();
+
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch())
+                display.sleep();
+        }
+
+        display.dispose();
+        
+    }
 
     public PredictionGui(final Composite parent, String match) {
+        this.updateThread = new UpdateThread(match);
         this.matchName = match;
         this.composite = new Composite(parent, SWT.BORDER);
         composite.setLayout(new GridLayout());
@@ -48,13 +75,32 @@ public class PredictionGui {
             // throw new RuntimeException();
         }
 
-        parent.getDisplay().timerExec(10000, new Runnable() {
+        parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
             public void run() {
                 handleUpdate();
                 parent.getDisplay().timerExec(10000, this);
             }
         });
+        
+       /* parent.getDisplay().asyncExec(new Runnable() {
+            
+            @Override
+            public void run() {
+                updateThread.run();
+            }
+        });*/
+        
+        /*parent.getDisplay().timerExec(5000, new Runnable() {
+            @Override
+            public void run() {
+                updateThread.run();
+            }
+        });*/
+        
+       updateThread.start();
+        
+
     }
 
     private void createScoreContents(Composite composite, String matchName) {
@@ -120,18 +166,9 @@ public class PredictionGui {
         if (name2.contains("/"))
             name2 = name2.substring(0, name2.indexOf("/"));
 
-        setScores();
     }
 
-    private void setScores() {
-        String scores = "";
-        try {
-            scores = extractScores(matchName);
-        } catch (Exception exception) {
-            //log.error(exception.getMessage());
-            exception.printStackTrace();
-        }
-
+    private void setScores(String scores) {
         int matchIndex = scores.indexOf(name1);
 
         TableItem item;
@@ -274,103 +311,7 @@ public class PredictionGui {
         }
     }
 
-    /*
-     * Gets real-time scores from http://www.livexscores.com/ Emulates a firefox
-     * browser with javascript and AJAX enabled and fetches score data from
-     * website. Finally, it returns the data for further parsing
-     */
-    private String extractScores(String match) throws Exception {
-
-        // Create a webClient to emulate Firefox browser
-        WebClient webClient = new WebClient();// BrowserVersion.FIREFOX_3_6);
-
-        // Customize all webclient listeners and handlers for no warning/info
-        // messages
-        webClient.setIncorrectnessListener(new IncorrectnessListener() {
-            public void notify(String string, Object object) {
-            }
-        });
-        webClient.setCssErrorHandler(new SilentCssErrorHandler());
-        webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
-            public void malformedScriptURL(HtmlPage page, String string,
-                    MalformedURLException exception) {
-            }
-
-            public void loadScriptError(HtmlPage page, URL url,
-                    Exception exception) {
-            }
-
-            public void scriptException(HtmlPage page, ScriptException exception) {
-            }
-
-            public void timeoutError(HtmlPage page, long int1, long int2) {
-            }
-        });
-        webClient.setAlertHandler(new AlertHandler() {
-            public void handleAlert(Page page, String message) {
-            }
-        });
-        webClient.setThrowExceptionOnScriptError(false);
-        webClient.setActiveXNative(true);
-        webClient.setCssEnabled(true);
-        webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
-            @Override
-            public boolean processSynchron(HtmlPage page, WebRequest request,
-                    boolean async) {
-                return true;
-            }
-        });
-
-        HtmlElement scores = null;
-
-        webClient.waitForBackgroundJavaScript(3000);
-        HtmlPage page = webClient
-                .getPage("http://www.livexscores.com/livescore/tennis");
-        // try 20 times to wait .5 second each for filling the page.
-        for (int i = 0; i < 2; i++) {
-            // page
-            scores = page.getElementById("allzapasy");
-
-            if (scores.asText() != "") {
-                break;
-            }
-            synchronized (page) {
-                page.wait(500);
-            }
-        }
-
-        scores = page.getElementById("allzapasy");
-
-        // Cleverly modify tennis balls gif elements of the website to
-        // readable text so as to identify the tennis player serving
-        Iterator<HtmlElement> iter = (scores.getElementsByAttribute("img",
-                "src", "/img/tennisball.gif")).iterator();
-        while (iter.hasNext()) {
-            ((HtmlElement) iter.next()).setTextContent("\nSERVER");
-        }
-
-        // Getting the relevant scores
-        Iterator<DomNode> itr = scores.getChildren().iterator();
-        itr.next();
-        HtmlElement elem = (HtmlElement) itr.next();
-
-        Iterator<DomNode> itr2 = elem.getChildren().iterator();
-        DomNode elem2 = (DomNode) itr2.next();
-
-        String allScores = scores.asText();
-        String string2 = elem2.asText();
-
-        /*
-         * int first = Math.min(string2.indexOf("WTA"), string2.indexOf("ATP"));
-         * allScores += "\n" + string2.substring(first);
-         */
-        // System.out.println(scores.asXml());
-        // System.out.println(allScores);
-
-        return string2;
-
-        // ////////j++;}
-    }
+  
 
     private String skipEmptyLines(String string) {
         while (string.charAt(0) == '\t' || string.charAt(0) == '\n'
@@ -382,9 +323,155 @@ public class PredictionGui {
 
     public void handleUpdate() {
         try {
-            setScores();
+            String score = updateThread.getScore();
+            System.out.println("Fetched score");
+            if ( score != null ) {
+                System.out.println("Not null! Updating...");
+                setScores(score);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    private class UpdateThread extends Thread{
+        
+        String score;
+        String match;
+        
+        public UpdateThread(String match) {
+            this.match = match;
+        }
+        
+        @Override
+        public void run() {
+            // keep updating the score
+            /*while (true ){
+                try {
+                    this.score = extractScores(match);
+                   // System.out.println("Score: " + this.score);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+                
+                try {
+                    Thread.sleep(10000);
+                }catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }*/
+            
+            try {
+                Thread.sleep(40000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        
+        public String getScore(){
+            return this.score;
+        }
+        
+        /*
+         * Gets real-time scores from http://www.livexscores.com/ Emulates a firefox
+         * browser with javascript and AJAX enabled and fetches score data from
+         * website. Finally, it returns the data for further parsing
+         */
+        private String extractScores(String match) throws Exception {
+
+            // Create a webClient to emulate Firefox browser
+            WebClient webClient = new WebClient();// BrowserVersion.FIREFOX_3_6);
+
+            // Customize all webclient listeners and handlers for no warning/info
+            // messages
+            webClient.setIncorrectnessListener(new IncorrectnessListener() {
+                public void notify(String string, Object object) {
+                }
+            });
+            webClient.setCssErrorHandler(new SilentCssErrorHandler());
+            webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
+                public void malformedScriptURL(HtmlPage page, String string,
+                        MalformedURLException exception) {
+                }
+
+                public void loadScriptError(HtmlPage page, URL url,
+                        Exception exception) {
+                }
+
+                public void scriptException(HtmlPage page, ScriptException exception) {
+                }
+
+                public void timeoutError(HtmlPage page, long int1, long int2) {
+                }
+            });
+            webClient.setAlertHandler(new AlertHandler() {
+                public void handleAlert(Page page, String message) {
+                }
+            });
+            webClient.setThrowExceptionOnScriptError(false);
+            webClient.setActiveXNative(true);
+            webClient.setCssEnabled(true);
+            webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
+                @Override
+                public boolean processSynchron(HtmlPage page, WebRequest request,
+                        boolean async) {
+                    return true;
+                }
+            });
+
+            HtmlElement scores = null;
+
+            webClient.waitForBackgroundJavaScript(3000);
+            HtmlPage page = webClient
+                    .getPage("http://www.livexscores.com/livescore/tennis");
+            // try 20 times to wait .5 second each for filling the page.
+            for (int i = 0; i < 2; i++) {
+                // page
+                scores = page.getElementById("allzapasy");
+
+                if (scores.asText() != "") {
+                    break;
+                }
+                synchronized (page) {
+                    page.wait(500);
+                }
+            }
+
+            scores = page.getElementById("allzapasy");
+
+            // Cleverly modify tennis balls gif elements of the website to
+            // readable text so as to identify the tennis player serving
+            Iterator<HtmlElement> iter = (scores.getElementsByAttribute("img",
+                    "src", "/img/tennisball.gif")).iterator();
+            while (iter.hasNext()) {
+                ((HtmlElement) iter.next()).setTextContent("\nSERVER");
+            }
+
+            // Getting the relevant scores
+            Iterator<DomNode> itr = scores.getChildren().iterator();
+            itr.next();
+            HtmlElement elem = (HtmlElement) itr.next();
+
+            Iterator<DomNode> itr2 = elem.getChildren().iterator();
+            DomNode elem2 = (DomNode) itr2.next();
+
+            String allScores = scores.asText();
+            String string2 = elem2.asText();
+            
+            
+            System.out.println("Extracted score");
+
+            /*
+             * int first = Math.min(string2.indexOf("WTA"), string2.indexOf("ATP"));
+             * allScores += "\n" + string2.substring(first);
+             */
+            // System.out.println(scores.asXml());
+            // System.out.println(allScores);
+
+            return string2;
+
+            // ////////j++;}
         }
     }
 

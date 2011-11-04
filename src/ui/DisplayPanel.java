@@ -194,7 +194,7 @@ public class DisplayPanel implements Listener {
             public void widgetSelected(SelectionEvent e) {
                 if (selected != null) {
                     // create the new shell
-                    Shell shell = new Shell(display, SWT.RESIZE);
+                    Shell shell = new Shell(display, SWT.SHELL_TRIM);
                     shell.setLayout(new FillLayout());
                     
                     // get selected tab
