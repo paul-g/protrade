@@ -62,9 +62,9 @@ public class PredictionGui {
         composite.setLayout(new GridLayout());
 
         try {
-            if (MatchUtils.isMatch(match)) {
+            /*if (MatchUtils.isMatch(match)) {
                 createScoreContents(composite, match);
-            }
+            }*/
             
             createProbabilityContents(composite);
             // System.out.println(match.substring(match.indexOf("n")));
@@ -74,7 +74,6 @@ public class PredictionGui {
             e.printStackTrace();
             // throw new RuntimeException();
         }
-        System.out.println("AAAAAAAAAAAAAA");
         try{
         	String stats = getStatistics(match);
             Composite table = createStatisticsTable(parent);
@@ -357,95 +356,76 @@ public class PredictionGui {
         if (name2.contains("/"))
             name2 = name2.substring(0, name2.indexOf("/"));
     	
-        // Create a webClient to emulate Firefox browser
-  	  final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
-  	  
-  	  // Customize all webclient listeners and handlers for no warning/info messages
-  	  webClient.setIncorrectnessListener(new IncorrectnessListener()
-  	  {
-  		  public void notify(String string, Object object){}
-  	  });
-  	  webClient.setCssErrorHandler(new SilentCssErrorHandler());
-  	  webClient.setJavaScriptErrorListener( new JavaScriptErrorListener()
-  	  {
-  		  public void malformedScriptURL(HtmlPage page, String string, MalformedURLException exception){}
-  		  public void loadScriptError(HtmlPage page, URL url, Exception exception){}
-  		  public void scriptException(HtmlPage page, ScriptException exception){}
-  		  public void timeoutError(HtmlPage page, long int1, long int2){}
-  	  });
-  	  webClient.setThrowExceptionOnScriptError(false);
-  	  webClient.setPrintContentOnFailingStatusCode(false);
-  	  webClient.setThrowExceptionOnFailingStatusCode(false);
-  	  webClient.setPopupBlockerEnabled(true);
-  	  webClient.setAlertHandler(new AlertHandler()
-  	  {
-  		  public void handleAlert(Page page, String message){}
-  	  });
-  	  webClient.setThrowExceptionOnScriptError(false);
-  	  webClient.setActiveXNative(true);
-  	  webClient.setCssEnabled(true);
-  	  webClient.setAjaxController(new NicelyResynchronizingAjaxController() 
-  	  {
-  		  @Override
-  		  public boolean processSynchron(HtmlPage page, WebRequest request, boolean async)
-  		  {
-  		        return true;
-  		  }		  
-  	  });	  
-        //	---------------------------------Login Page---------------------------------
-
-  	  webClient.setJavaScriptEnabled(true);
-  	  //new PinConnectionWrapper(webClient);
-  	  HtmlPage PageLogin = webClient.getPage("http://www.tennisinsight.com/scoresheet.php");
-  	  HtmlElement login = (HtmlElement) PageLogin.getElementById("LOGIN").getElementsByTagName("form").get(0);  
-  	  
-  	  HtmlTextInput name = (HtmlTextInput) PageLogin.getElementsByTagName("input").get(0);
-  	  HtmlPasswordInput pass = (HtmlPasswordInput)login.getElementsByTagName("input").get(1);
-  	  HtmlElement submitButton = (HtmlElement) login.getElementsByTagName("img").get(0);
-  	  
-  	  name.setText("radubal");
-  	  pass.setText("placintacumere");
-
-  	      System.out.println("Logging in to site");
-  	      //System.out.println(submitButton.asText());
-  	      //------------------------------------------------------------------------
-
-  	     //---------------------------------Pass varified Page----------------------
-  	      HtmlPage Loggedpage = (HtmlPage)submitButton.click();
-//  	    webClient.waitForBackgroundJavaScript(4000);
-  	      System.out.println("Successfully Logged in to site");
-  	     // HtmlElement btnContinue = (HtmlElement) pagePassVarified.getElementById("BtnClickToContinue");
-  	      //---------------------------------------------------------
-
-  	      //---------------------Home Page----------------------------------
-  	     // HtmlPage pageHome = btnContinue.click();
-  	     // System.out.println( Loggedpage.asText());
-  	      //HtmlElement element = page.;
-  	      
-  	      System.out.println("MMMMMMMMMMMMMMM"+ matchName + "MMMMMMMMMM");
-  	      
-  	      HtmlTextInput player1 = (HtmlTextInput) Loggedpage.getElementByName("match_preview_search1");
-  		  HtmlTextInput player2 = (HtmlTextInput) Loggedpage.getElementByName("match_preview_search2");
-  		  HtmlElement body = (HtmlElement) Loggedpage.getElementsByTagName("body").get(0);
-  		  HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute("td", "background", "/images/GO_green2.jpg").get(0);
-  		  player1.setText(name1);
-  		  player2.setText(name2);
-  		  HtmlPage intermPage = (HtmlPage)submitButton2.click();
-  		  
-  		  HtmlElement btnContinue = (HtmlElement) intermPage.getElementById("addinsight");
-  	      System.out.println("Successfully searched players");
-  	      HtmlPage page = (HtmlPage)btnContinue.click();
-  	      webClient.closeAllWindows();
-  	      
-  	      //player1.remove()
-  	      
-  	      return(page.asText());	      
-    }
+	// Create a webClient to emulate Firefox browser
+	final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
+	  
+	// Customize all webclient listeners and handlers for no warning/info messages
+	webClient.setIncorrectnessListener(new IncorrectnessListener()
+	{
+		public void notify(String string, Object object){}
+	});
+	webClient.setCssErrorHandler(new SilentCssErrorHandler());
+	webClient.setJavaScriptErrorListener( new JavaScriptErrorListener()
+	{
+		public void malformedScriptURL(HtmlPage page, String string, MalformedURLException exception){}
+		public void loadScriptError(HtmlPage page, URL url, Exception exception){}
+		public void scriptException(HtmlPage page, ScriptException exception){}
+		public void timeoutError(HtmlPage page, long int1, long int2){}
+	});
+	webClient.setThrowExceptionOnScriptError(false);
+	webClient.setPrintContentOnFailingStatusCode(false);
+	webClient.setThrowExceptionOnFailingStatusCode(false);
+	webClient.setPopupBlockerEnabled(true);
+	webClient.setAlertHandler(new AlertHandler()
+	{
+		public void handleAlert(Page page, String message){}
+	});
+	webClient.setThrowExceptionOnScriptError(false);
+	webClient.setActiveXNative(true);
+	webClient.setCssEnabled(true);
+	webClient.setAjaxController(new NicelyResynchronizingAjaxController() 
+	{
+		@Override
+		public boolean processSynchron(HtmlPage page, WebRequest request, boolean async)
+		{
+			return true;
+		}		  
+	  });	  
+	
+	webClient.setJavaScriptEnabled(true);
+	HtmlPage PageLogin = webClient.getPage("http://www.tennisinsight.com/scoresheet.php");
+	HtmlElement login = (HtmlElement) PageLogin.getElementById("LOGIN").getElementsByTagName("form").get(0);  
+	  
+	HtmlTextInput name = (HtmlTextInput) PageLogin.getElementsByTagName("input").get(0);
+	HtmlPasswordInput pass = (HtmlPasswordInput)login.getElementsByTagName("input").get(1);
+	HtmlElement submitButton = (HtmlElement) login.getElementsByTagName("img").get(0);
+	  
+	name.setText("radubal");
+	pass.setText("placintacumere");
+	
+	System.out.println("Logging in to site");
+	HtmlPage Loggedpage = (HtmlPage)submitButton.click();
+	System.out.println("Successfully Logged in to site");
+	
+	HtmlTextInput player1 = (HtmlTextInput) Loggedpage.getElementByName("match_preview_search1");
+	HtmlTextInput player2 = (HtmlTextInput) Loggedpage.getElementByName("match_preview_search2");
+	HtmlElement body = (HtmlElement) Loggedpage.getElementsByTagName("body").get(0);
+	HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute("td", "background", "/images/GO_green2.jpg").get(0);
+	player1.setText(name1);
+	player2.setText(name2);
+	HtmlPage intermPage = (HtmlPage)submitButton2.click();
+	  
+	HtmlElement btnContinue = (HtmlElement) intermPage.getElementById("addinsight");
+	System.out.println("Successfully searched players");
+	HtmlPage page = (HtmlPage)btnContinue.click();
+	webClient.closeAllWindows();
+	  
+	return(page.asText());	      
+}
     
     private void parseStatistics(String stats, Composite comp)
     {
   	  Tree table = (Tree) comp;
-  	  //System.out.println(stats + "/nEND OF CUT");
   	  stats = stats.substring(stats.indexOf("Head to Head Match Preview"), stats.indexOf("Player Comparison"));
         stats = stats.substring(stats.indexOf("stats\n") + 6,stats.length());
   	  
@@ -458,21 +438,16 @@ public class PredictionGui {
   		    }
   		    in.close();
   		} catch (IOException e) {
-  		}*/
-        
-
-        // Point the image at a real URL.
-       // image.setUrl("http://www.google.com/images/logo.gif");
-  
+  		}*/         
         
   	  // Fill in table headers with name players and images
       String player1 = stats.substring(0, stats.indexOf('\n'));
   	  table.getColumn(0).setText(player1);
-  	  table.getColumn(0).setImage(getImage("http://www.tennisinsight.com/images/" + player1 + ".jpg"));
+  	  table.getColumn(0).setImage(getImage("http://www.tennisinsight.com/images/" + player1 + ".JPG"));
   	  stats = skipLines(stats, 2);
   	  String player2 = stats.substring(0, stats.indexOf('\n'));
-  	  table.getColumn(0).setText(player1);
-  	  table.getColumn(0).setImage(getImage("http://www.tennisinsight.com/images/"+ player2 + ".jpg"));
+  	  table.getColumn(2).setText(player2);
+  	  table.getColumn(2).setImage(getImage("http://www.tennisinsight.com/images/"+ player2 + ".JPG"));
   	  stats = skipLines(stats, 2);
   	  
   	  // Fill in table
@@ -500,14 +475,7 @@ public class PredictionGui {
   	  basics.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
   	  basics.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
   	  basics.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
-  	  /*basics.addListener(SWT.MouseDoubleClick, new Listener(){
-  	      public void handleEvent(Event event) {
-  	          Point point = new Point(event.x, event.y);
-  	          //if (basics.getBounds().contains(point)) {
-  	           // basics.notifyListeners(10, event);
-  	         // }
-  	        }
-  	      });*/
+  	  
   	  for(int i=0; i<6; i++)
   	  {
   		  TreeItem item = new TreeItem(basics, SWT.CENTER );
@@ -610,11 +578,7 @@ public class PredictionGui {
   		  item.setText(2, stats.substring(0, stats.indexOf("\n")));
   		  stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
   	  } 	  
-  	 // System.out.println(stats + "/nEND OF CUT");
-  	 //table.setRedraw(true);
     }
-
-  
 
     private String skipEmptyLines(String string) {
         while (string.charAt(0) == '\t' || string.charAt(0) == '\n'
