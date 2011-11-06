@@ -104,12 +104,12 @@ public class DisplayPanel implements Listener {
             
             addMarketDataGrid(horizontal, match);
 
-            if (match.isInPlay())
+            //if (match.isInPlay())
                 addPredictionGui(horizontal, matchName);
-            else {
-                Label score = new Label(horizontal, SWT.BORDER);
-                score.setText("Match is not in progress - No score available");
-            }
+            //else {
+            //    Label score = new Label(horizontal, SWT.BORDER);
+            //    score.setText("Match is not in progress - No score available");
+            //}
 
             addChart(comp, match);
             
@@ -119,7 +119,7 @@ public class DisplayPanel implements Listener {
             
             folder.setSelection(item);
 
-            horizontal.setWeights(new int[]{60, 40});
+            //horizontal.setWeights(new int[]{60, 40});
             comp.setWeights(new int[]{10,30, 50,10});
         } else
             // just bring the required tab under focus
