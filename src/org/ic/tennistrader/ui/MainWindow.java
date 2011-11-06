@@ -36,12 +36,6 @@ public class MainWindow {
     public MainWindow(Display display, LoginShell loginShell) {
         loginShell.updateProgressBar(BAR_INCREMENT);
         loginShell.setText("Login successful! Starting application...");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         
         this.shell = new Shell(display);
         shell.setMaximized(true);
@@ -86,22 +80,10 @@ public class MainWindow {
 
         this.np = new NavigationPanel(sashFormLeft);
         loginShell.setText("Fetching betfair data");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
         this.dp = new DisplayPanel(sashFormRight);
         loginShell.updateProgressBar(BAR_INCREMENT);
         loginShell.setText("Preparing display");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         np.addListener(dp);
         
         @SuppressWarnings("unused")
@@ -109,20 +91,8 @@ public class MainWindow {
         
         loginShell.updateProgressBar(BAR_INCREMENT);
         loginShell.setText("Configuring tooblars");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
         loginShell.finishProgressBar();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         loginShell.dispose();
         shell.open();
         
