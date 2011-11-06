@@ -29,7 +29,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ILineSeries secondSeries;
 	private ILineSeries maPl1Series;
 	private ILineSeries maPl2Series;
-	private int sampleSize = 10; 
+	private int sampleSize = 200; 
 	private boolean decimalOdds;
 	private String xAxisTitle = "Time";
 	private String yAxisDecimalTitle = "Decimal Odds";

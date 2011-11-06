@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import org.ic.tennistrader.demo.handler.ExchangeAPI;
 import org.ic.tennistrader.demo.handler.GlobalAPI;
 import org.ic.tennistrader.demo.util.APIContext;
 import org.ic.tennistrader.domain.EventMarketBetfair;
@@ -12,7 +13,11 @@ import org.ic.tennistrader.domain.MarketBetfair;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.Tournament;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.domain.profile.AccountFunds;
+import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.exceptions.LoginFailedException;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.GetAccountFundsResp;
+import org.ic.tennistrader.demo.handler.ExchangeAPI.Exchange;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
@@ -165,7 +170,20 @@ public class BetfairConnectionHandler {
 	public static RealMatch getMatch(EventBetfair eb) {
 		return new RealMatch("", "", eb);
 	}
-		
+	
+    public static ProfileData getProfileData() throws Exception {
+        ProfileData profileData = new ProfileData();
+        GetAccountFundsResp ukFunds = ExchangeAPI.getAccountFunds(Exchange.UK,
+                apiContext);
+        GetAccountFundsResp ausFunds = ExchangeAPI.getAccountFunds(Exchange.AUS,
+                apiContext);
+        AccountFunds ukAccountFunds = new AccountFunds(ukFunds);
+        AccountFunds ausAccountFunds = new AccountFunds(ausFunds);
+        profileData.setAusAccountFunds(ausAccountFunds);
+        profileData.setUkAccountFunds(ukAccountFunds);
+        return profileData;
+    }
+
 	public static APIContext getApiContext() {
 		return apiContext;
 	}
