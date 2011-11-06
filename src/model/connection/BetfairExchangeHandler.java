@@ -12,10 +12,10 @@ import src.demo.util.InflatedMarketPrices.InflatedPrice;
 import src.demo.util.InflatedMarketPrices.InflatedRunner;
 import src.domain.EventBetfair;
 import src.domain.MOddsMarketData;
-import src.generated.exchange.BFExchangeServiceStub.Market;
-import src.generated.exchange.BFExchangeServiceStub.Runner;
-import src.generated.global.BFGlobalServiceStub.GetEventsResp;
-import src.generated.global.BFGlobalServiceStub.MarketSummary;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
 import src.utils.MatchUtils;
 import src.utils.Pair;
 

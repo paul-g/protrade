@@ -93,6 +93,14 @@
         if="test.failed"/>
   </target>
   -->
+
+  <!-- Recreates generated classes -->
+  <target name="generated">
+    <javac srcdir="org" classpathref="classpath"/>
+    <jar destfile="lib/generated.jar" basedir="." includes="org/**/*.class">
+    </jar>
+  </target>
+
   
   <!-- RUN unit tests -->
   <target name="run-unit-tests" depends="compile,compile-tests">

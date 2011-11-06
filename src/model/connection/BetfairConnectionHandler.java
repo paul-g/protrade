@@ -13,10 +13,10 @@ import src.domain.EventBetfair;
 import src.domain.Tournament;
 import src.domain.match.RealMatch;
 import src.exceptions.LoginFailedException;
-import src.generated.global.BFGlobalServiceStub.BFEvent;
-import src.generated.global.BFGlobalServiceStub.EventType;
-import src.generated.global.BFGlobalServiceStub.GetEventsResp;
-import src.generated.global.BFGlobalServiceStub.MarketSummary;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
 import src.utils.MatchUtils;
 
 public class BetfairConnectionHandler {

@@ -8,18 +8,18 @@ import src.demo.handler.ExchangeAPI.Exchange;
 import src.demo.util.APIContext;
 import src.demo.util.Display;
 
-import src.generated.exchange.BFExchangeServiceStub.BetCategoryTypeEnum;
-import src.generated.exchange.BFExchangeServiceStub.BetPersistenceTypeEnum;
-import src.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import src.generated.exchange.BFExchangeServiceStub.CancelBets;
-import src.generated.exchange.BFExchangeServiceStub.Market;
-import src.generated.exchange.BFExchangeServiceStub.PlaceBets;
-import src.generated.exchange.BFExchangeServiceStub.PlaceBetsResult;
-import src.generated.exchange.BFExchangeServiceStub.Runner;
-//import src.generated.global.BFGlobalServiceStub.BFEvent;
-//import src.generated.global.BFGlobalServiceStub.EventType;
-//import src.generated.global.BFGlobalServiceStub.GetEventsResp;
-//import src.generated.global.BFGlobalServiceStub.MarketSummary;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetCategoryTypeEnum;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetPersistenceTypeEnum;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.CancelBets;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.PlaceBets;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.PlaceBetsResult;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
+//import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
+//import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
+//import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
+//import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
 
 public class BetPlacer extends Thread{
     

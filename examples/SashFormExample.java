@@ -80,10 +80,6 @@ public class SashFormExample {
     display.dispose();
   }
 
-  private void init() {
-
-  }
-
   public static void main(String[] args) {
     new SashFormExample();
   }

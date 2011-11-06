@@ -1,12 +1,12 @@
 package src.demo.util;
-import src.generated.exchange.BFExchangeServiceStub.BetStatusEnum;
-import src.generated.exchange.BFExchangeServiceStub.GetAccountFundsResp;
-import src.generated.exchange.BFExchangeServiceStub.MUBet;
-import src.generated.exchange.BFExchangeServiceStub.Market;
-import src.generated.exchange.BFExchangeServiceStub.Runner;
-import src.generated.global.BFGlobalServiceStub.BFEvent;
-import src.generated.global.BFGlobalServiceStub.EventType;
-import src.generated.global.BFGlobalServiceStub.MarketSummary;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetStatusEnum;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.GetAccountFundsResp;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.MUBet;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,26 +1,29 @@
 package src.demo.handler;
 
 import src.demo.util.APIContext;
-import src.generated.global.BFGlobalServiceStub;
-import src.generated.global.BFGlobalServiceStub.APIRequestHeader;
-import src.generated.global.BFGlobalServiceStub.APIResponseHeader;
-import src.generated.global.BFGlobalServiceStub.EventType;
-import src.generated.global.BFGlobalServiceStub.GetActiveEventTypes;
-import src.generated.global.BFGlobalServiceStub.GetEventTypesReq;
-import src.generated.global.BFGlobalServiceStub.GetEventTypesResp;
-import src.generated.global.BFGlobalServiceStub.GetEvents;
-import src.generated.global.BFGlobalServiceStub.GetEventsErrorEnum;
-import src.generated.global.BFGlobalServiceStub.GetEventsReq;
-import src.generated.global.BFGlobalServiceStub.GetEventsResp;
-import src.generated.global.BFGlobalServiceStub.Login;
-import src.generated.global.BFGlobalServiceStub.LoginErrorEnum;
-import src.generated.global.BFGlobalServiceStub.LoginReq;
-import src.generated.global.BFGlobalServiceStub.LoginResp;
-import src.generated.global.BFGlobalServiceStub.Logout;
-import src.generated.global.BFGlobalServiceStub.LogoutErrorEnum;
-import src.generated.global.BFGlobalServiceStub.LogoutReq;
-import src.generated.global.BFGlobalServiceStub.LogoutResp;
 
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.*;
+/*
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.APIRequestHeader;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.APIResponseHeader;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetActiveEventTypes;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventTypesReq;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventTypesResp;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEvents;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsErrorEnum;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsReq;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.Login;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.LoginErrorEnum;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.LoginReq;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.LoginResp;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.Logout;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.LogoutErrorEnum;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.LogoutReq;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.LogoutResp;
+*/
 
 public class GlobalAPI {
 
