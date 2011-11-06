@@ -30,21 +30,21 @@ public class PredictionGui {
     private Table scoreTable;
 
     private String name1, name2;
-    
+
     private UpdateThread updateThread;
-    
+
     /**
      * For running the prediction gui separately
      */
-    public static void main(String args[]){
+    public static void main(String args[]) {
         final Display display = new Display();
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
-        
-        String matchName = "Bartoli v Medina Garrigues Anabel";
-        
+
+        String matchName = "Cilic v Verdasco";
+
         new PredictionGui(shell, matchName);
-        
+
         shell.open();
 
         while (!shell.isDisposed()) {
@@ -53,7 +53,7 @@ public class PredictionGui {
         }
 
         display.dispose();
-        
+
     }
 
     public PredictionGui(final Composite parent, String match) {
@@ -62,22 +62,24 @@ public class PredictionGui {
         composite.setLayout(new GridLayout());
 
         try {
-            /*if (MatchUtils.isMatch(match)) {
+            if (MatchUtils.isMatch(match)) {
                 createScoreContents(composite, match);
-            }*/
-            
-            createProbabilityContents(composite);
-            // System.out.println(match.substring(match.indexOf("n")));
-        } catch (Exception e) {
-            // if something goes wrong
-            log.error(e.getMessage() + " ");
+            }
+
+            createProbabilityContents(composite); //
+            System.out.println(match.substring(match.indexOf("n")));
+        } catch (Exception e) { 
+             // if something goes wrong
+            log.error(e.getMessage() +
+
+            " ");
             e.printStackTrace();
-            // throw new RuntimeException();
         }
-        try{
-        	String stats = getStatistics(match);
+
+        try {
+            String stats = getStatistics(match);
             Composite table = createStatisticsTable(parent);
-            parseStatistics(stats, table );
+            parseStatistics(stats, table);
         } catch (Exception e) {
             // if something goes wrong
             log.error(e.getMessage() + " ");
@@ -88,27 +90,23 @@ public class PredictionGui {
             @Override
             public void run() {
                 handleUpdate();
-                parent.getDisplay().timerExec(10000, this);
+                parent.getDisplay().timerExec(5000, this);
             }
         });
-        
-       /* parent.getDisplay().asyncExec(new Runnable() {
-            
-            @Override
-            public void run() {
-                updateThread.run();
-            }
-        });*/
-        
-        /*parent.getDisplay().timerExec(5000, new Runnable() {
-            @Override
-            public void run() {
-                updateThread.run();
-            }
-        });*/
-        
-       updateThread.start();
-        
+
+        /*
+         * parent.getDisplay().asyncExec(new Runnable() {
+         * 
+         * @Override public void run() { updateThread.run(); } });
+         */
+
+        /*
+         * parent.getDisplay().timerExec(5000, new Runnable() {
+         * 
+         * @Override public void run() { updateThread.run(); } });
+         */
+
+        updateThread.start();
 
     }
 
@@ -143,7 +141,7 @@ public class PredictionGui {
         this.scoreTable = new Table(composite, SWT.NONE);
         scoreTable.setBounds(new Rectangle(10, 10, 270, 90));
         scoreTable.setHeaderVisible(true);
-        
+
         // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
         scoreTable.setLinesVisible(true);
         this.columns = new TableColumn[8];
@@ -203,7 +201,7 @@ public class PredictionGui {
             item.setText(0, "");
             item2.setText(0, "S");
         }
-        
+
         int c = 1;
 
         scores = scores.substring(matchIndex, scores.length());
@@ -269,6 +267,10 @@ public class PredictionGui {
         for (int i = 0, n = columns.length; i < n; i++) {
             columns[i].pack();
         }
+        
+        scoreTable.redraw();
+        scoreTable.getParent().layout();
+        
     }
 
     private void createProbabilityContents(Composite composite) {
@@ -319,265 +321,301 @@ public class PredictionGui {
             column[i].pack();
         }
     }
-    
-    private Composite createStatisticsTable(Composite composite)
-    {
-  	  composite.setLayout(new FillLayout());
-  	  final Tree tree = new Tree(composite, SWT.MULTI | SWT.FULL_SELECTION | SWT.CENTER);
-  	  tree.setHeaderVisible(true);
-  	  tree.setLinesVisible(true);
-  	  TreeColumn[] tcolumn = new TreeColumn[3];
-  	  tcolumn[0] = new TreeColumn(tree, SWT.LEFT); 	  
-  	  tcolumn[0].setText("Player 1");	 
-  	  tcolumn[0].setWidth(220);
-  	  tcolumn[0].setResizable(false);
-  	          
-  	  tcolumn[1] = new TreeColumn(tree, SWT.CENTER);
-  	  tcolumn[1].setText("VS");
-  	  tcolumn[1].setWidth(150);
-  	  tcolumn[1].setResizable(false);
-  	  
-  	  tcolumn[2] = new TreeColumn(tree, SWT.RIGHT);
-  	  tcolumn[2].setText("Player 2");
-  	  tcolumn[2].setWidth(200);
-  	  tcolumn[2].setResizable(false);
-  	  //tcolumn[2].setImage(new Image(composite.getDisplay(),"/home/radu/tennis-trader/lib/Verdasco.jpg"));
 
-  	  return tree;
+    private Composite createStatisticsTable(Composite composite) {
+        composite.setLayout(new FillLayout());
+        final Tree tree = new Tree(composite, SWT.MULTI | SWT.FULL_SELECTION
+                | SWT.CENTER);
+        tree.setHeaderVisible(true);
+        tree.setLinesVisible(true);
+        TreeColumn[] tcolumn = new TreeColumn[3];
+        tcolumn[0] = new TreeColumn(tree, SWT.LEFT);
+        tcolumn[0].setText("Player 1");
+        tcolumn[0].setWidth(220);
+        tcolumn[0].setResizable(false);
+
+        tcolumn[1] = new TreeColumn(tree, SWT.CENTER);
+        tcolumn[1].setText("VS");
+        tcolumn[1].setWidth(150);
+        tcolumn[1].setResizable(false);
+
+        tcolumn[2] = new TreeColumn(tree, SWT.RIGHT);
+        tcolumn[2].setText("Player 2");
+        tcolumn[2].setWidth(200);
+        tcolumn[2].setResizable(false);
+        // tcolumn[2].setImage(new
+        // Image(composite.getDisplay(),"/home/radu/tennis-trader/lib/Verdasco.jpg"));
+
+        return tree;
     }
-    
-    private String getStatistics( String matchName) throws Exception
-    {
-    	this.name1 = matchName.substring(0, matchName.indexOf(" v"));
+
+    private String getStatistics(String matchName) throws Exception {
+        this.name1 = matchName.substring(0, matchName.indexOf(" v"));
         this.name2 = matchName.substring(matchName.indexOf("v ") + 2, matchName
                 .length());
         if (name1.contains("/"))
             name1 = name1.substring(0, name1.indexOf("/"));
         if (name2.contains("/"))
             name2 = name2.substring(0, name2.indexOf("/"));
-    	
-	// Create a webClient to emulate Firefox browser
-	final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
-	  
-	// Customize all webclient listeners and handlers for no warning/info messages
-	webClient.setIncorrectnessListener(new IncorrectnessListener()
-	{
-		public void notify(String string, Object object){}
-	});
-	webClient.setCssErrorHandler(new SilentCssErrorHandler());
-	webClient.setJavaScriptErrorListener( new JavaScriptErrorListener()
-	{
-		public void malformedScriptURL(HtmlPage page, String string, MalformedURLException exception){}
-		public void loadScriptError(HtmlPage page, URL url, Exception exception){}
-		public void scriptException(HtmlPage page, ScriptException exception){}
-		public void timeoutError(HtmlPage page, long int1, long int2){}
-	});
-	webClient.setThrowExceptionOnScriptError(false);
-	webClient.setPrintContentOnFailingStatusCode(false);
-	webClient.setThrowExceptionOnFailingStatusCode(false);
-	webClient.setPopupBlockerEnabled(true);
-	webClient.setAlertHandler(new AlertHandler()
-	{
-		public void handleAlert(Page page, String message){}
-	});
-	webClient.setThrowExceptionOnScriptError(false);
-	webClient.setActiveXNative(true);
-	webClient.setCssEnabled(true);
-	webClient.setAjaxController(new NicelyResynchronizingAjaxController() 
-	{
-		@Override
-		public boolean processSynchron(HtmlPage page, WebRequest request, boolean async)
-		{
-			return true;
-		}		  
-	  });	  
-	
-	webClient.setJavaScriptEnabled(true);
-	HtmlPage PageLogin = webClient.getPage("http://www.tennisinsight.com/scoresheet.php");
-	HtmlElement login = (HtmlElement) PageLogin.getElementById("LOGIN").getElementsByTagName("form").get(0);  
-	  
-	HtmlTextInput name = (HtmlTextInput) PageLogin.getElementsByTagName("input").get(0);
-	HtmlPasswordInput pass = (HtmlPasswordInput)login.getElementsByTagName("input").get(1);
-	HtmlElement submitButton = (HtmlElement) login.getElementsByTagName("img").get(0);
-	  
-	name.setText("radubal");
-	pass.setText("placintacumere");
-	
-	System.out.println("Logging in to site");
-	HtmlPage Loggedpage = (HtmlPage)submitButton.click();
-	System.out.println("Successfully Logged in to site");
-	
-	HtmlTextInput player1 = (HtmlTextInput) Loggedpage.getElementByName("match_preview_search1");
-	HtmlTextInput player2 = (HtmlTextInput) Loggedpage.getElementByName("match_preview_search2");
-	HtmlElement body = (HtmlElement) Loggedpage.getElementsByTagName("body").get(0);
-	HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute("td", "background", "/images/GO_green2.jpg").get(0);
-	player1.setText(name1);
-	player2.setText(name2);
-	HtmlPage intermPage = (HtmlPage)submitButton2.click();
-	  
-	HtmlElement btnContinue = (HtmlElement) intermPage.getElementById("addinsight");
-	System.out.println("Successfully searched players");
-	HtmlPage page = (HtmlPage)btnContinue.click();
-	webClient.closeAllWindows();
-	  
-	return(page.asText());	      
-}
-    
-    private void parseStatistics(String stats, Composite comp)
-    {
-  	  Tree table = (Tree) comp;
-  	  stats = stats.substring(stats.indexOf("Head to Head Match Preview"), stats.indexOf("Player Comparison"));
-        stats = stats.substring(stats.indexOf("stats\n") + 6,stats.length());
-  	  
-  	  //System.out.println(stats + "/nEND OF CUT");
-  	  /*try {
-  		    BufferedReader in = new BufferedReader(new FileReader("/home/radu/tennis-trader/images/data.txt"));
-  		    String str;
-  		    while ((str = in.readLine()) != null) {
-  		        stats += str+ '\n';
-  		    }
-  		    in.close();
-  		} catch (IOException e) {
-  		}*/         
-        
-  	  // Fill in table headers with name players and images
-      String player1 = stats.substring(0, stats.indexOf('\n'));
-  	  table.getColumn(0).setText(player1);
-  	  table.getColumn(0).setImage(getImage("http://www.tennisinsight.com/images/" + player1 + ".JPG"));
-  	  stats = skipLines(stats, 2);
-  	  String player2 = stats.substring(0, stats.indexOf('\n'));
-  	  table.getColumn(2).setText(player2);
-  	  table.getColumn(2).setImage(getImage("http://www.tennisinsight.com/images/"+ player2 + ".JPG"));
-  	  stats = skipLines(stats, 2);
-  	  
-  	  // Fill in table
-  	  ArrayList<String> list = new ArrayList<String>();
-  	  for (int i=0; i<6; i++)
-  	  {
-  		  list.add(stats.substring(0, stats.indexOf('\n')));
-  		  stats = skipLines(stats, 1);
-  	  }  	  
-  	  stats = skipEmptyLines(stats);	 
-  	  for (int i=0; i<6; i++)
-  	  {
-  		  list.add(stats.substring(0, stats.indexOf('\n')));
-  		  stats = skipLines(stats, 1);
-  	  }	  
-  	  stats = skipLines(stats, 2);	  
-  	  for (int i=0; i<6; i++)
-  	  {
-  		  list.add(stats.substring(0, stats.indexOf('\n')));
-  		  stats = skipLines(stats, 1);
-  	  }	
-  	  
-  	  final TreeItem basics = new TreeItem(table, SWT.MULTI | SWT.CENTER);
-  	  basics.setText(1,"Basics");
-  	  basics.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-  	  basics.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-  	  basics.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
-  	  
-  	  for(int i=0; i<6; i++)
-  	  {
-  		  TreeItem item = new TreeItem(basics, SWT.CENTER );
-  		  item.setText(0, list.get(i));
-  		  item.setText(1, list.get(i+6));
-  		  item.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  		  item.setText(2, list.get(i+12));
-  	  }
-  	  
-  	  //////////////////////////
-  	  // Match Statistics
-  	  //////////////////////////
-  	  
-  	  TreeItem match = new TreeItem(table, SWT.CENTER);
-  	  match.setText(1, "Match Stats");
-  	  match.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-  	  match.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-  	  match.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
-  	  
-  	  stats = stats.substring(stats.indexOf("Match Statistics\t") + 17,stats.length());
-  	  stats = skipEmptyLines(stats);
-  	  
-  	  // Match W/L
-  	  TreeItem item1 = new TreeItem(match, SWT.CENTER );
-  	  item1.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  	  item1.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-  	  item1.setText(1, "Match W/L %");
-  	  stats = skipEmptyLines(stats);
-  	  item1.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = skipLines(stats, 1);
-  	  
+
+        // Create a webClient to emulate Firefox browser
+        final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
+
+        // Customize all webclient listeners and handlers for no warning/info
+        // messages
+        webClient.setIncorrectnessListener(new IncorrectnessListener() {
+            public void notify(String string, Object object) {
+            }
+        });
+        webClient.setCssErrorHandler(new SilentCssErrorHandler());
+        webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
+            public void malformedScriptURL(HtmlPage page, String string,
+                    MalformedURLException exception) {
+            }
+
+            public void loadScriptError(HtmlPage page, URL url,
+                    Exception exception) {
+            }
+
+            public void scriptException(HtmlPage page, ScriptException exception) {
+            }
+
+            public void timeoutError(HtmlPage page, long int1, long int2) {
+            }
+        });
+        webClient.setThrowExceptionOnScriptError(false);
+        webClient.setPrintContentOnFailingStatusCode(false);
+        webClient.setThrowExceptionOnFailingStatusCode(false);
+        webClient.setPopupBlockerEnabled(true);
+        webClient.setAlertHandler(new AlertHandler() {
+            public void handleAlert(Page page, String message) {
+            }
+        });
+        webClient.setThrowExceptionOnScriptError(false);
+        webClient.setActiveXNative(true);
+        webClient.setCssEnabled(true);
+        webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
+            @Override
+            public boolean processSynchron(HtmlPage page, WebRequest request,
+                    boolean async) {
+                return true;
+            }
+        });
+
+        webClient.setJavaScriptEnabled(true);
+        HtmlPage PageLogin = webClient
+                .getPage("http://www.tennisinsight.com/scoresheet.php");
+        HtmlElement login = (HtmlElement) PageLogin.getElementById("LOGIN")
+                .getElementsByTagName("form").get(0);
+
+        HtmlTextInput name = (HtmlTextInput) PageLogin.getElementsByTagName(
+                "input").get(0);
+        HtmlPasswordInput pass = (HtmlPasswordInput) login
+                .getElementsByTagName("input").get(1);
+        HtmlElement submitButton = (HtmlElement) login.getElementsByTagName(
+                "img").get(0);
+
+        name.setText("radubal");
+        pass.setText("placintacumere");
+
+        System.out.println("Logging in to site");
+        HtmlPage Loggedpage = (HtmlPage) submitButton.click();
+        System.out.println("Successfully Logged in to site");
+
+        HtmlTextInput player1 = (HtmlTextInput) Loggedpage
+                .getElementByName("match_preview_search1");
+        HtmlTextInput player2 = (HtmlTextInput) Loggedpage
+                .getElementByName("match_preview_search2");
+        HtmlElement body = (HtmlElement) Loggedpage
+                .getElementsByTagName("body").get(0);
+        HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute(
+                "td", "background", "/images/GO_green2.jpg").get(0);
+        player1.setText(name1);
+        player2.setText(name2);
+        System.out.println(name1);
+        System.out.println(name2);
+        HtmlPage intermPage = (HtmlPage) submitButton2.click();
+
+        HtmlElement btnContinue = (HtmlElement) intermPage
+                .getElementById("addinsight");
+        System.out.println("Successfully searched players");
+        HtmlPage page;
+        if (btnContinue != null)
+            page = (HtmlPage) btnContinue.click();
+        else
+            page = intermPage;
+        webClient.closeAllWindows();
+
+        return (page.asText());
+    }
+
+    private void parseStatistics(String stats, Composite comp) {
+        Tree table = (Tree) comp;
+        stats = stats.substring(stats.indexOf("Head to Head Match Preview"),
+                stats.indexOf("Player Comparison"));
+        stats = stats.substring(stats.indexOf("stats\n") + 6, stats.length());
+
+        // System.out.println(stats + "/nEND OF CUT");
+        /*
+         * try { BufferedReader in = new BufferedReader(new
+         * FileReader("/home/radu/tennis-trader/images/data.txt")); String str;
+         * while ((str = in.readLine()) != null) { stats += str+ '\n'; }
+         * in.close(); } catch (IOException e) { }
+         */
+
+        // Fill in table headers with name players and images
+        String player1 = stats.substring(0, stats.indexOf('\n'));
+        table.getColumn(0).setText(player1);
+        table.getColumn(0).setImage(
+                getImage("http://www.tennisinsight.com/images/" + player1
+                        + ".JPG"));
+        stats = skipLines(stats, 2);
+        String player2 = stats.substring(0, stats.indexOf('\n'));
+        table.getColumn(2).setText(player2);
+        table.getColumn(2).setImage(
+                getImage("http://www.tennisinsight.com/images/" + player2
+                        + ".JPG"));
+        stats = skipLines(stats, 2);
+
+        // Fill in table
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < 6; i++) {
+            list.add(stats.substring(0, stats.indexOf('\n')));
+            stats = skipLines(stats, 1);
+        }
+        stats = skipEmptyLines(stats);
+        for (int i = 0; i < 6; i++) {
+            list.add(stats.substring(0, stats.indexOf('\n')));
+            stats = skipLines(stats, 1);
+        }
+        stats = skipLines(stats, 2);
+        for (int i = 0; i < 6; i++) {
+            list.add(stats.substring(0, stats.indexOf('\n')));
+            stats = skipLines(stats, 1);
+        }
+
+        final TreeItem basics = new TreeItem(table, SWT.MULTI | SWT.CENTER);
+        basics.setText(1, "Basics");
+        basics
+                .setForeground(table.getDisplay().getSystemColor(
+                        SWT.COLOR_WHITE));
+        basics.setBackground(table.getDisplay().getSystemColor(
+                SWT.COLOR_DARK_GREEN));
+        basics.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
+
+        for (int i = 0; i < 6; i++) {
+            TreeItem item = new TreeItem(basics, SWT.CENTER);
+            item.setText(0, list.get(i));
+            item.setText(1, list.get(i + 6));
+            item.setBackground(1, table.getDisplay().getSystemColor(
+                    SWT.COLOR_YELLOW));
+            item.setText(2, list.get(i + 12));
+        }
+
+        // ////////////////////////
+        // Match Statistics
+        // ////////////////////////
+
+        TreeItem match = new TreeItem(table, SWT.CENTER);
+        match.setText(1, "Match Stats");
+        match.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+        match.setBackground(table.getDisplay().getSystemColor(
+                SWT.COLOR_DARK_GREEN));
+        match.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
+
+        stats = stats.substring(stats.indexOf("Match Statistics\t") + 17, stats
+                .length());
+        stats = skipEmptyLines(stats);
+
+        // Match W/L
+        TreeItem item1 = new TreeItem(match, SWT.CENTER);
+        item1.setBackground(1, table.getDisplay().getSystemColor(
+                SWT.COLOR_YELLOW));
+        item1.setText(0, stats.substring(0, stats.indexOf(")") + 1));
+        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
+        item1.setText(1, "Match W/L %");
+        stats = skipEmptyLines(stats);
+        item1.setText(2, stats.substring(0, stats.indexOf(")") + 1));
+        stats = skipLines(stats, 1);
+
         // Set W/L
-  	  TreeItem item2 = new TreeItem(match, SWT.CENTER );
-  	  item2.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  	  item2.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-  	  item2.setText(1, "Set W/L %");
-  	  stats = skipEmptyLines(stats);
-  	  item2.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = skipLines(stats, 1);
-  	  
-  	  // Game W/L
-  	  TreeItem item3 = new TreeItem(match, SWT.CENTER );
-  	  item3.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  	  item3.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-  	  item3.setText(1, "Game W/L %");
-  	  stats = skipEmptyLines(stats);
-  	  item3.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = skipLines(stats, 1);
-  	  
-  	  // Points W/L
-  	  TreeItem item4 = new TreeItem(match, SWT.CENTER );
-  	  item4.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  	  item4.setText(0, stats.substring(0, stats.indexOf("%") + 1));
-  	  stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-  	  item4.setText(1, "Points W/L %");
-  	  stats = skipEmptyLines(stats);
-  	  item4.setText(2, stats.substring(0, stats.indexOf("%") + 1));
-  	  stats = skipLines(stats, 1);
-  	  
+        TreeItem item2 = new TreeItem(match, SWT.CENTER);
+        item2.setBackground(1, table.getDisplay().getSystemColor(
+                SWT.COLOR_YELLOW));
+        item2.setText(0, stats.substring(0, stats.indexOf(")") + 1));
+        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
+        item2.setText(1, "Set W/L %");
+        stats = skipEmptyLines(stats);
+        item2.setText(2, stats.substring(0, stats.indexOf(")") + 1));
+        stats = skipLines(stats, 1);
+
+        // Game W/L
+        TreeItem item3 = new TreeItem(match, SWT.CENTER);
+        item3.setBackground(1, table.getDisplay().getSystemColor(
+                SWT.COLOR_YELLOW));
+        item3.setText(0, stats.substring(0, stats.indexOf(")") + 1));
+        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
+        item3.setText(1, "Game W/L %");
+        stats = skipEmptyLines(stats);
+        item3.setText(2, stats.substring(0, stats.indexOf(")") + 1));
+        stats = skipLines(stats, 1);
+
+        // Points W/L
+        TreeItem item4 = new TreeItem(match, SWT.CENTER);
+        item4.setBackground(1, table.getDisplay().getSystemColor(
+                SWT.COLOR_YELLOW));
+        item4.setText(0, stats.substring(0, stats.indexOf("%") + 1));
+        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
+        item4.setText(1, "Points W/L %");
+        stats = skipEmptyLines(stats);
+        item4.setText(2, stats.substring(0, stats.indexOf("%") + 1));
+        stats = skipLines(stats, 1);
+
         // Tiebreaks W/L
-  	  TreeItem item5 = new TreeItem(match, SWT.CENTER );
-  	  item5.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  	  item5.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-  	  item5.setText(1, "Tiebreaks W/L %");
-  	  stats = skipEmptyLines(stats);
-  	  item5.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-  	  stats = skipLines(stats, 1);
-  	  
+        TreeItem item5 = new TreeItem(match, SWT.CENTER);
+        item5.setBackground(1, table.getDisplay().getSystemColor(
+                SWT.COLOR_YELLOW));
+        item5.setText(0, stats.substring(0, stats.indexOf(")") + 1));
+        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
+        item5.setText(1, "Tiebreaks W/L %");
+        stats = skipEmptyLines(stats);
+        item5.setText(2, stats.substring(0, stats.indexOf(")") + 1));
+        stats = skipLines(stats, 1);
+
         // Tiebreaks W/L
-  	  TreeItem item6 = new TreeItem(match, SWT.CENTER );
-  	  item6.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  	  item6.setText(0, stats.substring(0, stats.indexOf("\t")));
-  	  stats = stats.substring(stats.indexOf("Set") + 4, stats.length());
-  	  item6.setText(1, "Tiebreaks/Set");
-  	  item6.setText(2, stats.substring(0, stats.indexOf("\n")));
-  	  stats = skipLines(stats, 2);
-  	  
-  	  //////////////////////////
-  	  // Service Statistics
-  	  //////////////////////////
-  	  
-  	  TreeItem serves = new TreeItem(table, SWT.CENTER);
-  	  serves.setText(1, "Serve Stats");
-  	  serves.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-  	  serves.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-  	  serves.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
-  	  
-  	  for(int i=0; i<6; i++)
-  	  {
-  		  TreeItem item = new TreeItem(serves, SWT.CENTER );
-  		  item.setText(0, stats.substring(0, stats.indexOf("\t")));
-  		  stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
-  		  item.setText(1, stats.substring(0, stats.indexOf("\t")));
-  		  item.setBackground(1, table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-  		  stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
-  		  item.setText(2, stats.substring(0, stats.indexOf("\n")));
-  		  stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
-  	  } 	  
+        TreeItem item6 = new TreeItem(match, SWT.CENTER);
+        item6.setBackground(1, table.getDisplay().getSystemColor(
+                SWT.COLOR_YELLOW));
+        item6.setText(0, stats.substring(0, stats.indexOf("\t")));
+        stats = stats.substring(stats.indexOf("Set") + 4, stats.length());
+        item6.setText(1, "Tiebreaks/Set");
+        item6.setText(2, stats.substring(0, stats.indexOf("\n")));
+        stats = skipLines(stats, 2);
+
+        // ////////////////////////
+        // Service Statistics
+        // ////////////////////////
+
+        TreeItem serves = new TreeItem(table, SWT.CENTER);
+        serves.setText(1, "Serve Stats");
+        serves
+                .setForeground(table.getDisplay().getSystemColor(
+                        SWT.COLOR_WHITE));
+        serves.setBackground(table.getDisplay().getSystemColor(
+                SWT.COLOR_DARK_GREEN));
+        serves.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
+
+        for (int i = 0; i < 6; i++) {
+            TreeItem item = new TreeItem(serves, SWT.CENTER);
+            item.setText(0, stats.substring(0, stats.indexOf("\t")));
+            stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
+            item.setText(1, stats.substring(0, stats.indexOf("\t")));
+            item.setBackground(1, table.getDisplay().getSystemColor(
+                    SWT.COLOR_YELLOW));
+            stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
+            item.setText(2, stats.substring(0, stats.indexOf("\n")));
+            stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
+        }
     }
 
     private String skipEmptyLines(String string) {
@@ -587,31 +625,35 @@ public class PredictionGui {
         }
         return string;
     }
-    
+
     private String skipLines(String string, int count) {
         while (count-- > 0) {
-            string = string.substring(string.indexOf('\n') + 1, string.length());
+            string = string
+                    .substring(string.indexOf('\n') + 1, string.length());
         }
         return string;
     }
-    
+
     public static Image getImage(String url) {
-    	Image img;
-    	try { 
-    	  URL web = new URL(url);
-    	  InputStream stream = web.openStream();
-    	  ImageLoader loader = new ImageLoader();
-    	  ImageData imgData = loader.load(stream)[0];   	  
-    	  img = new Image(Display.getDefault(), imgData); 
-    	} catch (Exception e) { System.err.println("No image "+url+", "+e); return null; }
-    	return img;
+        Image img;
+        try {
+            URL web = new URL(url);
+            InputStream stream = web.openStream();
+            ImageLoader loader = new ImageLoader();
+            ImageData imgData = loader.load(stream)[0];
+            img = new Image(Display.getDefault(), imgData);
+        } catch (Exception e) {
+            System.err.println("No image " + url + ", " + e);
+            return null;
+        }
+        return img;
     }
 
     public void handleUpdate() {
         try {
             String score = updateThread.getScore();
             System.out.println("Fetched score");
-            if ( score != null ) {
+            if (score != null) {
                 System.out.println("Not null! Updating...");
                 setScores(score);
             }
@@ -619,51 +661,48 @@ public class PredictionGui {
             e.printStackTrace();
         }
     }
-    
-    private class UpdateThread extends Thread{
-        
+
+    private class UpdateThread extends Thread {
+
         String score;
         String match;
-        
+
         public UpdateThread(String match) {
             this.match = match;
         }
-        
+
         @Override
         public void run() {
             // keep updating the score
-            while (true ){
+            while (true) {
                 try {
                     this.score = extractScores(match);
-                   // System.out.println("Score: " + this.score);
-                } catch (Exception e){
+                    // System.out.println("Score: " + this.score);
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-                
+
                 try {
-                    Thread.sleep(10000);
-                }catch(Exception e){
+                    Thread.sleep(5000);
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
-            
+
             /*
-            try {
-                Thread.sleep(40000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }*/
+             * try { Thread.sleep(40000); } catch (InterruptedException e) { //
+             * TODO Auto-generated catch block e.printStackTrace(); }
+             */
         }
-        
-        public String getScore(){
+
+        public String getScore() {
             return this.score;
         }
-        
+
         /*
-         * Gets real-time scores from http://www.livexscores.com/ Emulates a firefox
-         * browser with javascript and AJAX enabled and fetches score data from
-         * website. Finally, it returns the data for further parsing
+         * Gets real-time scores from http://www.livexscores.com/ Emulates a
+         * firefox browser with javascript and AJAX enabled and fetches score
+         * data from website. Finally, it returns the data for further parsing
          */
         @SuppressWarnings("serial")
         private String extractScores(String match) throws Exception {
@@ -671,7 +710,8 @@ public class PredictionGui {
             // Create a webClient to emulate Firefox browser
             WebClient webClient = new WebClient();// BrowserVersion.FIREFOX_3_6);
 
-            // Customize all webclient listeners and handlers for no warning/info
+            // Customize all webclient listeners and handlers for no
+            // warning/info
             // messages
             webClient.setIncorrectnessListener(new IncorrectnessListener() {
                 public void notify(String string, Object object) {
@@ -687,7 +727,8 @@ public class PredictionGui {
                         Exception exception) {
                 }
 
-                public void scriptException(HtmlPage page, ScriptException exception) {
+                public void scriptException(HtmlPage page,
+                        ScriptException exception) {
                 }
 
                 public void timeoutError(HtmlPage page, long int1, long int2) {
@@ -701,13 +742,14 @@ public class PredictionGui {
             webClient.setActiveXNative(true);
             webClient.setCssEnabled(true);
 
-            webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
-                @Override
-                public boolean processSynchron(HtmlPage page, WebRequest request,
-                        boolean async) {
-                    return true;
-                }
-            });
+            webClient
+                    .setAjaxController(new NicelyResynchronizingAjaxController() {
+                        @Override
+                        public boolean processSynchron(HtmlPage page,
+                                WebRequest request, boolean async) {
+                            return true;
+                        }
+                    });
 
             HtmlElement scores = null;
 
@@ -746,8 +788,7 @@ public class PredictionGui {
             DomNode elem2 = (DomNode) itr2.next();
 
             String string2 = elem2.asText();
-            
-            
+
             System.out.println("Extracted score");
 
             return string2;

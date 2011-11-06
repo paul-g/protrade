@@ -98,29 +98,25 @@ public class DisplayPanel implements Listener {
             
             SashForm comp = new SashForm(control, SWT.VERTICAL);
             
-            addMatchData(comp, match);
+            SashForm infoAndBack = new SashForm(comp, SWT.HORIZONTAL);
+            
+            
+            addMatchData(infoAndBack, match);
+
+            addMarketDataGrid(infoAndBack, match);
 
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             
-            addMarketDataGrid(horizontal, match);
-
-            //if (match.isInPlay())
-                addPredictionGui(horizontal, matchName);
-            //else {
-            //    Label score = new Label(horizontal, SWT.BORDER);
-            //    score.setText("Match is not in progress - No score available");
-            //}
+            addPredictionGui(horizontal, matchName);
 
             addChart(comp, match);
-            
-           
 
             item.setControl(control);
             
             folder.setSelection(item);
 
-            //horizontal.setWeights(new int[]{60, 40});
-            comp.setWeights(new int[]{10,30, 50,10});
+            infoAndBack.setWeights(new int[]{20, 80});
+            comp.setWeights(new int[]{20,25,50,5});
         } else
             // just bring the required tab under focus
             folder.setSelection(pos);
@@ -164,7 +160,6 @@ public class DisplayPanel implements Listener {
         slider.setMaximum(1);
         slider.setValues(0, 0, 1, 0, 0, 0);
         final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match,slider);
-         
         
         match.registerForUpdate(chart, c);
         
