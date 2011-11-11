@@ -18,8 +18,6 @@ public class PICalculator {
   Button buttonAsyncExec = new Button(shell, SWT.PUSH);
 
   public PICalculator(boolean asyncExecEnabled) {
-    final boolean async = asyncExecEnabled;
-
     shell.setText("PI Calculator");
     shell.setSize(400, 80);
 

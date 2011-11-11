@@ -4,21 +4,20 @@
   <property name="build.test.dir" value="${build.dir}/test"/>
   <property name="build.jar.dir" value="${build.dir}/jar"/>
   <property name="src.dir" value="src"/>
-  <property name="unit.test.dir" value="unit-test"/>
-  <property name="system.test.dir" value="system-test"/>
+  <property name="unit.test.dir" value="tests-unit"/>
+  <property name="system.test.dir" value="tests-system"/>
   <property file="build.properties" />
   <property name="lib.dir" value="lib"/>
   <property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
   <property name="lib.axis.dir" value="${lib.dir}/axis" />
   <property name="lib.htmlunit" value="${lib.dir}/htmlunit" />
     
-  <!--
   <property name="test.report.dir" value="${build.dir}/junitreport"/>
   <property name="unit.test.report.dir"
     value="${build.dir}/junitreport/unit-test"/>
   <property name="system.test.report.dir"
     value="${build.dir}/junitreport/system-test"/>
-  -->
+ 
     
   <!-- Set the CLASSPATH -->
   <path id="classpath">
@@ -46,7 +45,7 @@
     
   <!-- RUN task - for now runs a class, but should run a jar in the future -->
   <target name="run" depends="compile">
-    <java classname="src.Main" fork="true" classpathref="classpath"/>
+    <java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath"/>
   </target>
   
   <!-- JAR and RUN tasks to create & run a jar, running the tests first -->
@@ -75,12 +74,11 @@
   <target name="compile-tests" depends="compile">
     <javac srcdir="${unit.test.dir}" destdir="${build.test.dir}"
       classpathref="classpath" />
-    <javac srcdir="${system.test.dir}" destdir="${build.test.dir}"
-      classpathref="classpath" />    
+<!--    <javac srcdir="${system.test.dir}" destdir="${build.test.dir}"
+      classpathref="classpath" />    -->
   </target>
   
-  <!--
-  <target name="run-unit-tests" depends="compile,compile-tests">
+<!--  <target name="run-unit-tests" depends="compile,compile-tests">
     <junit printsummary="yes" errorProperty="test.failed" 
       failureProperty="test.failed">
       <classpath refid="classpath"/>
@@ -91,8 +89,15 @@
     </junit>
     <fail message="Unit tests failed. Check log and/or reports."
         if="test.failed"/>
+  </target> -->
+
+  <!-- Recreates generated classes -->
+  <target name="generated">
+    <javac srcdir="org" classpathref="classpath"/>
+    <jar destfile="lib/generated.jar" basedir="." includes="org/**/*.class">
+    </jar>
   </target>
-  -->
+
   
   <!-- RUN unit tests -->
   <target name="run-unit-tests" depends="compile,compile-tests">
@@ -106,13 +111,13 @@
       <classpath refid="classpath"/>
       <formatter type="brief" usefile="false"/>
       <batchtest fork="yes" todir="${unit.test.report.dir}">
-        <fileset dir="unit-test/" includes="**/*Test.java"/>
+        <fileset dir="${unit.test.dir}" includes="**/*Test.java"/>
       </batchtest>      
     </junit>
-    <junitreport todir="${unit.test.report.dir}">
+<!--    <junitreport todir="${unit.test.report.dir}">
       <fileset dir="${unit.test.report.dir}" includes="TEST-*.xml"/>
       <report todir="${unit.test.report.dir}"/>
-    </junitreport>
+    </junitreport> -->
     <fail message="Unit tests failed. Check log and/or reports."
       if="test.failed"/>
   </target>
