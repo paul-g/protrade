@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
+import org.swtchart.IAxis;
+import org.swtchart.IAxisSet;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
@@ -38,11 +40,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private boolean pl1Selected;
 	private boolean maPl2Selected;
 	private boolean maPl1Selected;
-	private double[] pl1YSeries;
-	private double[] pl2YSeries;
-	private double[] maPl1;
-	private double[] maPl2;
-	private Date[] xSeries;
+	private ArrayList<Double> pl1YSeries;
+	private ArrayList<Double> pl2YSeries;
+	private ArrayList<Double> maPl1;
+	private ArrayList<Double> maPl2;
+	private ArrayList<Date> xSeries;
 	private Match match;
 	private Slider slider;
 
@@ -57,11 +59,14 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
+		
+		IAxisSet axisSet = this.getAxisSet();
+		IAxis yAxis = axisSet.getYAxis(0);
+		
 	}
 
 	private void createSlider(Slider slider) {
 		this.slider=slider;
-		slider.setMinimum(sampleSize-2);
 		slider.setMaximum(1);
 		slider.setSelection(0);
 		
@@ -122,35 +127,31 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				&& secondSeries.getYSeries() != null
 				&& maPl1Series.getYSeries() != null
 				&& maPl2Series.getYSeries() != null) {
-			Date[] prevXSeries = xSeries;
-			double[] prevPl1YSeries = pl1YSeries;// pl1YSeries;
-			double[] prevPl2YSeries = pl2YSeries;// pl2YSeries;
-			double[] prevMaPl1Series = maPl1;// pl1YSeries;
-			double[] prevMaPl2Series = maPl2;// pl2YSeries;
+			i=pl1YSeries.size();
 			// if not reached max sample size
 			//if (prevXSeries.length < sampleSize) {
-				xSeries = new Date[prevXSeries.length + 1];
-				pl1YSeries = new double[prevXSeries.length + 1];
-				pl2YSeries = new double[prevXSeries.length + 1];
-				maPl1 = new double[prevXSeries.length + 1];
-				maPl2 = new double[prevXSeries.length + 1];
+//				xSeries = new Date[prevXSeries.length + 1];
+//				pl1YSeries = new double[prevXSeries.length + 1];
+//				pl2YSeries = new double[prevXSeries.length + 1];
+//				maPl1 = new double[prevXSeries.length + 1];
+//				maPl2 = new double[prevXSeries.length + 1];
 
-				for (i = 0; i < prevXSeries.length; i++) {
-					xSeries[i] = prevXSeries[i];
-					pl1YSeries[i] = prevPl1YSeries[i];
-					pl2YSeries[i] = prevPl2YSeries[i];
-					maPl1[i] = prevMaPl1Series[i];
-					maPl2[i] = prevMaPl2Series[i];
-				}
+//				for (i = 0; i < prevXSeries.length; i++) {
+//					xSeries[i] = prevXSeries[i];
+//					pl1YSeries[i] = prevPl1YSeries[i];
+//					pl2YSeries[i] = prevPl2YSeries[i];
+//					maPl1[i] = prevMaPl1Series[i];
+//					maPl2[i] = prevMaPl2Series[i];
+//				}
 		} else {
-			xSeries = new Date[1];
-			pl1YSeries = new double[1];
-			pl2YSeries = new double[1];
-			maPl1 = new double[1];
-			maPl2 = new double[1];
+			xSeries = new ArrayList<Date>();
+			pl1YSeries = new ArrayList<Double>();
+			pl2YSeries = new ArrayList<Double>();
+			maPl1 = new ArrayList<Double>();
+			maPl2 = new ArrayList<Double>();
 		}
 
-		xSeries[i] = Calendar.getInstance().getTime();
+		xSeries.add(i, Calendar.getInstance().getTime());
 
 		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
 		pl2YSeries = addValue(pl2YSeries, i, data.getPl2Back());
@@ -163,6 +164,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				slider.setSelection(i);
 			}
 			slider.setMaximum(i+1);
+			if (i==sampleSize) slider.setMinimum(sampleSize-1);
 			updateSlide();
 		}
 		// set serieses values
@@ -172,7 +174,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	public void showSeries(int i, boolean dragged) {
-		int size = i<sampleSize ? i : sampleSize;
+		int size = (i+1)<sampleSize ? (i+1) : sampleSize;
 		Date showXSeries[] = new Date[size];
 		double[] showPl1YSeries = new double[size];
 		double[] showPl2YSeries = new double[size];
@@ -180,12 +182,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		double[] showMaPl2 = new double[size];
 		int z = i<sampleSize ? 0 : 1;
 		if (slider.getMaximum() == slider.getSelection()+1 || dragged){
-			for (int a = 0; a<sampleSize && a<i; a++){
-				showXSeries[a] = xSeries[(i-sampleSize+1)*z+a];
-				showPl1YSeries[a] = pl1YSeries[(i-sampleSize+1)*z+a];
-				showPl2YSeries[a] =	pl2YSeries[(i-sampleSize+1)*z+a];
-				showMaPl1[a] = maPl1[(i-sampleSize+1)*z+a];
-				showMaPl2[a] = maPl2[(i-sampleSize+1)*z+a];
+			for (int a = 0; a<size; a++){
+				int b = (i-sampleSize+1)*z+a;				
+				showXSeries[a] = xSeries.get(b);
+				showPl1YSeries[a] = pl1YSeries.get(b);
+				showPl2YSeries[a] =	pl2YSeries.get(b);
+				showMaPl1[a] = maPl1.get(b);
+				showMaPl2[a] = maPl2.get(b);
 			}
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(showPl1YSeries);
@@ -201,36 +204,36 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		
 	}
 
-	private double[] addMaValue(double[] array, int i,
-			double[] backData) {
-		if (backData != null) {
+	private ArrayList<Double> addMaValue(ArrayList<Double> maPl12, int i,
+			ArrayList<Double> pl1ySeries2) {
+		if (pl1ySeries2 != null) {
 			double sum = 0;
 			if (i < 10) {
-				for (int a = i; a >= 0; a--) sum+=backData[a];
-				array[i] = sum/(i+1);
+				for (int a = i; a >= 0; a--) sum+=pl1ySeries2.get(a);
+				maPl12.add(i,sum/(i+1));
 			} else {
-				sum = array[i-1]*10 - backData[i-10] + backData[i];
-				array[i] = sum/10;
+				sum = maPl12.get(i-1)*10 - pl1ySeries2.get(i-10) + pl1ySeries2.get(i);
+				maPl12.add(i,sum/10);
 			}
 		}
-		return array;
+		return maPl12;
 	}
 
-	private double[] addValue(double[] series, int i,
+	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, int i,
 			ArrayList<Pair<Double, Double>> oddData) {
 		// if data has been read from Betfair
 		if (oddData != null && oddData.size() > 0) {
-			series[i] = oddData.get(0).getI();
+			pl1ySeries2.add(i,oddData.get(0).getI());
 			if (!decimalOdds) // convert to fractional odds if necessary
-				series[i]--;
+				pl1ySeries2.add(i,pl1ySeries2.get(i)-1);
 		} else {
 			if (i > 0) // keep previous value if it exists
-				series[i] = series[i - 1];
+				pl1ySeries2.add(i,pl1ySeries2.get(i-1));
 			else
 				// put zero if no previous value
-				series[i] = 0;
+				pl1ySeries2.add(i,(double)0);
 		}
-		return series;
+		return pl1ySeries2;
 	}
 
 	// switches between the two odds representations
