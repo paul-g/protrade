@@ -30,7 +30,15 @@ public class LoginShell {
 
     private static final String TITLE = "Login to tennis trader";
     
+    public static final String SUCCESS = "Login successful! Please wait...";
+
+    public static final String FAIL = "Login failed! Please try again...";
+    
     private ProgressBar bar;
+    
+    public Shell showGui(){
+        return loginShell;
+    }
 
     public LoginShell(final Display display) {
         this.loginShell = new Shell(display, SWT.MAX/* SWT.NO_TRIM|SWT.ON_TOP */);// SWT.TRANSPARENCY_ALPHA);
@@ -121,13 +129,15 @@ public class LoginShell {
 
         loginShell.open();
 
+    }
+
+  public void run(final Display display) {
         while (!loginShell.isDisposed()) {
             if (!display.readAndDispatch())
                 display.sleep();
         }
 
         display.dispose();
-
     }
 
     private void makeTestAccount(final Display display) {
@@ -161,9 +171,6 @@ public class LoginShell {
         });
     }
 
-    private static final String SUCCESS = "Login successful! Please wait...";
-
-    private static final String FAIL = "Login failed! Please try again...";
 
     private static boolean checkLogin(String username, String password) {
         // Perform the login

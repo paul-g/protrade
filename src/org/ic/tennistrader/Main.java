@@ -29,7 +29,7 @@ public class Main {
     
     // start up the app
     final Display display = new Display();
-    new LoginShell(display);
+    new LoginShell(display).run(display);
   }
 
   private static void readConfigFile(){

@@ -12,4 +12,3 @@ public class UpdatableChartTest extends TestCase{
         assertEquals("m", "m");
     }
 }
-
