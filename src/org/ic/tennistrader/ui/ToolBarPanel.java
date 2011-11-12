@@ -108,7 +108,7 @@ public class ToolBarPanel {
 				}
 			}
 		});
-		
+
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
@@ -206,7 +206,7 @@ public class ToolBarPanel {
 
 				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 				String[] filterNames = new String[] { "CSV Files",
-						"All Files (*)" };
+				"All Files (*)" };
 				String[] filterExtensions = new String[] { "*.csv", "*" };
 				String filterPath = "/";
 				String platform = SWT.getPlatform();
@@ -234,29 +234,32 @@ public class ToolBarPanel {
 		// Setting span throughout the columns
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 3;
+		Display display = shell.getDisplay();
 
 		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(gridData);
 
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
-		final Image off = new Image(shell.getDisplay(), "images/connection_lost.png");
-		final Image on = new Image(shell.getDisplay(), "images/connection_on.png");
+		final Image off = new Image(display, "images/connection_lost.png");
+		final Image on = new Image(display, "images/connection_on.png");
 		widgetItem.setImage(on);
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					try { Thread.sleep(3000); } catch (Exception e) { }
-					toolbar.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (isInternetReachable()) {
-								log.info("Connection - ON");
-								widgetItem.setImage(on);
-							} else {
-								log.info("Connection - OFF");
-								widgetItem.setImage(off);
+					if (!shell.isDisposed()) {
+						toolbar.getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								if (isInternetReachable()) {
+									log.info("Connection - ON");
+									widgetItem.setImage(on);
+								} else {
+									log.info("Connection - OFF");
+									widgetItem.setImage(off);
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 			}
 		}).start();
