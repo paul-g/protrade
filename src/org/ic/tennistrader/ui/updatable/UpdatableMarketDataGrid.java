@@ -92,16 +92,21 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         }
     }
 
-    public void handleUpdate(MOddsMarketData newData) {
-        if (newData.getPl1Back() != null) {
-            updateButtons(newData.getPl1Back(), p1BackButtons, true);
-            updateButtons(newData.getPl1Lay(), p1LayButtons, false);
-            updateButtons(newData.getPl2Back(), p2BackButtons, true);
-            updateButtons(newData.getPl2Lay(), p2LayButtons, false);
-            player1.setText(newData.getPlayer1());
-            player2.setText(newData.getPlayer2());
-            composite.layout();
-        }
+    public void handleUpdate(final MOddsMarketData newData) {
+    	composite.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if (newData.getPl1Back() != null) {
+		            updateButtons(newData.getPl1Back(), p1BackButtons, true);
+		            updateButtons(newData.getPl1Lay(), p1LayButtons, false);
+		            updateButtons(newData.getPl2Back(), p2BackButtons, true);
+		            updateButtons(newData.getPl2Lay(), p2LayButtons, false);
+		            player1.setText(newData.getPlayer1());
+		            player2.setText(newData.getPlayer2());
+		            composite.layout();
+		        }
+			}    		
+    	});        
     }
 
     private void initColors() {

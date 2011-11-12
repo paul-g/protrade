@@ -263,8 +263,22 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 * updates the chart with the new given market data
 	 */
 	public void handleUpdate(final MOddsMarketData newData) {
-		fillData(newData);
-		updateDisplay();
+		final Composite comp = this.getParent();
+		final UpdatableChart chart = this;
+		if (comp != null) {
+			comp.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					fillData(newData);
+					if (!chart.isDisposed())
+						chart.redraw();
+					if (!comp.isDisposed())
+						comp.update();
+				}
+			});
+		}
+		//fillData(newData);
+		//updateDisplay();
 	}
 
 	private void updateDisplay() {

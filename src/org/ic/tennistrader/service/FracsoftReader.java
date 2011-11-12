@@ -20,7 +20,7 @@ import org.ic.tennistrader.utils.Pair;
  * @author Paul Grigoras
  * 
  */
-public class FracsoftReader implements DataUpdater {
+public class FracsoftReader extends DataUpdater {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
 
@@ -103,10 +103,16 @@ public class FracsoftReader implements DataUpdater {
         return pl1Backs;
     }
 
-    @Override
-    public void run() {
-        LiveDataFetcher.handleFileEvent(this.match, getMarketData());
-    }
+	@Override
+	public void run() {
+		while (true) {
+			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 
     private MOddsMarketData getMarketData() {
         if (pointer.hasNext())

@@ -70,9 +70,7 @@ public class PredictionGui {
             System.out.println(match.substring(match.indexOf("n")));
         } catch (Exception e) { 
              // if something goes wrong
-            log.error(e.getMessage() +
-
-            " ");
+            //log.error(e.getMessage() + " ");
             e.printStackTrace();
         }
 
@@ -82,7 +80,7 @@ public class PredictionGui {
             parseStatistics(stats, table);
         } catch (Exception e) {
             // if something goes wrong
-            log.error(e.getMessage() + " ");
+            //log.error(e.getMessage() + " ");
             e.printStackTrace();
         }
 
@@ -688,11 +686,6 @@ public class PredictionGui {
                     System.out.println(e.getMessage());
                 }
             }
-
-            /*
-             * try { Thread.sleep(40000); } catch (InterruptedException e) { //
-             * TODO Auto-generated catch block e.printStackTrace(); }
-             */
         }
 
         public String getScore() {

@@ -47,6 +47,26 @@ public class LiveDataFetcher {
         }
     }
     
+    private static void start() {
+        //log.info("go to run thread");
+        log.info("Start betfair thread");
+    	dataUpdater.start();
+    	
+        /*
+        comp.getDisplay().timerExec(0, new Runnable() {
+            @Override
+            public void run() {
+                dataUpdater.run();
+                if (!comp.isDisposed() )
+                    comp.getDisplay().timerExec(5000, this);
+            }
+        });
+        */
+        
+        log.info("after started betfair thread");
+        //log.info("after run in thread");
+    }
+    
     public static void registerFromFile(UpdatableWidget widget, Match match, String fileName, final Composite comp) {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !fileListeners.containsKey(match);
@@ -66,6 +86,8 @@ public class LiveDataFetcher {
         final DataUpdater fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);
+            fracsoftUpdater.start();
+            /*
             comp.getDisplay().timerExec(0, new Runnable() {
                 @Override
                 public void run() {
@@ -74,25 +96,14 @@ public class LiveDataFetcher {
                         comp.getDisplay().timerExec(1000, this);
                 }
             });
+            */
         } catch(FileNotFoundException fnfe) {
             log.error("Fracsoft file to be opened not found");
         }
     }
-
-    public static void start() {
-        log.info("go to run thread");
-        comp.getDisplay().timerExec(0, new Runnable() {
-            @Override
-            public void run() {
-                dataUpdater.run();
-                if (!comp.isDisposed() )
-                    comp.getDisplay().timerExec(5000, this);
-            }
-        });
-        log.info("after run in thread");
-    }
-
+   
     public static void handleEvent(HashMap<EventBetfair, MOddsMarketData> data) {
+    	log.info("Handle event from betfair thread");
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();

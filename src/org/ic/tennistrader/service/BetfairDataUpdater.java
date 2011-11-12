@@ -10,7 +10,7 @@ import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 
 import org.apache.log4j.Logger;
 
-public class BetfairDataUpdater implements DataUpdater {
+public class BetfairDataUpdater extends DataUpdater {
     private List<EventBetfair> events;
     private HashMap<EventBetfair, RealMatch> matches;
     
@@ -28,17 +28,24 @@ public class BetfairDataUpdater implements DataUpdater {
     }
 
     @Override
-    public void run() {
-        HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
-        for (EventBetfair eb : events) {
-            MOddsMarketData marketData = BetfairExchangeHandler
-                    .getMarketOdds(eb);
-            if (marketData.getPl1Back() != null) {
-                matches.get(eb).addMarketData(marketData);
-                
-            }
-            newMap.put(eb, marketData);
-        }
-        LiveDataFetcher.handleEvent(newMap);
-    }
+	public void run() {
+		while (true) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				log.info("Betfair Thread interrupted" + e.getMessage());
+			}
+			HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
+			for (EventBetfair eb : events) {
+				MOddsMarketData marketData = BetfairExchangeHandler
+						.getMarketOdds(eb);
+				if (marketData.getPl1Back() != null) {
+					matches.get(eb).addMarketData(marketData);
+
+				}
+				newMap.put(eb, marketData);
+			}
+			LiveDataFetcher.handleEvent(newMap);			
+		}
+	}
 }
