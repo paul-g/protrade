@@ -11,6 +11,8 @@
   <property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
   <property name="lib.axis.dir" value="${lib.dir}/axis" />
   <property name="lib.htmlunit" value="${lib.dir}/htmlunit" />
+  <property name="instrumented.dir" value="build/instrumented-classes"/>
+  <property name="coverage.html.dir" value="test-coverage"/>
     
   <property name="test.report.dir" value="${build.dir}/junitreport"/>
   <property name="unit.test.report.dir"
@@ -23,7 +25,7 @@
   <path id="classpath">
     <pathelement location="${build.prod.dir}"/>
     <pathelement location="${build.test.dir}"/>   
-    <fileset dir="${lib.dir}" includes="*.jar"/>
+    <fileset dir="${lib.dir}" includes="*.jar" excludes="cobertura.jar"/>
     <fileset dir="${lib.swt.dir}" includes="*.jar" />
     <fileset dir="${lib.axis.dir}" includes="*.jar"/>
     <fileset dir="${lib.htmlunit}" includes="*.jar"/> 
@@ -40,7 +42,7 @@
   <!-- COMPILE task -->
   <target name="compile" depends="prepare">
     <javac srcdir="${src.dir}" includeantruntime="false"
-      destdir="${build.prod.dir}" classpathref="classpath"/>
+      destdir="${build.prod.dir}" classpathref="classpath" debug="true" debuglevel="vars,lines,source"/>
     <copy todir="${build.prod.dir}" file="log4j.properties"/>
   </target>
     
@@ -99,17 +101,49 @@
     </jar>
   </target>
 
-  
+	<!-- Coverage tasks -->
+	<path id="cobertura.classpath">
+		<fileset dir="lib/cobertura">
+			<include name="cobertura.jar" />
+			<include name="lib/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
+
+	<target name="instrument" depends="compile">	
+		<cobertura-instrument todir="${instrumented.dir}">
+    	<fileset dir="build/prod">
+    	    <include name="**/*.class"/>
+    	</fileset>
+		</cobertura-instrument>
+	</target>
+	
+<!--
+	<target name="coverage">
+    <cobertura-report srcdir="${src.dir}" destdir="${build.coverage.dir}"/>
+	</target>
+-->
+	
+	<target name="coverage" depends="instrument">
+		<cobertura-report destdir="${coverage.html.dir}">
+			<fileset dir="${src.dir}">
+			</fileset>
+				<include name="**/*.java"/>
+		</cobertura-report>
+	</target>
+	
   <!-- RUN unit tests -->
   <target name="run-unit-tests" depends="compile,compile-tests">
     <mkdir dir="${test.report.dir}"/>
     <mkdir dir="${unit.test.report.dir}"/>      
-    <!--
-    <formatter type="xml"/>
+    <!--    <formatter type="xml"/>
     -->    
     <junit printsummary="yes" errorProperty="test.failed" 
       failureProperty="test.failed">
-      <classpath refid="classpath"/>
+      <classpath refid="cobertura.classpath" />
+ 			<classpath location="${instrumented.dir}" />
+      <classpath refid="classpath"/> 
       <formatter type="brief" usefile="false"/>
       <batchtest fork="yes" todir="${unit.test.report.dir}">
         <fileset dir="${unit.test.dir}" includes="**/*Test.java"/>
