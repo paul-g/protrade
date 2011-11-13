@@ -1,5 +1,8 @@
 package org.ic.tennistrader.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -22,6 +25,8 @@ import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
 public class LoginShell {
 
+    List<Listener> loginSucces = new ArrayList<Listener>();
+    
     private Shell loginShell;
 
     private Label result;
@@ -66,19 +71,18 @@ public class LoginShell {
 
         final Text username = new Text(loginShell, SWT.NONE);
         username.setLayoutData(gridData);
+        username.setText("username");
 
         Label passLabel = new Label(loginShell, SWT.NONE);
         passLabel.setText("Password: ");
 
         final Text password = new Text(loginShell, SWT.PASSWORD);
         password.setLayoutData(gridData);
+        password.setText("password");
 
         // just for alignment
         @SuppressWarnings("unused")
         Label blankLabel = new Label(loginShell, SWT.NONE);
-
-        // remember me button
-        makeRememberMe();
 
         @SuppressWarnings("unused")
         Label blankLabel2 = new Label(loginShell, SWT.NONE);
@@ -104,7 +108,7 @@ public class LoginShell {
                 if (checkLogin(user, password.getText())) {
                     Main.USERNAME = user;
                     updateResult(SUCCESS);
-                    launchApp(display);
+                    handleLoginSuccess();
                 } else
                     updateResult(FAIL);
             }
@@ -145,32 +149,17 @@ public class LoginShell {
         testAccount.setText("Test");
         testAccount.addListener(SWT.Selection, new Listener() {
             public void handleEvent(Event arg0) {
-                String username = Main.USERNAME;
-                String password = Main.PASSWORD;
+                String username = Main.TEST_USERNAME;
+                String password = Main.TEST_PASSWORD;
                 log.info("username " + username);
                 if (checkLogin(username, password)) {
                     updateResult(SUCCESS);
-                    launchApp(display);
+                    handleLoginSuccess();
                 } else
                     updateResult(FAIL);
             }
         });
     }
-
-    private void makeRememberMe() {
-        Button rememberMe = new Button(loginShell, SWT.CHECK);
-        GridData rmData = new GridData();
-        rmData.horizontalSpan = 4;
-        rememberMe.setText("Remember Me");
-        rememberMe.setLayoutData(rmData);
-        rememberMe.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(Event arg0) {
-                log.info("Remember Me selected");
-            }
-        });
-    }
-
 
     private static boolean checkLogin(String username, String password) {
         // Perform the login
@@ -204,8 +193,13 @@ public class LoginShell {
         loginShell.dispose();
     }
 
-    private void launchApp(Display display) {
-        new MainWindow(display, this);
+    public void addLoginSuccessListener(Listener listener){
+      loginSucces.add(listener);  
+    }
+    
+    public void handleLoginSuccess(){
+        for (Listener l : loginSucces)
+            l.handleEvent(new Event());
     }
     
     public void setText(String text){

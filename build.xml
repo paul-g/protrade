@@ -1,58 +1,60 @@
 <project name="tennis-trader">
-  <property name="build.dir" value="build"/>
-  <property name="build.prod.dir" value="${build.dir}/prod"/>
-  <property name="build.test.dir" value="${build.dir}/test"/>
-  <property name="build.jar.dir" value="${build.dir}/jar"/>
-  <property name="src.dir" value="src"/>
-  <property name="unit.test.dir" value="tests-unit"/>
-  <property name="system.test.dir" value="tests-system"/>
-  <property file="build.properties" />
-  <property name="lib.dir" value="lib"/>
-  <property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
-  <property name="lib.axis.dir" value="${lib.dir}/axis" />
-  <property name="lib.htmlunit" value="${lib.dir}/htmlunit" />
-  <property name="instrumented.dir" value="build/instrumented-classes"/>
-  <property name="coverage.html.dir" value="test-coverage"/>
-    
-  <property name="test.report.dir" value="${build.dir}/junitreport"/>
-  <property name="unit.test.report.dir"
-    value="${build.dir}/junitreport/unit-test"/>
-  <property name="system.test.report.dir"
-    value="${build.dir}/junitreport/system-test"/>
- 
-    
-  <!-- Set the CLASSPATH -->
-  <path id="classpath">
-    <pathelement location="${build.prod.dir}"/>
-    <pathelement location="${build.test.dir}"/>   
-    <fileset dir="${lib.dir}" includes="*.jar" excludes="cobertura.jar"/>
-    <fileset dir="${lib.swt.dir}" includes="*.jar" />
-    <fileset dir="${lib.axis.dir}" includes="*.jar"/>
-    <fileset dir="${lib.htmlunit}" includes="*.jar"/> 
-    <fileset dir="lib/swtbot/" includes="*.jar"/>
-  </path>
-  
-  <!-- Create the folders for required for build -->
-  <target name="prepare">
-    <mkdir dir="${build.dir}"/>
-    <mkdir dir="${build.prod.dir}" />
-    <mkdir dir="${build.test.dir}" />
-  </target>
+    <property name="build.dir" value="build" />
+    <property name="build.prod.dir" value="${build.dir}/prod" />
+    <property name="build.test.dir" value="${build.dir}/test" />
+    <property name="build.jar.dir" value="${build.dir}/jar" />
+    <property name="src.dir" value="src" />
+    <property name="unit.test.dir" value="tests-unit" />
+    <property name="system.test.dir" value="tests-system" />
+    <property file="build.properties" />
+    <property name="lib.dir" value="lib" />
+    <property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
+    <property name="lib.axis.dir" value="${lib.dir}/axis" />
+    <property name="lib.htmlunit" value="${lib.dir}/htmlunit" />
+    <property name="instrumented.dir" value="build/instrumented-classes" />
+    <property name="coverage.html.dir" value="test-coverage" />
 
-  <!-- COMPILE task -->
-  <target name="compile" depends="prepare">
-    <javac srcdir="${src.dir}" includeantruntime="false"
-      destdir="${build.prod.dir}" classpathref="classpath" debug="true" debuglevel="vars,lines,source"/>
-    <copy todir="${build.prod.dir}" file="log4j.properties"/>
-  </target>
-    
-  <!-- RUN task - for now runs a class, but should run a jar in the future -->
-  <target name="run" depends="compile">
-    <java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath"/>
-  </target>
-  
-  <!-- JAR and RUN tasks to create & run a jar, running the tests first -->
-  <!--  
+    <property name="test.report.dir" value="${build.dir}/junitreport" />
+    <property name="unit.test.report.dir" value="${build.dir}/junitreport/unit-test" />
+    <property name="system.test.report.dir" value="${build.dir}/junitreport/system-test" />
+
+
+    <!-- Set the CLASSPATH -->
+    <path id="classpath">
+        <pathelement location="${build.prod.dir}" />
+        <pathelement location="${build.test.dir}" />
+        <fileset dir="${lib.dir}" includes="*.jar" excludes="cobertura.jar" />
+        <fileset dir="${lib.swt.dir}" includes="*.jar" />
+        <fileset dir="${lib.axis.dir}" includes="*.jar" />
+        <fileset dir="${lib.htmlunit}" includes="*.jar" />
+        <fileset dir="lib/swtbot/" includes="*.jar" />
+        <fileset dir="lib/cobertura">
+            <include name="cobertura.jar" />
+            <include name="lib/*.jar" />
+        </fileset>
+
+    </path>
+
+    <!-- Create the folders for required for build -->
+    <target name="prepare">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.prod.dir}" />
+        <mkdir dir="${build.test.dir}" />
+    </target>
+
+    <!-- COMPILE task -->
+    <target name="compile" depends="prepare">
+        <javac srcdir="${src.dir}" includeantruntime="false" destdir="${build.prod.dir}" classpathref="classpath" debug="true" debuglevel="vars,lines,source" />
+        <copy todir="${build.prod.dir}" file="log4j.properties" />
+    </target>
+
+    <!-- RUN task - for now runs a class, but should run a jar in the future -->
+    <target name="run" depends="compile">
+        <java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath" />
+    </target>
+
+    <!-- JAR and RUN tasks to create & run a jar, running the tests first -->
+    <!--  
   <target name="jar" depends="compile,run-unit-tests,run-system-tests"> 
     <jar destfile="${build.jar.dir}/HelloWorld.jar" basedir="${build.prod.dir}">
       <manifest>
@@ -64,24 +66,25 @@
   <target name="run" depends="jar">
     <java jar="${build.jar.dir}/HelloWorld.jar" fork="true"/>
   </target>
-  -->  
-  
-  <!-- CLEAN task -->
-  <target name="clean">
-    <delete dir="${build.dir}"/>
-    <delete dir="${build.prod.dir}" />
-    <delete dir="${build.test.dir}" />
-  </target>
+  -->
 
-  <!-- COMPILE all tests -->
-  <target name="compile-tests" depends="compile">
-    <javac srcdir="${unit.test.dir}" destdir="${build.test.dir}"
-      classpathref="classpath" />
-<!--    <javac srcdir="${system.test.dir}" destdir="${build.test.dir}"
+    <!-- CLEAN task -->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${build.prod.dir}" />
+        <delete dir="${build.test.dir}" />
+        <delete dir="${coverage.html.dir}" />
+        <delete file="cobertura.ser" />
+    </target>
+
+    <!-- COMPILE all tests -->
+    <target name="compile-tests" depends="compile">
+        <javac srcdir="${unit.test.dir}" destdir="${build.test.dir}" classpathref="classpath" />
+        <!--    <javac srcdir="${system.test.dir}" destdir="${build.test.dir}"
       classpathref="classpath" />    -->
-  </target>
-  
-<!--  <target name="run-unit-tests" depends="compile,compile-tests">
+    </target>
+
+    <!--  <target name="run-unit-tests" depends="compile,compile-tests">
     <junit printsummary="yes" errorProperty="test.failed" 
       failureProperty="test.failed">
       <classpath refid="classpath"/>
@@ -94,90 +97,80 @@
         if="test.failed"/>
   </target> -->
 
-  <!-- Recreates generated classes -->
-  <target name="generated">
-    <javac srcdir="org" classpathref="classpath"/>
-    <jar destfile="lib/generated.jar" basedir="." includes="org/**/*.class">
-    </jar>
-  </target>
+    <!-- Recreates generated classes -->
+    <target name="generated">
+        <javac srcdir="org" classpathref="classpath" />
+        <jar destfile="lib/generated.jar" basedir="." includes="org/**/*.class">
+        </jar>
+    </target>
 
-	<!-- Coverage tasks -->
-	<path id="cobertura.classpath">
-		<fileset dir="lib/cobertura">
-			<include name="cobertura.jar" />
-			<include name="lib/*.jar" />
-		</fileset>
-	</path>
+    <!-- Coverage tasks -->
+    <taskdef classpathref="classpath" resource="tasks.properties" />
 
-	<taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
+    <target name="instrument" depends="compile">
+        <cobertura-instrument todir="${instrumented.dir}">
+            <fileset dir="build/prod">
+                <include name="**/*.class" />
+            </fileset>
+        </cobertura-instrument>
+    </target>
 
-	<target name="instrument" depends="compile">	
-		<cobertura-instrument todir="${instrumented.dir}">
-    	<fileset dir="build/prod">
-    	    <include name="**/*.class"/>
-    	</fileset>
-		</cobertura-instrument>
-	</target>
-	
-<!--
+    <!--
 	<target name="coverage">
     <cobertura-report srcdir="${src.dir}" destdir="${build.coverage.dir}"/>
 	</target>
 -->
-	
-	<target name="coverage" depends="instrument">
-		<cobertura-report destdir="${coverage.html.dir}">
-			<fileset dir="${src.dir}">
-			</fileset>
-				<include name="**/*.java"/>
-		</cobertura-report>
-	</target>
-	
-  <!-- RUN unit tests -->
-  <target name="run-unit-tests" depends="compile,compile-tests">
-    <mkdir dir="${test.report.dir}"/>
-    <mkdir dir="${unit.test.report.dir}"/>      
-    <!--    <formatter type="xml"/>
-    -->    
-    <junit printsummary="yes" errorProperty="test.failed" 
-      failureProperty="test.failed">
-      <classpath refid="cobertura.classpath" />
- 			<classpath location="${instrumented.dir}" />
-      <classpath refid="classpath"/> 
-      <formatter type="brief" usefile="false"/>
-      <batchtest fork="yes" todir="${unit.test.report.dir}">
-        <fileset dir="${unit.test.dir}" includes="**/*Test.java"/>
-      </batchtest>      
-    </junit>
-<!--    <junitreport todir="${unit.test.report.dir}">
+
+    <target name="coverage" depends="instrument, run-unit-tests">
+        <cobertura-report destdir="${coverage.html.dir}">
+            <fileset dir="${src.dir}">
+            </fileset>
+            <include name="**/*.java" />
+        </cobertura-report>
+    </target>
+
+    <!-- RUN unit tests -->
+    <target name="run-unit-tests" depends="compile,compile-tests">
+        <mkdir dir="${test.report.dir}" />
+        <mkdir dir="${unit.test.report.dir}" />
+        <!--    <formatter type="xml"/>
+    -->
+        <junit printsummary="yes" errorProperty="test.failed" failureProperty="test.failed">
+            <!-- <classpath refid="cobertura.classpath" /> -->
+            <classpath location="${instrumented.dir}" />
+            <classpath refid="classpath" />
+            <formatter type="brief" usefile="false" />
+            <batchtest fork="yes" todir="${unit.test.report.dir}">
+                <fileset dir="${unit.test.dir}" includes="**/*Test.java" />
+            </batchtest>
+        </junit>
+        <!--    <junitreport todir="${unit.test.report.dir}">
       <fileset dir="${unit.test.report.dir}" includes="TEST-*.xml"/>
       <report todir="${unit.test.report.dir}"/>
     </junitreport> -->
-    <fail message="Unit tests failed. Check log and/or reports."
-      if="test.failed"/>
-  </target>
-  
-  <!-- RUN system tests -->
-  <target name="run-system-tests" depends="compile,compile-tests">
-    <mkdir dir="${test.report.dir}"/>
-    <mkdir dir="${system.test.report.dir}"/>      
-    <!--
+        <fail message="Unit tests failed. Check log and/or reports." if="test.failed" />
+    </target>
+
+    <!-- RUN system tests -->
+    <target name="run-system-tests" depends="compile,compile-tests">
+        <mkdir dir="${test.report.dir}" />
+        <mkdir dir="${system.test.report.dir}" />
+        <!--
     <formatter type="xml"/>
-    -->    
-    <junit printsummary="yes" errorProperty="test.failed" 
-      failureProperty="test.failed">
-      <classpath refid="classpath"/>
-      <formatter type="brief" usefile="false"/>
-      <batchtest fork="yes" todir="${system.test.report.dir}">
-        <fileset dir="system-test/" includes="**/*Test.java"/>
-      </batchtest>      
-    </junit>
-    <junitreport todir="${system.test.report.dir}">
-      <fileset dir="${system.test.report.dir}" includes="TEST-*.xml"/>
-      <report todir="${system.test.report.dir}"/>
-    </junitreport>
-    <fail message="System tests failed. Check log and/or reports."
+    -->
+        <junit printsummary="yes" errorProperty="test.failed" failureProperty="test.failed">
+            <classpath refid="classpath" />
+            <formatter type="brief" usefile="false" />
+            <batchtest fork="yes" todir="${system.test.report.dir}">
+                <fileset dir="system-test/" includes="**/*Test.java" />
+            </batchtest>
+        </junit>
+        <junitreport todir="${system.test.report.dir}">
+            <fileset dir="${system.test.report.dir}" includes="TEST-*.xml"/>
+            <report todir="${system.test.report.dir}"/>
+        </junitreport>
+        <fail message="System tests failed. Check log and/or reports."
       if="test.failed"/>
-  </target>
-  
+    </target>
+
 </project>
