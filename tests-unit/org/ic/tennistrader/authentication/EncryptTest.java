@@ -1,10 +1,10 @@
 package org.ic.tennistrader.authentication;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
-public class EncryptTest extends TestCase{
+import static org.junit.Assert.*;
+
+public class EncryptTest{
     @Test
     public void testEncryptDecrypt() throws Exception{
         String password = "dummy!pass1234";
@@ -16,5 +16,10 @@ public class EncryptTest extends TestCase{
     @Test
     public void testMain() throws Exception{
         Encrypt.main(new String[]{"dummy"});
+    }
+    
+    @Test
+    public void testMainNoArguments() throws Exception{ 
+        Encrypt.main(new String[]{});
     }
 }

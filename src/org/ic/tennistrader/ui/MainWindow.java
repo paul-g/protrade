@@ -1,5 +1,8 @@
 package org.ic.tennistrader.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -12,6 +15,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import org.ic.tennistrader.Main;
@@ -19,12 +24,15 @@ import org.ic.tennistrader.Main;
 public class MainWindow {
 
     private Shell shell;
+    
+    private List<Listener> loadListeners = new ArrayList<Listener>();
 
     // the sash forms
     private SashForm sashForm;
     private SashForm sashFormLeft;
     private SashForm sashFormRight;
-
+    private Display display;
+    
     private DisplayPanel dp;
 
     private NavigationPanel np;
@@ -34,12 +42,17 @@ public class MainWindow {
     private final int BAR_INCREMENT = 5;
     
     public Shell show(){
+        show(display);
+        shell.open();
         return shell;
     }
     
-    public MainWindow(Display display, LoginShell loginShell) {
-        loginShell.updateProgressBar(BAR_INCREMENT);
-        loginShell.setText("Login successful! Starting application...");
+    public MainWindow(Display display) {
+        this.display = display;
+    }
+
+    private void show(Display display) {
+        notifyLoadEvent("Login successful! Starting application...");
         
         this.shell = new Shell(display);
         shell.setMaximized(true);
@@ -83,22 +96,24 @@ public class MainWindow {
         sashForm.setWeights(new int[]{20,80});
 
         this.np = new NavigationPanel(sashFormLeft);
-        loginShell.setText("Fetching betfair data");
+        notifyLoadEvent("Fetching betfair data");
 
         this.dp = new DisplayPanel(sashFormRight);
-        loginShell.updateProgressBar(BAR_INCREMENT);
-        loginShell.setText("Preparing display");
+        
+        notifyLoadEvent("Preparing display");
         np.addListener(dp);
         
+        notifyLoadEvent("Configuring toolbars");
         @SuppressWarnings("unused")
         ToolBarPanel bottomPanel = new ToolBarPanel(this, false);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
-        loginShell.updateProgressBar(BAR_INCREMENT);
-        loginShell.setText("Configuring tooblars");
-
-        loginShell.finishProgressBar();
-        loginShell.dispose();
-        shell.open();
+        notifyLoadEvent("Done!");
     }
     
     public void run(Display display) {
@@ -171,5 +186,17 @@ public class MainWindow {
     
     public DisplayPanel getDisplayPanel(){
         return dp;
+    }
+    
+    public void addLoadListener(Listener listener){
+        loadListeners.add(listener);
+    }
+    
+    public void notifyLoadEvent(String name){
+        for (Listener l: loadListeners){
+            Event e = new Event();
+            e.text = name;
+            l.handleEvent(e);
+        }
     }
 }

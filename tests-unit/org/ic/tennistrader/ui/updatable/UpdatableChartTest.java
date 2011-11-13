@@ -2,13 +2,12 @@ package org.ic.tennistrader.ui.updatable;
 
 import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-
-public class UpdatableChartTest extends TestCase{
+public class UpdatableChartTest{
 
     @Test
-    public void testInvertAxis() {
+    public void invertAxis() {
         assertEquals("m", "m");
     }
 }

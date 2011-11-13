@@ -41,7 +41,7 @@ public class LoginShell {
     
     private ProgressBar bar;
     
-    public Shell showGui(){
+    public Shell show(){
         return loginShell;
     }
 
