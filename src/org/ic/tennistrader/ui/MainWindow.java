@@ -32,7 +32,11 @@ public class MainWindow {
     private static Logger log = Logger.getLogger(MainWindow.class);
     
     private final int BAR_INCREMENT = 5;
-
+    
+    public Shell show(){
+        return shell;
+    }
+    
     public MainWindow(Display display, LoginShell loginShell) {
         loginShell.updateProgressBar(BAR_INCREMENT);
         loginShell.setText("Login successful! Starting application...");
@@ -95,7 +99,9 @@ public class MainWindow {
         loginShell.finishProgressBar();
         loginShell.dispose();
         shell.open();
-        
+    }
+    
+    public void run(Display display) {
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch())
                 display.sleep();

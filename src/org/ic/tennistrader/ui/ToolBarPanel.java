@@ -69,6 +69,46 @@ public class ToolBarPanel {
 	}
 
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
+		final ToolItem balanceItem = new ToolItem(login,SWT.DROP_DOWN);
+		try {
+			balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
+		} catch (Exception e2) {
+			log.error(e2.getMessage());
+		}
+		final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
+		MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+		ukBalance.setText("GBP");
+		ukBalance.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
+				} catch (Exception e1) {
+					log.error(e1.getMessage());
+				}
+			}
+		});
+		MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+		ausBalance.setText("AUD");
+		ausBalance.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					balanceItem.setText("$"+BetfairConnectionHandler.getProfileData().getAusAccountFunds().getBalance());
+				} catch (Exception e1) {
+					log.error(e1.getMessage());
+				}
+			}
+		});
+		
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
@@ -96,6 +136,8 @@ public class ToolBarPanel {
 		new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
 		profileItem.addListener(SWT.Selection, new RightDropDownListener(
 				profileItem, profileDropDown));
+		balanceItem.addListener(SWT.Selection, new RightDropDownListener(
+				balanceItem, balanceDropDown));
 	}
 
 	private void makeNewWidgetMenu(final MainWindow mainWindow,
@@ -199,6 +241,7 @@ public class ToolBarPanel {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
 		final Image off = new Image(shell.getDisplay(), "images/connection_lost.png");
 		final Image on = new Image(shell.getDisplay(), "images/connection_on.png");
+		widgetItem.setImage(on);
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
