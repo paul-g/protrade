@@ -121,7 +121,7 @@
 	</target>
 -->
 
-    <target name="coverage" depends="instrument, run-unit-tests">
+    <target name="coverage" depends="clean, instrument, run-unit-tests">
         <cobertura-report destdir="${coverage.html.dir}">
             <fileset dir="${src.dir}">
             </fileset>
@@ -166,11 +166,10 @@
             </batchtest>
         </junit>
         <junitreport todir="${system.test.report.dir}">
-            <fileset dir="${system.test.report.dir}" includes="TEST-*.xml"/>
-            <report todir="${system.test.report.dir}"/>
+            <fileset dir="${system.test.report.dir}" includes="TEST-*.xml" />
+            <report todir="${system.test.report.dir}" />
         </junitreport>
-        <fail message="System tests failed. Check log and/or reports."
-      if="test.failed"/>
+        <fail message="System tests failed. Check log and/or reports." if="test.failed" />
     </target>
 
 </project>
