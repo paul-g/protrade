@@ -15,11 +15,11 @@ import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.utils.Pair;
 
 /**
- * Reads data in Fracsoft format from a given file
- * 
- * @author Paul Grigoras
- * 
- */
+* Reads data in Fracsoft format from a given file
+*
+* @author Paul Grigoras
+*
+*/
 public class FracsoftReader extends DataUpdater {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
@@ -108,8 +108,9 @@ public class FracsoftReader extends DataUpdater {
 		while (true) {
 			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
+				log.info("Fracsoft thread interrupted");
 			}
 		}
 	}

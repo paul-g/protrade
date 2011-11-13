@@ -47,11 +47,23 @@ public class LiveDataFetcher {
         }
     }
     
-    private static void start() {
-        //log.info("go to run thread");
-        log.info("Start betfair thread");
-    	dataUpdater.start();
-    	
+    public static void registerFromFile(UpdatableWidget widget, Match match, String fileName, final Composite comp) {
+        List<UpdatableWidget> widgets;
+        boolean isNewMatch = !fileListeners.containsKey(match);
+        if (isNewMatch)
+            widgets = new ArrayList<UpdatableWidget>();
+        else
+            widgets = fileListeners.get(match);
+        widgets.add(widget);
+        fileListeners.put(match, widgets);
+        if(isNewMatch) {
+            startFromFile(match, fileName, comp);
+        }
+    }
+
+    public static void start() {
+        log.info("Start Betfair thread");
+        dataUpdater.start();
         /*
         comp.getDisplay().timerExec(0, new Runnable() {
             @Override
@@ -62,27 +74,11 @@ public class LiveDataFetcher {
             }
         });
         */
-        
-        log.info("after started betfair thread");
-        //log.info("after run in thread");
     }
     
-    public static void registerFromFile(UpdatableWidget widget, Match match, String fileName, final Composite comp) {
-        List<UpdatableWidget> widgets;
-        boolean isNewMatch = !fileListeners.containsKey(match);
-        if (isNewMatch)
-            widgets = new ArrayList<UpdatableWidget>();
-        else
-            widgets = fileListeners.get(match);        
-        widgets.add(widget);
-        fileListeners.put(match, widgets);
-        if(isNewMatch) {
-            startFromFile(match, fileName, comp);            
-        }        
-    }
-
     private static void startFromFile(Match match, String fileName,
             final Composite comp) {
+    	log.info("Start Fracsoft thread");
         final DataUpdater fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);
@@ -100,10 +96,11 @@ public class LiveDataFetcher {
         } catch(FileNotFoundException fnfe) {
             log.error("Fracsoft file to be opened not found");
         }
+        log.info("After started Fracsoft thread");
     }
-   
+
     public static void handleEvent(HashMap<EventBetfair, MOddsMarketData> data) {
-    	log.info("Handle event from betfair thread");
+    	//log.info("Handle Betfair event-----------------------------------");
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();

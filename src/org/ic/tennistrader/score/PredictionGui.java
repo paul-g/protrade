@@ -34,8 +34,8 @@ public class PredictionGui {
     private UpdateThread updateThread;
 
     /**
-     * For running the prediction gui separately
-     */
+* For running the prediction gui separately
+*/
     public static void main(String args[]) {
         final Display display = new Display();
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
@@ -68,9 +68,11 @@ public class PredictionGui {
 
             createProbabilityContents(composite); //
             System.out.println(match.substring(match.indexOf("n")));
-        } catch (Exception e) { 
+        } catch (Exception e) {
              // if something goes wrong
-            //log.error(e.getMessage() + " ");
+            log.error(e.getMessage() +
+
+            " ");
             e.printStackTrace();
         }
 
@@ -80,7 +82,7 @@ public class PredictionGui {
             parseStatistics(stats, table);
         } catch (Exception e) {
             // if something goes wrong
-            //log.error(e.getMessage() + " ");
+            log.error(e.getMessage() + " ");
             e.printStackTrace();
         }
 
@@ -93,16 +95,16 @@ public class PredictionGui {
         });
 
         /*
-         * parent.getDisplay().asyncExec(new Runnable() {
-         * 
-         * @Override public void run() { updateThread.run(); } });
-         */
+* parent.getDisplay().asyncExec(new Runnable() {
+*
+* @Override public void run() { updateThread.run(); } });
+*/
 
         /*
-         * parent.getDisplay().timerExec(5000, new Runnable() {
-         * 
-         * @Override public void run() { updateThread.run(); } });
-         */
+* parent.getDisplay().timerExec(5000, new Runnable() {
+*
+* @Override public void run() { updateThread.run(); } });
+*/
 
         updateThread.start();
 
@@ -455,11 +457,11 @@ public class PredictionGui {
 
         // System.out.println(stats + "/nEND OF CUT");
         /*
-         * try { BufferedReader in = new BufferedReader(new
-         * FileReader("/home/radu/tennis-trader/images/data.txt")); String str;
-         * while ((str = in.readLine()) != null) { stats += str+ '\n'; }
-         * in.close(); } catch (IOException e) { }
-         */
+* try { BufferedReader in = new BufferedReader(new
+* FileReader("/home/radu/tennis-trader/images/data.txt")); String str;
+* while ((str = in.readLine()) != null) { stats += str+ '\n'; }
+* in.close(); } catch (IOException e) { }
+*/
 
         // Fill in table headers with name players and images
         String player1 = stats.substring(0, stats.indexOf('\n'));
@@ -686,6 +688,11 @@ public class PredictionGui {
                     System.out.println(e.getMessage());
                 }
             }
+
+            /*
+* try { Thread.sleep(40000); } catch (InterruptedException e) { //
+* TODO Auto-generated catch block e.printStackTrace(); }
+*/
         }
 
         public String getScore() {
@@ -693,10 +700,10 @@ public class PredictionGui {
         }
 
         /*
-         * Gets real-time scores from http://www.livexscores.com/ Emulates a
-         * firefox browser with javascript and AJAX enabled and fetches score
-         * data from website. Finally, it returns the data for further parsing
-         */
+* Gets real-time scores from http://www.livexscores.com/ Emulates a
+* firefox browser with javascript and AJAX enabled and fetches score
+* data from website. Finally, it returns the data for further parsing
+*/
         @SuppressWarnings("serial")
         private String extractScores(String match) throws Exception {
 
@@ -789,3 +796,4 @@ public class PredictionGui {
     }
 
 }
+

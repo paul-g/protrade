@@ -28,12 +28,12 @@ public class BetfairDataUpdater extends DataUpdater {
     }
 
     @Override
-	public void run() {
+    public void run() {
 		while (true) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				log.info("Betfair Thread interrupted" + e.getMessage());
+				log.info("Betfair thread interrupted");
 			}
 			HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
 			for (EventBetfair eb : events) {
@@ -45,7 +45,7 @@ public class BetfairDataUpdater extends DataUpdater {
 				}
 				newMap.put(eb, marketData);
 			}
-			LiveDataFetcher.handleEvent(newMap);			
+			LiveDataFetcher.handleEvent(newMap);
 		}
-	}
+    }
 }
