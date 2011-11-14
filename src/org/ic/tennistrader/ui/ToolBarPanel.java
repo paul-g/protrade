@@ -70,6 +70,7 @@ public class ToolBarPanel {
 
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
 		final ToolItem balanceItem = new ToolItem(login,SWT.DROP_DOWN);
+		balanceItem.setToolTipText("Balance");
 		try {
 			balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
 		} catch (Exception e2) {
@@ -241,6 +242,7 @@ public class ToolBarPanel {
 		toolbar.setLayoutData(gridData);
 
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
+		widgetItem.setToolTipText("Internet Connection");
 		final Image off = new Image(display, "images/connection_lost.png");
 		final Image on = new Image(display, "images/connection_on.png");
 		widgetItem.setImage(on);
