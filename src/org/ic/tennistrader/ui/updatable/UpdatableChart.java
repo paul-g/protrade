@@ -16,11 +16,13 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
 import org.swtchart.IAxis;
+import org.swtchart.IAxis.Position;
 import org.swtchart.IAxisSet;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
+import org.swtchart.Range;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -60,6 +62,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
+
 
 		IAxisSet axisSet = this.getAxisSet();
 		IAxis yAxis = axisSet.getYAxis(0);
@@ -124,6 +127,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 * Populates the chart with the given market data
 	 */
 	public void fillData(MOddsMarketData data) {
+		System.out.println("start thr1");
 		int i = 0;
 		// if graph already displaying values
 		if (firstSeries.getYSeries() != null
@@ -131,7 +135,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				&& maPl1Series.getYSeries() != null
 				&& maPl2Series.getYSeries() != null) {
 			i = pl1YSeries.size();
-			
 		} else {
 			xSeries = new ArrayList<Date>();
 			pl1YSeries = new ArrayList<Double>();
@@ -139,8 +142,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			maPl1 = new ArrayList<Double>();
 			maPl2 = new ArrayList<Double>();
 		}
-		System.out.println(pl1YSeries.size()+"-0000");
-		System.out.println(pl2YSeries.size()+"-0000");
+
 		xSeries.add(i, Calendar.getInstance().getTime());
 
 		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
@@ -158,7 +160,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			if (i == sampleSize)
 				slider.setMinimum(sampleSize - 1);
 			updateSlide();
+		} else {
+			slider.setMaximum(i+1);
+			slider.setMinimum(i);
+			slider.setSelection(i);
+			
 		}
+		
 		// set serieses values
 		showSeries(i, false);
 		if (!this.isDisposed())
@@ -175,7 +183,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		int z = i < sampleSize ? 0 : 1;
 		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
 			int pow = 1;
-			if (decimalOdds) pow=-1;
+			if (!decimalOdds) pow=-1;
 			for (int a = 0; a < size; a++) {
 				int b = (i - sampleSize + 1) * z + a;
 				showXSeries[a] = xSeries.get(b);
@@ -192,8 +200,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			maPl1Series.setYSeries(showMaPl1);
 			maPl2Series.setXDateSeries(showXSeries);
 			maPl2Series.setYSeries(showMaPl2);
+			updateDisplay();
 		}
-
 	}
 
 	private ArrayList<Double> addMaValue(ArrayList<Double> maPl12, int i,
@@ -216,6 +224,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, int i,
 			ArrayList<Pair<Double, Double>> oddData) {
 		// if data has been read from Betfair
+		System.out.println("added");
 		if (oddData != null && oddData.size() > 0) {
 			pl1ySeries2.add(i, oddData.get(0).getI());
 		} else {
@@ -230,8 +239,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 	// switches between the two odds representations
 	public void invertAxis() {
-		int changeValue = decimalOdds ? (-1) : 1;
-		decimalOdds = !decimalOdds;
 //		
 //		if (decimalOdds)
 //			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
@@ -293,7 +300,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			});
 		}
 	}
-	
+
 
 	private void updateSlide() {
 		final Composite comp = slider.getParent();
