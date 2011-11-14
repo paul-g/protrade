@@ -112,6 +112,7 @@ public class ToolBarPanel {
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
+		profileItem.setToolTipText("Profile");
 		final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
 		MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
 		logout.setText("Log out");
