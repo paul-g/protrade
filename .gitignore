@@ -22,3 +22,8 @@ bin/
 # SSH key #
 tennis_trade
 tennis_trade.pub
+
+# Test reports #
+################
+test-coverage
+cobertura.ser

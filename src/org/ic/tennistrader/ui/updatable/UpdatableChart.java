@@ -63,14 +63,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
 
-		// create second Y axis
-		int axisId = this.getAxisSet().createYAxis();
 
-		// set the properties of second Y axis
-		IAxis yAxis2 = this.getAxisSet().getYAxis(axisId);
-		yAxis2.setPosition(Position.Secondary);
-		yAxis2.setRange(new Range(0, 100));
-		//
+		IAxisSet axisSet = this.getAxisSet();
+		IAxis yAxis = axisSet.getYAxis(0);
+
 	}
 
 	private void createSlider(Slider slider) {
@@ -146,12 +142,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			maPl1 = new ArrayList<Double>();
 			maPl2 = new ArrayList<Double>();
 		}
-		
-		System.out.println("test2");
-		System.out.println(pl1YSeries.size()+" " + xSeries.size());
+
 		xSeries.add(i, Calendar.getInstance().getTime());
 
 		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
+		System.out.println(pl1YSeries.size());
 		pl2YSeries = addValue(pl2YSeries, i, data.getPl2Back());
 		maPl1 = addMaValue(maPl1, i, pl1YSeries);
 		maPl2 = addMaValue(maPl2, i, pl2YSeries);
@@ -173,17 +168,12 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		}
 		
 		// set serieses values
-		System.out.println("finishthr1");
 		showSeries(i, false);
 		if (!this.isDisposed())
 			this.getAxisSet().adjustRange();
 	}
 
 	public void showSeries(int i, boolean dragged) {
-		System.out.println("startthr2");
-		System.out.println(slider.getMaximum() + " " + slider.getMinimum() + 
-							" " + slider.getSelection());
-		System.out.println(i);
 		int size = (i + 1) < sampleSize ? (i + 1) : sampleSize;
 		Date showXSeries[] = new Date[size];
 		double[] showPl1YSeries = new double[size];
@@ -193,9 +183,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		int z = i < sampleSize ? 0 : 1;
 		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
 			int pow = 1;
-			if (!decimalOdds) {
-				pow = -1;
-			}
+			if (!decimalOdds) pow=-1;
 			for (int a = 0; a < size; a++) {
 				int b = (i - sampleSize + 1) * z + a;
 				showXSeries[a] = xSeries.get(b);
@@ -214,7 +202,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			maPl2Series.setYSeries(showMaPl2);
 			updateDisplay();
 		}
-		System.out.println("finishthr2");
 	}
 
 	private ArrayList<Double> addMaValue(ArrayList<Double> maPl12, int i,
@@ -240,8 +227,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		System.out.println("added");
 		if (oddData != null && oddData.size() > 0) {
 			pl1ySeries2.add(i, oddData.get(0).getI());
-			if (!decimalOdds) // convert to fractional odds if necessary
-				pl1ySeries2.add(i, pl1ySeries2.get(i) - 1);
 		} else {
 			if (i > 0) // keep previous value if it exists
 				pl1ySeries2.add(i, pl1ySeries2.get(i - 1));
@@ -254,22 +239,19 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 	// switches between the two odds representations
 	public void invertAxis() {
-		decimalOdds = !decimalOdds;
-		showSeries(slider.getSelection(),false);
-//		int changeValue = decimalOdds ? (-1) : 1;
-
+//		
 //		if (decimalOdds)
 //			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
 //		else
-//			this.getAxisSet().getYAxis(0).getTitle()
-//					.setText(yAxisFractionalTitle);
+//			this.getAxisSet().getYAxis(0).getTitle().setText(
+//					yAxisFractionalTitle);
 //
-//		firstSeries.setYSeries(adjustSeriesValues(changeValue,
-//				firstSeries.getYSeries()));
-//		secondSeries.setYSeries(adjustSeriesValues(changeValue,
-//				secondSeries.getYSeries()));
-//
-//		updateDisplay();
+//		firstSeries.setYSeries(adjustSeriesValues(changeValue, firstSeries
+//				.getYSeries()));
+//		secondSeries.setYSeries(adjustSeriesValues(changeValue, secondSeries
+//				.getYSeries()));
+		showSeries(slider.getSelection(), true);
+		//updateDisplay();
 	}
 
 	private double[] adjustSeriesValues(int changeValue, double[] series) {
@@ -280,14 +262,29 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		return series;
 	}
 
-	/*
+	/**
 	 * updates the chart with the new given market data
 	 */
 	public void handleUpdate(final MOddsMarketData newData) {
-		fillData(newData);
-		updateDisplay();
+		//final Composite comp = this.getParent();
+		final UpdatableChart chart = this;
+		if (chart != null) {
+			chart.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					fillData(newData);
+					if (!chart.isDisposed()) {
+						chart.redraw();
+						chart.getParent().update();
+					}
+					//if (!comp.isDisposed())
+					//	comp.update();
+				}
+			});
+		}
 	}
 
+	
 	private void updateDisplay() {
 		final Composite comp = this.getParent();
 		final UpdatableChart chart = this;
@@ -303,6 +300,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			});
 		}
 	}
+
 
 	private void updateSlide() {
 		final Composite comp = slider.getParent();
