@@ -1,70 +1,95 @@
 package org.ic.tennistrader.ui;
 
-import junit.framework.TestCase;
-
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.ic.tennistrader.Main;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-public class LoginShellTest extends TestCase {
-    
-    private final Display display = new Display();;
-    private final Shell shell = new LoginShell(display).showGui();
-    private final SWTBot bot = new SWTBot(shell);
-    
-    @Test
-    public void testEmptyLoginFail() throws Exception {
-        SWTBotPreferences.PLAYBACK_DELAY = 100;
+import static org.junit.Assert.*;
 
-        SWTBotButton loginButton = bot.button("Login");
+public class LoginShellTest {
+    private Display display;
+    private LoginShell ls;
+    private Shell shell;
+    private SWTBot bot;
+    private SWTBotButton loginButton;
+
+    @Before
+    public void setUp() {
+        display = new Display();
+        ls = new LoginShell(display);
+        shell = ls.show();
+        bot = new SWTBot(shell);
+        loginButton = bot.button("Login");
+
+    }
+
+    @After
+    public void tearDown() {
+        display.dispose();
+    }
+
+    @Test
+    public void emptyLoginFail() throws Exception {
         loginButton.click();
         SWTBotLabel fail = bot.label(LoginShell.FAIL);
         assertNotNull(fail);
 
-        /*
-         * SWTBotText userText = bot.textWithLabel("Username: "); SWTBotText
-         * passwordText = bot.textWithLabel("Password: ");
-         */
-        /*
-         * userText.setFocus(); userText.setText("Superman");
-         * 
-         * Assert.assertEquals(userText.getText(),"Superman");
-         * 
-         * passwordText.setFocus(); passwordText.setText("test123");
-         * 
-         * Assert.assertEquals(passwordText.getText(),"test123");
-         * 
-         * loginButton.setFocus(); loginButton.click();
-         * 
-         * 
-         * userText.setFocus(); userText.setText("Favonius");
-         * 
-         * Assert.assertEquals(userText.getText(), "Favonius");
-         * 
-         * passwordText.setFocus(); passwordText.setText("abcd123");
-         * 
-         * Assert.assertEquals(passwordText.getText(), "abcd123");
-         * 
-         * loginButton.setFocus(); loginButton.click();
-         */
     }
 
     @Test
-    public void testCorrectLoginSuccess() {
+    public void correctLoginSuccess() throws Exception {
+        SWTBotText username = bot.text("username");
+        username.setText("corina409");
+        SWTBotText password = bot.text("password");
+        password.setText("testpass1");
 
-        SWTBotButton loginButton = bot.button("Login");
         loginButton.click();
-        
-        SWTBotText userText = bot.textWithLabel("Username: ");
-        SWTBotText passwordText = bot.textWithLabel("Password: ");
-   
         SWTBotLabel success = bot.label(LoginShell.SUCCESS);
         assertNotNull(success);
+
+    }
+
+    @Test
+    public void testAccount() throws Exception {
+
+        // load the username
+        Main.readConfigFile();
+
+        SWTBotButton testButton = bot.button("Test");
+
+        // startup the app
+        TestListener tl = new TestListener();
+
+        ls.addLoginSuccessListener(tl);
+
+        testButton.click();
+
+        SWTBotLabel success = bot.label(LoginShell.SUCCESS);
+        assertNotNull(success);
+
+        assertTrue(tl.isReached());
+    }
+
+    private class TestListener implements Listener {
+        boolean reached = false;
+
+        @Override
+        public void handleEvent(Event arg0) {
+            reached = true;
+        }
+
+        boolean isReached() {
+            return reached;
+        }
     }
 
 }

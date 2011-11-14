@@ -10,8 +10,11 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import org.ic.tennistrader.ui.LoginShell;
+import org.ic.tennistrader.ui.MainWindow;
 import org.ic.tennistrader.authentication.Encrypt;
 
 public class Main {
@@ -23,16 +26,44 @@ public class Main {
   public static String USERNAME = "";
   public static String PASSWORD = "";
   
+  public static String TEST_USERNAME =  "";
+  public static String TEST_PASSWORD =  "";
+  
   public static void main(String[] args) {
     // read the config file
     readConfigFile();
     
     // start up the app
     final Display display = new Display();
-    new LoginShell(display).run(display);
+    final LoginShell ls = new LoginShell(display);
+    final MainWindow mw = new MainWindow(display); 
+    
+    mw.addLoadListener(new Listener() {
+        @Override
+        public void handleEvent(Event event) {
+            if (event.text.equals("Done!")) {
+                ls.finishProgressBar();
+                ls.dispose();
+            }
+            else {
+                ls.updateProgressBar(10);
+                ls.setText(event.text);
+            }
+        }
+    });
+    
+    ls.addLoginSuccessListener(new Listener() {
+        @Override
+        public void handleEvent(Event arg0) {
+            mw.show();
+            mw.run(display);
+        }
+    });
+    
+    ls.run(display);
   }
 
-  private static void readConfigFile(){
+  public static void readConfigFile(){
     String filename = "config.local";
     String line;
     Scanner scanner = null;
@@ -48,9 +79,9 @@ public class Main {
         log.info("split " + name + " " + value);
         
         if (name.equals("username"))
-          USERNAME = value;
+          TEST_USERNAME = value;
         else if (name.equals("password")) {
-          PASSWORD = Encrypt.decrypt(value);
+          TEST_PASSWORD = Encrypt.decrypt(value);
         }
       }
     } catch (FileNotFoundException e){

@@ -51,17 +51,17 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         player2 = initLayout(p2BackButtons, p2LayButtons);
     }
 
-	private void createLabel(String text, Color color, GridData headerData, int textAlignment) {
-		Label back = new Label(composite, textAlignment);
+private void createLabel(String text, Color color, GridData headerData, int textAlignment) {
+Label back = new Label(composite, textAlignment);
         back.setLayoutData(headerData);
         back.setText(text);
         back.setBackground(color);
         back.setFont(titleFont);
-	}
+}
 
-	private Label initLayout(OddsButton[] pBackButtons,
-			OddsButton[] pLayButtons) {
-		Label player = new Label(composite, SWT.NONE);
+private Label initLayout(OddsButton[] pBackButtons,
+OddsButton[] pLayButtons) {
+Label player = new Label(composite, SWT.NONE);
         player.setFont(titleFont);
         for (int i = 0; i < 2; i++)
             pBackButtons[i] = new OddsButton(composite, normalColor);
@@ -70,12 +70,12 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         for (int i = 1; i < 3; i++)
             pLayButtons[i] = new OddsButton(composite, normalColor);
         return player;
-	}
+}
 
-	private void initFonts() {
-		this.oddsFont = new Font(composite.getDisplay(), "Arial", 12, SWT.BOLD);
+private void initFonts() {
+this.oddsFont = new Font(composite.getDisplay(), "Arial", 12, SWT.BOLD);
         this.titleFont = new Font(composite.getDisplay(), "Arial", 13, SWT.None);
-	}
+}
 
     public void updateButtons(ArrayList<Pair<Double, Double>> valueList,
             OddsButton[] buttons, boolean back) {
@@ -92,21 +92,26 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         }
     }
 
-    public void handleUpdate(MOddsMarketData newData) {
-        if (newData.getPl1Back() != null) {
-            updateButtons(newData.getPl1Back(), p1BackButtons, true);
-            updateButtons(newData.getPl1Lay(), p1LayButtons, false);
-            updateButtons(newData.getPl2Back(), p2BackButtons, true);
-            updateButtons(newData.getPl2Lay(), p2LayButtons, false);
-            player1.setText(newData.getPlayer1());
-            player2.setText(newData.getPlayer2());
-            composite.layout();
-        }
+    public void handleUpdate(final MOddsMarketData newData) {
+    	composite.getDisplay().asyncExec(new Runnable(){
+			@Override
+			public void run() {
+				if (newData.getPl1Back() != null) {
+		            updateButtons(newData.getPl1Back(), p1BackButtons, true);
+		            updateButtons(newData.getPl1Lay(), p1LayButtons, false);
+		            updateButtons(newData.getPl2Back(), p2BackButtons, true);
+		            updateButtons(newData.getPl2Lay(), p2LayButtons, false);
+		            player1.setText(newData.getPlayer1());
+		            player2.setText(newData.getPlayer2());
+		            composite.layout();
+		        }
+			}     		
+    	});        
     }
 
     private void initColors() {
-    	// The application's current background colour is 238, 238, 224
-    	this.layColor = new org.eclipse.swt.graphics.Color(composite
+     // The application's current background colour is 238, 238, 224
+     this.layColor = new org.eclipse.swt.graphics.Color(composite
                 .getDisplay(), 238, 210, 238);
         this.backColor = new org.eclipse.swt.graphics.Color(composite
                 .getDisplay(), 198, 226, 255);
@@ -134,7 +139,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             odds.setBackground(color);
             amount.setBackground(color);
             //this.amount.setForeground(composite.getDisplay().getSystemColor(
-            //        SWT.COLOR_DARK_GRAY));
+            // SWT.COLOR_DARK_GRAY));
         }
 
         void setOdds(String odds) {

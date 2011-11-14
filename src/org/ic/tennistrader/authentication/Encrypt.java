@@ -45,7 +45,7 @@ public class Encrypt {
   }
 
 
-  private static String encrypt(String property) throws GeneralSecurityException {
+  public static String encrypt(String property) throws GeneralSecurityException {
       SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
       SecretKey key = keyFactory.generateSecret(new PBEKeySpec(KEY));
       Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
