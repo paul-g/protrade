@@ -144,7 +144,8 @@ public class ToolBarPanel {
 
 	private void makeNewWidgetMenu(final MainWindow mainWindow,
 			final Shell shell) {
-		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);       
+		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+		widgetItem.setToolTipText("Widget Menu");
 		final Image img = new Image(shell.getDisplay(), "images/plus_item.png");
 		widgetItem.setImage(img);
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
@@ -184,6 +185,7 @@ public class ToolBarPanel {
 
 	private void makePlayMenu(final Shell shell) {
 		final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+		playButtonItem.setToolTipText("Play from a file");
 		Image play = new Image(shell.getDisplay(), "images/play.png");
 		playButtonItem.setImage(play);
 
