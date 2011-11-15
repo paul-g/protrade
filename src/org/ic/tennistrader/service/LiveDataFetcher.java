@@ -16,8 +16,9 @@ import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class LiveDataFetcher {
-    // one Betfair updater
+    // one Betfair updater and many Fracsoft updater
     private static DataUpdater dataUpdater = null;
+    private static List<DataUpdater> fileUpdaters = new ArrayList<DataUpdater>();
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
@@ -82,6 +83,7 @@ public class LiveDataFetcher {
         final DataUpdater fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);
+            fileUpdaters.add(fracsoftUpdater);
             fracsoftUpdater.start();
             /*
             comp.getDisplay().timerExec(0, new Runnable() {
@@ -117,5 +119,13 @@ public class LiveDataFetcher {
                 w.handleUpdate(data);
             }
         }
+    }
+    
+    public static void stopAllThreads() {
+    	if (dataUpdater != null)
+    		dataUpdater.setStop();
+    	for (DataUpdater du : fileUpdaters) {
+    		du.setStop();
+    	}
     }
 }

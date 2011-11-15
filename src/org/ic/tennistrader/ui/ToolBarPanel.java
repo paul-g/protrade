@@ -26,12 +26,15 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
 public class ToolBarPanel {
 
 	private ToolBar toolbar;
 	private ToolBar login;
+
+	private static boolean stop = false;
 
 	private static Logger log = Logger.getLogger(ToolBarPanel.class);
 
@@ -69,80 +72,91 @@ public class ToolBarPanel {
 	}
 
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
-		final ToolItem balanceItem = new ToolItem(login,SWT.DROP_DOWN);
-		try {
-			balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
-		} catch (Exception e2) {
-			log.error(e2.getMessage());
-		}
-		final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
-		MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-		ukBalance.setText("GBP");
-		ukBalance.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
+		balanceItem.setToolTipText("Balance");
+		final ProfileData profileData;
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
-				} catch (Exception e1) {
-					log.error(e1.getMessage());
-				}
-			}
-		});
-		MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-		ausBalance.setText("AUD");
-		ausBalance.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					balanceItem.setText("$"+BetfairConnectionHandler.getProfileData().getAusAccountFunds().getBalance());
-				} catch (Exception e1) {
-					log.error(e1.getMessage());
-				}
-			}
-		});
-		
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
-		final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
-		MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
-		logout.setText("Log out");
-		logout.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		profileItem.setToolTipText("Profile");
+		
+		try {
+			profileData = BetfairConnectionHandler.getProfileData();
+		
+			balanceItem.setText("£"
+					+ profileData.getUkAccountFunds().getBalance());
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					BetfairConnectionHandler.logout();
-				} catch (Exception e1) {
-					log.error(e1.getMessage());
+			final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
+			MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+			ukBalance.setText("GBP");
+			ukBalance.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
 				}
-				Display nd = toolbar.getDisplay();
-				mainWindow.dispose();
-				new LoginShell(nd);
-			}
-		});
-		new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
-		new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
-		profileItem.addListener(SWT.Selection, new RightDropDownListener(
-				profileItem, profileDropDown));
-		balanceItem.addListener(SWT.Selection, new RightDropDownListener(
-				balanceItem, balanceDropDown));
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					balanceItem.setText("£"
+							+ profileData.getUkAccountFunds().getBalance());
+				}
+			});
+
+			MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+			ausBalance.setText("AUD");
+			ausBalance.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						balanceItem
+								.setText("$"
+										+ profileData.getAusAccountFunds()
+												.getBalance());
+					} catch (Exception e1) {
+						log.error(e1.getMessage());
+					}
+				}
+			});
+
+			
+			final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
+			MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
+			logout.setText("Log out");
+			logout.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						BetfairConnectionHandler.logout();
+					} catch (Exception e1) {
+						log.error(e1.getMessage());
+					}
+					Display nd = toolbar.getDisplay();
+					mainWindow.dispose();
+					new LoginShell(nd);
+				}
+			});
+			new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
+			new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
+			profileItem.addListener(SWT.Selection, new RightDropDownListener(
+					profileItem, profileDropDown));
+			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
+					balanceItem, balanceDropDown));
+		} catch (Exception e) {
+		}
 	}
 
 	private void makeNewWidgetMenu(final MainWindow mainWindow,
 			final Shell shell) {
-		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);       
+		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+		widgetItem.setToolTipText("Widget Menu");
 		final Image img = new Image(shell.getDisplay(), "images/plus_item.png");
 		widgetItem.setImage(img);
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
@@ -182,6 +196,7 @@ public class ToolBarPanel {
 
 	private void makePlayMenu(final Shell shell) {
 		final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+		playButtonItem.setToolTipText("Play from a file");
 		Image play = new Image(shell.getDisplay(), "images/play.png");
 		playButtonItem.setImage(play);
 
@@ -234,29 +249,36 @@ public class ToolBarPanel {
 		// Setting span throughout the columns
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 3;
+		Display display = shell.getDisplay();
 
 		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(gridData);
 
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
-		final Image off = new Image(shell.getDisplay(), "images/connection_lost.png");
-		final Image on = new Image(shell.getDisplay(), "images/connection_on.png");
+		widgetItem.setToolTipText("Internet Connection");
+		final Image off = new Image(display, "images/connection_lost.png");
+		final Image on = new Image(display, "images/connection_on.png");
 		widgetItem.setImage(on);
 		new Thread(new Runnable() {
 			public void run() {
-				while (true) {
-					try { Thread.sleep(3000); } catch (Exception e) { }
-					toolbar.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (isInternetReachable()) {
-								log.info("Connection - ON");
-								widgetItem.setImage(on);
-							} else {
-								log.info("Connection - OFF");
-								widgetItem.setImage(off);
+				while (!stop) {
+					try {
+						Thread.sleep(3000);
+					} catch (Exception e) {
+					}
+					if (!shell.isDisposed()) {
+						toolbar.getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								if (isInternetReachable()) {
+									log.info("Connection - ON");
+									widgetItem.setImage(on);
+								} else {
+									log.info("Connection - OFF");
+									widgetItem.setImage(off);
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 			}
 		}).start();
@@ -277,14 +299,15 @@ public class ToolBarPanel {
 			// URL to a source
 			URL url = new URL("http://www.google.com");
 			// Open a connection
-			HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
-			// Retrieving data from the source - if there is no connection, throws and exception
+			HttpURLConnection urlConnect = (HttpURLConnection) url
+					.openConnection();
+			// Retrieving data from the source - if there is no connection,
+			// throws and exception
 			@SuppressWarnings("unused")
 			Object objData = urlConnect.getContent();
 		} catch (UnknownHostException e) {
 			return false;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			return false;
 		}
 		return true;
@@ -331,5 +354,9 @@ public class ToolBarPanel {
 				menu.setVisible(true);
 			}
 		}
+	}
+
+	public static void setStop() {
+		stop = true;
 	}
 }

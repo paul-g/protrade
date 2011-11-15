@@ -29,7 +29,7 @@ public class BetfairDataUpdater extends DataUpdater {
 
     @Override
     public void run() {
-		while (true) {
+		while (!this.stop) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -48,4 +48,9 @@ public class BetfairDataUpdater extends DataUpdater {
 			LiveDataFetcher.handleEvent(newMap);
 		}
     }
+
+	@Override
+	public void setStop() {
+		this.stop = true;
+	}
 }
