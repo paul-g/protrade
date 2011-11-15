@@ -36,14 +36,31 @@ public class Main {
     // start up the app
     final Display display = new Display();
     final LoginShell ls = new LoginShell(display);
+    final MainWindow mw = new MainWindow(display); 
+    
+    mw.addLoadListener(new Listener() {
+        @Override
+        public void handleEvent(Event event) {
+            if (event.text.equals("Done!")) {
+                ls.finishProgressBar();
+                ls.dispose();
+            }
+            else {
+                ls.updateProgressBar(10);
+                ls.setText(event.text);
+            }
+        }
+    });
+    
     ls.addLoginSuccessListener(new Listener() {
         @Override
         public void handleEvent(Event arg0) {
-            new MainWindow(display, ls).run(display);
+            mw.show();
+            mw.run(display);
         }
     });
-    ls.run(display);
     
+    ls.run(display);
   }
 
   public static void readConfigFile(){

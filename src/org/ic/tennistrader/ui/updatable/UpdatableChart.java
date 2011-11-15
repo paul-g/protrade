@@ -16,11 +16,13 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
 import org.swtchart.IAxis;
+import org.swtchart.IAxis.Position;
 import org.swtchart.IAxisSet;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
+import org.swtchart.Range;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -60,6 +62,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
+
 
 		IAxisSet axisSet = this.getAxisSet();
 		IAxis yAxis = axisSet.getYAxis(0);
@@ -124,6 +127,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 * Populates the chart with the given market data
 	 */
 	public void fillData(MOddsMarketData data) {
+		System.out.println("start thr1");
 		int i = 0;
 		// if graph already displaying values
 		if (firstSeries.getYSeries() != null
@@ -131,21 +135,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				&& maPl1Series.getYSeries() != null
 				&& maPl2Series.getYSeries() != null) {
 			i = pl1YSeries.size();
-			// if not reached max sample size
-			// if (prevXSeries.length < sampleSize) {
-			// xSeries = new Date[prevXSeries.length + 1];
-			// pl1YSeries = new double[prevXSeries.length + 1];
-			// pl2YSeries = new double[prevXSeries.length + 1];
-			// maPl1 = new double[prevXSeries.length + 1];
-			// maPl2 = new double[prevXSeries.length + 1];
-
-			// for (i = 0; i < prevXSeries.length; i++) {
-			// xSeries[i] = prevXSeries[i];
-			// pl1YSeries[i] = prevPl1YSeries[i];
-			// pl2YSeries[i] = prevPl2YSeries[i];
-			// maPl1[i] = prevMaPl1Series[i];
-			// maPl2[i] = prevMaPl2Series[i];
-			// }
 		} else {
 			xSeries = new ArrayList<Date>();
 			pl1YSeries = new ArrayList<Double>();
@@ -157,6 +146,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		xSeries.add(i, Calendar.getInstance().getTime());
 
 		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
+		System.out.println(pl1YSeries.size());
 		pl2YSeries = addValue(pl2YSeries, i, data.getPl2Back());
 		maPl1 = addMaValue(maPl1, i, pl1YSeries);
 		maPl2 = addMaValue(maPl2, i, pl2YSeries);
@@ -170,7 +160,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			if (i == sampleSize)
 				slider.setMinimum(sampleSize - 1);
 			updateSlide();
+		} else {
+			slider.setMaximum(i+1);
+			slider.setMinimum(i);
+			slider.setSelection(i);
+			
 		}
+		
 		// set serieses values
 		showSeries(i, false);
 		if (!this.isDisposed())
@@ -186,13 +182,15 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		double[] showMaPl2 = new double[size];
 		int z = i < sampleSize ? 0 : 1;
 		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
+			int pow = 1;
+			if (!decimalOdds) pow=-1;
 			for (int a = 0; a < size; a++) {
 				int b = (i - sampleSize + 1) * z + a;
 				showXSeries[a] = xSeries.get(b);
-				showPl1YSeries[a] = pl1YSeries.get(b);
-				showPl2YSeries[a] = pl2YSeries.get(b);
-				showMaPl1[a] = maPl1.get(b);
-				showMaPl2[a] = maPl2.get(b);
+				showPl1YSeries[a] = Math.pow(pl1YSeries.get(b),pow);
+				showPl2YSeries[a] = Math.pow(pl2YSeries.get(b),pow);
+				showMaPl1[a] = Math.pow(maPl1.get(b),pow);
+				showMaPl2[a] = Math.pow(maPl2.get(b),pow);
 			}
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(showPl1YSeries);
@@ -202,8 +200,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			maPl1Series.setYSeries(showMaPl1);
 			maPl2Series.setXDateSeries(showXSeries);
 			maPl2Series.setYSeries(showMaPl2);
+			updateDisplay();
 		}
-
 	}
 
 	private ArrayList<Double> addMaValue(ArrayList<Double> maPl12, int i,
@@ -226,10 +224,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, int i,
 			ArrayList<Pair<Double, Double>> oddData) {
 		// if data has been read from Betfair
+		System.out.println("added");
 		if (oddData != null && oddData.size() > 0) {
 			pl1ySeries2.add(i, oddData.get(0).getI());
-			if (!decimalOdds) // convert to fractional odds if necessary
-				pl1ySeries2.add(i, pl1ySeries2.get(i) - 1);
 		} else {
 			if (i > 0) // keep previous value if it exists
 				pl1ySeries2.add(i, pl1ySeries2.get(i - 1));
@@ -242,20 +239,19 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 	// switches between the two odds representations
 	public void invertAxis() {
-		int changeValue = decimalOdds ? (-1) : 1;
-		decimalOdds = !decimalOdds;
-		if (decimalOdds)
-			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
-		else
-			this.getAxisSet().getYAxis(0).getTitle().setText(
-					yAxisFractionalTitle);
-
-		firstSeries.setYSeries(adjustSeriesValues(changeValue, firstSeries
-				.getYSeries()));
-		secondSeries.setYSeries(adjustSeriesValues(changeValue, secondSeries
-				.getYSeries()));
-
-		updateDisplay();
+//		
+//		if (decimalOdds)
+//			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
+//		else
+//			this.getAxisSet().getYAxis(0).getTitle().setText(
+//					yAxisFractionalTitle);
+//
+//		firstSeries.setYSeries(adjustSeriesValues(changeValue, firstSeries
+//				.getYSeries()));
+//		secondSeries.setYSeries(adjustSeriesValues(changeValue, secondSeries
+//				.getYSeries()));
+		showSeries(slider.getSelection(), true);
+		//updateDisplay();
 	}
 
 	private double[] adjustSeriesValues(int changeValue, double[] series) {
@@ -266,7 +262,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		return series;
 	}
 
-	/*
+	/**
 	 * updates the chart with the new given market data
 	 */
 	public void handleUpdate(final MOddsMarketData newData) {
@@ -304,7 +300,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			});
 		}
 	}
-	
+
 
 	private void updateSlide() {
 		final Composite comp = slider.getParent();
