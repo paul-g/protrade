@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import org.ic.tennistrader.Main;
+import org.ic.tennistrader.service.LiveDataFetcher;
 
 public class MainWindow {
 
@@ -106,7 +107,9 @@ public class MainWindow {
             if (!display.readAndDispatch())
                 display.sleep();
         }
-        
+        LiveDataFetcher.stopAllThreads();
+        ToolBarPanel.setStop();
+        //System.out.println("Application is closing...");
         display.dispose();
     }
 

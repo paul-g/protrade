@@ -106,9 +106,9 @@ public class DisplayPanel implements Listener {
             addMarketDataGrid(infoAndBack, match);
 
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
-            
-            addPredictionGui(horizontal, matchName);
-
+			if (match.isInPlay()) {
+				addPredictionGui(horizontal, matchName);
+			}
             addChart(comp, match);
 
             item.setControl(control);
