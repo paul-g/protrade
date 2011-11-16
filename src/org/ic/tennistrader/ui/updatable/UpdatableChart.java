@@ -5,6 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -29,6 +32,7 @@ import org.swtchart.Range;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.ui.MainWindow;
 import org.ic.tennistrader.utils.Pair;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
@@ -71,6 +75,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
+		this.getLegend().setPosition(SWT.TOP);
 	}
 	
 	private void createSlider(Slider slider) {
@@ -193,13 +198,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		if (back != null || lay!= null) {
 			minus = back.get(back.size()-1).getI();
 			plus = lay.get(lay.size()-1).getI();
-			array.add(new Pair(plus,minus));
+			array.add(new Pair<Double, Double>(plus,minus));
 		} else {
 			if (i > 0) // keep previous value if it exists
 				array.add(i,array.get(i-1));
 			else
 				// put zero if no previous value
-				array.add(i, new Pair(0,0));
+				array.add(i, new Pair<Double, Double>(0.0,0.0));
 		}
 		return array;
 	}
@@ -408,6 +413,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		final MenuItem spPlayer2 = new MenuItem(menu, SWT.CHECK);
 		spPlayer2.setText("Back/Lay Spread " + match.getPlayer2());
+		
+		final MenuItem stretch = new MenuItem(menu, SWT.CHECK);
+		stretch.setText("Stretch");
 
 		player1.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
@@ -455,6 +463,17 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				UpdatableChart.this.changeSelected(6);
 			}
 		});
+		
+		stretch.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+                SashForm sf = (SashForm)UpdatableChart.this.getParent().getParent(); 
+                if (sf.getMaximizedControl() == null )
+                    sf.setMaximizedControl(UpdatableChart.this.getParent());
+                else
+                    sf.setMaximizedControl(null);
+            }
+        });
+        
 
 		// first player selected by default
 		player1.setSelection(true);

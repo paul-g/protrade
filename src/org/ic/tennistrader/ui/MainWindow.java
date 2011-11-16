@@ -10,6 +10,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,12 +31,12 @@ public class MainWindow {
     private List<Listener> loadListeners = new ArrayList<Listener>();
 
     // the sash forms
-    private SashForm sashForm;
+    private static SashForm sashForm;
     private SashForm sashFormLeft;
     private SashForm sashFormRight;
     private Display display;
     
-    private DisplayPanel dp;
+    private static DisplayPanel dp;
 
     private NavigationPanel np;
 
@@ -201,5 +203,16 @@ public class MainWindow {
             e.text = name;
             l.handleEvent(e);
         }
+    }
+    
+    public static void toggleMaximizeMatchDisplay(){
+        if( sashForm.getMaximizedControl() == dp.getControl() )
+            sashForm.setMaximizedControl(null);
+          else
+            sashForm.setMaximizedControl(dp.getControl());
+    }
+
+   public void addMatchViewer() {
+        dp.addMatchViewer();
     }
 }

@@ -2,9 +2,13 @@ package org.ic.tennistrader.ui;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -12,6 +16,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -33,6 +38,8 @@ public class DisplayPanel implements Listener {
     private final CTabFolder folder;
     private Display display;
     private CTabItem selected;
+    
+    private SashForm chartSash;
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(DisplayPanel.class);
@@ -109,7 +116,11 @@ public class DisplayPanel implements Listener {
 			if (match.isInPlay()) {
 				addPredictionGui(horizontal, matchName);
 			}
-            addChart(comp, match);
+            
+			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
+			addChart(chartSash, match);
+			addMatchViewer(chartSash);
+			chartSash.setWeights(new int[]{60,40});
 
             item.setControl(control);
             
@@ -154,7 +165,7 @@ public class DisplayPanel implements Listener {
         // Select values on chart
         Composite c = new Composite(comp, SWT.NONE);
         c.setLayout(new FillLayout());
-        Composite slideComp = new Composite(comp, SWT.NONE);
+        Composite slideComp = new Composite(comp.getParent(), SWT.NONE);
         slideComp.setLayout(new FillLayout());
         Slider slider = new Slider(slideComp,SWT.HORIZONTAL);
         slider.setMaximum(1);
@@ -234,7 +245,19 @@ public class DisplayPanel implements Listener {
             }
         });
         
-        folder.addListener(SWT.MenuDetect, new RightClickListener(popup));
+        folder.addListener(SWT.MenuDetect, new RightClickListener(popup)); 
+        
+        folder.addMouseListener(new MouseListener() {
+            public void mouseDoubleClick(MouseEvent e) {
+                MainWindow.toggleMaximizeMatchDisplay();
+            }
+
+            public void mouseDown(MouseEvent e) {
+            }
+
+            public void mouseUp(MouseEvent e) {
+            }
+          });
     }
 
     private class RightClickListener implements Listener {
@@ -266,4 +289,26 @@ public class DisplayPanel implements Listener {
         gridData.grabExcessVerticalSpace = true;
         return gridData;
     }
+    
+    public Control getControl(){
+        return folder.getParent();
+    }
+    
+   public void addMatchViewer(Composite comp) {
+
+        final Browser browser;
+        try {
+            browser = new Browser(comp, SWT.NONE);
+        } catch (SWTError e) {
+            log.error("Could not instantiate Browser: " + e.getMessage());
+            return;
+        }
+        browser.setUrl("http://www.livescorehunter.ro/index.php?option=com_lsh&view=lsh&event_id=70396&tv_id=374&tid=26339&channel=0&tmpl=component&layout=popup&Itemid=207");
+        comp.layout();
+    }
+   
+   public void addMatchViewer(){
+       addMatchViewer(chartSash);
+   }
+   
 }

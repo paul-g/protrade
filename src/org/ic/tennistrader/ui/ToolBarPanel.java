@@ -31,328 +31,338 @@ import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
 public class ToolBarPanel {
 
-	private ToolBar toolbar;
-	private ToolBar login;
+    private ToolBar toolbar;
+    private ToolBar login;
 
-	private static boolean stop = false;
+    private static boolean stop = false;
 
-	private static Logger log = Logger.getLogger(ToolBarPanel.class);
+    private static Logger log = Logger.getLogger(ToolBarPanel.class);
 
-	private MainWindow mainWindow;
+    private MainWindow mainWindow;
 
-	public ToolBarPanel(final MainWindow mainWindow) {
-		this.mainWindow = mainWindow;
-		final Shell shell = mainWindow.getShell();
+    public ToolBarPanel(final MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+        final Shell shell = mainWindow.getShell();
 
-		// Setting span throughout the columns
-		GridData gridData = new GridData();
-		gridData.horizontalSpan = 2;
+        // Setting span throughout the columns
+        GridData gridData = new GridData();
+        gridData.horizontalSpan = 2;
 
-		// Setting up the toolbar with the placeholders - due to the number of
-		// columns
-		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		toolbar.setLayoutData(gridData);
+        // Setting up the toolbar with the placeholders - due to the number of
+        // columns
+        this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
+        toolbar.setLayoutData(gridData);
 
-		// New widget menu
-		makeNewWidgetMenu(mainWindow, shell);
+        // New widget menu
+        makeNewWidgetMenu(mainWindow, shell);
 
-		// Play button
-		makePlayMenu(shell);
+        // Play button
+        makePlayMenu(shell);
 
-		// Grid for right alignment
-		GridData loginData = new GridData();
-		loginData.horizontalSpan = 1;
-		loginData.horizontalAlignment = SWT.RIGHT;
-		this.login = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		login.setLayoutData(loginData);
+        // Grid for right alignment
+        GridData loginData = new GridData();
+        loginData.horizontalSpan = 1;
+        loginData.horizontalAlignment = SWT.RIGHT;
+        this.login = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
+        login.setLayoutData(loginData);
 
-		// Log out/profile menu
-		makeProfileMenu(mainWindow, shell);
+        // Log out/profile menu
+        makeProfileMenu(mainWindow, shell);
 
-	}
+    }
 
-	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
-		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
-		balanceItem.setToolTipText("Balance");
-		final ProfileData profileData;
+    private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
+        final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
+        balanceItem.setToolTipText("Balance");
+        final ProfileData profileData;
 
-		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
-		// TODO: this is a slight hack
-		profileItem.setText(Main.USERNAME);
-		profileItem.setToolTipText("Profile");
-		
-		try {
-			profileData = BetfairConnectionHandler.getProfileData();
-		
-			balanceItem.setText("£"
-					+ profileData.getUkAccountFunds().getBalance());
+        final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
+        // TODO: this is a slight hack
+        profileItem.setText(Main.USERNAME);
+        profileItem.setToolTipText("Profile");
 
-			final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
-			MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-			ukBalance.setText("GBP");
-			ukBalance.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
+        try {
+            profileData = BetfairConnectionHandler.getProfileData();
 
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					balanceItem.setText("£"
-							+ profileData.getUkAccountFunds().getBalance());
-				}
-			});
+            balanceItem.setText("£"
+                    + profileData.getUkAccountFunds().getBalance());
 
-			MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-			ausBalance.setText("AUD");
-			ausBalance.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
+            final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
+            MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+            ukBalance.setText("GBP");
+            ukBalance.addSelectionListener(new SelectionListener() {
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                }
 
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					try {
-						balanceItem
-								.setText("$"
-										+ profileData.getAusAccountFunds()
-												.getBalance());
-					} catch (Exception e1) {
-						log.error(e1.getMessage());
-					}
-				}
-			});
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    balanceItem.setText("£"
+                            + profileData.getUkAccountFunds().getBalance());
+                }
+            });
 
-			
-			final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
-			MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
-			logout.setText("Log out");
-			logout.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
+            MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+            ausBalance.setText("AUD");
+            ausBalance.addSelectionListener(new SelectionListener() {
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                }
 
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					try {
-						BetfairConnectionHandler.logout();
-					} catch (Exception e1) {
-						log.error(e1.getMessage());
-					}
-					Display nd = toolbar.getDisplay();
-					mainWindow.dispose();
-					new LoginShell(nd);
-				}
-			});
-			new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
-			new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
-			profileItem.addListener(SWT.Selection, new RightDropDownListener(
-					profileItem, profileDropDown));
-			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
-					balanceItem, balanceDropDown));
-		} catch (Exception e) {
-		}
-	}
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    try {
+                        balanceItem
+                                .setText("$"
+                                        + profileData.getAusAccountFunds()
+                                                .getBalance());
+                    } catch (Exception e1) {
+                        log.error(e1.getMessage());
+                    }
+                }
+            });
 
-	private void makeNewWidgetMenu(final MainWindow mainWindow,
-			final Shell shell) {
-		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
-		widgetItem.setToolTipText("Widget Menu");
-		final Image img = new Image(shell.getDisplay(), "images/plus_item.png");
-		widgetItem.setImage(img);
-		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
-		MenuItem matchNavigator = new MenuItem(widgetDropDown, SWT.PUSH);
-		matchNavigator.setText("Match Navigator");
-		matchNavigator.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				log.info("Opened match navigator");
-				mainWindow.addMatchNavigator();
-			}
-		});
+            final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
+            MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
+            logout.setText("Log out");
+            logout.addSelectionListener(new SelectionListener() {
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                }
 
-		MenuItem activeBets = new MenuItem(widgetDropDown, SWT.PUSH);
-		activeBets.setText("Active Bets Display");
-		activeBets.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event arg0) {
-				log.info("Opened an active bets display tab");
-				mainWindow.addActiveBetsDisplay();
-			}
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    try {
+                        BetfairConnectionHandler.logout();
+                    } catch (Exception e1) {
+                        log.error(e1.getMessage());
+                    }
+                    Display nd = toolbar.getDisplay();
+                    mainWindow.dispose();
+                    new LoginShell(nd);
+                }
+            });
+            new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
+            new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
+            profileItem.addListener(SWT.Selection, new RightDropDownListener(
+                    profileItem, profileDropDown));
+            balanceItem.addListener(SWT.Selection, new RightDropDownListener(
+                    balanceItem, balanceDropDown));
+        } catch (Exception e) {
+        }
+    }
 
-		});
+    private void makeNewWidgetMenu(final MainWindow mainWindow,
+            final Shell shell) {
+        final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+        widgetItem.setToolTipText("Widget Menu");
+        final Image img = new Image(shell.getDisplay(), "images/plus_item.png");
+        widgetItem.setImage(img);
+        final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
+        MenuItem matchNavigator = new MenuItem(widgetDropDown, SWT.PUSH);
+        matchNavigator.setText("Match Navigator");
+        matchNavigator.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                log.info("Opened match navigator");
+                mainWindow.addMatchNavigator();
+            }
+        });
 
-		new MenuItem(widgetDropDown, SWT.PUSH).setText("Match Statistics");
-		MenuItem playerStats = new MenuItem(widgetDropDown, SWT.PUSH);
-		playerStats.setText("Player Statistics");
-		playerStats.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				mainWindow.addPlayerStatistics();
-			}
-		});
-		widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
-				widgetItem, widgetDropDown));
-		toolbar.pack();
-	}
+        MenuItem activeBets = new MenuItem(widgetDropDown, SWT.PUSH);
+        activeBets.setText("Active Bets Display");
+        activeBets.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event arg0) {
+                log.info("Opened an active bets display tab");
+                mainWindow.addActiveBetsDisplay();
+            }
 
-	private void makePlayMenu(final Shell shell) {
-		final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
-		playButtonItem.setToolTipText("Play from a file");
-		Image play = new Image(shell.getDisplay(), "images/play.png");
-		playButtonItem.setImage(play);
+        });
 
-		final Menu playDropDown = new Menu(shell, SWT.POP_UP);
+        new MenuItem(widgetDropDown, SWT.PUSH).setText("Match Statistics");
 
-		MenuItem usOpenFinal = new MenuItem(playDropDown, SWT.PUSH);
-		usOpenFinal.setText("US Open Final 2011");
-		usOpenFinal.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				openMatchView("fracsoft-data/fracsoft1.csv");
-			}
-		});
+        MenuItem playerStats = new MenuItem(widgetDropDown, SWT.PUSH);
+        playerStats.setText("Player Statistics");
+        playerStats.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                mainWindow.addPlayerStatistics();
+            }
+        });
 
-		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
-		playItem.setText("From File");
-		playItem.addListener(SWT.Selection, new Listener() {
+        MenuItem matchViewer = new MenuItem(widgetDropDown, SWT.PUSH);
+        matchViewer.setText("Match Viewer");
+        matchViewer.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                mainWindow.addMatchViewer();
+            }
+        });
 
-			@Override
-			public void handleEvent(Event arg0) {
+        widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
+                widgetItem, widgetDropDown));
+        toolbar.pack();
+    }
 
-				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-				String[] filterNames = new String[] { "CSV Files",
-						"All Files (*)" };
-				String[] filterExtensions = new String[] { "*.csv", "*" };
-				String filterPath = "/";
-				String platform = SWT.getPlatform();
-				if (platform.equals("win32") || platform.equals("wpf")) {
-					filterNames = new String[] { "CSV Files", "All Files (*.*)" };
-					filterExtensions = new String[] { "*.csv", "*.*" };
-					filterPath = "c:\\";
-				}
-				dialog.setFilterNames(filterNames);
-				dialog.setFilterExtensions(filterExtensions);
-				dialog.setFilterPath(filterPath);
-				dialog.setFileName("myfile");
+    private void makePlayMenu(final Shell shell) {
+        final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+        playButtonItem.setToolTipText("Play from a file");
+        Image play = new Image(shell.getDisplay(), "images/play.png");
+        playButtonItem.setImage(play);
 
-				openMatchView(dialog.open());
-			}
+        final Menu playDropDown = new Menu(shell, SWT.POP_UP);
 
-		});
-		playButtonItem.addListener(SWT.Selection, new LeftDropDownListener(
-				playButtonItem, playDropDown));
-	}
+        MenuItem usOpenFinal = new MenuItem(playDropDown, SWT.PUSH);
+        usOpenFinal.setText("US Open Final 2011");
+        usOpenFinal.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                openMatchView("fracsoft-data/fracsoft1.csv");
+            }
+        });
 
-	public ToolBarPanel(final MainWindow mainWindow, boolean isTop) {
+        MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
+        playItem.setText("From File");
+        playItem.addListener(SWT.Selection, new Listener() {
 
-		final Shell shell = mainWindow.getShell();
-		// Setting span throughout the columns
-		GridData gridData = new GridData();
-		gridData.horizontalSpan = 3;
-		Display display = shell.getDisplay();
+            @Override
+            public void handleEvent(Event arg0) {
 
-		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		toolbar.setLayoutData(gridData);
+                FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+                String[] filterNames = new String[] { "CSV Files",
+                        "All Files (*)" };
+                String[] filterExtensions = new String[] { "*.csv", "*" };
+                String filterPath = "/";
+                String platform = SWT.getPlatform();
+                if (platform.equals("win32") || platform.equals("wpf")) {
+                    filterNames = new String[] { "CSV Files", "All Files (*.*)" };
+                    filterExtensions = new String[] { "*.csv", "*.*" };
+                    filterPath = "c:\\";
+                }
+                dialog.setFilterNames(filterNames);
+                dialog.setFilterExtensions(filterExtensions);
+                dialog.setFilterPath(filterPath);
+                dialog.setFileName("myfile");
 
-		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
-		widgetItem.setToolTipText("Internet Connection");
-		final Image off = new Image(display, "images/connection_lost.png");
-		final Image on = new Image(display, "images/connection_on.png");
-		widgetItem.setImage(on);
-		new Thread(new Runnable() {
-			public void run() {
-				while (!stop) {
-					try {
-						Thread.sleep(3000);
-					} catch (Exception e) {
-					}
-					if (!shell.isDisposed()) {
-						toolbar.getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								if (isInternetReachable()) {
-									log.info("Connection - ON");
-									widgetItem.setImage(on);
-								} else {
-									log.info("Connection - OFF");
-									widgetItem.setImage(off);
-								}
-							}
-						});
-					}
-				}
-			}
-		}).start();
-	}
+                openMatchView(dialog.open());
+            }
 
-	private void openMatchView(String filename) {
-		if (filename != null) {
-			Match match = new HistoricalMatch(filename);
-			mainWindow.getDisplayPanel().addMatchView(match);
-		}
-	}
+        });
+        playButtonItem.addListener(SWT.Selection, new LeftDropDownListener(
+                playButtonItem, playDropDown));
+    }
 
-	private boolean isInternetReachable() {
-		try {
-			// URL to a source
-			URL url = new URL("http://www.google.com");
-			// Open a connection
-			HttpURLConnection urlConnect = (HttpURLConnection) url
-					.openConnection();
-			// Retrieving data from the source - if there is no connection,
-			// throws and exception
-			@SuppressWarnings("unused")
-			Object objData = urlConnect.getContent();
-		} catch (UnknownHostException e) {
-			return false;
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
+    public ToolBarPanel(final MainWindow mainWindow, boolean isTop) {
 
-	private class LeftDropDownListener implements Listener {
+        final Shell shell = mainWindow.getShell();
+        // Setting span throughout the columns
+        GridData gridData = new GridData();
+        gridData.horizontalSpan = 3;
+        Display display = shell.getDisplay();
 
-		private ToolItem item;
-		private Menu menu;
+        this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
+        toolbar.setLayoutData(gridData);
 
-		public LeftDropDownListener(ToolItem item, Menu menu) {
-			this.item = item;
-			this.menu = menu;
-		}
+        final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
+        widgetItem.setToolTipText("Internet Connection");
+        final Image off = new Image(display, "images/connection_lost.png");
+        final Image on = new Image(display, "images/connection_on.png");
+        widgetItem.setImage(on);
+        new Thread(new Runnable() {
+            public void run() {
+                while (!stop) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (Exception e) {
+                    }
+                    if (!shell.isDisposed()) {
+                        toolbar.getDisplay().asyncExec(new Runnable() {
+                            public void run() {
+                                if (isInternetReachable()) {
+                                    log.info("Connection - ON");
+                                    widgetItem.setImage(on);
+                                } else {
+                                    log.info("Connection - OFF");
+                                    widgetItem.setImage(off);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }).start();
+    }
 
-		public void handleEvent(Event event) {
-			if (event.detail == SWT.ARROW) {
-				Rectangle bounds = item.getBounds();
-				Point point = toolbar.toDisplay(bounds.x, bounds.y
-						+ bounds.height);
-				menu.setLocation(point);
-				menu.setVisible(true);
-			}
-		}
+    private void openMatchView(String filename) {
+        if (filename != null) {
+            Match match = new HistoricalMatch(filename);
+            mainWindow.getDisplayPanel().addMatchView(match);
+        }
+    }
 
-	}
+    private boolean isInternetReachable() {
+        try {
+            // URL to a source
+            URL url = new URL("http://www.google.com");
+            // Open a connection
+            HttpURLConnection urlConnect = (HttpURLConnection) url
+                    .openConnection();
+            // Retrieving data from the source - if there is no connection,
+            // throws and exception
+            @SuppressWarnings("unused")
+            Object objData = urlConnect.getContent();
+        } catch (UnknownHostException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
 
-	private class RightDropDownListener implements Listener {
+    private class LeftDropDownListener implements Listener {
 
-		private ToolItem item;
-		private Menu menu;
+        private ToolItem item;
+        private Menu menu;
 
-		public RightDropDownListener(ToolItem item, Menu menu) {
-			this.item = item;
-			this.menu = menu;
-		}
+        public LeftDropDownListener(ToolItem item, Menu menu) {
+            this.item = item;
+            this.menu = menu;
+        }
 
-		public void handleEvent(Event event) {
-			if (event.detail == SWT.ARROW) {
-				Rectangle bounds = item.getBounds();
-				Point point = login.toDisplay(bounds.x + bounds.width, bounds.y
-						+ bounds.height);
-				menu.setLocation(point);
-				menu.setVisible(true);
-			}
-		}
-	}
+        public void handleEvent(Event event) {
+            if (event.detail == SWT.ARROW) {
+                Rectangle bounds = item.getBounds();
+                Point point = toolbar.toDisplay(bounds.x, bounds.y
+                        + bounds.height);
+                menu.setLocation(point);
+                menu.setVisible(true);
+            }
+        }
 
-	public static void setStop() {
-		stop = true;
-	}
+    }
+
+    private class RightDropDownListener implements Listener {
+
+        private ToolItem item;
+        private Menu menu;
+
+        public RightDropDownListener(ToolItem item, Menu menu) {
+            this.item = item;
+            this.menu = menu;
+        }
+
+        public void handleEvent(Event event) {
+            if (event.detail == SWT.ARROW) {
+                Rectangle bounds = item.getBounds();
+                Point point = login.toDisplay(bounds.x + bounds.width, bounds.y
+                        + bounds.height);
+                menu.setLocation(point);
+                menu.setVisible(true);
+            }
+        }
+    }
+
+    public static void setStop() {
+        stop = true;
+    }
 }

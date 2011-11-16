@@ -47,10 +47,11 @@ public class LoginShell {
 
     public LoginShell(final Display display) {
         this.loginShell = new Shell(display, SWT.MAX/* SWT.NO_TRIM|SWT.ON_TOP */);// SWT.TRANSPARENCY_ALPHA);
-        loginShell.setSize(614, 380);
+        loginShell.setSize(400,160);
+        loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT); 
 
         final Image logoUp = new Image(loginShell.getDisplay(),
-                "images/logo_modif.jpg");
+                "images/sports_tennis.jpg");
         loginShell.setBackgroundImage(logoUp);
 
         Rectangle rect = loginShell.getClientArea();
@@ -58,26 +59,32 @@ public class LoginShell {
         loginShell.setText(TITLE);
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 5;
-        gridLayout.marginTop = 110;
+        gridLayout.marginTop = 0;
 
         loginShell.setLayout(gridLayout);
 
-        GridData gridData = new GridData(150, 30);
+        GridData gridData = new GridData(75, 16);
         gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData.horizontalSpan = 5;
+        gridData.horizontalSpan = 1;
+        
+        GridData gridData2 = new GridData(150, 16);
+        gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
+        gridData2.horizontalSpan = 4;
 
         Label loginLabel = new Label(loginShell, SWT.NONE);
         loginLabel.setText("Username: ");
+        loginLabel.setLayoutData(gridData);
 
         final Text username = new Text(loginShell, SWT.NONE);
-        username.setLayoutData(gridData);
+        username.setLayoutData(gridData2);
         username.setText("username");
 
         Label passLabel = new Label(loginShell, SWT.NONE);
+        passLabel.setLayoutData(gridData);
         passLabel.setText("Password: ");
 
         final Text password = new Text(loginShell, SWT.PASSWORD);
-        password.setLayoutData(gridData);
+        password.setLayoutData(gridData2);
         password.setText("password");
 
         // just for alignment
@@ -130,7 +137,6 @@ public class LoginShell {
         barData.horizontalAlignment = SWT.FILL;
         bar.setLayoutData(barData);
         bar.setVisible(false);
-
         loginShell.open();
 
     }

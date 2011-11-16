@@ -14,7 +14,6 @@ public class BetfairDataUpdater extends DataUpdater {
     private List<EventBetfair> events;
     private HashMap<EventBetfair, RealMatch> matches;
     
-    @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(BetfairDataUpdater.class);
 
     public BetfairDataUpdater() {
