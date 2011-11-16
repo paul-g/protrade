@@ -116,7 +116,7 @@ public class FracsoftReader extends DataUpdater {
 		log.info("Fracsoft thread terminates");
 	}
 
-    private MOddsMarketData getMarketData() {
+    public MOddsMarketData getMarketData() {
         if (pointer.hasNext())
             return pointer.next();
         return null;

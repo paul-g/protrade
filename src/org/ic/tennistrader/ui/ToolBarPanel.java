@@ -207,7 +207,6 @@ public class ToolBarPanel {
 		usOpenFinal.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				// TODO Auto-generated method stub
 				openMatchView("fracsoft-data/fracsoft1.csv");
 			}
 		});
@@ -286,10 +285,7 @@ public class ToolBarPanel {
 
 	private void openMatchView(String filename) {
 		if (filename != null) {
-
-			// TODO: change the match to a Historical match
 			Match match = new HistoricalMatch(filename);
-
 			mainWindow.getDisplayPanel().addMatchView(match);
 		}
 	}

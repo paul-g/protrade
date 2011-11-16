@@ -71,9 +71,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
-
 	}
-
+	
 	private void createSlider(Slider slider) {
 		this.slider = slider;
 		slider.setMaximum(1);
@@ -465,4 +464,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		this.getPlotArea().setMenu(menu);
 	}
 
+	public ILineSeries getFirstSeries() {
+		return firstSeries;
+	}
+
+	public ILineSeries getSecondSeries() {
+		return secondSeries;
+	}
 }
