@@ -12,10 +12,12 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -26,6 +28,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
@@ -33,7 +36,11 @@ public class ToolBarPanel {
 
 	private ToolBar toolbar;
 	private ToolBar login;
+	private Shell profileWindow;
+	private Shell preferencesWindow;
 
+	private ProfileData profileData;
+	
 	private static boolean stop = false;
 
 	private static Logger log = Logger.getLogger(ToolBarPanel.class);
@@ -66,6 +73,13 @@ public class ToolBarPanel {
 		this.login = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
 		login.setLayoutData(loginData);
 
+		// Retrieving user data from the site
+		try {
+			profileData = BetfairConnectionHandler.getProfileData();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		
 		// Log out/profile menu
 		makeProfileMenu(mainWindow, shell);
 
@@ -74,16 +88,14 @@ public class ToolBarPanel {
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
 		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
 		balanceItem.setToolTipText("Balance");
-		final ProfileData profileData;
+
 
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
 		profileItem.setToolTipText("Profile");
 		
-		try {
-			profileData = BetfairConnectionHandler.getProfileData();
-		
+		try {		
 			balanceItem.setText("£"
 					+ profileData.getUkAccountFunds().getBalance());
 
@@ -112,17 +124,14 @@ public class ToolBarPanel {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try {
-						balanceItem
-								.setText("$"
-										+ profileData.getAusAccountFunds()
-												.getBalance());
+						balanceItem.setText("$"
+							 + profileData.getAusAccountFunds().getBalance());
 					} catch (Exception e1) {
 						log.error(e1.getMessage());
 					}
 				}
 			});
 
-			
 			final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
 			MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
 			logout.setText("Log out");
@@ -138,13 +147,80 @@ public class ToolBarPanel {
 					} catch (Exception e1) {
 						log.error(e1.getMessage());
 					}
-					Display nd = toolbar.getDisplay();
+					final Display nd = toolbar.getDisplay();
 					mainWindow.dispose();
-					new LoginShell(nd);
+					final LoginShell ls = new LoginShell(nd);
+					final MainWindow mw = new MainWindow(nd); 
+					mw.addLoadListener(new Listener() {
+					        @Override
+					        public void handleEvent(Event event) {
+					            if (event.text.equals("Done!")) {
+					                ls.finishProgressBar();
+					                ls.dispose();
+					            }
+					            else {
+					                ls.updateProgressBar(10);
+					                ls.setText(event.text);
+					            }
+					        }
+					});
+					ls.addLoginSuccessListener(new Listener() {
+				        @Override
+				        public void handleEvent(Event arg0) {
+				            mw.show();
+				            mw.run(nd);
+				        }
+				    });
+					ls.run(nd);
 				}
 			});
-			new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
-			new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
+			MenuItem profileButton = new MenuItem(profileDropDown, SWT.PUSH);
+			profileButton.setText("Profile");
+			profileButton.addSelectionListener(new SelectionListener() {
+	            @Override
+	            public void widgetDefaultSelected(SelectionEvent e) {
+	            }
+
+	            @Override
+	            public void widgetSelected(SelectionEvent e) {
+	            	if (profileWindow == null || profileWindow.isDisposed()) {
+	                    profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
+	                    profileWindow.setLayout(new FillLayout());
+	                    profileWindow.setText("Profile");
+	                    profileWindow.setSize(200,200);
+	                    profileWindow.setLocation(1100,80);
+	                    Label profData = new Label(profileWindow,SWT.BORDER);
+	                    profData.setText(textProfile());
+	                    profileWindow.open();
+	            	} else {
+	            		profileWindow.forceActive();
+	            	}
+	            }
+	        });
+			MenuItem preferencesButton = new MenuItem(profileDropDown, SWT.PUSH);
+			preferencesButton.setText("Preferences");
+			preferencesButton.addSelectionListener(new SelectionListener() {
+	            @Override
+	            public void widgetDefaultSelected(SelectionEvent e) {
+	            }
+
+	            @Override
+	            public void widgetSelected(SelectionEvent e) {
+	            	if (preferencesWindow == null || preferencesWindow.isDisposed()) {
+	                    preferencesWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
+	                    preferencesWindow.setLayout(new FillLayout());
+	                    preferencesWindow.setText("Preferences");
+	                    preferencesWindow.setSize(200,200);
+	                    preferencesWindow.setLocation(1120,100);
+	                    ToolBar prefData = new ToolBar(preferencesWindow, SWT.VERTICAL);
+	                    new ToolItem(prefData, SWT.CHECK).setText("Remember Me");
+	                    new ToolItem(prefData, SWT.CHECK).setText("Display my name");
+	                    preferencesWindow.open();
+	            	} else {
+	            		preferencesWindow.forceActive();
+	            	}
+	            }
+	        });
 			profileItem.addListener(SWT.Selection, new RightDropDownListener(
 					profileItem, profileDropDown));
 			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
@@ -262,7 +338,7 @@ public class ToolBarPanel {
 			public void run() {
 				while (!stop) {
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(5000);
 					} catch (Exception e) {
 					}
 					if (!shell.isDisposed()) {
@@ -354,5 +430,18 @@ public class ToolBarPanel {
 
 	public static void setStop() {
 		stop = true;
+	}
+	
+	public String textProfile() {
+		AccountFunds af = profileData.getUkAccountFunds();
+		String res =
+		"Username : " + Main.USERNAME +
+		"\nBetfair points : " + af.getBetfairPoints() +
+		"\nCurrent balance : " + af.getBalance() +
+		"\nAvailable balance : " + af.getAvailable() +
+		"\nCredit limit : " + af.getCreditLimit() +
+		"\nExposure : " + af.getExposure() +
+		"\nExposure limit : " + af.getExposureLimit();
+		return res;
 	}
 }
