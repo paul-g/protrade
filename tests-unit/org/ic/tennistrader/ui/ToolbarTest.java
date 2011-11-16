@@ -30,7 +30,6 @@ public class ToolbarTest {
 
 	@Test
 	public void widgetUpperLeftCheck() {
-		bot.shell("Tennis Trader");
 		// Left corner widgets
 		SWTBotToolbarDropDownButton widget_menu = bot.toolbarDropDownButtonWithTooltip("Widget Menu");
 		SWTBotToolbarDropDownButton play_menu = bot.toolbarDropDownButtonWithTooltip("Play from a file");
