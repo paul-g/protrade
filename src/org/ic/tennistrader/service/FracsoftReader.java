@@ -113,7 +113,7 @@ public class FracsoftReader extends DataUpdater {
 				log.info("Fracsoft thread interrupted");
 			}
 		}
-		log.info("Fracsoft thread terminates");
+		log.info("Stopped Fracsoft thread");
 	}
 
     public MOddsMarketData getMarketData() {
@@ -156,7 +156,6 @@ public class FracsoftReader extends DataUpdater {
 
 	@Override
 	public void setStop() {
-		log.info("Stop Fracsoft thread");
 		this.stop = true;
 	}
 }

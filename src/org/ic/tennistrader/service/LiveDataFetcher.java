@@ -63,46 +63,24 @@ public class LiveDataFetcher {
     }
 
     public static void start() {
-        log.info("Start Betfair thread");
+        log.info("Started Betfair thread");
         dataUpdater.start();
-        /*
-        comp.getDisplay().timerExec(0, new Runnable() {
-            @Override
-            public void run() {
-                dataUpdater.run();
-                if (!comp.isDisposed() )
-                    comp.getDisplay().timerExec(5000, this);
-            }
-        });
-        */
     }
     
     private static void startFromFile(Match match, String fileName,
-            final Composite comp) {
-    	log.info("Start Fracsoft thread");
+            final Composite comp) {    	
         final DataUpdater fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);
             fileUpdaters.add(fracsoftUpdater);
-            fracsoftUpdater.start();
-            /*
-            comp.getDisplay().timerExec(0, new Runnable() {
-                @Override
-                public void run() {
-                    fracsoftUpdater.run();
-                    if (!comp.isDisposed() )
-                        comp.getDisplay().timerExec(1000, this);
-                }
-            });
-            */
+            log.info("Started Fracsoft thread");
+            fracsoftUpdater.start();            
         } catch(FileNotFoundException fnfe) {
             log.error("Fracsoft file to be opened not found");
         }
-        log.info("After started Fracsoft thread");
     }
 
     public static void handleEvent(HashMap<EventBetfair, MOddsMarketData> data) {
-    	//log.info("Handle Betfair event-----------------------------------");
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();

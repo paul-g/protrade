@@ -48,6 +48,7 @@ public class BetfairDataUpdater extends DataUpdater {
 			}
 			LiveDataFetcher.handleEvent(newMap);
 		}
+		log.info("Stopped Betfair thread");
     }
 
 	@Override

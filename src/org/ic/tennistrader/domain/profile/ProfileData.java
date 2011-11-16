@@ -1,5 +1,7 @@
 package org.ic.tennistrader.domain.profile;
 
+import java.util.Calendar;
+
 
 public class ProfileData {
     private AccountFunds ukAccountFounds;
@@ -8,7 +10,9 @@ public class ProfileData {
     private String address1, address2, address3, townCity, countyState, postCode, country;
     private String homePhone, mobilePhone, emailAddress;
     private String timeZone, currency;
-    private Integer gamcareLimit, gamcareFrequency, gamcareLossLimit, gamcareLossLimitFrequency, gamcareUpdateDate;
+    private Integer gamcareLimit, gamcareLossLimit;
+    private String gamcareFrequency, gamcareLossLimitFrequency;
+    private Calendar gamcareUpdateDate;
         
     public ProfileData() {        
     }
@@ -173,11 +177,11 @@ public class ProfileData {
         this.gamcareLimit = gamcareLimit;
     }
 
-    public Integer getGamcareFrequency() {
+    public String getGamcareFrequency() {
         return gamcareFrequency;
     }
 
-    public void setGamcareFrequency(Integer gamcareFrequency) {
+    public void setGamcareFrequency(String gamcareFrequency) {
         this.gamcareFrequency = gamcareFrequency;
     }
 
@@ -189,19 +193,19 @@ public class ProfileData {
         this.gamcareLossLimit = gamcareLossLimit;
     }
 
-    public Integer getGamcareLossLimitFrequency() {
+    public String getGamcareLossLimitFrequency() {
         return gamcareLossLimitFrequency;
     }
 
-    public void setGamcareLossLimitFrequency(Integer gamcareLossLimitFrequency) {
+    public void setGamcareLossLimitFrequency(String gamcareLossLimitFrequency) {
         this.gamcareLossLimitFrequency = gamcareLossLimitFrequency;
     }
 
-    public Integer getGamcareUpdateDate() {
+    public Calendar getGamcareUpdateDate() {
         return gamcareUpdateDate;
     }
 
-    public void setGamcareUpdateDate(Integer gamcareUpdateDate) {
+    public void setGamcareUpdateDate(Calendar gamcareUpdateDate) {
         this.gamcareUpdateDate = gamcareUpdateDate;
     }
 }
