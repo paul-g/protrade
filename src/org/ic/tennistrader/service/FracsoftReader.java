@@ -104,8 +104,8 @@ public class FracsoftReader extends DataUpdater {
     }
 
 	@Override
-	public void run() {
-		while (true) {
+	public void run() {		
+		while (!this.stop) {
 			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
 			try {
 				Thread.sleep(1000);
@@ -113,9 +113,10 @@ public class FracsoftReader extends DataUpdater {
 				log.info("Fracsoft thread interrupted");
 			}
 		}
+		log.info("Fracsoft thread terminates");
 	}
 
-    private MOddsMarketData getMarketData() {
+    public MOddsMarketData getMarketData() {
         if (pointer.hasNext())
             return pointer.next();
         return null;
@@ -152,4 +153,10 @@ public class FracsoftReader extends DataUpdater {
 
         return new Pair<String, String>(player1, player2);
     }
+
+	@Override
+	public void setStop() {
+		log.info("Stop Fracsoft thread");
+		this.stop = true;
+	}
 }

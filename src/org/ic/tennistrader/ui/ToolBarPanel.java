@@ -26,12 +26,15 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
 public class ToolBarPanel {
 
 	private ToolBar toolbar;
 	private ToolBar login;
+
+	private static boolean stop = false;
 
 	private static Logger log = Logger.getLogger(ToolBarPanel.class);
 
@@ -69,77 +72,85 @@ public class ToolBarPanel {
 	}
 
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
-		final ToolItem balanceItem = new ToolItem(login,SWT.DROP_DOWN);
+		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
 		balanceItem.setToolTipText("Balance");
-		try {
-			balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
-		} catch (Exception e2) {
-			log.error(e2.getMessage());
-		}
-		final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
-		MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-		ukBalance.setText("GBP");
-		ukBalance.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					balanceItem.setText("£"+BetfairConnectionHandler.getProfileData().getUkAccountFunds().getBalance());
-				} catch (Exception e1) {
-					log.error(e1.getMessage());
-				}
-			}
-		});
-		MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-		ausBalance.setText("AUD");
-		ausBalance.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					balanceItem.setText("$"+BetfairConnectionHandler.getProfileData().getAusAccountFunds().getBalance());
-				} catch (Exception e1) {
-					log.error(e1.getMessage());
-				}
-			}
-		});
+		final ProfileData profileData;
 
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
 		profileItem.setToolTipText("Profile");
-		final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
-		MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
-		logout.setText("Log out");
-		logout.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		
+		try {
+			profileData = BetfairConnectionHandler.getProfileData();
+		
+			balanceItem.setText("£"
+					+ profileData.getUkAccountFunds().getBalance());
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					BetfairConnectionHandler.logout();
-				} catch (Exception e1) {
-					log.error(e1.getMessage());
+			final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
+			MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+			ukBalance.setText("GBP");
+			ukBalance.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
 				}
-				Display nd = toolbar.getDisplay();
-				mainWindow.dispose();
-				new LoginShell(nd);
-			}
-		});
-		new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
-		new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
-		profileItem.addListener(SWT.Selection, new RightDropDownListener(
-				profileItem, profileDropDown));
-		balanceItem.addListener(SWT.Selection, new RightDropDownListener(
-				balanceItem, balanceDropDown));
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					balanceItem.setText("£"
+							+ profileData.getUkAccountFunds().getBalance());
+				}
+			});
+
+			MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+			ausBalance.setText("AUD");
+			ausBalance.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						balanceItem
+								.setText("$"
+										+ profileData.getAusAccountFunds()
+												.getBalance());
+					} catch (Exception e1) {
+						log.error(e1.getMessage());
+					}
+				}
+			});
+
+			
+			final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
+			MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
+			logout.setText("Log out");
+			logout.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						BetfairConnectionHandler.logout();
+					} catch (Exception e1) {
+						log.error(e1.getMessage());
+					}
+					Display nd = toolbar.getDisplay();
+					mainWindow.dispose();
+					new LoginShell(nd);
+				}
+			});
+			new MenuItem(profileDropDown, SWT.PUSH).setText("Profile");
+			new MenuItem(profileDropDown, SWT.PUSH).setText("Preferences");
+			profileItem.addListener(SWT.Selection, new RightDropDownListener(
+					profileItem, profileDropDown));
+			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
+					balanceItem, balanceDropDown));
+		} catch (Exception e) {
+		}
 	}
 
 	private void makeNewWidgetMenu(final MainWindow mainWindow,
@@ -196,7 +207,6 @@ public class ToolBarPanel {
 		usOpenFinal.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				// TODO Auto-generated method stub
 				openMatchView("fracsoft-data/fracsoft1.csv");
 			}
 		});
@@ -210,7 +220,7 @@ public class ToolBarPanel {
 
 				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 				String[] filterNames = new String[] { "CSV Files",
-				"All Files (*)" };
+						"All Files (*)" };
 				String[] filterExtensions = new String[] { "*.csv", "*" };
 				String filterPath = "/";
 				String platform = SWT.getPlatform();
@@ -250,8 +260,11 @@ public class ToolBarPanel {
 		widgetItem.setImage(on);
 		new Thread(new Runnable() {
 			public void run() {
-				while (true) {
-					try { Thread.sleep(3000); } catch (Exception e) { }
+				while (!stop) {
+					try {
+						Thread.sleep(3000);
+					} catch (Exception e) {
+					}
 					if (!shell.isDisposed()) {
 						toolbar.getDisplay().asyncExec(new Runnable() {
 							public void run() {
@@ -272,10 +285,7 @@ public class ToolBarPanel {
 
 	private void openMatchView(String filename) {
 		if (filename != null) {
-
-			// TODO: change the match to a Historical match
 			Match match = new HistoricalMatch(filename);
-
 			mainWindow.getDisplayPanel().addMatchView(match);
 		}
 	}
@@ -285,14 +295,15 @@ public class ToolBarPanel {
 			// URL to a source
 			URL url = new URL("http://www.google.com");
 			// Open a connection
-			HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
-			// Retrieving data from the source - if there is no connection, throws and exception
+			HttpURLConnection urlConnect = (HttpURLConnection) url
+					.openConnection();
+			// Retrieving data from the source - if there is no connection,
+			// throws and exception
 			@SuppressWarnings("unused")
 			Object objData = urlConnect.getContent();
 		} catch (UnknownHostException e) {
 			return false;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			return false;
 		}
 		return true;
@@ -339,5 +350,9 @@ public class ToolBarPanel {
 				menu.setVisible(true);
 			}
 		}
+	}
+
+	public static void setStop() {
+		stop = true;
 	}
 }

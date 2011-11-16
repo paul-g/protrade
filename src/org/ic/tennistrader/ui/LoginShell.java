@@ -152,6 +152,8 @@ public class LoginShell {
                 String username = Main.TEST_USERNAME;
                 String password = Main.TEST_PASSWORD;
                 log.info("username " + username);
+                Main.USERNAME = Main.TEST_USERNAME;
+                Main.PASSWORD = Main.TEST_PASSWORD;
                 if (checkLogin(username, password)) {
                     updateResult(SUCCESS);
                     handleLoginSuccess();

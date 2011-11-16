@@ -23,13 +23,14 @@ public class BetfairDataUpdater extends DataUpdater {
     }
 
     public void addEvent(RealMatch match) {
-        matches.put(match.getEventBetfair(), match);
-        events.add(match.getEventBetfair());
+        EventBetfair eventBetfair = match.getEventBetfair();
+		matches.put(eventBetfair, match);
+        events.add(eventBetfair);
     }
 
     @Override
     public void run() {
-		while (true) {
+		while (!this.stop) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -48,4 +49,13 @@ public class BetfairDataUpdater extends DataUpdater {
 			LiveDataFetcher.handleEvent(newMap);
 		}
     }
+
+	@Override
+	public void setStop() {
+		this.stop = true;
+	}
+	
+	public List<EventBetfair> getEvents() {
+		return this.events;
+	}
 }
