@@ -1,23 +1,54 @@
 package org.ic.tennistrader.score;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
-
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.utils.MatchUtils;
 
-import java.io.InputStream;
-import java.net.*;
-
-import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.html.*;
-import com.gargoylesoftware.htmlunit.javascript.*;
-
-import java.util.*;
+import com.gargoylesoftware.htmlunit.AlertHandler;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.ScriptException;
+import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
+import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
+import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
 public class PredictionGui {
 
@@ -32,6 +63,8 @@ public class PredictionGui {
     private String name1, name2;
 
     private UpdateThread updateThread;
+    
+    private String playerFirstNames;
 
     /**
 * For running the prediction gui separately
@@ -41,7 +74,7 @@ public class PredictionGui {
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        String matchName = "Cilic v Verdasco";
+        String matchName = "Gonzalez v Hidalgo";
 
         new PredictionGui(shell, matchName);
 
@@ -67,7 +100,7 @@ public class PredictionGui {
             }
 
             createProbabilityContents(composite); //
-            System.out.println(match.substring(match.indexOf("n")));
+            //System.out.println(match.substring(match.indexOf("n")));
         } catch (Exception e) {
              // if something goes wrong
             log.error(e.getMessage() +
@@ -75,6 +108,21 @@ public class PredictionGui {
             " ");
             e.printStackTrace();
         }
+        
+        
+        // Get scores once to get both players first names for use in statistics
+        String firstScore= null;
+        try {
+             firstScore = updateThread.extractScores(match);
+            // System.out.println("Score: " + this.score);
+        } catch (Exception e) {
+           // System.out.println(e.getMessage());
+        }
+        
+        if (firstScore !=null)
+        {
+        	playerFirstNames = setScores(firstScore);
+        }       
 
         try {
             String stats = getStatistics(match);
@@ -86,11 +134,11 @@ public class PredictionGui {
             e.printStackTrace();
         }
 
-        parent.getDisplay().timerExec(5000, new Runnable() {
+        parent.getDisplay().timerExec(1000, new Runnable() {
             @Override
             public void run() {
                 handleUpdate();
-                parent.getDisplay().timerExec(5000, this);
+                parent.getDisplay().timerExec(500, this);
             }
         });
 
@@ -174,8 +222,8 @@ public class PredictionGui {
             name2 = name2.substring(0, name2.indexOf("/"));
 
     }
-
-    private void setScores(String scores) {
+    
+    private String setScores(String scores) {
         int matchIndex = scores.indexOf(name1);
 
         TableItem item;
@@ -188,7 +236,7 @@ public class PredictionGui {
             item = new TableItem(scoreTable, SWT.NONE);
             item2 = new TableItem(scoreTable, SWT.NONE);
         }
-
+       
         // display server
         if (matchIndex >= 8
                 && scores.substring(matchIndex - 8, matchIndex - 2).compareTo(
@@ -236,8 +284,10 @@ public class PredictionGui {
         }
 
         c = 1;
-
+        
         scores = skipEmptyLines(scores);
+        if(item2.getText(0).compareTo("S") == 0 && scores.startsWith("SERVER")) 
+        	scores = skipLines(scores,1);
         String player2 = scores.substring(0, scores.indexOf(")") + 1);
         scores = scores.substring(scores.indexOf("\n") + 1, scores.length());
         scores.trim();
@@ -270,6 +320,8 @@ public class PredictionGui {
         
         scoreTable.redraw();
         scoreTable.getParent().layout();
+        
+        return (player1.substring(player1.indexOf(" ") +1, player1.indexOf(" (")) + "---" + player2.substring(player2.indexOf(" ") + 1, player2.indexOf(" (")));
         
     }
 
@@ -430,10 +482,17 @@ public class PredictionGui {
                 .getElementsByTagName("body").get(0);
         HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute(
                 "td", "background", "/images/GO_green2.jpg").get(0);
-        player1.setText(name1);
-        player2.setText(name2);
-        System.out.println(name1);
-        System.out.println(name2);
+        if (playerFirstNames!=null)
+        {
+        	player1.setText(playerFirstNames.substring(0, playerFirstNames.indexOf("---")) + " " + name1);
+            player2.setText(playerFirstNames.substring(playerFirstNames.indexOf("---") +3, playerFirstNames.length()) + " " + name2);
+        }
+        else {
+        	player1.setText(name1);
+        	player2.setText(name2);
+        }
+        System.out.println(playerFirstNames.substring(0, playerFirstNames.indexOf("---")) + name1);
+        System.out.println(playerFirstNames.substring(playerFirstNames.indexOf("---") +3, playerFirstNames.length()) + name2);
         HtmlPage intermPage = (HtmlPage) submitButton2.click();
 
         HtmlElement btnContinue = (HtmlElement) intermPage
@@ -466,15 +525,44 @@ public class PredictionGui {
         // Fill in table headers with name players and images
         String player1 = stats.substring(0, stats.indexOf('\n'));
         table.getColumn(0).setText(player1);
-        table.getColumn(0).setImage(
-                getImage("http://www.tennisinsight.com/images/" + player1
-                        + ".JPG"));
+        int index =0;
+        String imagePlayer = "";
+        String cPlayer = player1;
+        while(cPlayer.indexOf(' ') > -1)
+        {
+        	imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' ')) + "%20";
+        	cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1 , cPlayer.length());
+        }
+        imagePlayer += cPlayer;
+        
+        Image imgPlayer = getImage("http://www.tennisinsight.com/images/" + imagePlayer + ".jpg");
+        try{
+        	table.getColumn(0).setImage(imgPlayer);
+        	imgPlayer.dispose();
+        } catch (NullPointerException ex) {
+        	table.getColumn(0).setImage(getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+        }
         stats = skipLines(stats, 2);
+        
         String player2 = stats.substring(0, stats.indexOf('\n'));
         table.getColumn(2).setText(player2);
-        table.getColumn(2).setImage(
-                getImage("http://www.tennisinsight.com/images/" + player2
-                        + ".JPG"));
+        imagePlayer = "";
+        cPlayer = player2;
+        while(cPlayer.indexOf(' ') > -1)
+        {
+        	imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' ')) + "%20";
+        	cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1 , cPlayer.length());
+        }
+        imagePlayer += cPlayer;
+        
+        imgPlayer = getImage("http://www.tennisinsight.com/images/" + imagePlayer + ".jpg");
+        try{
+        	table.getColumn(2).setImage(imgPlayer);
+        	imgPlayer.dispose();
+        } catch ( NullPointerException ex) {
+        	table.getColumn(2).setImage(getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+        }
+        
         stats = skipLines(stats, 2);
 
         // Fill in table
@@ -643,12 +731,13 @@ public class PredictionGui {
             ImageData imgData = loader.load(stream)[0];
             img = new Image(Display.getDefault(), imgData);
         } catch (Exception e) {
-            System.err.println("No image " + url + ", " + e);
+           // System.err.println("No image " + url + ", " + e);
             return null;
         }
         return img;
     }
 
+    
     public void handleUpdate() {
         try {
             String score = updateThread.getScore();
@@ -658,7 +747,7 @@ public class PredictionGui {
                 setScores(score);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -679,13 +768,13 @@ public class PredictionGui {
                     this.score = extractScores(match);
                     // System.out.println("Score: " + this.score);
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                   // System.out.println(e.getMessage());
                 }
 
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                   // System.out.println(e.getMessage());
                 }
             }
 
@@ -704,7 +793,8 @@ public class PredictionGui {
 * firefox browser with javascript and AJAX enabled and fetches score
 * data from website. Finally, it returns the data for further parsing
 */
-        @SuppressWarnings("serial")
+        //@SuppressWarnings("serial")
+        @SuppressWarnings("all")
         private String extractScores(String match) throws Exception {
 
             // Create a webClient to emulate Firefox browser
@@ -712,7 +802,7 @@ public class PredictionGui {
 
             // Customize all webclient listeners and handlers for no
             // warning/info
-            // messages
+            // messages@SuppressWarnings("all")
             webClient.setIncorrectnessListener(new IncorrectnessListener() {
                 public void notify(String string, Object object) {
                 }
@@ -756,6 +846,7 @@ public class PredictionGui {
             webClient.waitForBackgroundJavaScript(3000);
             HtmlPage page = webClient
                     .getPage("http://www.livexscores.com/livescore/tennis");
+            
             // try 20 times to wait .5 second each for filling the page.
             for (int i = 0; i < 2; i++) {
                 // page
@@ -771,7 +862,7 @@ public class PredictionGui {
 
             scores = page.getElementById("allzapasy");
 
-            // Cleverly modify tennis balls gif elements of the website to
+            // Modify tennis balls gif elements of the website to
             // readable text so as to identify the tennis player serving
             Iterator<HtmlElement> iter = (scores.getElementsByAttribute("img",
                     "src", "/img/tennisball.gif")).iterator();
