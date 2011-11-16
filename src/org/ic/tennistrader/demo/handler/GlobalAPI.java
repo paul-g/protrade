@@ -1,6 +1,9 @@
 package org.ic.tennistrader.demo.handler;
 
+import java.rmi.RemoteException;
+
 import org.ic.tennistrader.demo.util.APIContext;
+import org.ic.tennistrader.exceptions.ViewProfileException;
 
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.*;
@@ -145,6 +148,29 @@ public class GlobalAPI {
         }
         
         setHeaderDataToContext(context, resp.getHeader());
+	}
+	
+	//Return Profile info
+	public static ViewProfileResp getProfile(APIContext context) throws ViewProfileException{
+	    // Create the request
+	    ViewProfileReq request = new ViewProfileReq();
+	    request.setHeader(getHeader(context));
+	    // Create the profile
+	    ViewProfile profile = new ViewProfile();
+	    profile.setRequest(request);
+	    // post the query and get the response
+	    ViewProfileResp resp;
+	    try {
+            resp = getStub().viewProfile(profile).getResult();
+            context.getUsage().addCall("viewProfile");
+	    } catch (Exception e) {
+            throw new ViewProfileException(e.getMessage());
+        }
+	    // check if request successful
+	    if (resp.getErrorCode() != ViewProfileErrorEnum.OK)
+	        throw new ViewProfileException(resp.getErrorCode().toString());	    
+	    setHeaderDataToContext(context, resp.getHeader());
+	    return resp;
 	}
 	
 }

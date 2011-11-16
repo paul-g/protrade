@@ -22,6 +22,7 @@ import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
+import org.ic.tennistrader.generated.global.BFGlobalServiceStub.ViewProfileResp;
 import org.ic.tennistrader.utils.MatchUtils;
 
 public class BetfairConnectionHandler {
@@ -172,7 +173,8 @@ public class BetfairConnectionHandler {
 	}
 	
     public static ProfileData getProfileData() throws Exception {
-        ProfileData profileData = new ProfileData();
+        ProfileData profileData = new ProfileData();        
+        // get account funds info
         GetAccountFundsResp ukFunds = ExchangeAPI.getAccountFunds(Exchange.UK,
                 apiContext);
         GetAccountFundsResp ausFunds = ExchangeAPI.getAccountFunds(Exchange.AUS,
@@ -180,8 +182,41 @@ public class BetfairConnectionHandler {
         AccountFunds ukAccountFunds = new AccountFunds(ukFunds);
         AccountFunds ausAccountFunds = new AccountFunds(ausFunds);
         profileData.setAusAccountFunds(ausAccountFunds);
-        profileData.setUkAccountFunds(ukAccountFunds);
+        profileData.setUkAccountFunds(ukAccountFunds);                
+        // get the personal profile info
+        ViewProfileResp resp = GlobalAPI.getProfile(apiContext);        
+        setProfileInfo(profileData, resp);        
         return profileData;
+    }
+
+    private static void setProfileInfo(ProfileData profileData,
+            ViewProfileResp resp) {
+        // set names
+        profileData.setTitle(resp.getTitle().toString());
+        profileData.setFirstName(resp.getFirstName());
+        profileData.setSurname(resp.getSurname());
+        profileData.setUsername(resp.getUserName());
+        // set address info
+        profileData.setAddress1(resp.getAddress1());
+        profileData.setAddress2(resp.getAddress2());
+        profileData.setAddress3(resp.getAddress3());        
+        profileData.setTownCity(resp.getTownCity());
+        profileData.setCountyState(resp.getCountyState());
+        profileData.setPostCode(resp.getPostCode());
+        profileData.setCountry(resp.getCountryOfResidence());
+        // set contact info
+        profileData.setHomePhone(resp.getHomeTelephone());
+        profileData.setMobilePhone(resp.getMobileTelephone());
+        profileData.setEmailAddress(resp.getEmailAddress());
+        // set additional info
+        profileData.setCurrency(resp.getCurrency());
+        profileData.setTimeZone(resp.getTimeZone());        
+        // set Gamcare values
+        profileData.setGamcareFrequency(resp.getGamcareFrequency().toString());
+        profileData.setGamcareLimit(resp.getGamcareLimit());
+        profileData.setGamcareLossLimit(resp.getGamcareLossLimit());
+        profileData.setGamcareLossLimitFrequency(resp.getGamcareLossLimitFrequency().toString());
+        profileData.setGamcareUpdateDate(resp.getGamcareUpdateDate());
     }
 
 	public static APIContext getApiContext() {
