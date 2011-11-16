@@ -5,8 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -16,16 +17,12 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
 import org.swtchart.IAxis;
-import org.swtchart.IAxis.Position;
 import org.swtchart.IErrorBar.ErrorBarType;
-import org.swtchart.IAxisSet;
-import org.swtchart.IBarSeries;
 import org.swtchart.IErrorBar;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
-import org.swtchart.Range;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -71,6 +68,21 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
+		this.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseScrolled(MouseEvent e) {
+				int units = e.count;
+//				IAxis yAxis = getAxisSet().getYAxis(0);
+				System.out.println(e.x + " " + e.y);
+				if (units > 0) {
+					// Rotating forward
+					getAxisSet().zoomIn();
+				} else {
+					// Rotating backward
+					getAxisSet().zoomOut();
+				}
+			}
+		});
 	}
 	
 	private void createSlider(Slider slider) {
@@ -181,8 +193,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		// set serieses values
 		showSeries(i, false);
-		if (!this.isDisposed())
-			this.getAxisSet().adjustRange();
+		if (!this.isDisposed()) this.getAxisSet().getXAxis(0).adjustRange();
 	}
 
 	private ArrayList<Pair<Double, Double>> addLay(ArrayList<Pair<Double, Double>> array, int i,
@@ -471,4 +482,32 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	public ILineSeries getSecondSeries() {
 		return secondSeries;
 	}
+	
+/*	private class ZoomListener implements MouseWheelListener,org.eclipse.swt.events.MouseWheelListener{
+		private UpdatableChart uc;
+		
+		public ZoomListener (UpdatableChart uc) {
+			this.uc = uc;
+		}
+		
+		@Override
+		public void mouseWheelMoved(final MouseWheelEvent e) {
+			int units = e.getWheelRotation();
+			IAxis yAxis = uc.getAxisSet().getYAxis(0);
+			if (units > 0) {
+				// Rotated backward
+				yAxis.zoomOut();
+				System.out.println("Zooming out...");
+			} else {
+				// Rotated forward
+				yAxis.zoomIn();
+				System.out.println("Zooming in...");
+			}
+		}
+
+		@Override
+		public void mouseScrolled(MouseEvent e) {
+			System.out.println(e.toString());
+		}
+	}8*/
 }
