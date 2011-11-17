@@ -498,6 +498,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	public ILineSeries getSecondSeries() {
 		return secondSeries;
 	}
+
+	@Override
+	public void adddisposeListener(Listener listener) {
+		this.addListener(SWT.Dispose, listener);
+	}
 	
 /*	private class ZoomListener implements MouseWheelListener,org.eclipse.swt.events.MouseWheelListener{
 		private UpdatableChart uc;
