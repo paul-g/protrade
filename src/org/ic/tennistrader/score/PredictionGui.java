@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -48,11 +49,11 @@ public class PredictionGui {
     private String name1, name2;
 
     private ScoreUpdateThread updateThread;
-    
+
     private StatisticsUpdateThread statisticsUpdateThread;
 
     private boolean statisticsPopulated = false;
-    
+
     private Composite statisticsTable;
 
     /**
@@ -65,7 +66,7 @@ public class PredictionGui {
 
         Player playerOne = new Player("Novak", "Djokovic");
         Player playerTwo = new Player("Roger", "Federer");
-        
+
         Match match = new HistoricalMatch(playerOne, playerTwo);
 
         new PredictionGui(shell, match);
@@ -87,30 +88,26 @@ public class PredictionGui {
         this.updateThread = new ScoreUpdateThread(match.getName());
 
         this.composite = new Composite(parent, SWT.BORDER);
+
         composite.setLayout(new GridLayout());
 
-        try {
-            createScoreContents(composite, match.getName());
+        ScorePanel sc = new ScorePanel(composite, match);
 
-            createProbabilityContents(composite); //
-            // System.out.println(match.substring(match.indexOf("n")));
-        } catch (Exception e) {
-            // if something goes wrong
-            log.error(e.getMessage() + " ");
-            e.printStackTrace();
-        }
+        ProbabilityPanel probabilityPanel = new ProbabilityPanel(composite);
 
         statisticsTable = createStatisticsTable(parent);
 
         parent.getDisplay().timerExec(1000, new Runnable() {
+
             @Override
             public void run() {
                 handleUpdate();
                 parent.getDisplay().timerExec(5000, this);
             }
         });
-        
+
         parent.getDisplay().timerExec(1000, new Runnable() {
+
             @Override
             public void run() {
                 checkStatisticsUpdate();
@@ -119,74 +116,8 @@ public class PredictionGui {
             }
         });
 
-       // updateThread.start();
+        updateThread.start();
         statisticsUpdateThread.start();
-    }
-
-    private void createScoreContents(Composite composite, String matchName) {
-        final ToolBar toolBar = new ToolBar(composite, SWT.NONE);
-        // toolBar.setBounds(new Rectangle(331, 8, 100, 30));
-
-        final Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
-        MenuItem match = new MenuItem(menu, SWT.PUSH);
-        match.setText("best of 3 set tiebreaker");
-        match = new MenuItem(menu, SWT.PUSH);
-        match.setText("best of 3 set advantage");
-        match = new MenuItem(menu, SWT.PUSH);
-        match.setText("best of 5 set tiebreaker");
-        match = new MenuItem(menu, SWT.PUSH);
-        match.setText("best of 5 set ad(vantage");
-
-        final ToolItem dropdown = new ToolItem(toolBar, SWT.DROP_DOWN);
-        dropdown.setText("Match Type");
-        dropdown.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                if (event.detail == SWT.ARROW) {
-                    Rectangle rect = dropdown.getBounds();
-                    Point pt = new Point(rect.x, rect.y + rect.height);
-                    pt = toolBar.toDisplay(pt);
-                    menu.setLocation(pt.x, pt.y);
-                    menu.setVisible(true);
-                }
-            }
-        });
-
-        this.scoreTable = new Table(composite, SWT.NONE);
-        scoreTable.setBounds(new Rectangle(10, 10, 270, 90));
-        scoreTable.setHeaderVisible(true);
-
-        // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-        scoreTable.setLinesVisible(true);
-        this.columns = new TableColumn[8];
-        columns[0] = new TableColumn(scoreTable, SWT.NONE);
-        columns[0].setText("Serving");
-        columns[1] = new TableColumn(scoreTable, SWT.NONE);
-        columns[1].setText("Score:");
-        columns[2] = new TableColumn(scoreTable, SWT.NONE);
-        columns[2].setText("Set 1");
-        columns[3] = new TableColumn(scoreTable, SWT.NONE);
-        columns[3].setText("Set 2");
-        columns[4] = new TableColumn(scoreTable, SWT.NONE);
-        columns[4].setText("Set 3");
-        columns[5] = new TableColumn(scoreTable, SWT.NONE);
-        columns[5].setText("Set 4");
-        columns[6] = new TableColumn(scoreTable, SWT.NONE);
-        columns[6].setText("Set 5");
-        columns[7] = new TableColumn(scoreTable, SWT.NONE);
-        columns[7].setText("Points");
-
-        // Filling the probabilities table with data
-        scoreTable.setRedraw(false);
-
-        
-        /*this.name1 = matchName.substring(0, matchName.indexOf(" v"));
-        this.name2 = matchName.substring(matchName.indexOf("v ") + 2,
-                matchName.length());
-        if (name1.contains("/"))
-            name1 = name1.substring(0, name1.indexOf("/"));
-        if (name2.contains("/"))
-            name2 = name2.substring(0, name2.indexOf("/"));*/
-
     }
 
     private String setScores(String scores) {
@@ -292,55 +223,6 @@ public class PredictionGui {
                 + "---" + player2.substring(player2.indexOf(" ") + 1,
                 player2.indexOf(" (")));
 
-    }
-
-    private void createProbabilityContents(Composite composite) {
-        final Table table = new Table(composite, SWT.NONE);
-        table.setBounds(new Rectangle(10, 110, 370, 90));
-        table.setHeaderVisible(true);
-        // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-        table.setLinesVisible(true);
-        TableColumn[] column = new TableColumn[5];
-
-        column[0] = new TableColumn(table, SWT.NONE);
-        column[0].setText("Probability of winning:");
-
-        column[1] = new TableColumn(table, SWT.NONE);
-        column[1].setText("Point");
-
-        column[2] = new TableColumn(table, SWT.NONE);
-        column[2].setText("Game");
-
-        column[3] = new TableColumn(table, SWT.NONE);
-        column[3].setText("Set");
-
-        column[4] = new TableColumn(table, SWT.NONE);
-        column[4].setText("Match");
-
-        // Filling the probabilities table with data
-        table.setRedraw(false);
-
-        TableItem item = new TableItem(table, SWT.NONE);
-        int c = 0;
-        item.setText(c++, "Player 1");
-        item.setText(c++, "62%");
-        item.setText(c++, "78%");
-        item.setText(c++, "57%");
-        item.setText(c++, "63%");
-
-        TableItem item2 = new TableItem(table, SWT.NONE);
-        c = 0;
-        item2.setText(c++, "Player 2");
-        item2.setText(c++, "38%");
-        item2.setText(c++, "22%");
-        item2.setText(c++, "43%");
-        item2.setText(c++, "37%");
-
-        table.setRedraw(true);
-
-        for (int i = 0, n = column.length; i < n; i++) {
-            column[i].pack();
-        }
     }
 
     private Composite createStatisticsTable(Composite composite) {

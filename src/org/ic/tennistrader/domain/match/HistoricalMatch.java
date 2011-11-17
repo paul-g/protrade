@@ -14,15 +14,19 @@ import org.ic.tennistrader.utils.Pair;
 public class HistoricalMatch implements Match {
     private String name;
     private String filename;
+    private Score score;
     private Player player1 = new Player();
     private Player player2 = new Player();
     
     public HistoricalMatch(Player player1, Player player2){
+        this.score = new Score(3);
         this.player1 = player1;
         this.player2 = player2;
     }
     
     public HistoricalMatch(String filename){
+        this.score = new Score();
+
         Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
         
         System.out.println(p.getI());
@@ -88,5 +92,10 @@ public class HistoricalMatch implements Match {
     @Override
     public Player getPlayerTwo() {
         return player2;
+    }
+
+    @Override
+    public Score getScore() {
+        return score;
     }
 }

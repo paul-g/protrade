@@ -21,8 +21,10 @@ public class RealMatch implements Match{
 	private Player player2 = new Player();
 	private EventBetfair eventBetfair;
 	private List<MOddsMarketData> marketDatas;
+	private Score score;
 	
 	public RealMatch(String player1, String player2, EventBetfair eb) {
+	    Score score = new Score();
 	    String name = eb.getName();
 	    String[] names = name.split(" v ");
 	    if ( names.length == 2){
@@ -86,5 +88,10 @@ public class RealMatch implements Match{
     @Override
     public Player getPlayerTwo() {
         return player2;
+    }
+
+    @Override
+    public Score getScore() {
+        return score;
     }
 }

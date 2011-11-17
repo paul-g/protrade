@@ -12,9 +12,11 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -155,6 +157,21 @@ public class DisplayPanel implements Listener {
         String st = (match.isInPlay()? "In Progress" : "Not In Progress");
         status.setText("Status: " + st);
         
+        (new Label(composite, SWT.BORDER)).setText("Speed: ");
+        final Combo combo = new Combo (composite, SWT.READ_ONLY);
+        final String[] selectionItems = new String [] {"Alpha", "Bravo", "Charlie"};
+        combo.setItems (selectionItems);
+        Rectangle clientArea = composite.getClientArea ();
+        combo.setBounds (clientArea.x, clientArea.y, 200, 200);
+        
+        combo.addListener(SWT.Selection, new Listener(){
+            @Override
+            public void handleEvent(Event arg0) {
+                System.out.println("Selected " + selectionItems[combo.getSelectionIndex()]);
+                
+            } 
+        });
+
         composite.pack();
     }
 

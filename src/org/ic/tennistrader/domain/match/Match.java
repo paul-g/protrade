@@ -9,6 +9,7 @@ public interface Match {
     public String getName();
     public Player getPlayerOne();
     public Player getPlayerTwo();
+    public Score getScore();
     
     public void registerForUpdate(UpdatableWidget widget, Composite composite);
 }

@@ -168,4 +168,32 @@ public class Score {
 
         return setsWon;
     }
+    
+    public int[] getPlayerOneScore(){
+        return getPlayerScores(PlayerEnum.PLAYER1);
+    }
+    
+    public int[] getPlayerTwoScore(){
+        return getPlayerScores(PlayerEnum.PLAYER2);
+    }
+    
+    private int[] getPlayerScores(PlayerEnum player){
+        
+        int playerScores [] = new int[maximumSetsPlayed];
+        for (int i=0;i<playerScores.length;i++)
+            playerScores[i] = 0;
+        
+        int i = 0;
+        
+        for (SetScore s : scores ){
+            playerScores[i] = (player == PlayerEnum.PLAYER1? s.getPlayerOneGames() : s.getPlayerTwoGames());
+            i++;
+        }
+        
+        return playerScores;
+    }
+    
+    public int getMaximumSetsPlayed(){
+        return maximumSetsPlayed;
+    }
 }
