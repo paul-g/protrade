@@ -16,6 +16,14 @@ public class BetfairUpdaterEvents {
 	}
 	
 	public synchronized void addEvent(EventBetfair eb) {
-		this.events.add(eb);
+		if (!events.contains(eb)) {
+			System.out.println("Add event - " + eb.getBetfairId());
+			this.events.add(eb);
+		}
+	}
+
+	public void removeEvent(EventBetfair eventBetfair) {
+		System.out.println("Remove event - " + eventBetfair.getBetfairId());
+		this.events.remove(eventBetfair);
 	}
 }
