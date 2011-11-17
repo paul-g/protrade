@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
@@ -17,7 +19,7 @@ import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
-    private static DataUpdater dataUpdater = null;
+    private static BetfairDataUpdater dataUpdater = null;
     private static List<DataUpdater> fileUpdaters = new ArrayList<DataUpdater>();
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
@@ -27,7 +29,7 @@ public class LiveDataFetcher {
     private static Composite comp;
     private static boolean started = false;
 
-    public static void registerLive(UpdatableWidget widget, RealMatch match, Composite composite) {
+    public static void registerLive(final UpdatableWidget widget, final RealMatch match, Composite composite) {
         comp = composite;
         if (dataUpdater == null)
             dataUpdater = new BetfairDataUpdater();
@@ -41,6 +43,12 @@ public class LiveDataFetcher {
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
+        widget.setDisposeListener(new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				unregisterLive(widget, match);
+			}        	
+        });
         // start the thread
         if (!started){
             started = true;
@@ -48,7 +56,26 @@ public class LiveDataFetcher {
         }
     }
     
-    public static void registerFromFile(UpdatableWidget widget, Match match, String fileName, final Composite comp) {
+    protected static void unregisterLive(UpdatableWidget widget, RealMatch match) {
+    	System.out.println("Unregister live entered");
+    	List<UpdatableWidget> widgets = null;
+    	if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
+            widgets = listeners.get(match.getEventBetfair().getBetfairId());
+        }
+    	if (widgets != null) {
+    		widgets.remove(widget);
+    		if (widgets.size() == 0)
+    			removeMatch(match);
+    	}
+    	    	
+	}
+
+	private static void removeMatch(RealMatch match) {
+		listeners.remove(match.getEventBetfair().getBetfairId());
+		dataUpdater.removeEvent(match.getEventBetfair());
+	}
+	
+	public static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName, final Composite comp) {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !fileListeners.containsKey(match);
         if (isNewMatch)
@@ -57,12 +84,22 @@ public class LiveDataFetcher {
             widgets = fileListeners.get(match);
         widgets.add(widget);
         fileListeners.put(match, widgets);
+        widget.setDisposeListener(new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				unregisterFromFile(widget, match);
+			}        	
+        });
         if(isNewMatch) {
             startFromFile(match, fileName, comp);
         }
     }
 
-    public static void start() {
+    protected static void unregisterFromFile(UpdatableWidget widget, Match match) {
+		// TODO Auto-generated method stub		
+	}
+
+	public static void start() {
         log.info("Started Betfair thread");
         dataUpdater.start();
     }

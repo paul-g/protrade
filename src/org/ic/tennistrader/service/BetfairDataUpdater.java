@@ -37,6 +37,7 @@ public class BetfairDataUpdater extends DataUpdater {
 			HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
 			List<EventBetfair> events = new ArrayList<EventBetfair>(synchronizedEvents.getEvents());
 			for (EventBetfair eb : events) {
+				System.out.println("Size of events - " + events.size());
 				RealMatch match = matches.get(eb);
 				if (match.isInPlay() || match.getRecentMarketData() == null || i == 0) {
 					MOddsMarketData marketData = BetfairExchangeHandler
@@ -65,5 +66,9 @@ public class BetfairDataUpdater extends DataUpdater {
 	
 	public List<EventBetfair> getEvents() {
 		return synchronizedEvents.getEvents();
+	}
+
+	public void removeEvent(EventBetfair eventBetfair) {
+		synchronizedEvents.removeEvent(eventBetfair);
 	}
 }

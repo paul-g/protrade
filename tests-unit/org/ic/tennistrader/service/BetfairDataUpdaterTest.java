@@ -37,9 +37,9 @@ public class BetfairDataUpdaterTest {
 	
 	@Test
 	public void testNEvents() {		
-		EventBetfair eb = new EventBetfair("name", 1);
 		int n = 5;
 		for (int i = 0; i < n; i++) {
+			EventBetfair eb = new EventBetfair("name", i);
 			RealMatch match = new RealMatch("pl1", "pl2", eb);
 			betfairDataUpdater.addEvent(match);
 		}

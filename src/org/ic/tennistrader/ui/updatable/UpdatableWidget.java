@@ -10,5 +10,5 @@ public interface UpdatableWidget {
 	public void handleUpdate(MOddsMarketData newData);
 	
 	// adds the given listener when the widget is disposed
-	public void adddisposeListener(Listener listener);
+	public void setDisposeListener(Listener listener);
 }

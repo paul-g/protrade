@@ -165,7 +165,7 @@ this.oddsFont = new Font(composite.getDisplay(), "Arial", 12, SWT.BOLD);
     }
 
 	@Override
-	public void adddisposeListener(Listener listener) {
+	public void setDisposeListener(Listener listener) {
 		composite.addListener(SWT.Dispose, listener);
 	}
 }

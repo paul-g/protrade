@@ -500,7 +500,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	@Override
-	public void adddisposeListener(Listener listener) {
+	public void setDisposeListener(Listener listener) {		
 		this.addListener(SWT.Dispose, listener);
 	}
 	
