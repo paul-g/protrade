@@ -105,7 +105,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		
 		ISeriesSet seriesSet = this.getSeriesSet();
 		// build first series
-		String str1 = "back odds " + match.getPlayer1(); 
+		String str1 = "back odds " + match.getPlayerOne(); 
 		firstSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, str1);
 		Color color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		firstSeries.setLineColor(color);
@@ -115,9 +115,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl1Spread.setType(ErrorBarType.BOTH);
 		pl1Spread.setVisible(false);
 		// build second series
-		String str2 = "back odds " + match.getPlayer2();
+		String str2 = "back odds " + match.getPlayerTwo();
 		secondSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
-				"back odds " + match.getPlayer2());
+				"back odds " + match.getPlayerTwo());
 		Color colorSr2 = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		secondSeries.setLineColor(colorSr2);
 		secondSeries.setSymbolSize(4);
@@ -127,7 +127,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl2Spread.setType(ErrorBarType.BOTH);
 		pl2Spread.setVisible(false);
 		// building moving averages player 1
-		String str3 = "MA " + match.getPlayer1(); 
+		String str3 = "MA " + match.getPlayerOne(); 
 		maPl1Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, str3);
 		Color color3 = Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_MAGENTA);
@@ -137,7 +137,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		maPl1Series.setVisible(false);
 
 		// building moving averages player 2
-		String str4 = "MA " + match.getPlayer2(); 
+		String str4 = "MA " + match.getPlayerTwo(); 
 		maPl2Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, str4);
 		Color color4 = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
 		maPl2Series.setLineColor(color4);
@@ -403,24 +403,24 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		});
 
 		final MenuItem player1 = new MenuItem(menu, SWT.CHECK);
-		player1.setText(match.getPlayer1());
+		player1.setText(match.getPlayerOne().toString());
 		this.setMenu(menu);
 		this.getPlotArea().setMenu(menu);
 
 		final MenuItem player2 = new MenuItem(menu, SWT.CHECK);
-		player2.setText(match.getPlayer2());
+		player2.setText(match.getPlayerTwo().toString());
 
 		final MenuItem maPlayer1 = new MenuItem(menu, SWT.CHECK);
-		maPlayer1.setText("MA " + match.getPlayer1());
+		maPlayer1.setText("MA " + match.getPlayerOne());
 
 		final MenuItem maPlayer2 = new MenuItem(menu, SWT.CHECK);
-		maPlayer2.setText("MA " + match.getPlayer2());
+		maPlayer2.setText("MA " + match.getPlayerTwo());
 
 		final MenuItem spPlayer1 = new MenuItem(menu, SWT.CHECK);
-		spPlayer1.setText("Back/Lay Spread " + match.getPlayer1());
+		spPlayer1.setText("Back/Lay Spread " + match.getPlayerOne());
 
 		final MenuItem spPlayer2 = new MenuItem(menu, SWT.CHECK);
-		spPlayer2.setText("Back/Lay Spread " + match.getPlayer2());
+		spPlayer2.setText("Back/Lay Spread " + match.getPlayerTwo());
 		
 		final MenuItem stretch = new MenuItem(menu, SWT.CHECK);
 		stretch.setText("Stretch");

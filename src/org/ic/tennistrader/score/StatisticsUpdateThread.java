@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.ic.tennistrader.domain.match.Match;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -28,20 +29,18 @@ public class StatisticsUpdateThread extends Thread{
     private List<Listener> listeners = new ArrayList<Listener>();
 
     private String page = null;
-    private String playerFirstNames;
-    private String matchName;
+    private Match match;
     
-    public StatisticsUpdateThread(String matchName, String playerFirstNames) {
-        this.matchName = matchName;
-        this.playerFirstNames = playerFirstNames;
+    public StatisticsUpdateThread(Match match) {
+        this.match = match;
     }
     
     @Override
     public void run() {
-        System.out.println(playerFirstNames);
+        System.out.println(match.getPlayerOne().toString() + " vs " + match.getPlayerTwo().toString());
         // keep updating the score
         try {
-            page = getStatistics(matchName);
+            page = getStatistics();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,14 +61,7 @@ public class StatisticsUpdateThread extends Thread{
         }
     }
     
-    private String getStatistics(String matchName) throws Exception {
-       String name1 = matchName.substring(0, matchName.indexOf(" v"));
-       String name2 = matchName.substring(matchName.indexOf("v ") + 2,
-                matchName.length());
-        if (name1.contains("/"))
-            name1 = name1.substring(0, name1.indexOf("/"));
-        if (name2.contains("/"))
-            name2 = name2.substring(0, name2.indexOf("/"));
+    private String getStatistics() throws Exception {
 
         // Create a webClient to emulate Firefox browser
         final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
@@ -96,6 +88,7 @@ public class StatisticsUpdateThread extends Thread{
             public void timeoutError(HtmlPage page, long int1, long int2) {
             }
         });
+        
         webClient.setThrowExceptionOnScriptError(false);
         webClient.setPrintContentOnFailingStatusCode(false);
         webClient.setThrowExceptionOnFailingStatusCode(false);
@@ -143,36 +136,41 @@ public class StatisticsUpdateThread extends Thread{
                 .getElementsByTagName("body").get(0);
         HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute(
                 "td", "background", "/images/GO_green2.jpg").get(0);
-        if (this.playerFirstNames != null) {
-            player1.setText(playerFirstNames.substring(0,
-                    playerFirstNames.indexOf("---"))
-                    + " " + name1);
-            player2.setText(playerFirstNames.substring(
-                    playerFirstNames.indexOf("---") + 3,
-                    playerFirstNames.length())
-                    + " " + name2);
-        } else {
-            player1.setText(name1);
-            player2.setText(name2);
-        }
-        System.out.println(playerFirstNames.substring(0,
-                playerFirstNames.indexOf("---"))
-                + name1);
-        System.out.println(playerFirstNames.substring(
-                playerFirstNames.indexOf("---") + 3, playerFirstNames.length())
-                + name2);
+        
+        player1.setText(match.getPlayerOne().toString());
+        player2.setText(match.getPlayerTwo().toString());
+    
+        System.out.println(match.getPlayerOne().toString());
+        System.out.println(match.getPlayerTwo().toString());
+        
         HtmlPage intermPage = (HtmlPage) submitButton2.click();
 
         HtmlElement btnContinue = (HtmlElement) intermPage
                 .getElementById("addinsight");
         System.out.println("Successfully searched players");
-        HtmlPage page;
+        HtmlPage page = null;
         if (btnContinue != null)
             page = (HtmlPage) btnContinue.click();
         else
             page = intermPage;
-        webClient.closeAllWindows();
+     
+        
 
+        for (int i = 0; i < 20; i++) {
+            System.out.println("Waiting");
+            // page
+            String stats = page.asText();
+            
+            if ( stats.indexOf("Head to Head Match Preview") != -1 ) 
+                break;
+            
+            synchronized (page) {
+                page.wait(500);
+            }
+        }
+        
+        webClient.closeAllWindows();
+        
         return (page.asText());
     }
 

@@ -7,8 +7,8 @@ import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 public interface Match {    
     public boolean isInPlay();
     public String getName();
-    public String getPlayer1();
-    public String getPlayer2();
+    public Player getPlayerOne();
+    public Player getPlayerTwo();
     
     public void registerForUpdate(UpdatableWidget widget, Composite composite);
 }

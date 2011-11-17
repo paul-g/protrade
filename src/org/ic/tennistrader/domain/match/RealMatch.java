@@ -17,7 +17,8 @@ import org.ic.tennistrader.ui.updatable.UpdatableWidget;
  *
  */
 public class RealMatch implements Match{
-	private String player1, player2;
+	private Player player1 = new Player();
+	private Player player2 = new Player();
 	private EventBetfair eventBetfair;
 	private List<MOddsMarketData> marketDatas;
 	
@@ -25,8 +26,8 @@ public class RealMatch implements Match{
 	    String name = eb.getName();
 	    String[] names = name.split(" v ");
 	    if ( names.length == 2){
-	        this.player1 = names[0];
-		    this.player2 = names[1];
+	        this.player1.setLastname(names[0]);
+		    this.player2.setLastname(names[1]);
 	    }
 		this.setEventBetfair(eb);
 		setMarketDatas(new ArrayList<MOddsMarketData>());
@@ -78,12 +79,12 @@ public class RealMatch implements Match{
 	}
 
     @Override
-    public String getPlayer1() {
+    public Player getPlayerOne() {
         return player1;
     }
 
     @Override
-    public String getPlayer2() {
+    public Player getPlayerTwo() {
         return player2;
     }
 }

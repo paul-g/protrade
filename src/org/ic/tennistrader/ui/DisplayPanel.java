@@ -64,8 +64,8 @@ public class DisplayPanel implements Listener {
         folder.setSelection(cti);
     }
 
-    private void addPredictionGui(Composite composite, String title) {
-        new PredictionGui(composite, title);
+    private void addPredictionGui(Composite composite, Match match) {
+        new PredictionGui(composite, match);
     }
 
     public void handleEvent(Event event) {
@@ -113,9 +113,12 @@ public class DisplayPanel implements Listener {
             addMarketDataGrid(infoAndBack, match);
 
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
-			if (match.isInPlay()) {
-				addPredictionGui(horizontal, matchName);
-			}
+            
+			/*if (match.isInPlay()) {
+				addPredictionGui(horizontal, match);
+			}*/
+            
+			addPredictionGui(horizontal, match);
             
 			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
 			addChart(chartSash, match);

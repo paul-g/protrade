@@ -30,6 +30,9 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.Main;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
+import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.utils.MatchUtils;
 
 public class PredictionGui {
@@ -48,13 +51,9 @@ public class PredictionGui {
     
     private StatisticsUpdateThread statisticsUpdateThread;
 
-    private boolean statsticsPopulated = false;
+    private boolean statisticsPopulated = false;
     
-    private boolean statisticsThreadStarted = false;
-
     private Composite statisticsTable;
-
-    private String match;
 
     /**
      * For running the prediction gui separately
@@ -64,9 +63,12 @@ public class PredictionGui {
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        String matchName = "Bachinger v Stebe";
+        Player playerOne = new Player("Novak", "Djokovic");
+        Player playerTwo = new Player("Roger", "Federer");
+        
+        Match match = new HistoricalMatch(playerOne, playerTwo);
 
-        new PredictionGui(shell, matchName);
+        new PredictionGui(shell, match);
 
         shell.open();
 
@@ -79,18 +81,16 @@ public class PredictionGui {
 
     }
 
-    public PredictionGui(final Composite parent, String match) {
+    public PredictionGui(final Composite parent, Match match) {
+        this.statisticsUpdateThread = new StatisticsUpdateThread(match);
 
-        this.updateThread = new ScoreUpdateThread(match);
+        this.updateThread = new ScoreUpdateThread(match.getName());
 
         this.composite = new Composite(parent, SWT.BORDER);
-        this.match = match;
         composite.setLayout(new GridLayout());
 
         try {
-            if (MatchUtils.isMatch(match)) {
-                createScoreContents(composite, match);
-            }
+            createScoreContents(composite, match.getName());
 
             createProbabilityContents(composite); //
             // System.out.println(match.substring(match.indexOf("n")));
@@ -109,8 +109,18 @@ public class PredictionGui {
                 parent.getDisplay().timerExec(5000, this);
             }
         });
+        
+        parent.getDisplay().timerExec(1000, new Runnable() {
+            @Override
+            public void run() {
+                checkStatisticsUpdate();
+                if (!statisticsPopulated)
+                    parent.getDisplay().timerExec(5000, this);
+            }
+        });
 
-        updateThread.start();
+       // updateThread.start();
+        statisticsUpdateThread.start();
     }
 
     private void createScoreContents(Composite composite, String matchName) {
@@ -168,13 +178,14 @@ public class PredictionGui {
         // Filling the probabilities table with data
         scoreTable.setRedraw(false);
 
-        this.name1 = matchName.substring(0, matchName.indexOf(" v"));
+        
+        /*this.name1 = matchName.substring(0, matchName.indexOf(" v"));
         this.name2 = matchName.substring(matchName.indexOf("v ") + 2,
                 matchName.length());
         if (name1.contains("/"))
             name1 = name1.substring(0, name1.indexOf("/"));
         if (name2.contains("/"))
-            name2 = name2.substring(0, name2.indexOf("/"));
+            name2 = name2.substring(0, name2.indexOf("/"));*/
 
     }
 
@@ -596,36 +607,23 @@ public class PredictionGui {
         try {
             String score = updateThread.getScore();
             System.out.println("Fetched score");
-            String firstNames = null;
             if (score != null) {
                 System.out.println("Not null! Updating...");
-                firstNames = setScores(score);
+                setScores(score);
             }
-
-            checkStatisticsUpdate(firstNames);
 
         } catch (Exception e) {
             // e.printStackTrace();
         }
     }
 
-    private void checkStatisticsUpdate(String firstNames) {
-        if (!statisticsThreadStarted && firstNames != null) {
-            System.out.println(firstNames);
-            this.statisticsUpdateThread = new StatisticsUpdateThread(match,
-                    firstNames);
-            this.statisticsUpdateThread.start();
-            statisticsThreadStarted = true;
-        }
+    private void checkStatisticsUpdate() {
 
-        if (!statsticsPopulated) {
+        if (!statisticsPopulated) {
             try {
-                String stats = null;
-                if (this.statisticsUpdateThread != null)
-                    stats = this.statisticsUpdateThread.getPage();
-
+                String stats = this.statisticsUpdateThread.getPage();
                 if (stats != null) {
-                    statsticsPopulated = true;
+                    statisticsPopulated = true;
                     parseStatistics(stats, this.statisticsTable);
                 }
             } catch (Exception e) {
