@@ -4,74 +4,168 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Score {
-    
-    private enum Player{
-        PLAYER1, PLAYER2;
-    }
-    
-    // AD = 50
+
+    public static final int AD = 50;
+
     private int playerOnePoints;
     private int playerTwoPoints;
-    
+
     private List<SetScore> scores = new ArrayList<SetScore>();
     private SetScore currentSet;
     
-    public Score(){
+    private int maximumSetsPlayed = 3;
+
+    public Score() {
+        init();
+    }
+    
+    public Score(int maximumSetsPlayed) {
+        init();
+        this.maximumSetsPlayed = maximumSetsPlayed;
+    }
+
+    private void init() {
+        playerOnePoints = 0;
+        playerTwoPoints = 0;
         currentSet = new SetScore();
         scores.add(currentSet);
     }
-    
-    public void addPlayerOnePoint(){
+
+    private void addPlayerPoint(PlayerEnum player) {
+        if (isFinished()) 
+            return;
+        
+        int playerPoints = (player.equals(PlayerEnum.PLAYER1) ? playerOnePoints
+                : playerTwoPoints);
+        
         if (currentSet.isTiebreak())
-            gameWon(Player.PLAYER1);
-        
-        switch (playerOnePoints){
-            case 0 :
-            case 15 : playerOnePoints += 15; break; 
-            case 30 : playerOnePoints += 10; break;
-            case 40 : 
-                if (playerTwoPoints < 40)
-                    currentSet.addPlayerOneGame();
-                else { 
-                    if (playerTwoPoints == 50 )
+            gameWon(player);
+
+        switch (playerPoints) {
+            case 0:
+            case 15:
+                playerPoints += 15;
+                break;
+            case 30:
+                playerPoints += 10;
+                break;
+            case 40:
+                if (opponentScore(player) < 40) {
+                    gameWon(player);
+                    return;
+                } else {
+                    if (opponentScore(player) == AD)
                         playerOnePoints = playerTwoPoints = 40;
-                    else 
-                        currentSet.addPlayerOneGame();
+                    else
+                        playerPoints = AD;
                 }
+                ;
+                break;
+            case 50:
+                gameWon(player);
+                return;
         }
+
+        switch (player) {
+            case PLAYER1:
+                playerOnePoints = playerPoints;
+                break;
+            case PLAYER2:
+                playerTwoPoints = playerPoints;
+                break;
+        }
+
     }
-    
-    public void addPlayerTwoPoint(){
-        if (currentSet.isTiebreak())
-            gameWon(Player.PLAYER2);
-        
-        switch (playerTwoPoints){
-            case 0 :
-            case 15 : playerTwoPoints += 15; break; 
-            case 30 : playerTwoPoints += 10; break;
-            case 40 : 
-                if (playerOnePoints < 40)
-                    gameWon(Player.PLAYER2);
-                else { 
-                    if (playerOnePoints == 50 )
-                        playerOnePoints = playerTwoPoints = 40;
-                    else 
-                        gameWon(Player.PLAYER2);
-                }
-        }
+
+    public void addPlayerOnePoint() {
+        addPlayerPoint(PlayerEnum.PLAYER1);
     }
-    
-    private void gameWon(Player player){
-        switch (player){
-            case PLAYER1: currentSet.addPlayerOneGame(); break;
-            case PLAYER2: currentSet.addPlayerTwoGame(); break;
+
+    public void addPlayerTwoPoint() {
+        addPlayerPoint(PlayerEnum.PLAYER2);
+    }
+
+    private void gameWon(PlayerEnum player) {
+
+        switch (player) {
+            case PLAYER1:
+                currentSet.addPlayerOneGame();
+                break;
+            case PLAYER2:
+                currentSet.addPlayerTwoGame();
+                break;
+            default:
+                break;
         }
-        
+
         playerOnePoints = 0;
         playerTwoPoints = 0;
-        
-        //if (currentSet.isFinished())
-        
-        
+
+        if (currentSet.isFinished()) {
+            SetScore newSet = new SetScore();
+            scores.add(newSet);
+            currentSet = newSet;
+        }
+
+    }
+
+    private Integer opponentScore(PlayerEnum player) {
+        switch (player) {
+            case PLAYER1:
+                return playerTwoPoints;
+            case PLAYER2:
+                return playerOnePoints;
+            default:
+                return 0;
+        }
+    }
+
+    public SetScore getCurrentSetScore() {
+        return currentSet;
+    }
+
+    public int getPlayerOnePoints() {
+        return playerOnePoints;
+    }
+
+    public int getPlayerTwoPoints() {
+        return playerTwoPoints;
+    }
+
+    public SetScore getSetScore(int setNumber) {
+        // bug found -> was >1 instead of >=1
+        // bug found -> was < scores.size() instead of <= scores.size()
+        if (setNumber <= scores.size() && setNumber >= 1)
+            return scores.get(setNumber - 1);
+        else
+            return null;
+    }
+
+    public boolean isFinished() {
+        int win = maximumSetsPlayed / 2 + 1;
+        if ( getPlayerOneSets() >= win ) 
+            return true;
+        if ( getPlayerTwoSets() >= win ) 
+            return true;
+        return false;
+    }
+
+    public int getPlayerOneSets() {
+        return getPlayerSets(PlayerEnum.PLAYER1);
+    }
+
+    public int getPlayerTwoSets() {
+        return getPlayerSets(PlayerEnum.PLAYER2);
+    }
+
+    public int getPlayerSets(PlayerEnum player) {
+
+        int setsWon = 0;
+
+        for (SetScore s : scores)
+            if (s.getWinner() == player)
+                setsWon++;
+
+        return setsWon;
     }
 }

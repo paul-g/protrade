@@ -1,10 +1,8 @@
 package org.ic.tennistrader.score;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -34,22 +32,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.utils.MatchUtils;
 
-import com.gargoylesoftware.htmlunit.AlertHandler;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.ScriptException;
-import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.html.DomNode;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
-import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
-
 public class PredictionGui {
 
     private static Logger log = Logger.getLogger(Main.class);
@@ -62,19 +44,27 @@ public class PredictionGui {
 
     private String name1, name2;
 
-    private UpdateThread updateThread;
+    private ScoreUpdateThread updateThread;
     
-    private String playerFirstNames;
+    private StatisticsUpdateThread statisticsUpdateThread;
+
+    private boolean statsticsPopulated = false;
+    
+    private boolean statisticsThreadStarted = false;
+
+    private Composite statisticsTable;
+
+    private String match;
 
     /**
-* For running the prediction gui separately
-*/
+     * For running the prediction gui separately
+     */
     public static void main(String args[]) {
         final Display display = new Display();
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        String matchName = "Gonzalez v Hidalgo";
+        String matchName = "Bachinger v Stebe";
 
         new PredictionGui(shell, matchName);
 
@@ -90,8 +80,11 @@ public class PredictionGui {
     }
 
     public PredictionGui(final Composite parent, String match) {
-        this.updateThread = new UpdateThread(match);
+
+        this.updateThread = new ScoreUpdateThread(match);
+
         this.composite = new Composite(parent, SWT.BORDER);
+        this.match = match;
         composite.setLayout(new GridLayout());
 
         try {
@@ -100,62 +93,24 @@ public class PredictionGui {
             }
 
             createProbabilityContents(composite); //
-            //System.out.println(match.substring(match.indexOf("n")));
-        } catch (Exception e) {
-             // if something goes wrong
-            log.error(e.getMessage() +
-
-            " ");
-            e.printStackTrace();
-        }
-        
-        
-        // Get scores once to get both players first names for use in statistics
-        String firstScore= null;
-        try {
-             firstScore = updateThread.extractScores(match);
-            // System.out.println("Score: " + this.score);
-        } catch (Exception e) {
-           // System.out.println(e.getMessage());
-        }
-        
-        if (firstScore !=null)
-        {
-        	playerFirstNames = setScores(firstScore);
-        }       
-
-        try {
-            String stats = getStatistics(match);
-            Composite table = createStatisticsTable(parent);
-            parseStatistics(stats, table);
+            // System.out.println(match.substring(match.indexOf("n")));
         } catch (Exception e) {
             // if something goes wrong
             log.error(e.getMessage() + " ");
             e.printStackTrace();
         }
 
+        statisticsTable = createStatisticsTable(parent);
+
         parent.getDisplay().timerExec(1000, new Runnable() {
             @Override
             public void run() {
                 handleUpdate();
-                parent.getDisplay().timerExec(500, this);
+                parent.getDisplay().timerExec(5000, this);
             }
         });
 
-        /*
-* parent.getDisplay().asyncExec(new Runnable() {
-*
-* @Override public void run() { updateThread.run(); } });
-*/
-
-        /*
-* parent.getDisplay().timerExec(5000, new Runnable() {
-*
-* @Override public void run() { updateThread.run(); } });
-*/
-
         updateThread.start();
-
     }
 
     private void createScoreContents(Composite composite, String matchName) {
@@ -214,15 +169,15 @@ public class PredictionGui {
         scoreTable.setRedraw(false);
 
         this.name1 = matchName.substring(0, matchName.indexOf(" v"));
-        this.name2 = matchName.substring(matchName.indexOf("v ") + 2, matchName
-                .length());
+        this.name2 = matchName.substring(matchName.indexOf("v ") + 2,
+                matchName.length());
         if (name1.contains("/"))
             name1 = name1.substring(0, name1.indexOf("/"));
         if (name2.contains("/"))
             name2 = name2.substring(0, name2.indexOf("/"));
 
     }
-    
+
     private String setScores(String scores) {
         int matchIndex = scores.indexOf(name1);
 
@@ -236,7 +191,7 @@ public class PredictionGui {
             item = new TableItem(scoreTable, SWT.NONE);
             item2 = new TableItem(scoreTable, SWT.NONE);
         }
-       
+
         // display server
         if (matchIndex >= 8
                 && scores.substring(matchIndex - 8, matchIndex - 2).compareTo(
@@ -264,16 +219,16 @@ public class PredictionGui {
             // //////////////Player 1 data
             // Skip odds
             if (scores.charAt(0) != '\t')
-                scores = scores.substring(scores.indexOf("\n") + 1, scores
-                        .length());
+                scores = scores.substring(scores.indexOf("\n") + 1,
+                        scores.length());
             // skip initial tab
             scores = scores.substring(1, scores.length());
 
             // 5 sets
             for (int i = 0; i < 5; i++) {
                 item.setText(c++, scores.substring(0, scores.indexOf("\t")));
-                scores = scores.substring(scores.indexOf("\t") + 1, scores
-                        .length());
+                scores = scores.substring(scores.indexOf("\t") + 1,
+                        scores.length());
             }
 
             // Points
@@ -284,10 +239,10 @@ public class PredictionGui {
         }
 
         c = 1;
-        
+
         scores = skipEmptyLines(scores);
-        if(item2.getText(0).compareTo("S") == 0 && scores.startsWith("SERVER")) 
-        	scores = skipLines(scores,1);
+        if (item2.getText(0).compareTo("S") == 0 && scores.startsWith("SERVER"))
+            scores = skipLines(scores, 1);
         String player2 = scores.substring(0, scores.indexOf(")") + 1);
         scores = scores.substring(scores.indexOf("\n") + 1, scores.length());
         scores.trim();
@@ -317,12 +272,15 @@ public class PredictionGui {
         for (int i = 0, n = columns.length; i < n; i++) {
             columns[i].pack();
         }
-        
+
         scoreTable.redraw();
         scoreTable.getParent().layout();
-        
-        return (player1.substring(player1.indexOf(" ") +1, player1.indexOf(" (")) + "---" + player2.substring(player2.indexOf(" ") + 1, player2.indexOf(" (")));
-        
+
+        return (player1.substring(player1.indexOf(" ") + 1,
+                player1.indexOf(" ("))
+                + "---" + player2.substring(player2.indexOf(" ") + 1,
+                player2.indexOf(" (")));
+
     }
 
     private void createProbabilityContents(Composite composite) {
@@ -401,113 +359,6 @@ public class PredictionGui {
         return tree;
     }
 
-    private String getStatistics(String matchName) throws Exception {
-        this.name1 = matchName.substring(0, matchName.indexOf(" v"));
-        this.name2 = matchName.substring(matchName.indexOf("v ") + 2, matchName
-                .length());
-        if (name1.contains("/"))
-            name1 = name1.substring(0, name1.indexOf("/"));
-        if (name2.contains("/"))
-            name2 = name2.substring(0, name2.indexOf("/"));
-
-        // Create a webClient to emulate Firefox browser
-        final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
-
-        // Customize all webclient listeners and handlers for no warning/info
-        // messages
-        webClient.setIncorrectnessListener(new IncorrectnessListener() {
-            public void notify(String string, Object object) {
-            }
-        });
-        webClient.setCssErrorHandler(new SilentCssErrorHandler());
-        webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
-            public void malformedScriptURL(HtmlPage page, String string,
-                    MalformedURLException exception) {
-            }
-
-            public void loadScriptError(HtmlPage page, URL url,
-                    Exception exception) {
-            }
-
-            public void scriptException(HtmlPage page, ScriptException exception) {
-            }
-
-            public void timeoutError(HtmlPage page, long int1, long int2) {
-            }
-        });
-        webClient.setThrowExceptionOnScriptError(false);
-        webClient.setPrintContentOnFailingStatusCode(false);
-        webClient.setThrowExceptionOnFailingStatusCode(false);
-        webClient.setPopupBlockerEnabled(true);
-        webClient.setAlertHandler(new AlertHandler() {
-            public void handleAlert(Page page, String message) {
-            }
-        });
-        webClient.setThrowExceptionOnScriptError(false);
-        webClient.setActiveXNative(true);
-        webClient.setCssEnabled(true);
-        webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
-            @Override
-            public boolean processSynchron(HtmlPage page, WebRequest request,
-                    boolean async) {
-                return true;
-            }
-        });
-
-        webClient.setJavaScriptEnabled(true);
-        HtmlPage PageLogin = webClient
-                .getPage("http://www.tennisinsight.com/scoresheet.php");
-        HtmlElement login = (HtmlElement) PageLogin.getElementById("LOGIN")
-                .getElementsByTagName("form").get(0);
-
-        HtmlTextInput name = (HtmlTextInput) PageLogin.getElementsByTagName(
-                "input").get(0);
-        HtmlPasswordInput pass = (HtmlPasswordInput) login
-                .getElementsByTagName("input").get(1);
-        HtmlElement submitButton = (HtmlElement) login.getElementsByTagName(
-                "img").get(0);
-
-        name.setText("radubal");
-        pass.setText("placintacumere");
-
-        System.out.println("Logging in to site");
-        HtmlPage Loggedpage = (HtmlPage) submitButton.click();
-        System.out.println("Successfully Logged in to site");
-
-        HtmlTextInput player1 = (HtmlTextInput) Loggedpage
-                .getElementByName("match_preview_search1");
-        HtmlTextInput player2 = (HtmlTextInput) Loggedpage
-                .getElementByName("match_preview_search2");
-        HtmlElement body = (HtmlElement) Loggedpage
-                .getElementsByTagName("body").get(0);
-        HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute(
-                "td", "background", "/images/GO_green2.jpg").get(0);
-        if (playerFirstNames!=null)
-        {
-        	player1.setText(playerFirstNames.substring(0, playerFirstNames.indexOf("---")) + " " + name1);
-            player2.setText(playerFirstNames.substring(playerFirstNames.indexOf("---") +3, playerFirstNames.length()) + " " + name2);
-        }
-        else {
-        	player1.setText(name1);
-        	player2.setText(name2);
-        }
-        System.out.println(playerFirstNames.substring(0, playerFirstNames.indexOf("---")) + name1);
-        System.out.println(playerFirstNames.substring(playerFirstNames.indexOf("---") +3, playerFirstNames.length()) + name2);
-        HtmlPage intermPage = (HtmlPage) submitButton2.click();
-
-        HtmlElement btnContinue = (HtmlElement) intermPage
-                .getElementById("addinsight");
-        System.out.println("Successfully searched players");
-        HtmlPage page;
-        if (btnContinue != null)
-            page = (HtmlPage) btnContinue.click();
-        else
-            page = intermPage;
-        webClient.closeAllWindows();
-
-        return (page.asText());
-    }
-
     private void parseStatistics(String stats, Composite comp) {
         Tree table = (Tree) comp;
         stats = stats.substring(stats.indexOf("Head to Head Match Preview"),
@@ -516,53 +367,61 @@ public class PredictionGui {
 
         // System.out.println(stats + "/nEND OF CUT");
         /*
-* try { BufferedReader in = new BufferedReader(new
-* FileReader("/home/radu/tennis-trader/images/data.txt")); String str;
-* while ((str = in.readLine()) != null) { stats += str+ '\n'; }
-* in.close(); } catch (IOException e) { }
-*/
+         * try { BufferedReader in = new BufferedReader(new
+         * FileReader("/home/radu/tennis-trader/images/data.txt")); String str;
+         * while ((str = in.readLine()) != null) { stats += str+ '\n'; }
+         * in.close(); } catch (IOException e) { }
+         */
 
         // Fill in table headers with name players and images
         String player1 = stats.substring(0, stats.indexOf('\n'));
         table.getColumn(0).setText(player1);
-        int index =0;
+        int index = 0;
         String imagePlayer = "";
         String cPlayer = player1;
-        while(cPlayer.indexOf(' ') > -1)
-        {
-        	imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' ')) + "%20";
-        	cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1 , cPlayer.length());
+        while (cPlayer.indexOf(' ') > -1) {
+            imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' '))
+                    + "%20";
+            cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1,
+                    cPlayer.length());
         }
         imagePlayer += cPlayer;
-        
-        Image imgPlayer = getImage("http://www.tennisinsight.com/images/" + imagePlayer + ".jpg");
-        try{
-        	table.getColumn(0).setImage(imgPlayer);
-        	imgPlayer.dispose();
+
+        Image imgPlayer = getImage("http://www.tennisinsight.com/images/"
+                + imagePlayer + ".jpg");
+        try {
+            table.getColumn(0).setImage(imgPlayer);
+            imgPlayer.dispose();
         } catch (NullPointerException ex) {
-        	table.getColumn(0).setImage(getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+            table.getColumn(0)
+                    .setImage(
+                            getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
         }
         stats = skipLines(stats, 2);
-        
+
         String player2 = stats.substring(0, stats.indexOf('\n'));
         table.getColumn(2).setText(player2);
         imagePlayer = "";
         cPlayer = player2;
-        while(cPlayer.indexOf(' ') > -1)
-        {
-        	imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' ')) + "%20";
-        	cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1 , cPlayer.length());
+        while (cPlayer.indexOf(' ') > -1) {
+            imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' '))
+                    + "%20";
+            cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1,
+                    cPlayer.length());
         }
         imagePlayer += cPlayer;
-        
-        imgPlayer = getImage("http://www.tennisinsight.com/images/" + imagePlayer + ".jpg");
-        try{
-        	table.getColumn(2).setImage(imgPlayer);
-        	imgPlayer.dispose();
-        } catch ( NullPointerException ex) {
-        	table.getColumn(2).setImage(getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+
+        imgPlayer = getImage("http://www.tennisinsight.com/images/"
+                + imagePlayer + ".jpg");
+        try {
+            table.getColumn(2).setImage(imgPlayer);
+            imgPlayer.dispose();
+        } catch (NullPointerException ex) {
+            table.getColumn(2)
+                    .setImage(
+                            getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
         }
-        
+
         stats = skipLines(stats, 2);
 
         // Fill in table
@@ -584,9 +443,7 @@ public class PredictionGui {
 
         final TreeItem basics = new TreeItem(table, SWT.MULTI | SWT.CENTER);
         basics.setText(1, "Basics");
-        basics
-                .setForeground(table.getDisplay().getSystemColor(
-                        SWT.COLOR_WHITE));
+        basics.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
         basics.setBackground(table.getDisplay().getSystemColor(
                 SWT.COLOR_DARK_GREEN));
         basics.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
@@ -595,8 +452,8 @@ public class PredictionGui {
             TreeItem item = new TreeItem(basics, SWT.CENTER);
             item.setText(0, list.get(i));
             item.setText(1, list.get(i + 6));
-            item.setBackground(1, table.getDisplay().getSystemColor(
-                    SWT.COLOR_YELLOW));
+            item.setBackground(1,
+                    table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
             item.setText(2, list.get(i + 12));
         }
 
@@ -611,14 +468,14 @@ public class PredictionGui {
                 SWT.COLOR_DARK_GREEN));
         match.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
 
-        stats = stats.substring(stats.indexOf("Match Statistics\t") + 17, stats
-                .length());
+        stats = stats.substring(stats.indexOf("Match Statistics\t") + 17,
+                stats.length());
         stats = skipEmptyLines(stats);
 
         // Match W/L
         TreeItem item1 = new TreeItem(match, SWT.CENTER);
-        item1.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
+        item1.setBackground(1,
+                table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
         item1.setText(0, stats.substring(0, stats.indexOf(")") + 1));
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
         item1.setText(1, "Match W/L %");
@@ -628,8 +485,8 @@ public class PredictionGui {
 
         // Set W/L
         TreeItem item2 = new TreeItem(match, SWT.CENTER);
-        item2.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
+        item2.setBackground(1,
+                table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
         item2.setText(0, stats.substring(0, stats.indexOf(")") + 1));
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
         item2.setText(1, "Set W/L %");
@@ -639,8 +496,8 @@ public class PredictionGui {
 
         // Game W/L
         TreeItem item3 = new TreeItem(match, SWT.CENTER);
-        item3.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
+        item3.setBackground(1,
+                table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
         item3.setText(0, stats.substring(0, stats.indexOf(")") + 1));
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
         item3.setText(1, "Game W/L %");
@@ -650,8 +507,8 @@ public class PredictionGui {
 
         // Points W/L
         TreeItem item4 = new TreeItem(match, SWT.CENTER);
-        item4.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
+        item4.setBackground(1,
+                table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
         item4.setText(0, stats.substring(0, stats.indexOf("%") + 1));
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
         item4.setText(1, "Points W/L %");
@@ -661,8 +518,8 @@ public class PredictionGui {
 
         // Tiebreaks W/L
         TreeItem item5 = new TreeItem(match, SWT.CENTER);
-        item5.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
+        item5.setBackground(1,
+                table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
         item5.setText(0, stats.substring(0, stats.indexOf(")") + 1));
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
         item5.setText(1, "Tiebreaks W/L %");
@@ -672,8 +529,8 @@ public class PredictionGui {
 
         // Tiebreaks W/L
         TreeItem item6 = new TreeItem(match, SWT.CENTER);
-        item6.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
+        item6.setBackground(1,
+                table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
         item6.setText(0, stats.substring(0, stats.indexOf("\t")));
         stats = stats.substring(stats.indexOf("Set") + 4, stats.length());
         item6.setText(1, "Tiebreaks/Set");
@@ -686,9 +543,7 @@ public class PredictionGui {
 
         TreeItem serves = new TreeItem(table, SWT.CENTER);
         serves.setText(1, "Serve Stats");
-        serves
-                .setForeground(table.getDisplay().getSystemColor(
-                        SWT.COLOR_WHITE));
+        serves.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
         serves.setBackground(table.getDisplay().getSystemColor(
                 SWT.COLOR_DARK_GREEN));
         serves.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
@@ -698,8 +553,8 @@ public class PredictionGui {
             item.setText(0, stats.substring(0, stats.indexOf("\t")));
             stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
             item.setText(1, stats.substring(0, stats.indexOf("\t")));
-            item.setBackground(1, table.getDisplay().getSystemColor(
-                    SWT.COLOR_YELLOW));
+            item.setBackground(1,
+                    table.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
             stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
             item.setText(2, stats.substring(0, stats.indexOf("\n")));
             stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
@@ -731,160 +586,53 @@ public class PredictionGui {
             ImageData imgData = loader.load(stream)[0];
             img = new Image(Display.getDefault(), imgData);
         } catch (Exception e) {
-           // System.err.println("No image " + url + ", " + e);
+            // System.err.println("No image " + url + ", " + e);
             return null;
         }
         return img;
     }
 
-    
     public void handleUpdate() {
         try {
             String score = updateThread.getScore();
             System.out.println("Fetched score");
+            String firstNames = null;
             if (score != null) {
                 System.out.println("Not null! Updating...");
-                setScores(score);
+                firstNames = setScores(score);
             }
+
+            checkStatisticsUpdate(firstNames);
+
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
-    private class UpdateThread extends Thread {
-
-        String score;
-        String match;
-
-        public UpdateThread(String match) {
-            this.match = match;
+    private void checkStatisticsUpdate(String firstNames) {
+        if (!statisticsThreadStarted && firstNames != null) {
+            System.out.println(firstNames);
+            this.statisticsUpdateThread = new StatisticsUpdateThread(match,
+                    firstNames);
+            this.statisticsUpdateThread.start();
+            statisticsThreadStarted = true;
         }
 
-        @Override
-        public void run() {
-            // keep updating the score
-            while (true) {
-                try {
-                    this.score = extractScores(match);
-                    // System.out.println("Score: " + this.score);
-                } catch (Exception e) {
-                   // System.out.println(e.getMessage());
-                }
+        if (!statsticsPopulated) {
+            try {
+                String stats = null;
+                if (this.statisticsUpdateThread != null)
+                    stats = this.statisticsUpdateThread.getPage();
 
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                   // System.out.println(e.getMessage());
+                if (stats != null) {
+                    statsticsPopulated = true;
+                    parseStatistics(stats, this.statisticsTable);
                 }
+            } catch (Exception e) {
+                // if something goes wrong
+                log.error(e.getMessage() + " ");
+                e.printStackTrace();
             }
-
-            /*
-* try { Thread.sleep(40000); } catch (InterruptedException e) { //
-* TODO Auto-generated catch block e.printStackTrace(); }
-*/
-        }
-
-        public String getScore() {
-            return this.score;
-        }
-
-        /*
-* Gets real-time scores from http://www.livexscores.com/ Emulates a
-* firefox browser with javascript and AJAX enabled and fetches score
-* data from website. Finally, it returns the data for further parsing
-*/
-        //@SuppressWarnings("serial")
-        @SuppressWarnings("all")
-        private String extractScores(String match) throws Exception {
-
-            // Create a webClient to emulate Firefox browser
-            WebClient webClient = new WebClient();// BrowserVersion.FIREFOX_3_6);
-
-            // Customize all webclient listeners and handlers for no
-            // warning/info
-            // messages@SuppressWarnings("all")
-            webClient.setIncorrectnessListener(new IncorrectnessListener() {
-                public void notify(String string, Object object) {
-                }
-            });
-            webClient.setCssErrorHandler(new SilentCssErrorHandler());
-            webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
-                public void malformedScriptURL(HtmlPage page, String string,
-                        MalformedURLException exception) {
-                }
-
-                public void loadScriptError(HtmlPage page, URL url,
-                        Exception exception) {
-                }
-
-                public void scriptException(HtmlPage page,
-                        ScriptException exception) {
-                }
-
-                public void timeoutError(HtmlPage page, long int1, long int2) {
-                }
-            });
-            webClient.setAlertHandler(new AlertHandler() {
-                public void handleAlert(Page page, String message) {
-                }
-            });
-            webClient.setThrowExceptionOnScriptError(false);
-            webClient.setActiveXNative(true);
-            webClient.setCssEnabled(true);
-
-            webClient
-                    .setAjaxController(new NicelyResynchronizingAjaxController() {
-                        @Override
-                        public boolean processSynchron(HtmlPage page,
-                                WebRequest request, boolean async) {
-                            return true;
-                        }
-                    });
-
-            HtmlElement scores = null;
-
-            webClient.waitForBackgroundJavaScript(3000);
-            HtmlPage page = webClient
-                    .getPage("http://www.livexscores.com/livescore/tennis");
-            
-            // try 20 times to wait .5 second each for filling the page.
-            for (int i = 0; i < 2; i++) {
-                // page
-                scores = page.getElementById("allzapasy");
-
-                if (scores.asText() != "") {
-                    break;
-                }
-                synchronized (page) {
-                    page.wait(500);
-                }
-            }
-
-            scores = page.getElementById("allzapasy");
-
-            // Modify tennis balls gif elements of the website to
-            // readable text so as to identify the tennis player serving
-            Iterator<HtmlElement> iter = (scores.getElementsByAttribute("img",
-                    "src", "/img/tennisball.gif")).iterator();
-            while (iter.hasNext()) {
-                ((HtmlElement) iter.next()).setTextContent("\nSERVER");
-            }
-
-            // Getting the relevant scores
-            Iterator<DomNode> itr = scores.getChildren().iterator();
-            itr.next();
-            HtmlElement elem = (HtmlElement) itr.next();
-
-            Iterator<DomNode> itr2 = elem.getChildren().iterator();
-            DomNode elem2 = (DomNode) itr2.next();
-
-            String string2 = elem2.asText();
-
-            System.out.println("Extracted score");
-
-            return string2;
         }
     }
-
 }
-

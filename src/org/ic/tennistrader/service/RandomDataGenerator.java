@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 
+import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.domain.match.SetScore;
+
 public class RandomDataGenerator {    
     private static BufferedWriter out;
     
@@ -33,11 +36,9 @@ public class RandomDataGenerator {
     private static int totalMatched = 0;
     private static double lpm = 1.6;
     
-    private static int playerOneGames[] = new int[3];
-    private static int playerTwoGames[] = new int[3];
+    private static Score score;
     
-    private static int playerOnePoints = 0;
-    private static int playerTwoPoints = 0;
+    private static final int AVG_SECS_PER_POINT = 10;
     
     
     //TODO: enum
@@ -64,7 +65,21 @@ public class RandomDataGenerator {
         
         for (;i<TOTAL_COUNT - AFTER_PLAY_COUNT; i++ ){
             makeNewEntry();
+            if ( i % AVG_SECS_PER_POINT ==0 ) {
+                double rand = Math.random();
+                if ( rand < 0.5 )
+                    update(true);
+                else 
+                    update(false);
+            }
+            if (score.isFinished()) break;
         }
+        
+        // make a few more entries
+        int prev = i, j = 0;
+        for (;j<5;j++)
+            makeNewEntry();
+        i+=j;
         
         setMatchFinished();
         
@@ -82,10 +97,7 @@ public class RandomDataGenerator {
     private static void init() {
         marketStatus = MARKET_ACTIVE;
         
-        for (int i=0;i<playerOneGames.length;i++){
-            playerOneGames[i] = 0;
-            playerTwoGames[i] = 0;
-        }
+        score = new Score();
     }
 
     private static void setMatchFinished() {
@@ -118,27 +130,42 @@ public class RandomDataGenerator {
         
         String line = makeCsv(currentTimestamp + "", inPlayDelay + "", marketStatus, selectionId, playerName, backOdds, layOdds, totalMatched + "", lpm + "", games, points);
         
-        update();
         
         return line;
     }
     
-    private static void update() {
+    private static void update(boolean player1) {
         
         currentTimestamp+=1000;
         
+        if (player1)
+            score.addPlayerOnePoint();
+        else 
+            score.addPlayerTwoPoint();
         
     }
 
     private static String getPointsAsString(boolean player1) {
-        return (player1? playerOnePoints : playerTwoPoints) + "";
+        return (player1? score.getPlayerOnePoints() : score.getPlayerTwoPoints()) + "";
     }
 
     private static String[] getScoreAsString(boolean player1) {
         String [] scoresString = new String[3];
-        int [] scores = (player1? playerOneGames : playerTwoGames);
+        
+        int size = 3; 
+                
+        int [] scores = new int[3];
+        
+        for (int i=1;i<4;i++) {
+            SetScore setScore = score.getSetScore(i);
+            scores[i-1] = 0;
+            if (setScore != null)
+                scores[i-1] = (player1? setScore.getPlayerOneGames() : setScore.getPlayerTwoGames());
+        }
+        
         for (int i=0;i<scores.length;i++)
              scoresString[i] = scores[i] + "";
+        
         return scoresString;
     }
 
