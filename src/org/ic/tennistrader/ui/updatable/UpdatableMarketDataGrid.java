@@ -9,7 +9,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.utils.Pair;
@@ -138,6 +140,13 @@ this.oddsFont = new Font(composite.getDisplay(), "Arial", 12, SWT.BOLD);
             this.amount = new Label(comp, SWT.NONE);
             odds.setBackground(color);
             amount.setBackground(color);
+            
+            comp.addListener(SWT.MouseUp, new Listener() {
+				@Override
+				public void handleEvent(Event arg0) {
+					System.out.println("Clicked on betting button");
+				}            	
+            });
             //this.amount.setForeground(composite.getDisplay().getSystemColor(
             // SWT.COLOR_DARK_GRAY));
         }
@@ -154,4 +163,9 @@ this.oddsFont = new Font(composite.getDisplay(), "Arial", 12, SWT.BOLD);
             comp.layout();
         }
     }
+
+	@Override
+	public void adddisposeListener(Listener listener) {
+		composite.addListener(SWT.Dispose, listener);
+	}
 }

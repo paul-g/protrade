@@ -11,41 +11,49 @@ import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 import org.apache.log4j.Logger;
 
 public class BetfairDataUpdater extends DataUpdater {
-    private List<EventBetfair> events;
+    //private List<EventBetfair> events;
+	private BetfairUpdaterEvents synchronizedEvents;
     private HashMap<EventBetfair, RealMatch> matches;
+    private int i = 0;
     
     private static Logger log = Logger.getLogger(BetfairDataUpdater.class);
 
     public BetfairDataUpdater() {
         matches = new HashMap<EventBetfair, RealMatch>();
-        events = new ArrayList<EventBetfair>();
+        //events = new ArrayList<EventBetfair>();
+        synchronizedEvents = new BetfairUpdaterEvents();
     }
 
     public void addEvent(RealMatch match) {
         EventBetfair eventBetfair = match.getEventBetfair();
 		matches.put(eventBetfair, match);
-        events.add(eventBetfair);
+        //events.add(eventBetfair);
+		synchronizedEvents.addEvent(eventBetfair);
     }
 
     @Override
     public void run() {
-		while (!this.stop) {
+		while (!this.stop) {			
+			HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
+			List<EventBetfair> events = new ArrayList<EventBetfair>(synchronizedEvents.getEvents());
+			for (EventBetfair eb : events) {
+				RealMatch match = matches.get(eb);
+				if (match.isInPlay() || match.getRecentMarketData() == null || i == 0) {
+					MOddsMarketData marketData = BetfairExchangeHandler
+							.getMarketOdds(eb);
+					if (marketData.getPl1Back() != null) {
+						matches.get(eb).addMarketData(marketData);
+					}
+					newMap.put(eb, marketData);
+				}
+				i = (i + 1) % 10;
+			}
+			LiveDataFetcher.handleEvent(newMap);
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				log.info("Betfair thread interrupted");
 			}
-			HashMap<EventBetfair, MOddsMarketData> newMap = new HashMap<EventBetfair, MOddsMarketData>();
-			for (EventBetfair eb : events) {
-				MOddsMarketData marketData = BetfairExchangeHandler
-						.getMarketOdds(eb);
-				if (marketData.getPl1Back() != null) {
-					matches.get(eb).addMarketData(marketData);
-
-				}
-				newMap.put(eb, marketData);
-			}
-			LiveDataFetcher.handleEvent(newMap);
 		}
 		log.info("Stopped Betfair thread");
     }
@@ -56,6 +64,6 @@ public class BetfairDataUpdater extends DataUpdater {
 	}
 	
 	public List<EventBetfair> getEvents() {
-		return this.events;
+		return synchronizedEvents.getEvents();
 	}
 }
