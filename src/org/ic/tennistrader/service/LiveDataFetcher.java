@@ -100,10 +100,13 @@ public class LiveDataFetcher {
     }
     
     public static void stopAllThreads() {
-    	if (dataUpdater != null)
+    	if (dataUpdater != null) {
     		dataUpdater.setStop();
+    		dataUpdater.interrupt();
+    	}
     	for (DataUpdater du : fileUpdaters) {
     		du.setStop();
+    		du.interrupt();
     	}
     }
 }

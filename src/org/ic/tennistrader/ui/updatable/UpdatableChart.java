@@ -203,7 +203,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		double plus;
 		double minus;
 		// if data has been read from Betfair
-		if (back != null || lay!= null) {
+		if (back != null && lay != null && back.size() > 0 && lay.size() > 0) {
 			minus = back.get(back.size()-1).getI();
 			plus = lay.get(lay.size()-1).getI();
 			array.add(new Pair<Double, Double>(plus,minus));
