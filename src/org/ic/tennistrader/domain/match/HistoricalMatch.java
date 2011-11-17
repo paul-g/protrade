@@ -62,8 +62,8 @@ public class HistoricalMatch implements Match {
     }
 
     @Override
-    public void registerForUpdate(UpdatableWidget widget, Composite composite) {
-        LiveDataFetcher.registerFromFile(widget, this, filename, composite);
+    public void registerForUpdate(UpdatableWidget widget) {
+        LiveDataFetcher.registerFromFile(widget, this, filename);
     }
     
     // needs to be in a different class!!!

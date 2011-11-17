@@ -193,7 +193,7 @@ public class DisplayPanel implements Listener {
         slider.setValues(0, 0, 1, 0, 0, 0);
         final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match,slider);
         
-        match.registerForUpdate(chart, c);
+        match.registerForUpdate(chart);
         
         comp.update();
     }
@@ -206,7 +206,7 @@ public class DisplayPanel implements Listener {
      */
     private void addMarketDataGrid(Composite comp, Match match) {
         UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
-        match.registerForUpdate(table, comp);
+        match.registerForUpdate(table);
     }
 
     private void setOnClickMenu() {

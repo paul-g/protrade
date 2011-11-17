@@ -26,11 +26,9 @@ public class LiveDataFetcher {
     // map of updatable widgets waiting for updates from the same match from file
     private static HashMap<Match, List<UpdatableWidget>> fileListeners = new HashMap<Match, List<UpdatableWidget>>();
     private static Logger log = Logger.getLogger(LiveDataFetcher.class);
-    private static Composite comp;
     private static boolean started = false;
 
-    public static void registerLive(final UpdatableWidget widget, final RealMatch match, Composite composite) {
-        comp = composite;
+    public static void registerLive(final UpdatableWidget widget, final RealMatch match) {
         if (dataUpdater == null)
             dataUpdater = new BetfairDataUpdater();
         dataUpdater.addEvent(match);
@@ -75,7 +73,7 @@ public class LiveDataFetcher {
 		dataUpdater.removeEvent(match.getEventBetfair());
 	}
 	
-	public static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName, final Composite comp) {
+	public static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName) {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !fileListeners.containsKey(match);
         if (isNewMatch)
@@ -91,7 +89,7 @@ public class LiveDataFetcher {
 			}        	
         });
         if(isNewMatch) {
-            startFromFile(match, fileName, comp);
+            startFromFile(match, fileName);
         }
     }
 
@@ -104,8 +102,7 @@ public class LiveDataFetcher {
         dataUpdater.start();
     }
     
-    private static void startFromFile(Match match, String fileName,
-            final Composite comp) {    	
+    private static void startFromFile(Match match, String fileName) {    	
         final FracsoftReader fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);

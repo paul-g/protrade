@@ -76,8 +76,8 @@ public class RealMatch implements Match{
 	    return toString();
 	}
 	
-	public void registerForUpdate(UpdatableWidget widget, Composite composite){
-	    LiveDataFetcher.registerLive(widget, this, composite);
+	public void registerForUpdate(UpdatableWidget widget){
+	    LiveDataFetcher.registerLive(widget, this);
 	}
 
     @Override
