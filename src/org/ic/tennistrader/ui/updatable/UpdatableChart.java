@@ -75,13 +75,15 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			public void mouseScrolled(MouseEvent e) {
 				int units = e.count;
 //				IAxis yAxis = getAxisSet().getYAxis(0);
-				System.out.println(e.x + " " + e.y);
+				//System.out.println(e.x + " " + e.y);
 				if (units > 0) {
 					// Rotating forward
 					getAxisSet().zoomIn();
+					//getAxisSet().getXAxis(0).zoomIn();
 				} else {
 					// Rotating backward
 					getAxisSet().zoomOut();
+					//getAxisSet().getXAxis(0).zoomOut();
 				}
 			}
 		});
@@ -195,7 +197,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		// set serieses values
 		showSeries(i, false);
-		if (!this.isDisposed()) this.getAxisSet().getXAxis(0).adjustRange();
+		if (!this.isDisposed()) 
+			this.getAxisSet().getXAxis(0).adjustRange();
+			//this.getAxisSet().getYAxis(0).adjustRange();
 	}
 
 	private ArrayList<Pair<Double, Double>> addLay(ArrayList<Pair<Double, Double>> array, int i,

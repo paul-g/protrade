@@ -19,8 +19,8 @@ import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
-    private static BetfairDataUpdater dataUpdater = null;
-    private static List<DataUpdater> fileUpdaters = new ArrayList<DataUpdater>();
+    private static BetfairDataUpdater dataUpdater = null;    
+    private static HashMap<Match, FracsoftReader> fileReaders = new HashMap<Match, FracsoftReader>();    
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
@@ -106,10 +106,10 @@ public class LiveDataFetcher {
     
     private static void startFromFile(Match match, String fileName,
             final Composite comp) {    	
-        final DataUpdater fracsoftUpdater;
+        final FracsoftReader fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);
-            fileUpdaters.add(fracsoftUpdater);
+            fileReaders.put(match, fracsoftUpdater);            
             log.info("Started Fracsoft thread");
             fracsoftUpdater.start();            
         } catch(FileNotFoundException fnfe) {
@@ -141,9 +141,14 @@ public class LiveDataFetcher {
     		dataUpdater.setStop();
     		dataUpdater.interrupt();
     	}
-    	for (DataUpdater du : fileUpdaters) {
-    		du.setStop();
-    		du.interrupt();
+    	for (FracsoftReader fr : fileReaders.values()) {
+    		fr.setStop();
+    		fr.interrupt();
     	}
+    }
+    
+    public static void setPlaybackSpeed(Match match, int updatesPerSecond) {
+    	FracsoftReader fracsoftReader = fileReaders.get(match);
+    	fracsoftReader.setUpdatesPerSecond(updatesPerSecond);
     }
 }

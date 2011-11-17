@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.PredictionGui;
+import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import org.ic.tennistrader.utils.MatchUtils;
@@ -144,7 +145,7 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addMatchData(Composite comp, Match match) {
+    private void addMatchData(Composite comp, final Match match) {
         Composite composite = new Composite(comp, SWT.BORDER);
         RowLayout rowLayout = new RowLayout();
         rowLayout.type = SWT.VERTICAL;
@@ -159,16 +160,16 @@ public class DisplayPanel implements Listener {
         
         (new Label(composite, SWT.BORDER)).setText("Speed: ");
         final Combo combo = new Combo (composite, SWT.READ_ONLY);
-        final String[] selectionItems = new String [] {"Alpha", "Bravo", "Charlie"};
+        final String[] selectionItems = new String [] {"1", "2", "5", "10"};
         combo.setItems (selectionItems);
+        combo.select(0);
         Rectangle clientArea = composite.getClientArea ();
         combo.setBounds (clientArea.x, clientArea.y, 200, 200);
         
         combo.addListener(SWT.Selection, new Listener(){
             @Override
             public void handleEvent(Event arg0) {
-                System.out.println("Selected " + selectionItems[combo.getSelectionIndex()]);
-                
+                LiveDataFetcher.setPlaybackSpeed(match, Integer.parseInt(selectionItems[combo.getSelectionIndex()]));
             } 
         });
 
