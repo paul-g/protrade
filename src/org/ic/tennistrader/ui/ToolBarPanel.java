@@ -298,6 +298,15 @@ public class ToolBarPanel {
 				openMatchView("fracsoft-data/fracsoft1.csv");
 			}
 		});
+		
+		MenuItem usOpenFinalFull = new MenuItem(playDropDown, SWT.PUSH);
+		usOpenFinalFull.setText("US Open Final 2011(full)");
+		usOpenFinalFull.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                openMatchView("full-data/fulldata1.csv");
+            }
+        });
 
 		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
 		playItem.setText("From File");

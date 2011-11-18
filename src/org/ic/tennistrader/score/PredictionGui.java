@@ -6,27 +6,18 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -34,7 +25,7 @@ import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.utils.MatchUtils;
+import org.ic.tennistrader.domain.match.RealMatch;
 
 public class PredictionGui {
 
@@ -97,17 +88,7 @@ public class PredictionGui {
 
         statisticsTable = createStatisticsTable(parent);
 
-        parent.getDisplay().timerExec(1000, new Runnable() {
-
-            @Override
-            public void run() {
-                handleUpdate();
-                parent.getDisplay().timerExec(5000, this);
-            }
-        });
-
-        parent.getDisplay().timerExec(1000, new Runnable() {
-
+        parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
             public void run() {
                 checkStatisticsUpdate();
@@ -116,7 +97,20 @@ public class PredictionGui {
             }
         });
 
-        updateThread.start();
+        if (match.isInPlay()) {
+            // only start score fetching for live matches
+            parent.getDisplay().timerExec(5000, new Runnable() {
+
+                @Override
+                public void run() {
+                    handleUpdate();
+                    parent.getDisplay().timerExec(5000, this);
+                }
+            });
+
+            updateThread.start();
+        }
+
         statisticsUpdateThread.start();
     }
 

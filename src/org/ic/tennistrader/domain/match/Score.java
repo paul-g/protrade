@@ -196,4 +196,21 @@ public class Score {
     public int getMaximumSetsPlayed(){
         return maximumSetsPlayed;
     }
+
+    public void setPlayerOnePoints(int playerOnePoints) {
+        this.playerOnePoints = playerOnePoints;
+    }
+
+    public void setPlayerTwoPoints(int playerTwoPoints) {
+        this.playerTwoPoints = playerTwoPoints;
+    }
+    
+    public void setSets(int[] playerOneGames, int[] playerTwoGames){
+        scores.clear();
+        for (int i=0;i<maximumSetsPlayed;i++){
+            SetScore sc = new SetScore(playerOneGames[i], playerTwoGames[i]);
+            scores.add(sc);
+        }
+    }
+    
 }

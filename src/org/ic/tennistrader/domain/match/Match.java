@@ -10,6 +10,7 @@ public interface Match {
     public Player getPlayerOne();
     public Player getPlayerTwo();
     public Score getScore();
+    public void setScore(Score score);
     
     public void registerForUpdate(UpdatableWidget widget, Composite composite);
 }

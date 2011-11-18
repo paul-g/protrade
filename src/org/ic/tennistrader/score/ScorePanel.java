@@ -1,15 +1,18 @@
 package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class ScorePanel {
+public class ScorePanel implements UpdatableWidget {
 
     private Match match;
 
@@ -17,14 +20,16 @@ public class ScorePanel {
 
     private TableColumn[] columns;
 
+    private Display display;
+
     public ScorePanel(Composite composite, Match match) {
         this.match = match;
 
+        this.display = composite.getDisplay();
+
         this.scoreTable = new Table(composite, SWT.NONE);
-        // scoreTable.setBounds(new Rectangle(10, 10, 270, 90));
         scoreTable.setHeaderVisible(true);
 
-        // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
         scoreTable.setLinesVisible(true);
         this.columns = new TableColumn[8];
         columns[0] = new TableColumn(scoreTable, SWT.NONE);
@@ -41,6 +46,14 @@ public class ScorePanel {
         columns[i + 2] = new TableColumn(scoreTable, SWT.NONE);
         columns[i + 2].setText("Points");
 
+        int c = 1;
+        TableItem ti = new TableItem(scoreTable, SWT.NONE);
+        ti.setText(c++, match.getPlayerOne().toString());
+
+        c = 1;
+        TableItem ti2 = new TableItem(scoreTable, SWT.NONE);
+        ti2.setText(c++, match.getPlayerTwo().toString());
+
         setScores();
 
         scoreTable.setRedraw(true);
@@ -51,16 +64,16 @@ public class ScorePanel {
 
         scoreTable.redraw();
         scoreTable.getParent().layout();
+
+        match.registerForUpdate(this, composite);
     }
 
     public void setScores() {
         Score score = match.getScore();
 
         int playerOneScores[] = score.getPlayerOneScore();
-
-        TableItem ti = new TableItem(scoreTable, SWT.NONE);
-        int c = 1;
-        ti.setText(c++, match.getPlayerOne().toString());
+        TableItem ti = scoreTable.getItem(0);
+        int c = 2;
         for (int s : playerOneScores) {
             ti.setText(c++, s + "");
         }
@@ -68,14 +81,28 @@ public class ScorePanel {
         ti.setText(c, score.getPlayerOnePoints() + "");
 
         int playerTwoScores[] = score.getPlayerTwoScore();
-
-        TableItem ti2 = new TableItem(scoreTable, SWT.NONE);
-        c = 1;
-        ti2.setText(c++, match.getPlayerTwo().toString());
+        TableItem ti2 = scoreTable.getItem(1);
+        c = 2;
         for (int s : playerTwoScores) {
             ti2.setText(c++, s + "");
         }
 
         ti2.setText(c, score.getPlayerTwoPoints() + "");
+    }
+
+    @Override
+    public void handleUpdate(MOddsMarketData newData) {
+        System.out.println("Updating score" + match.getScore().getPlayerOnePoints() + " " + match.getScore().getPlayerTwoPoints());
+        display.asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                setScores();
+            }
+        });
+    }
+
+    @Override
+    public void setDisposeListener(Listener listener) {
+        // TODO Auto-generated method stub
     }
 }

@@ -15,7 +15,9 @@ import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
+import org.ic.tennistrader.utils.Pair;
 
 public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
@@ -127,11 +129,13 @@ public class LiveDataFetcher {
         }
     }
 
-    public static void handleFileEvent(Match match, MOddsMarketData data) {
+    public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {
+        
+        match.setScore(dataScore.getJ());
         if (fileListeners.containsKey(match)) {
             List<UpdatableWidget> widgets = fileListeners.get(match);
             for (UpdatableWidget w : widgets) {
-                w.handleUpdate(data);
+                w.handleUpdate(dataScore.getI());
             }
         }
     }

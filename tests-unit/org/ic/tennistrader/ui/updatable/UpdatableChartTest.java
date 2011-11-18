@@ -40,10 +40,10 @@ public class UpdatableChartTest{
     public void testInvertAxis() {
     	try {
 			FracsoftReader reader = new FracsoftReader(match, filename);
-				chart.handleUpdate(reader.getMarketData());
-				chart.handleUpdate(reader.getMarketData());
-				chart.handleUpdate(reader.getMarketData());
-				chart.handleUpdate(reader.getMarketData());
+				chart.handleUpdate(reader.getMarketData().getI());
+				chart.handleUpdate(reader.getMarketData().getI());
+				chart.handleUpdate(reader.getMarketData().getI());
+				chart.handleUpdate(reader.getMarketData().getI());
 			/*chart.invertAxis();
 	        for (double d : chart.getFirstSeries().getYSeries()) {
 	        	assertTrue(d <= 1);

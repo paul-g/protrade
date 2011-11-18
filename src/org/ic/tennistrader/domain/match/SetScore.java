@@ -9,6 +9,13 @@ public class SetScore {
     private int tiebreakPointsPlayerTwo;
     
     private PlayerEnum winner;
+    
+    public SetScore(){}
+    
+    public SetScore(int playerOneGames, int playerTwoGames){
+        this.playerOneGames = playerOneGames;
+        this.playerTwoGames = playerTwoGames;
+    }
 
     private void addPlayerGame(PlayerEnum player) {
 

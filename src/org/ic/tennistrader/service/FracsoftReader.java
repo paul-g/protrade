@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.utils.Pair;
 
 /**
@@ -24,9 +25,9 @@ public class FracsoftReader extends DataUpdater {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
 
-    private List<MOddsMarketData> matchDataList = new ArrayList<MOddsMarketData>();
+    private List<Pair<MOddsMarketData, Score>> matchDataList = new ArrayList<Pair<MOddsMarketData, Score>>();
 
-    private Iterator<MOddsMarketData> pointer = null;
+    private Iterator<Pair<MOddsMarketData, Score>> pointer = null;
 
     private int inPlayPointer = -1;
 
@@ -36,6 +37,10 @@ public class FracsoftReader extends DataUpdater {
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
+
+    private static final int POINTS_OFFSET = 22;
+
+    private static final int GAMES_OFFSET = 19;
 
     public FracsoftReader(Match match, String filename)
             throws FileNotFoundException {
@@ -72,8 +77,21 @@ public class FracsoftReader extends DataUpdater {
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
-
-                matchDataList.add(data);
+                
+                int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
+                int pl2Points = Integer.parseInt(lines2[POINTS_OFFSET]);
+                
+                System.out.println(pl1Points + " " + pl2Points);
+                Score s = new Score();
+                s.setPlayerOnePoints(pl1Points);
+                s.setPlayerTwoPoints(pl2Points);
+                
+                int pl1games[] = getGames(lines1);
+                int pl2games[] = getGames(lines2);
+                
+                s.setSets(pl1games, pl2games);
+                
+                matchDataList.add(new Pair<MOddsMarketData,Score>(data, s));
                 if (data.getDelay() != 0 && inPlayPointer == -1)
                     inPlayPointer = i;
                 i++;
@@ -90,6 +108,14 @@ public class FracsoftReader extends DataUpdater {
 
         // pointer = matchDataList.iterator();
         pointer = matchDataList.listIterator(inPlayPointer);
+    }
+
+    private int[] getGames(String[] lines) {
+        int [] games = new int[3];
+        for (int i=0;i<3;i++) {
+            games[i] = Integer.parseInt(lines[GAMES_OFFSET + i]);
+        }
+        return games;
     }
 
     private ArrayList<Pair<Double, Double>> getOdds(String[] lines1, int offset) {
@@ -116,7 +142,7 @@ public class FracsoftReader extends DataUpdater {
 		log.info("Stopped Fracsoft thread");
 	}
 
-    public MOddsMarketData getMarketData() {
+    public Pair<MOddsMarketData, Score> getMarketData() {
         if (pointer.hasNext())
             return pointer.next();
         return null;

@@ -94,4 +94,9 @@ public class RealMatch implements Match{
     public Score getScore() {
         return score;
     }
+
+    @Override
+    public void setScore(Score score) {
+       this.score = score;
+    }
 }

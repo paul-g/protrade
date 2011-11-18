@@ -43,7 +43,6 @@ public class DisplayPanel implements Listener {
     
     private SashForm chartSash;
 
-    @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(DisplayPanel.class);
 
     public DisplayPanel(Composite parent) {
