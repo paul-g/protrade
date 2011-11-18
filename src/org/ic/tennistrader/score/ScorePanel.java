@@ -65,7 +65,7 @@ public class ScorePanel implements UpdatableWidget {
         scoreTable.redraw();
         scoreTable.getParent().layout();
 
-        match.registerForUpdate(this, composite);
+        match.registerForUpdate(this);
     }
 
     public void setScores() {
@@ -92,7 +92,6 @@ public class ScorePanel implements UpdatableWidget {
 
     @Override
     public void handleUpdate(MOddsMarketData newData) {
-        System.out.println("Updating score" + match.getScore().getPlayerOnePoints() + " " + match.getScore().getPlayerTwoPoints());
         display.asyncExec(new Runnable() {
             @Override
             public void run() {

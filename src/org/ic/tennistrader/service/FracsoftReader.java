@@ -16,11 +16,11 @@ import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.utils.Pair;
 
 /**
-* Reads data in Fracsoft format from a given file
-*
-* @author Paul Grigoras
-*
-*/
+ * Reads data in Fracsoft format from a given file
+ * 
+ * @author Paul Grigoras
+ * 
+ */
 public class FracsoftReader extends DataUpdater {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
@@ -78,21 +78,25 @@ public class FracsoftReader extends DataUpdater {
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
-                
-                int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
-                int pl2Points = Integer.parseInt(lines2[POINTS_OFFSET]);
-                
-                System.out.println(pl1Points + " " + pl2Points);
+
                 Score s = new Score();
-                s.setPlayerOnePoints(pl1Points);
-                s.setPlayerTwoPoints(pl2Points);
                 
-                int pl1games[] = getGames(lines1);
-                int pl2games[] = getGames(lines2);
-                
-                s.setSets(pl1games, pl2games);
-                
-                matchDataList.add(new Pair<MOddsMarketData,Score>(data, s));
+                if (lines1.length > GAMES_OFFSET) {
+                    // score data is provided
+                    int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
+                    int pl2Points = Integer.parseInt(lines2[POINTS_OFFSET]);
+
+                    System.out.println(pl1Points + " " + pl2Points);
+                    s.setPlayerOnePoints(pl1Points);
+                    s.setPlayerTwoPoints(pl2Points);
+
+                    int pl1games[] = getGames(lines1);
+                    int pl2games[] = getGames(lines2);
+
+                    s.setSets(pl1games, pl2games);
+                }
+
+                matchDataList.add(new Pair<MOddsMarketData, Score>(data, s));
                 if (data.getDelay() != 0 && inPlayPointer == -1)
                     inPlayPointer = i;
                 i++;
@@ -112,8 +116,8 @@ public class FracsoftReader extends DataUpdater {
     }
 
     private int[] getGames(String[] lines) {
-        int [] games = new int[3];
-        for (int i=0;i<3;i++) {
+        int[] games = new int[3];
+        for (int i = 0; i < 3; i++) {
             games[i] = Integer.parseInt(lines[GAMES_OFFSET + i]);
         }
         return games;
@@ -130,18 +134,18 @@ public class FracsoftReader extends DataUpdater {
         return pl1Backs;
     }
 
-	@Override
-	public void run() {		
-		while (!this.stop) {
-			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
-			try {
-				Thread.sleep(1000 / this.updatesPerSecond);
-			} catch (InterruptedException e) {
-				log.info("Fracsoft thread interrupted");
-			}
-		}
-		log.info("Stopped Fracsoft thread");
-	}
+    @Override
+    public void run() {
+        while (!this.stop) {
+            LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+            try {
+                Thread.sleep(1000 / this.updatesPerSecond);
+            } catch (InterruptedException e) {
+                log.info("Fracsoft thread interrupted");
+            }
+        }
+        log.info("Stopped Fracsoft thread");
+    }
 
     public Pair<MOddsMarketData, Score> getMarketData() {
         if (pointer.hasNext())
@@ -173,7 +177,7 @@ public class FracsoftReader extends DataUpdater {
 
             player1 = line1.split(",")[NAME_OFFSET];
             player2 = line2.split(",")[NAME_OFFSET];
-            
+
         } catch (FileNotFoundException e) {
             log.error(e.getMessage());
         }
@@ -181,12 +185,12 @@ public class FracsoftReader extends DataUpdater {
         return new Pair<String, String>(player1, player2);
     }
 
-	@Override
-	public void setStop() {
-		this.stop = true;
-	}
-	
-	public void setUpdatesPerSecond(int updates) {
-		this.updatesPerSecond = updates;
-	}
+    @Override
+    public void setStop() {
+        this.stop = true;
+    }
+
+    public void setUpdatesPerSecond(int updates) {
+        this.updatesPerSecond = updates;
+    }
 }

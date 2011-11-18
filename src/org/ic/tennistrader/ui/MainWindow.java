@@ -105,6 +105,8 @@ public class MainWindow {
         
         notifyLoadEvent("Preparing display");
         np.addListener(dp);
+
+        addActiveBetsDisplay(sashFormLeft);
         
         notifyLoadEvent("Configuring toolbars");
         @SuppressWarnings("unused")
@@ -135,16 +137,7 @@ public class MainWindow {
     }
     
     private void addActiveBetsDisplay(Composite composite) {
-        CTabFolder tabFolder = new CTabFolder(composite, SWT.BORDER);
-        CTabItem cti = new CTabItem(tabFolder, SWT.CLOSE);
-        cti.setText("Active Bets");
-        tabFolder.setSimple(false);
-        tabFolder.setMinimizeVisible(true);
-        tabFolder.setMaximizeVisible(true);
-        Button button = new Button(tabFolder, SWT.NONE);
-        button.setText("Active Bets Data Not Available...");
-        cti.setControl(button);
-        composite.layout();
+        new BetsDisplay(composite);
     }
 
     public void addMatchNavigator() {
