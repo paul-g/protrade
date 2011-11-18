@@ -146,8 +146,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             comp.addListener(SWT.MouseUp, new Listener() {
                 @Override
                 public void handleEvent(Event e) {
-                    // ignore the currency symbol
-                    double o = Double.parseDouble(odds.getText().substring(1));
+                    double o = Double.parseDouble(odds.getText());
                     double a = 10.0;
                     BetManager.addBet(o, a);
                     BetsDisplay.addBet(o, a);
