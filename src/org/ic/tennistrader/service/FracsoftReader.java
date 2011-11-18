@@ -32,6 +32,7 @@ public class FracsoftReader extends DataUpdater {
     private int inPlayPointer = -1;
 
     private Match match;
+    private int updatesPerSecond = 1;
 
     private static final int DELAY_OFFSET = 1;
     private static final int NAME_OFFSET = 4;
@@ -134,7 +135,7 @@ public class FracsoftReader extends DataUpdater {
 		while (!this.stop) {
 			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1000 / this.updatesPerSecond);
 			} catch (InterruptedException e) {
 				log.info("Fracsoft thread interrupted");
 			}
@@ -183,5 +184,9 @@ public class FracsoftReader extends DataUpdater {
 	@Override
 	public void setStop() {
 		this.stop = true;
+	}
+	
+	public void setUpdatesPerSecond(int updates) {
+		this.updatesPerSecond = updates;
 	}
 }

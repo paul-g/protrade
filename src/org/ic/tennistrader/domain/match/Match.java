@@ -12,5 +12,5 @@ public interface Match {
     public Score getScore();
     public void setScore(Score score);
     
-    public void registerForUpdate(UpdatableWidget widget, Composite composite);
+    public void registerForUpdate(UpdatableWidget widget);
 }

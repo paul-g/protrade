@@ -21,18 +21,16 @@ import org.ic.tennistrader.utils.Pair;
 
 public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
-    private static BetfairDataUpdater dataUpdater = null;
-    private static List<DataUpdater> fileUpdaters = new ArrayList<DataUpdater>();
+    private static BetfairDataUpdater dataUpdater = null;    
+    private static HashMap<Match, FracsoftReader> fileReaders = new HashMap<Match, FracsoftReader>();    
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
     private static HashMap<Match, List<UpdatableWidget>> fileListeners = new HashMap<Match, List<UpdatableWidget>>();
     private static Logger log = Logger.getLogger(LiveDataFetcher.class);
-    private static Composite comp;
     private static boolean started = false;
 
-    public static void registerLive(final UpdatableWidget widget, final RealMatch match, Composite composite) {
-        comp = composite;
+    public static void registerLive(final UpdatableWidget widget, final RealMatch match) {
         if (dataUpdater == null)
             dataUpdater = new BetfairDataUpdater();
         dataUpdater.addEvent(match);
@@ -77,7 +75,7 @@ public class LiveDataFetcher {
 		dataUpdater.removeEvent(match.getEventBetfair());
 	}
 	
-	public static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName, final Composite comp) {
+	public static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName) {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !fileListeners.containsKey(match);
         if (isNewMatch)
@@ -93,7 +91,7 @@ public class LiveDataFetcher {
 			}        	
         });
         if(isNewMatch) {
-            startFromFile(match, fileName, comp);
+            startFromFile(match, fileName);
         }
     }
 
@@ -106,12 +104,11 @@ public class LiveDataFetcher {
         dataUpdater.start();
     }
     
-    private static void startFromFile(Match match, String fileName,
-            final Composite comp) {    	
-        final DataUpdater fracsoftUpdater;
+    private static void startFromFile(Match match, String fileName) {    	
+        final FracsoftReader fracsoftUpdater;
         try {
             fracsoftUpdater = new FracsoftReader(match, fileName);
-            fileUpdaters.add(fracsoftUpdater);
+            fileReaders.put(match, fracsoftUpdater);            
             log.info("Started Fracsoft thread");
             fracsoftUpdater.start();            
         } catch(FileNotFoundException fnfe) {
@@ -145,9 +142,14 @@ public class LiveDataFetcher {
     		dataUpdater.setStop();
     		dataUpdater.interrupt();
     	}
-    	for (DataUpdater du : fileUpdaters) {
-    		du.setStop();
-    		du.interrupt();
+    	for (FracsoftReader fr : fileReaders.values()) {
+    		fr.setStop();
+    		fr.interrupt();
     	}
+    }
+    
+    public static void setPlaybackSpeed(Match match, int updatesPerSecond) {
+    	FracsoftReader fracsoftReader = fileReaders.get(match);
+    	fracsoftReader.setUpdatesPerSecond(updatesPerSecond);
     }
 }
