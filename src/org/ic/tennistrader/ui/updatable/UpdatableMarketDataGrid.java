@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -32,6 +33,8 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
     private Color backColor;
     private Font oddsFont;
     private Font titleFont;
+    private Color clickColor;
+    private Color hoverColor;
 
     public UpdatableMarketDataGrid(Composite parent) {
         composite = new Composite(parent, SWT.BORDER);
@@ -121,15 +124,23 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
                 composite.getDisplay(), 198, 226, 255);
         this.normalColor = new org.eclipse.swt.graphics.Color(
                 composite.getDisplay(), 240, 240, 240);
+        this.clickColor =  new org.eclipse.swt.graphics.Color(
+                composite.getDisplay(), 84, 139, 84);
+       this.hoverColor = new org.eclipse.swt.graphics.Color(
+               composite.getDisplay(), 124, 205, 124);
     }
 
     private class OddsButton {
         private Composite comp;
         private Label odds;
         private Label amount;
+        private final Display display;
+        private Color initialColor;
 
         OddsButton(Composite parent, Color color) {
+            this.initialColor = color;
             comp = new Composite(parent, SWT.BORDER);
+            this.display = parent.getDisplay(); 
             RowLayout rowLayout = new RowLayout();
             rowLayout.type = SWT.VERTICAL;
             GridData gd = new GridData();
@@ -143,17 +154,66 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             odds.setBackground(color);
             amount.setBackground(color);
 
-            comp.addListener(SWT.MouseUp, new Listener() {
+             addClickListener();
+             addEnterListener();
+             addExitListener();
+        }
+        
+        void setBackgroundColor(Color color){
+            odds.setBackground(color);
+            amount.setBackground(color);
+            comp.setBackground(color);
+        }
+        
+        void addClickListener(){
+            Listener l = new Listener() {
                 @Override
                 public void handleEvent(Event e) {
                     double o = Double.parseDouble(odds.getText());
                     double a = 10.0;
                     BetManager.addBet(o, a);
                     BetsDisplay.addBet(o, a);
-                }
-            });
-            // this.amount.setForeground(composite.getDisplay().getSystemColor(
-            // SWT.COLOR_DARK_GRAY));
+                    
+                    setBackgroundColor(clickColor);
+                    
+                    display.timerExec(100, new Runnable() {
+                        @Override
+                        public void run() {
+                            setBackgroundColor(initialColor);
+                        }
+                    });
+                  }
+             };
+                    
+            comp.addListener(SWT.MouseUp, l); 
+            odds.addListener(SWT.MouseUp, l);
+            amount.addListener(SWT.MouseUp, l);
+        }
+        
+        void addEnterListener(){
+            Listener l = new Listener() {
+                @Override
+                public void handleEvent(Event e) {
+                    setBackgroundColor(hoverColor);
+                  }
+             };
+                    
+            comp.addListener(SWT.MouseEnter, l); 
+            odds.addListener(SWT.MouseEnter, l);
+            amount.addListener(SWT.MouseEnter, l);
+        }
+        
+        void addExitListener(){
+            Listener l = new Listener() {
+                @Override
+                public void handleEvent(Event e) {
+                    setBackgroundColor(initialColor);
+                  }
+             };
+                    
+            comp.addListener(SWT.MouseExit, l); 
+            odds.addListener(SWT.MouseExit, l);
+            amount.addListener(SWT.MouseExit, l);
         }
 
         void setOdds(String odds) {

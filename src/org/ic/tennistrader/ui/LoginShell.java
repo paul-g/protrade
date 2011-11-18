@@ -33,7 +33,7 @@ public class LoginShell {
 
     private static Logger log = Logger.getLogger(LoginShell.class);
 
-    private static final String TITLE = "Login to tennis trader";
+    private static final String TITLE = "Tennis Trader Login";
     
     public static final String SUCCESS = "Login successful! Please wait...";
 
@@ -63,7 +63,7 @@ public class LoginShell {
 
         loginShell.setLayout(gridLayout);
 
-        GridData gridData = new GridData(75, 16);
+        GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData.horizontalSpan = 1;
         

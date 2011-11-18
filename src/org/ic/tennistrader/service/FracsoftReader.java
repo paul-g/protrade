@@ -86,7 +86,6 @@ public class FracsoftReader extends DataUpdater {
                     int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
                     int pl2Points = Integer.parseInt(lines2[POINTS_OFFSET]);
 
-                    System.out.println(pl1Points + " " + pl2Points);
                     s.setPlayerOnePoints(pl1Points);
                     s.setPlayerTwoPoints(pl2Points);
 
