@@ -3,7 +3,6 @@ package org.ic.tennistrader.score;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -25,7 +24,6 @@ import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.domain.match.RealMatch;
 
 public class PredictionGui {
 

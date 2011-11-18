@@ -7,10 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -150,6 +148,7 @@ public class LiveDataFetcher {
     
     public static void setPlaybackSpeed(Match match, int updatesPerSecond) {
     	FracsoftReader fracsoftReader = fileReaders.get(match);
-    	fracsoftReader.setUpdatesPerSecond(updatesPerSecond);
+    	if (fracsoftReader != null)
+    	    fracsoftReader.setUpdatesPerSecond(updatesPerSecond);
     }
 }

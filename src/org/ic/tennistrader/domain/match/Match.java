@@ -1,7 +1,5 @@
 package org.ic.tennistrader.domain.match;
 
-import org.eclipse.swt.widgets.Composite;
-
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public interface Match {    
@@ -10,7 +8,6 @@ public interface Match {
     public Player getPlayerOne();
     public Player getPlayerTwo();
     public Score getScore();
-    public void setScore(Score score);
-    
+    public void setScore(Score score);    
     public void registerForUpdate(UpdatableWidget widget);
 }

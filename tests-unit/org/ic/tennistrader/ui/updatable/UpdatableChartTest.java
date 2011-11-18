@@ -1,21 +1,16 @@
 package org.ic.tennistrader.ui.updatable;
 
 import java.io.FileNotFoundException;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.FracsoftReader;
 import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.MainWindow;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class UpdatableChartTest{
 	private UpdatableChart chart;

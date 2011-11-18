@@ -1,10 +1,7 @@
 package org.ic.tennistrader.demo.handler;
 
-import java.rmi.RemoteException;
-
 import org.ic.tennistrader.demo.util.APIContext;
 import org.ic.tennistrader.exceptions.ViewProfileException;
-
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.*;
 

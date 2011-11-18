@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.TreeItem;
 
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
@@ -206,6 +207,8 @@ public class DisplayPanel implements Listener {
     private void addMarketDataGrid(Composite comp, Match match) {
         UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
         match.registerForUpdate(table);
+        BetManager.registerGrid(match, table);
+        
     }
 
     private void setOnClickMenu() {

@@ -9,8 +9,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
-
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;

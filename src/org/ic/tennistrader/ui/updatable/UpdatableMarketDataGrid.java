@@ -17,7 +17,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
-import org.ic.tennistrader.service.BetManager;
+import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
+import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.BetsDisplay;
 import org.ic.tennistrader.utils.Pair;
 
@@ -56,8 +59,8 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         createLabel("Back", backColor, headerData, SWT.RIGHT);
         createLabel("Lay", layColor, headerData, SWT.NONE);
 
-        player1 = initLayout(p1BackButtons, p1LayButtons);
-        player2 = initLayout(p2BackButtons, p2LayButtons);
+        player1 = initLayout(p1BackButtons, p1LayButtons, true);
+        player2 = initLayout(p2BackButtons, p2LayButtons, false);
     }
 
     private void createLabel(String text, Color color, GridData headerData,
@@ -69,15 +72,15 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         back.setFont(titleFont);
     }
 
-    private Label initLayout(OddsButton[] pBackButtons, OddsButton[] pLayButtons) {
+    private Label initLayout(OddsButton[] pBackButtons, OddsButton[] pLayButtons, boolean pl1) {
         Label player = new Label(composite, SWT.NONE);
         player.setFont(titleFont);
         for (int i = 0; i < 2; i++)
-            pBackButtons[i] = new OddsButton(composite, normalColor);
-        pBackButtons[2] = new OddsButton(composite, backColor);
-        pLayButtons[0] = new OddsButton(composite, layColor);
+            pBackButtons[i] = new OddsButton(composite, normalColor, true, pl1);
+        pBackButtons[2] = new OddsButton(composite, backColor, true, pl1);
+        pLayButtons[0] = new OddsButton(composite, layColor, false, pl1);
         for (int i = 1; i < 3; i++)
-            pLayButtons[i] = new OddsButton(composite, normalColor);
+            pLayButtons[i] = new OddsButton(composite, normalColor, false, pl1);
         return player;
     }
 
@@ -131,6 +134,18 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
        this.hoverColor = new org.eclipse.swt.graphics.Color(
                composite.getDisplay(), 124, 205, 124);
     }
+    
+    void addBet(double amount, double odds, boolean player1, boolean back){
+        //double oddsVal = Double.parseDouble(odds.getText());
+        BetManager.addBet(odds, amount);
+        //BetManager.placeBet()
+              
+        
+        BetManager.placeBet(this, player1, back ? BetTypeEnum.B : BetTypeEnum.L, odds, amount);
+        
+        
+        BetsDisplay.addBet(odds, amount);            
+    }
 
     private class OddsButton {
         private Composite comp;
@@ -138,9 +153,13 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
         private Label amount;
         private final Display display;
         private Color initialColor;
+        private boolean back;
+        private boolean isPlayer1;
 
-        OddsButton(Composite parent, Color color) {
+        OddsButton(Composite parent, Color color, boolean back, boolean pl1) {
             this.initialColor = color;
+            this.back = back;
+            this.isPlayer1 = pl1;
             comp = new Composite(parent, SWT.BORDER);
             this.display = parent.getDisplay(); 
             RowLayout rowLayout = new RowLayout();
@@ -184,7 +203,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             a.addListener(SWT.Selection, new Listener(){
                 @Override
                 public void handleEvent(Event arg0) {
-                    addBet(amount);
+                    addBet(amount, Double.parseDouble(odds.getText()), isPlayer1, back);
                 }
             });
         }
@@ -199,7 +218,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             Listener l = new Listener() {
                 @Override
                 public void handleEvent(Event e) {
-                    addBet(10.0);
+                    addBet(10.0, Double.parseDouble(odds.getText()), isPlayer1, back);
                     setBackgroundColor(clickColor);
                     
                     display.timerExec(100, new Runnable() {
@@ -215,12 +234,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             odds.addListener(SWT.MouseUp, l);
             amount.addListener(SWT.MouseUp, l);
         }
-        
-        void addBet(double a){
-            double o = Double.parseDouble(odds.getText());
-            BetManager.addBet(o, a);
-            BetsDisplay.addBet(o, a);            
-        }
+                
         
         void addEnterListener(){
             Listener l = new Listener() {

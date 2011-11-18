@@ -2,9 +2,6 @@ package org.ic.tennistrader.domain.match;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.swt.widgets.Composite;
-
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;

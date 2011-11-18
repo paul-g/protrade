@@ -3,9 +3,6 @@ package org.ic.tennistrader.domain.match;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
-import org.eclipse.swt.widgets.Composite;
-
 import org.ic.tennistrader.service.FracsoftReader;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
