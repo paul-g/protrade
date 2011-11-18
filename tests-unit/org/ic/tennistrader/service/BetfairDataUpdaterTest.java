@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class BetfairDataUpdaterTest {
-	BetfairDataUpdater betfairDataUpdater;
+	BetfairDataUpdaterThread betfairDataUpdaterThread;
 	/*
 	Mockery context = new Mockery() {{
         setImposteriser(ClassImposteriser.INSTANCE);
@@ -17,22 +17,22 @@ public class BetfairDataUpdaterTest {
 		RealMatch match = mock(RealMatch.class);
 		EventBetfair eb = context.mock(EventBetfair.class);		
 		context.checking(new Expectations() {{
-            one (betfairDataUpdater).getEvents().size();
+            one (betfairDataUpdaterThread).getEvents().size();
                 will(returnValue(1));
         }});		 
 	*/
 	
 	@Before
 	public void setUp() {
-		betfairDataUpdater = new BetfairDataUpdater();
+		betfairDataUpdaterThread = new BetfairDataUpdaterThread();
 	}
 	
 	@Test
 	public void testOneEvent() {		
 		EventBetfair eb = new EventBetfair("name", 1);
 		RealMatch match = new RealMatch("pl1", "pl2", eb);
-		betfairDataUpdater.addEvent(match);
-		assertEquals(1, betfairDataUpdater.getEvents().size());
+		betfairDataUpdaterThread.addEvent(match);
+		assertEquals(1, betfairDataUpdaterThread.getEvents().size());
 	}
 	
 	@Test
@@ -41,22 +41,22 @@ public class BetfairDataUpdaterTest {
 		for (int i = 0; i < n; i++) {
 			EventBetfair eb = new EventBetfair("name", i);
 			RealMatch match = new RealMatch("pl1", "pl2", eb);
-			betfairDataUpdater.addEvent(match);
+			betfairDataUpdaterThread.addEvent(match);
 		}
-		assertEquals(n, betfairDataUpdater.getEvents().size());
+		assertEquals(n, betfairDataUpdaterThread.getEvents().size());
 	}
 	
 	@Test 
 	public void testStopCondition() {
-		betfairDataUpdater.start();
-		assertTrue(betfairDataUpdater.isAlive());
-		betfairDataUpdater.setStop();
-		betfairDataUpdater.interrupt();
+		betfairDataUpdaterThread.start();
+		assertTrue(betfairDataUpdaterThread.isAlive());
+		betfairDataUpdaterThread.setStop();
+		betfairDataUpdaterThread.interrupt();
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 		}
-		assertFalse(betfairDataUpdater.isAlive());
+		assertFalse(betfairDataUpdaterThread.isAlive());
 	}
 
 }

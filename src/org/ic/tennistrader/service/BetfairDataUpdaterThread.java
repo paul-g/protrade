@@ -10,15 +10,15 @@ import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 
 import org.apache.log4j.Logger;
 
-public class BetfairDataUpdater extends DataUpdater {
+public class BetfairDataUpdaterThread extends DataUpdaterThread {
     //private List<EventBetfair> events;
 	private BetfairUpdaterEvents synchronizedEvents;
     private HashMap<EventBetfair, RealMatch> matches;
     private int i = 0;
     
-    private static Logger log = Logger.getLogger(BetfairDataUpdater.class);
+    private static Logger log = Logger.getLogger(BetfairDataUpdaterThread.class);
 
-    public BetfairDataUpdater() {
+    public BetfairDataUpdaterThread() {
         matches = new HashMap<EventBetfair, RealMatch>();
         //events = new ArrayList<EventBetfair>();
         synchronizedEvents = new BetfairUpdaterEvents();

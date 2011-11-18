@@ -22,9 +22,10 @@ public class RealMatch implements Match{
 	private EventBetfair eventBetfair;
 	private List<MOddsMarketData> marketDatas;
 	private Score score;
+	private boolean namesSet = false;
 	
 	public RealMatch(String player1, String player2, EventBetfair eb) {
-	    Score score = new Score();
+	    this.score = new Score();
 	    String name = eb.getName();
 	    String[] names = name.split(" v ");
 	    if ( names.length == 2){
@@ -50,7 +51,29 @@ public class RealMatch implements Match{
 	
 	public void addMarketData(MOddsMarketData marketData) {
 		this.marketDatas.add(marketData);
+        if (!namesSet && marketData.getPlayer1() != null) {
+            setPlayerNames(marketData);
+            namesSet = true;
+        }
 	}
+
+    private void setPlayerNames(MOddsMarketData marketData) {
+        int lastNameIndex = marketData.getPlayer1().lastIndexOf(' ');
+        if (lastNameIndex > 0) {
+            this.player1.setFirstname(marketData.getPlayer1().substring(0,
+                    lastNameIndex));
+            this.player1.setLastname(marketData.getPlayer1().substring(
+                    lastNameIndex + 1));
+            lastNameIndex = marketData.getPlayer2().lastIndexOf(' ');
+            this.player2.setFirstname(marketData.getPlayer2().substring(0,
+                    lastNameIndex));
+            this.player2.setLastname(marketData.getPlayer2().substring(
+                    lastNameIndex + 1));
+        } else {
+            this.player1.setLastname(marketData.getPlayer1());
+            this.player2.setLastname(marketData.getPlayer2());
+        }
+    }
 	
 	public MOddsMarketData getRecentMarketData() {
 		if (this.marketDatas.size() == 0)

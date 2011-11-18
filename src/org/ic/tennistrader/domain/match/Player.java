@@ -1,11 +1,13 @@
 package org.ic.tennistrader.domain.match;
 
-public class Player {
-    
+public class Player {    
     String firstname;
     String lastname;
     
-    public Player(){}
+    public Player(){
+        this.firstname = "";
+        this.lastname = "";
+    }
     
     public Player(String firstname, String lastname){
         this.firstname = firstname;

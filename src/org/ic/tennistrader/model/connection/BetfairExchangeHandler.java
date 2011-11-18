@@ -56,22 +56,8 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				modds.setMatchStatus(selectedMarket.getMarketStatus()
 						.toString());
 				modds.setLocation(selectedMarket.getCountryISO3());
-
-				/*
-				 * modds.setPl1Back(setBack(prices,1));
-				 * modds.setPl2Back(setBack(prices,2));
-				 * modds.setPl1Lay(setLay(prices,1));
-				 * modds.setPl2Lay(setLay(prices,2));
-				 */
-
 				modds.setDelay(prices.getInPlayDelay());
-
-				/*
-				 * String[] names = getNames(m.getName());
-				 * modds.setPlayer1(names[0]); modds.setPlayer2(names[1]);
-				 */
-				// msg = showMarket(selectedExchange, selectedMarket, prices);
-
+				
 				int i = 0;
 				for (InflatedRunner r : prices.getRunners()) {
 					Runner marketRunner = null;
@@ -92,8 +78,6 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 					}
 					i++;
 				}
-				// System.out.println("Player 1 " + modds.getPlayer1() +
-				// ", player2 " + modds.getPlayer2());
 			}
 		} catch (Exception e) {
 			log.info("Error fetching market info for the match - "

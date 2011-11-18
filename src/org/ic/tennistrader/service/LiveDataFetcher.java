@@ -21,7 +21,7 @@ import org.ic.tennistrader.utils.Pair;
 
 public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
-    private static BetfairDataUpdater dataUpdater = null;    
+    private static BetfairDataUpdaterThread dataUpdater = null;    
     private static HashMap<Match, FracsoftReader> fileReaders = new HashMap<Match, FracsoftReader>();    
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
@@ -32,7 +32,7 @@ public class LiveDataFetcher {
 
     public static void registerLive(final UpdatableWidget widget, final RealMatch match) {
         if (dataUpdater == null)
-            dataUpdater = new BetfairDataUpdater();
+            dataUpdater = new BetfairDataUpdaterThread();
         dataUpdater.addEvent(match);
         List<UpdatableWidget> widgets;
         // add the widget as listener to the given match
@@ -57,7 +57,7 @@ public class LiveDataFetcher {
     }
     
     protected static void unregisterLive(UpdatableWidget widget, RealMatch match) {
-    	System.out.println("Unregister live entered");
+    	//System.out.println("Unregister live entered");
     	List<UpdatableWidget> widgets = null;
     	if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
             widgets = listeners.get(match.getEventBetfair().getBetfairId());

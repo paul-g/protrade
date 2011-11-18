@@ -21,7 +21,7 @@ import org.ic.tennistrader.utils.Pair;
  * @author Paul Grigoras
  * 
  */
-public class FracsoftReader extends DataUpdater {
+public class FracsoftReader extends DataUpdaterThread {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
 

@@ -5,9 +5,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -24,12 +26,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
-public class StatisticsUpdateThread extends Thread{
-    
+public class StatisticsUpdateThread extends Thread{    
     private List<Listener> listeners = new ArrayList<Listener>();
-
     private String page = null;
     private Match match;
+    private static Logger log = Logger.getLogger(StatisticsUpdateThread.class);
     
     public StatisticsUpdateThread(Match match) {
         this.match = match;
@@ -42,7 +43,8 @@ public class StatisticsUpdateThread extends Thread{
         try {
             page = getStatistics();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            log.error(e.getStackTrace());
         }
         
       // updateAll();
