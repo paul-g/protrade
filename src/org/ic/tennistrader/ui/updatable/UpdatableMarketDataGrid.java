@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.service.BetManager;
@@ -157,8 +159,36 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
              addClickListener();
              addEnterListener();
              addExitListener();
+             
+             
+             Menu menu = makeMenu(comp);
+             comp.setMenu(menu);
+             odds.setMenu(menu);
+             amount.setMenu(menu);
         }
         
+        private Menu makeMenu(Composite comp) {
+            Menu menu = new Menu(comp.getShell(), SWT.POP_UP);
+            makeItem(menu, 15.0);
+            makeItem(menu, 20.0);
+            makeItem(menu, 25.0);
+            makeItem(menu, 30.0);
+            makeItem(menu, 40.0);
+            return menu;
+        }
+        
+        private void makeItem(Menu menu, final double amount){
+            final MenuItem a = new MenuItem(menu, SWT.PUSH);
+            a.setText(amount + "£");
+            
+            a.addListener(SWT.Selection, new Listener(){
+                @Override
+                public void handleEvent(Event arg0) {
+                    addBet(amount);
+                }
+            });
+        }
+
         void setBackgroundColor(Color color){
             odds.setBackground(color);
             amount.setBackground(color);
@@ -169,17 +199,13 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             Listener l = new Listener() {
                 @Override
                 public void handleEvent(Event e) {
-                    double o = Double.parseDouble(odds.getText());
-                    double a = 10.0;
-                    BetManager.addBet(o, a);
-                    BetsDisplay.addBet(o, a);
-                    
+                    addBet(10.0);
                     setBackgroundColor(clickColor);
                     
                     display.timerExec(100, new Runnable() {
                         @Override
                         public void run() {
-                            setBackgroundColor(initialColor);
+                            setBackgroundColor(hoverColor);
                         }
                     });
                   }
@@ -188,6 +214,12 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
             comp.addListener(SWT.MouseUp, l); 
             odds.addListener(SWT.MouseUp, l);
             amount.addListener(SWT.MouseUp, l);
+        }
+        
+        void addBet(double a){
+            double o = Double.parseDouble(odds.getText());
+            BetManager.addBet(o, a);
+            BetsDisplay.addBet(o, a);            
         }
         
         void addEnterListener(){
