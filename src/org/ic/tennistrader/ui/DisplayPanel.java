@@ -1,5 +1,9 @@
 package org.ic.tennistrader.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -29,11 +33,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.TreeItem;
 
+import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
+import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import org.ic.tennistrader.utils.MatchUtils;
 
@@ -204,12 +210,15 @@ public class DisplayPanel implements Listener {
      * @param comp
      * @param ti
      */
-    private void addMarketDataGrid(Composite comp, Match match) {
-        UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
-        match.registerForUpdate(table);
-        BetManager.registerGrid(match, table);
-        
-    }
+	private void addMarketDataGrid(Composite comp, Match match) {
+		UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp);
+		BetController betController = new BetController(Arrays.asList(table.getP1BackButtons()),
+				Arrays.asList(table.getP1LayButtons()),	Arrays.asList(table.getP2BackButtons()), 
+				Arrays.asList(table.getP2LayButtons()), match);
+		table.setBetController(betController);
+		match.registerForUpdate(table);
+		//BetManager.registerGrid(match, table);
+	}
 
     private void setOnClickMenu() {
         Menu popup = new Menu(folder);

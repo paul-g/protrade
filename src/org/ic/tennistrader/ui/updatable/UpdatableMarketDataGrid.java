@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
@@ -26,6 +27,7 @@ import org.ic.tennistrader.utils.Pair;
 
 public class UpdatableMarketDataGrid implements UpdatableWidget {
     private Composite composite;
+    private BetController betController;
     private OddsButton[] p1BackButtons = new OddsButton[3];
     private OddsButton[] p1LayButtons = new OddsButton[3];
     private OddsButton[] p2BackButtons = new OddsButton[3];
@@ -38,9 +40,7 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
     private Color backColor;
     private Font oddsFont;
     private Font titleFont;
-    private Color clickColor;
-    private Color hoverColor;
-
+    
     public UpdatableMarketDataGrid(Composite parent) {
         composite = new Composite(parent, SWT.BORDER);
         composite.setLayout(new GridLayout(7, true));
@@ -75,12 +75,13 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
     private Label initLayout(OddsButton[] pBackButtons, OddsButton[] pLayButtons, boolean pl1) {
         Label player = new Label(composite, SWT.NONE);
         player.setFont(titleFont);
-        for (int i = 0; i < 2; i++)
-            pBackButtons[i] = new OddsButton(composite, normalColor, true, pl1);
-        pBackButtons[2] = new OddsButton(composite, backColor, true, pl1);
-        pLayButtons[0] = new OddsButton(composite, layColor, false, pl1);
+        for (int i = 0; i < 2; i++) {
+            pBackButtons[i] = new OddsButton(composite, normalColor, oddsFont, this);
+        }
+        pBackButtons[2] = new OddsButton(composite, backColor, oddsFont, this);
+        pLayButtons[0] = new OddsButton(composite, layColor, oddsFont, this);
         for (int i = 1; i < 3; i++)
-            pLayButtons[i] = new OddsButton(composite, normalColor, false, pl1);
+            pLayButtons[i] = new OddsButton(composite, normalColor, oddsFont, this);
         return player;
     }
 
@@ -129,154 +130,51 @@ public class UpdatableMarketDataGrid implements UpdatableWidget {
                 composite.getDisplay(), 198, 226, 255);
         this.normalColor = new org.eclipse.swt.graphics.Color(
                 composite.getDisplay(), 240, 240, 240);
-        this.clickColor =  new org.eclipse.swt.graphics.Color(
-                composite.getDisplay(), 84, 139, 84);
-       this.hoverColor = new org.eclipse.swt.graphics.Color(
-               composite.getDisplay(), 124, 205, 124);
     }
-    
-    void addBet(double amount, double odds, boolean player1, boolean back){
-        //double oddsVal = Double.parseDouble(odds.getText());
-        BetManager.addBet(odds, amount);
-        //BetManager.placeBet()
-              
-        
-        BetManager.placeBet(this, player1, back ? BetTypeEnum.B : BetTypeEnum.L, odds, amount);
-        
-        
-        BetsDisplay.addBet(odds, amount);            
-    }
-
-    private class OddsButton {
-        private Composite comp;
-        private Label odds;
-        private Label amount;
-        private final Display display;
-        private Color initialColor;
-        private boolean back;
-        private boolean isPlayer1;
-
-        OddsButton(Composite parent, Color color, boolean back, boolean pl1) {
-            this.initialColor = color;
-            this.back = back;
-            this.isPlayer1 = pl1;
-            comp = new Composite(parent, SWT.BORDER);
-            this.display = parent.getDisplay(); 
-            RowLayout rowLayout = new RowLayout();
-            rowLayout.type = SWT.VERTICAL;
-            GridData gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            comp.setBackground(color);
-            comp.setLayoutData(gd);
-            comp.setLayout(rowLayout);
-            this.odds = new Label(comp, SWT.NONE);
-            this.odds.setFont(oddsFont);
-            this.amount = new Label(comp, SWT.NONE);
-            odds.setBackground(color);
-            amount.setBackground(color);
-
-             addClickListener();
-             addEnterListener();
-             addExitListener();
-             
-             
-             Menu menu = makeMenu(comp);
-             comp.setMenu(menu);
-             odds.setMenu(menu);
-             amount.setMenu(menu);
-        }
-        
-        private Menu makeMenu(Composite comp) {
-            Menu menu = new Menu(comp.getShell(), SWT.POP_UP);
-            makeItem(menu, 15.0);
-            makeItem(menu, 20.0);
-            makeItem(menu, 25.0);
-            makeItem(menu, 30.0);
-            makeItem(menu, 40.0);
-            return menu;
-        }
-        
-        private void makeItem(Menu menu, final double amount){
-            final MenuItem a = new MenuItem(menu, SWT.PUSH);
-            a.setText(amount + "£");
-            
-            a.addListener(SWT.Selection, new Listener(){
-                @Override
-                public void handleEvent(Event arg0) {
-                    addBet(amount, Double.parseDouble(odds.getText()), isPlayer1, back);
-                }
-            });
-        }
-
-        void setBackgroundColor(Color color){
-            odds.setBackground(color);
-            amount.setBackground(color);
-            comp.setBackground(color);
-        }
-        
-        void addClickListener(){
-            Listener l = new Listener() {
-                @Override
-                public void handleEvent(Event e) {
-                    addBet(10.0, Double.parseDouble(odds.getText()), isPlayer1, back);
-                    setBackgroundColor(clickColor);
-                    
-                    display.timerExec(100, new Runnable() {
-                        @Override
-                        public void run() {
-                            setBackgroundColor(hoverColor);
-                        }
-                    });
-                  }
-             };
-                    
-            comp.addListener(SWT.MouseUp, l); 
-            odds.addListener(SWT.MouseUp, l);
-            amount.addListener(SWT.MouseUp, l);
-        }
-                
-        
-        void addEnterListener(){
-            Listener l = new Listener() {
-                @Override
-                public void handleEvent(Event e) {
-                    setBackgroundColor(hoverColor);
-                  }
-             };
-                    
-            comp.addListener(SWT.MouseEnter, l); 
-            odds.addListener(SWT.MouseEnter, l);
-            amount.addListener(SWT.MouseEnter, l);
-        }
-        
-        void addExitListener(){
-            Listener l = new Listener() {
-                @Override
-                public void handleEvent(Event e) {
-                    setBackgroundColor(initialColor);
-                  }
-             };
-                    
-            comp.addListener(SWT.MouseExit, l); 
-            odds.addListener(SWT.MouseExit, l);
-            amount.addListener(SWT.MouseExit, l);
-        }
-
-        void setOdds(String odds) {
-            this.odds.setText(odds);
-        }
-
-        void setAmount(String amount) {
-            this.amount.setText("£" + amount);
-        }
-
-        void layout() {
-            comp.layout();
-        }
-    }
-
+   
     @Override
     public void setDisposeListener(Listener listener) {
         composite.addListener(SWT.Dispose, listener);
     }
+    
+    public OddsButton[] getP1BackButtons() {
+		return p1BackButtons;
+	}
+
+	public void setP1BackButtons(OddsButton[] p1BackButtons) {
+		this.p1BackButtons = p1BackButtons;
+	}
+
+	public OddsButton[] getP1LayButtons() {
+		return p1LayButtons;
+	}
+
+	public void setP1LayButtons(OddsButton[] p1LayButtons) {
+		this.p1LayButtons = p1LayButtons;
+	}
+
+	public OddsButton[] getP2BackButtons() {
+		return p2BackButtons;
+	}
+
+	public void setP2BackButtons(OddsButton[] p2BackButtons) {
+		this.p2BackButtons = p2BackButtons;
+	}
+
+	public OddsButton[] getP2LayButtons() {
+		return p2LayButtons;
+	}
+
+	public void setP2LayButtons(OddsButton[] p2LayButtons) {
+		this.p2LayButtons = p2LayButtons;
+	}
+
+	public void setBetController(BetController betController) {
+		this.betController = betController;
+		
+	}
+
+	public BetController getBetController() {
+		return betController;
+	}
 }

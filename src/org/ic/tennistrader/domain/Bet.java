@@ -34,11 +34,11 @@ public class Bet {
         this.player = player;
     }
 
-    public BetTypeEnum getBetType() {
+    public BetTypeEnum getType() {
         return type;
     }
 
-    public void setBetType(BetTypeEnum betType) {
+    public void setType(BetTypeEnum betType) {
         this.type = betType;
     }
     

@@ -9,6 +9,8 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.ic.tennistrader.domain.Bet;
+import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 
 public class BetsDisplay {
     
@@ -33,11 +35,13 @@ public class BetsDisplay {
         composite.layout();
     }
     
-    public static void addBet(double odds, double amount){
-        Label bet = new Label(composite, SWT.NONE);
-        bet.setText(amount+ "@"+odds);
-        activeBets.add(bet);
-        composite.layout();
-    }
+	public static void addBet(Bet bet) {
+		Label betLabel = new Label(composite, SWT.NONE);
+		betLabel.setText((bet.getType() == BetTypeEnum.B ? "Back " : "Lay ")
+				+ bet.getPlayer().toString() + " for " + bet.getValue().getJ()
+				+ "£ at " + bet.getValue().getI() + "");
+		activeBets.add(betLabel);
+		composite.layout();
+	}
 
 }
