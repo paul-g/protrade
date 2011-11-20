@@ -72,7 +72,7 @@ public class MainWindow {
 
         // Menu and Tool bar set-up
         @SuppressWarnings("unused")
-        ToolBarPanel tp = new ToolBarPanel(this);
+        UpperToolBar tp = new UpperToolBar(this);
 
         @SuppressWarnings("unused")
         MenuPanel mp = new MenuPanel(this);
@@ -106,8 +106,10 @@ public class MainWindow {
         addActiveBetsDisplay(sashFormLeft);
         
         notifyLoadEvent("Configuring toolbars");
+        
         @SuppressWarnings("unused")
-        ToolBarPanel bottomPanel = new ToolBarPanel(this, false);
+        LowerToolBar bottomPanel = new LowerToolBar(this);
+        
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -124,7 +126,7 @@ public class MainWindow {
                 display.sleep();
         }
         LiveDataFetcher.stopAllThreads();
-        ToolBarPanel.setStop();
+        LowerToolBar.setStop();
         //System.out.println("Application is closing...");
         display.dispose();
     }

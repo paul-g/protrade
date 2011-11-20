@@ -31,10 +31,12 @@ public class ToolbarTest {
 	@Test
 	public void widgetUpperLeftCheck() {
 		// Left corner widgets
+		UpperToolBar utb = new UpperToolBar(mw);
 		SWTBotToolbarDropDownButton widget_menu = bot.toolbarDropDownButtonWithTooltip("Widget Menu");
 		SWTBotToolbarDropDownButton play_menu = bot.toolbarDropDownButtonWithTooltip("Play from a file");
 		assertNotNull(widget_menu);
 		assertNotNull(play_menu);
+		assertNotNull(utb);
 	}
 	
 	@Test
@@ -49,8 +51,10 @@ public class ToolbarTest {
 	@Test
 	public void widgetLowerToolbarCheck() {
 		// Lower Toolbar
+		LowerToolBar ltb = new LowerToolBar(mw);
         SWTBotToolbarButton connection = bot.toolbarButtonWithTooltip("Internet Connection");
         assertNotNull(connection);
         assertNotNull(connection.widget.getImage());
+        assertNotNull(ltb);
 	}
 }

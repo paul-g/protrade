@@ -1,10 +1,5 @@
 package org.ic.tennistrader.ui;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.UnknownHostException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -24,7 +19,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
@@ -32,22 +26,16 @@ import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 
-public class ToolBarPanel {
-
+public class UpperToolBar {
 	private ToolBar toolbar;
 	private ToolBar login;
 	private Shell profileWindow;
 	private Shell preferencesWindow;
-
 	private ProfileData profileData;
-	
-	private static boolean stop = false;
-
-	private static Logger log = Logger.getLogger(ToolBarPanel.class);
-
+	private static Logger log = Logger.getLogger(UpperToolBar.class);
 	private MainWindow mainWindow;
 
-	public ToolBarPanel(final MainWindow mainWindow) {
+	public UpperToolBar(final MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
 		final Shell shell = mainWindow.getShell();
 
@@ -79,12 +67,12 @@ public class ToolBarPanel {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
-		
+
 		// Log out/profile menu
 		makeProfileMenu(mainWindow, shell);
-
+		
 	}
-
+	
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
 		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
 		balanceItem.setToolTipText("Balance");
@@ -338,74 +326,27 @@ public class ToolBarPanel {
 		playButtonItem.addListener(SWT.Selection, new LeftDropDownListener(
 				playButtonItem, playDropDown));
 	}
-
-	public ToolBarPanel(final MainWindow mainWindow, boolean isTop) {
-
-		final Shell shell = mainWindow.getShell();
-		// Setting span throughout the columns
-		GridData gridData = new GridData();
-		gridData.horizontalSpan = 3;
-		Display display = shell.getDisplay();
-
-		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		toolbar.setLayoutData(gridData);
-
-		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
-		widgetItem.setToolTipText("Internet Connection");
-		final Image off = new Image(display, "images/connection_lost.png");
-		final Image on = new Image(display, "images/connection_on.png");
-		widgetItem.setImage(on);
-		new Thread(new Runnable() {
-			public void run() {
-				while (!stop) {
-					try {
-						Thread.sleep(5000);
-					} catch (Exception e) {
-					}
-					if (!shell.isDisposed()) {
-						toolbar.getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								if (isInternetReachable()) {
-									log.info("Connection - ON");
-									widgetItem.setImage(on);
-								} else {
-									log.info("Connection - OFF");
-									widgetItem.setImage(off);
-								}
-							}
-						});
-					}
-				}
-			}
-		}).start();
+	
+	public String textProfile() {
+		AccountFunds af = profileData.getUkAccountFunds();
+		String res =
+		"Username : " + Main.USERNAME +
+		"\nBetfair points : " + af.getBetfairPoints() +
+		"\nCurrent balance : " + af.getBalance() +
+		"\nAvailable balance : " + af.getAvailable() +
+		"\nCredit limit : " + af.getCreditLimit() +
+		"\nExposure : " + af.getExposure() +
+		"\nExposure limit : " + af.getExposureLimit();
+		return res;
 	}
-
+	
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
 			mainWindow.getDisplayPanel().addMatchView(match);
 		}
 	}
-
-	private boolean isInternetReachable() {
-		try {
-			// URL to a source
-			URL url = new URL("http://www.google.com");
-			// Open a connection
-			HttpURLConnection urlConnect = (HttpURLConnection) url
-					.openConnection();
-			// Retrieving data from the source - if there is no connection,
-			// throws and exception
-			@SuppressWarnings("unused")
-			Object objData = urlConnect.getContent();
-		} catch (UnknownHostException e) {
-			return false;
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
-
+	
 	private class LeftDropDownListener implements Listener {
 
 		private ToolItem item;
@@ -448,21 +389,6 @@ public class ToolBarPanel {
 			}
 		}
 	}
-
-	public static void setStop() {
-		stop = true;
-	}
 	
-	public String textProfile() {
-		AccountFunds af = profileData.getUkAccountFunds();
-		String res =
-		"Username : " + Main.USERNAME +
-		"\nBetfair points : " + af.getBetfairPoints() +
-		"\nCurrent balance : " + af.getBalance() +
-		"\nAvailable balance : " + af.getAvailable() +
-		"\nCredit limit : " + af.getCreditLimit() +
-		"\nExposure : " + af.getExposure() +
-		"\nExposure limit : " + af.getExposureLimit();
-		return res;
-	}
+
 }
