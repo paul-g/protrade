@@ -1,6 +1,7 @@
 package org.ic.tennistrader.domain.match;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
@@ -17,6 +18,7 @@ public class ChartData {
 	private int dataSize;
 	
 	public ChartData(){
+		dataSize = 0;
 		pl1YSeries = new ArrayList<Double>();
 		pl2YSeries = new ArrayList<Double>();
 		pl1Lay = new ArrayList<Pair<Double,Double>>();
@@ -27,13 +29,14 @@ public class ChartData {
 	}
 	
 	public void addValues(MOddsMarketData data){
+		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
 		pl1YSeries = addValue(pl1YSeries,  data.getPl1Back());
 		pl2YSeries = addValue(pl2YSeries,  data.getPl2Back());
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
 		maPl2 = addMaValue(maPl2, pl2YSeries);
-
+		setDataSize(pl1YSeries.size());
 	}
 	private ArrayList<Pair<Double, Double>> addLay(ArrayList<Pair<Double, Double>> array, 
 			ArrayList<Pair<Double, Double>> back, ArrayList<Pair<Double, Double>> lay) {

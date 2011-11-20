@@ -64,7 +64,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
 		this.getLegend().setPosition(SWT.TOP);
-		addListeners();
+		//addListeners();
+		this.getAxisSet().adjustRange();
 
 	}
 
@@ -153,17 +154,19 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 */
 	public void fillData(MOddsMarketData data) {
 		// add new market data to the data structures
-		chartData.addValues(data);
 		int i = chartData.getDataSize();
+		chartData.addValues(data);
+		
 
 		// update size of the slider and selection based on what user was
 		// previously viewing
 		updateSlider(chartData.getDataSize());
 		// set serieses values
 		showSeries(i, false);
-		if (!this.isDisposed())
+		if (!this.isDisposed()){
 			this.getAxisSet().getXAxis(0).adjustRange();
-		// this.getAxisSet().getYAxis(0).adjustRange();
+			this.getAxisSet().getYAxis(0).adjustRange();
+		}
 	}
 
 	private void updateSlider(int i) {
@@ -240,6 +243,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 						* k;
 			}
 			
+			for (int b = 0; b<dataArray.get(0).length; b++){
+				System.out.print(showXSeries[b] + " " + dataArray.get(0)[b]+ " ");
+			}
+			System.out.println();
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(	dataArray.get(0));
 			secondSeries.setXDateSeries(showXSeries);
