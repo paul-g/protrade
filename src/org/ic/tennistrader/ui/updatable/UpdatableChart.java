@@ -1,7 +1,6 @@
 package org.ic.tennistrader.ui.updatable;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
@@ -25,8 +24,8 @@ import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.match.ChartData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.utils.Pair;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ILineSeries firstSeries;
@@ -36,6 +35,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private IErrorBar pl1Spread;
 	private IErrorBar pl2Spread;
 	private int sampleSize = 200;
+	private int seriesNr = 8;
 	private boolean decimalOdds;
 	private String xAxisTitle = "Time";
 	private String yAxisDecimalTitle = "Decimal Odds";
@@ -46,49 +46,49 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private boolean maPl1Selected;
 	private boolean spPl1Selected;
 	private boolean spPl2Selected;
-	private ArrayList<Double> pl1YSeries;
-	private ArrayList<Double> pl2YSeries;
-	private ArrayList<Pair<Double,Double>> pl1Lay;
-	private ArrayList<Pair<Double,Double>> pl2Lay;
-	private ArrayList<Double> maPl1;
-	private ArrayList<Double> maPl2;
-	private ArrayList<Date> xSeries;
+	private ChartData chartData;
 	private Match match;
 	private Slider slider;
 
 	public UpdatableChart(Composite parent, int style, Match match,
 			Slider slider) {
 		super(parent, style);
+		chartData = new ChartData();
 		createSlider(slider);
 		this.match = match;
 		setSeriesStyles();
 		decimalOdds = true;
+		pl1Selected = true;
 		this.getAxisSet().getXAxis(0).getTitle().setText(xAxisTitle);
 		this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
-		pl1Selected = true;
 		this.getTitle().setText(match.getName());
 		makeMenus(parent);
 		this.getLegend().setPosition(SWT.TOP);
+		addListeners();
 
+	}
+
+	private void addListeners() {
 		this.addMouseWheelListener(new MouseWheelListener() {
 			@Override
 			public void mouseScrolled(MouseEvent e) {
 				int units = e.count;
-//				IAxis yAxis = getAxisSet().getYAxis(0);
-				//System.out.println(e.x + " " + e.y);
+				// IAxis yAxis = getAxisSet().getYAxis(0);
+				// System.out.println(e.x + " " + e.y);
 				if (units > 0) {
 					// Rotating forward
 					getAxisSet().zoomIn();
-					//getAxisSet().getXAxis(0).zoomIn();
+					// getAxisSet().getXAxis(0).zoomIn();
 				} else {
 					// Rotating backward
 					getAxisSet().zoomOut();
-					//getAxisSet().getXAxis(0).zoomOut();
+					// getAxisSet().getXAxis(0).zoomOut();
 				}
 			}
 		});
+
 	}
-	
+
 	private void createSlider(Slider slider) {
 		this.slider = slider;
 		slider.setMaximum(1);
@@ -104,20 +104,19 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	private void setSeriesStyles() {
-		
+
 		ISeriesSet seriesSet = this.getSeriesSet();
 		// build first series
-		String str1 = "back odds " + match.getPlayerOne(); 
-		firstSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, str1);
+		firstSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
+				"back odds " + match.getPlayerOne());
 		Color color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		firstSeries.setLineColor(color);
 		firstSeries.setSymbolSize(4);
 		firstSeries.setSymbolType(PlotSymbolType.CROSS);
-		pl1Spread = firstSeries.getYErrorBar();	
+		pl1Spread = firstSeries.getYErrorBar();
 		pl1Spread.setType(ErrorBarType.BOTH);
 		pl1Spread.setVisible(false);
 		// build second series
-		String str2 = "back odds " + match.getPlayerTwo();
 		secondSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
 				"back odds " + match.getPlayerTwo());
 		Color colorSr2 = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
@@ -129,8 +128,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		pl2Spread.setType(ErrorBarType.BOTH);
 		pl2Spread.setVisible(false);
 		// building moving averages player 1
-		String str3 = "MA " + match.getPlayerOne(); 
-		maPl1Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, str3);
+		maPl1Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
+				"MA " + match.getPlayerOne());
 		Color color3 = Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_MAGENTA);
 		maPl1Series.setLineColor(color3);
@@ -139,46 +138,35 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		maPl1Series.setVisible(false);
 
 		// building moving averages player 2
-		String str4 = "MA " + match.getPlayerTwo(); 
-		maPl2Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, str4);
+		maPl2Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
+				"MA " + match.getPlayerTwo());
 		Color color4 = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
 		maPl2Series.setLineColor(color4);
 		maPl2Series.setSymbolSize(4);
 		maPl2Series.setSymbolType(PlotSymbolType.TRIANGLE);
 		maPl2Series.setVisible(false);
-		
+
 	}
 
 	/**
 	 * Populates the chart with the given market data
 	 */
 	public void fillData(MOddsMarketData data) {
-		int i = 0;
-		// if graph already displaying values
-		if (firstSeries.getYSeries() != null
-				&& secondSeries.getYSeries() != null
-				&& maPl1Series.getYSeries() != null
-				&& maPl2Series.getYSeries() != null) {
-			i = pl1YSeries.size();
-		} else {
-			xSeries = new ArrayList<Date>();
-			pl1YSeries = new ArrayList<Double>();
-			pl2YSeries = new ArrayList<Double>();
-			maPl1 = new ArrayList<Double>();
-			maPl2 = new ArrayList<Double>();
-			pl1Lay = new ArrayList<Pair<Double,Double>>();
-			pl2Lay = new ArrayList<Pair<Double,Double>>();
-		}
+		// add new market data to the data structures
+		chartData.addValues(data);
+		int i = chartData.getDataSize();
 
-		xSeries.add(i, Calendar.getInstance().getTime());
+		// update size of the slider and selection based on what user was
+		// previously viewing
+		updateSlider(chartData.getDataSize());
+		// set serieses values
+		showSeries(i, false);
+		if (!this.isDisposed())
+			this.getAxisSet().getXAxis(0).adjustRange();
+		// this.getAxisSet().getYAxis(0).adjustRange();
+	}
 
-		pl1YSeries = addValue(pl1YSeries, i, data.getPl1Back());
-		pl2YSeries = addValue(pl2YSeries, i, data.getPl2Back());
-		pl1Lay = addLay(pl1Lay, i, data.getPl1Back(),data.getPl1Lay());
-		pl2Lay = addLay(pl2Lay, i, data.getPl2Back(),data.getPl2Lay());
-		maPl1 = addMaValue(maPl1, i, pl1YSeries);
-		maPl2 = addMaValue(maPl2, i, pl2YSeries);
-
+	private void updateSlider(int i) {
 		if (i >= sampleSize) {
 			if (slider.getSelection() == slider.getMaximum() - 1) {
 				slider.setMaximum(i + 1);
@@ -195,110 +183,77 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		}
 
-		// set serieses values
-		showSeries(i, false);
-		if (!this.isDisposed()) 
-			this.getAxisSet().getXAxis(0).adjustRange();
-			//this.getAxisSet().getYAxis(0).adjustRange();
-	}
-
-	private ArrayList<Pair<Double, Double>> addLay(ArrayList<Pair<Double, Double>> array, int i,
-			ArrayList<Pair<Double, Double>> back, ArrayList<Pair<Double, Double>> lay) {
-		double plus;
-		double minus;
-		// if data has been read from Betfair
-		if (back != null && lay != null && back.size() > 0 && lay.size() > 0) {
-			minus = back.get(back.size()-1).getI();
-			plus = lay.get(lay.size()-1).getI();
-			array.add(new Pair<Double, Double>(plus,minus));
-		} else {
-			if (i > 0) // keep previous value if it exists
-				array.add(i,array.get(i-1));
-			else
-				// put zero if no previous value
-				array.add(i, new Pair<Double, Double>(0.0,0.0));
-		}
-		return array;
 	}
 
 	public void showSeries(int i, boolean dragged) {
 		int size = (i + 1) < sampleSize ? (i + 1) : sampleSize;
 		Date showXSeries[] = new Date[size];
-		double[] showPl1YSeries = new double[size];
-		double[] showPl2YSeries = new double[size];
-		double[] showMaPl1 = new double[size];
-		double[] showMaPl2 = new double[size];
-		double[] showPl1Plus = new double[size];
-		double[] showPl1Minus = new double[size];
-		double[] showPl2Plus = new double[size];
-		double[] showPl2Minus = new double[size];
+		ArrayList<double[]> dataArray = new ArrayList<double[]>();
+		for (int k = 0; k < seriesNr; k++) {
+			dataArray.add(k, new double[size]);
+		}
 		int z = i < sampleSize ? 0 : 1;
 		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
+			// variables for updating series according decimal/implied setting
 			int pow = 1;
 			int k = 1;
 			if (!decimalOdds) {
 				pow = -1;
-				k=100;
+				k = 100;
 			}
-				
+
 			for (int a = 0; a < size; a++) {
+				int nr = 0;
 				int b = (i - sampleSize + 1) * z + a;
-				showXSeries[a] = xSeries.get(b);
-				showPl1YSeries[a] = Math.pow(pl1YSeries.get(b), pow)*k;
-				showPl2YSeries[a] = Math.pow(pl2YSeries.get(b), pow)*k;
-				showMaPl1[a] = Math.pow(maPl1.get(b), pow)*k;
-				showMaPl2[a] = Math.pow(maPl2.get(b), pow)*k;
-				showPl1Plus[a] = (Math.pow(pl1Lay.get(b).getI(),pow)  - Math.pow(pl1YSeries.get(b),pow)) * k;
-				showPl1Minus[a] = (Math.pow(pl1YSeries.get(b),pow) - Math.pow(pl1Lay.get(b).getJ(),pow)) * k;
-				showPl2Plus[a] = (Math.pow(pl2Lay.get(b).getI(),pow) - Math.pow(pl2YSeries.get(b),pow)) * k;
-				showPl2Minus[a] = (Math.pow(pl2YSeries.get(b),pow) - Math.pow(pl2Lay.get(b).getJ(),pow)) * k;
+				showXSeries[a] = chartData.getxSeries().get(b);
+				dataArray.get(nr)[a] = Math.pow(chartData.getPl1YSeries()
+						.get(b), pow)
+						* k;
+				nr++;
+				dataArray.get(nr)[a] = Math.pow(chartData.getPl2YSeries()
+						.get(b), pow)
+						* k;
+				nr++;
+				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl1().get(b),
+						pow) * k;
+				nr++;
+				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl2().get(b),
+						pow) * k;
+				nr++;
+				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1Lay().get(b)
+						.getI(), pow) - Math.pow(
+						chartData.getPl1YSeries().get(b), pow))
+						* k;
+				nr++;
+				dataArray.get(nr)[a] = (Math.pow(
+						chartData.getPl1YSeries().get(b), pow) - Math.pow(
+						chartData.getPl1Lay().get(b).getJ(), pow)) * k;
+				nr++;
+				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2Lay().get(b)
+						.getI(), pow) - Math.pow(
+						chartData.getPl2YSeries().get(b), pow))
+						* k;
+				nr++;
+				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2YSeries().get(b),
+						pow) - Math.pow(chartData.getPl2Lay().get(b).getJ(),
+						pow))
+						* k;
 			}
+			
 			firstSeries.setXDateSeries(showXSeries);
-			firstSeries.setYSeries(showPl1YSeries);
+			firstSeries.setYSeries(	dataArray.get(0));
 			secondSeries.setXDateSeries(showXSeries);
-			secondSeries.setYSeries(showPl2YSeries);
+			secondSeries.setYSeries(dataArray.get(1));
 			maPl1Series.setXDateSeries(showXSeries);
-			maPl1Series.setYSeries(showMaPl1);
+			maPl1Series.setYSeries(dataArray.get(2));
 			maPl2Series.setXDateSeries(showXSeries);
-			maPl2Series.setYSeries(showMaPl2);
-			pl1Spread.setPlusErrors(showPl1Plus);
-			pl1Spread.setMinusErrors(showPl1Minus);
-			pl2Spread.setPlusErrors(showPl2Plus);
-			pl2Spread.setMinusErrors(showPl2Minus);
+			maPl2Series.setYSeries(dataArray.get(3));
+			pl1Spread.setPlusErrors(dataArray.get(4));
+			pl1Spread.setMinusErrors(dataArray.get(5));
+			pl2Spread.setPlusErrors(dataArray.get(6));
+			pl2Spread.setMinusErrors(dataArray.get(7));
 			updateDisplay();
 		}
-	}
-
-	private ArrayList<Double> addMaValue(ArrayList<Double> maPl12, int i,
-			ArrayList<Double> pl1ySeries2) {
-		if (pl1ySeries2 != null) {
-			double sum = 0;
-			if (i < 10) {
-				for (int a = i; a >= 0; a--)
-					sum += pl1ySeries2.get(a);
-				maPl12.add(i, sum / (i + 1));
-			} else {
-				sum = maPl12.get(i - 1) * 10 - pl1ySeries2.get(i - 10)
-						+ pl1ySeries2.get(i);
-				maPl12.add(i, sum / 10);
-			}
-		}
-		return maPl12;
-	}
-
-	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, int i,
-			ArrayList<Pair<Double, Double>> oddData) {
-		// if data has been read from Betfair
-		if (oddData != null && oddData.size() > 0) {
-			pl1ySeries2.add(i, oddData.get(0).getI());
-		} else {
-			if (i > 0) // keep previous value if it exists
-				pl1ySeries2.add(i, pl1ySeries2.get(i - 1));
-			else
-				// put zero if no previous value
-				pl1ySeries2.add(i, (double) 0);
-		}
-		return pl1ySeries2;
 	}
 
 	// switches between the two odds representations
@@ -311,7 +266,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 					.setText(yAxisFractionalTitle);
 
 		showSeries(slider.getSelection(), true);
-		// updateDisplay();
+		updateDisplay();
 	}
 
 	/**
@@ -367,31 +322,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		}
 	}
 
-	public void changeSelected(int i) {
-		if (i == 1)
-			pl1Selected = !pl1Selected;
-		else if (i == 2)
-			pl2Selected = !pl2Selected;
-		else if (i == 3)
-			maPl1Selected = !maPl1Selected;
-		else if (i == 4)
-			maPl2Selected = !maPl2Selected;
-		else if (i == 5) 
-			spPl1Selected = !spPl1Selected;
-		else if (i == 6) 
-			spPl2Selected = !spPl2Selected;
-		
-
-		firstSeries.setVisible(pl1Selected);
-		secondSeries.setVisible(pl2Selected);
-		maPl1Series.setVisible(maPl1Selected);
-		maPl2Series.setVisible(maPl2Selected);
-		pl1Spread.setVisible(spPl1Selected);
-		pl2Spread.setVisible(spPl2Selected);
-		updateDisplay();
-
-	}
-
 	private void makeMenus(Composite parent) {
 		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
 		final MenuItem toggle = new MenuItem(menu, SWT.PUSH);
@@ -425,7 +355,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		final MenuItem spPlayer2 = new MenuItem(menu, SWT.CHECK);
 		spPlayer2.setText("Back/Lay Spread " + match.getPlayerTwo());
-		
+
 		final MenuItem stretch = new MenuItem(menu, SWT.CHECK);
 		stretch.setText("Stretch");
 
@@ -436,7 +366,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 					player1.setSelection(true);
 					return;
 				}
-				UpdatableChart.this.changeSelected(1);
+
+				pl1Selected = !pl1Selected;
+				firstSeries.setVisible(pl1Selected);
+				updateDisplay();
+
 			}
 
 		});
@@ -448,44 +382,54 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 					player2.setSelection(true);
 					return;
 				}
-				UpdatableChart.this.changeSelected(2);
+				pl2Selected = !pl2Selected;
+				secondSeries.setVisible(pl2Selected);
+				updateDisplay();
 			}
 		});
 
 		maPlayer1.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				UpdatableChart.this.changeSelected(3);
+				maPl1Selected = !maPl1Selected;
+				maPl1Series.setVisible(maPl1Selected);
+				updateDisplay();
 			}
 		});
 
 		maPlayer2.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				UpdatableChart.this.changeSelected(4);
+				maPl2Selected = !maPl2Selected;
+				maPl2Series.setVisible(maPl2Selected);
+				updateDisplay();
 			}
 		});
-		
+
 		spPlayer1.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				UpdatableChart.this.changeSelected(5);
+				spPl1Selected = !spPl1Selected;
+				pl1Spread.setVisible(spPl1Selected);
+				updateDisplay();
 			}
 		});
-		
+
 		spPlayer2.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				UpdatableChart.this.changeSelected(6);
+				spPl2Selected = !spPl2Selected;
+				pl2Spread.setVisible(spPl2Selected);
+				updateDisplay();
 			}
 		});
-		
+
 		stretch.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                SashForm sf = (SashForm)UpdatableChart.this.getParent().getParent(); 
-                if (sf.getMaximizedControl() == null )
-                    sf.setMaximizedControl(UpdatableChart.this.getParent());
-                else
-                    sf.setMaximizedControl(null);
-            }
-        });
-        
+			public void handleEvent(Event event) {
+				SashForm sf = (SashForm) UpdatableChart.this.getParent()
+						.getParent();
+				if (sf.getMaximizedControl() == null)
+					sf.setMaximizedControl(UpdatableChart.this.getParent());
+				else
+					sf.setMaximizedControl(null);
+			}
+		});
 
 		// first player selected by default
 		player1.setSelection(true);
@@ -495,44 +439,25 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		this.getPlotArea().setMenu(menu);
 	}
 
-	public ILineSeries getFirstSeries() {
-		return firstSeries;
-	}
-
-	public ILineSeries getSecondSeries() {
-		return secondSeries;
-	}
-
 	@Override
-	public void setDisposeListener(Listener listener) {		
+	public void setDisposeListener(Listener listener) {
 		this.addListener(SWT.Dispose, listener);
 	}
-	
-/*	private class ZoomListener implements MouseWheelListener,org.eclipse.swt.events.MouseWheelListener{
-		private UpdatableChart uc;
-		
-		public ZoomListener (UpdatableChart uc) {
-			this.uc = uc;
-		}
-		
-		@Override
-		public void mouseWheelMoved(final MouseWheelEvent e) {
-			int units = e.getWheelRotation();
-			IAxis yAxis = uc.getAxisSet().getYAxis(0);
-			if (units > 0) {
-				// Rotated backward
-				yAxis.zoomOut();
-				System.out.println("Zooming out...");
-			} else {
-				// Rotated forward
-				yAxis.zoomIn();
-				System.out.println("Zooming in...");
-			}
-		}
 
-		@Override
-		public void mouseScrolled(MouseEvent e) {
-			System.out.println(e.toString());
-		}
-	}8*/
+	/*
+	 * private class ZoomListener implements
+	 * MouseWheelListener,org.eclipse.swt.events.MouseWheelListener{ private
+	 * UpdatableChart uc;
+	 * 
+	 * public ZoomListener (UpdatableChart uc) { this.uc = uc; }
+	 * 
+	 * @Override public void mouseWheelMoved(final MouseWheelEvent e) { int
+	 * units = e.getWheelRotation(); IAxis yAxis = uc.getAxisSet().getYAxis(0);
+	 * if (units > 0) { // Rotated backward yAxis.zoomOut();
+	 * System.out.println("Zooming out..."); } else { // Rotated forward
+	 * yAxis.zoomIn(); System.out.println("Zooming in..."); } }
+	 * 
+	 * @Override public void mouseScrolled(MouseEvent e) {
+	 * System.out.println(e.toString()); } }8
+	 */
 }
