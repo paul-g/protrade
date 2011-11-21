@@ -1,9 +1,6 @@
 package org.ic.tennistrader.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -35,11 +32,9 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
-import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import org.ic.tennistrader.utils.MatchUtils;
 
