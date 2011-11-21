@@ -63,10 +63,12 @@ public class LowerToolBar {
 		}).start();
 	}
 	
+	/** Thread stopping value */
 	public static void setStop() {
 		stop = true;
 	}
 	
+	/** Method checking the internet availability */
 	private boolean isInternetReachable() {
 		try {
 			// URL to a source

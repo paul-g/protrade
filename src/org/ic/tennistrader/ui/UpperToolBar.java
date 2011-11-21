@@ -73,6 +73,7 @@ public class UpperToolBar {
 		
 	}
 	
+	/** Profile button menu constructor */
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
 		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
 		balanceItem.setToolTipText("Balance");
@@ -217,6 +218,7 @@ public class UpperToolBar {
 		}
 	}
 
+	/** New widget button constructor */
 	private void makeNewWidgetMenu(final MainWindow mainWindow,
 			final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
@@ -270,6 +272,7 @@ public class UpperToolBar {
 		toolbar.pack();
 	}
 
+	/** Play menu constructor */
 	private void makePlayMenu(final Shell shell) {
 		final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 		playButtonItem.setToolTipText("Play from a file");
@@ -326,7 +329,8 @@ public class UpperToolBar {
 		playButtonItem.addListener(SWT.Selection, new LeftDropDownListener(
 				playButtonItem, playDropDown));
 	}
-	
+
+	/** Text representation of the profile */
 	public String textProfile() {
 		AccountFunds af = profileData.getUkAccountFunds();
 		String res =
@@ -340,6 +344,7 @@ public class UpperToolBar {
 		return res;
 	}
 	
+	/** Open a new match view */
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
@@ -347,6 +352,7 @@ public class UpperToolBar {
 		}
 	}
 	
+	/** Listener for the left hand side buttons */
 	private class LeftDropDownListener implements Listener {
 
 		private ToolItem item;
@@ -369,6 +375,7 @@ public class UpperToolBar {
 
 	}
 
+	/** Listener for right hand side buttons */
 	private class RightDropDownListener implements Listener {
 
 		private ToolItem item;
