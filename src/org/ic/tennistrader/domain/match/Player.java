@@ -3,6 +3,7 @@ package org.ic.tennistrader.domain.match;
 public class Player {    
     String firstname;
     String lastname;
+    Statistics statistics;
     
     public Player(){
         this.firstname = "";

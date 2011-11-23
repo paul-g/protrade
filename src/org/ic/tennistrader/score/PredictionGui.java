@@ -24,6 +24,9 @@ import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.domain.match.Statistics;
 
 public class PredictionGui {
 
@@ -44,6 +47,7 @@ public class PredictionGui {
     private boolean statisticsPopulated = false;
 
     private Composite statisticsTable;
+    
 
     /**
      * For running the prediction gui separately
@@ -53,8 +57,8 @@ public class PredictionGui {
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        Player playerOne = new Player("Novak", "Djokovic");
-        Player playerTwo = new Player("Roger", "Federer");
+        Player playerOne = new Player("Julio Cesar", "Campozano");
+        Player playerTwo = new Player("Andres", "Molteni");
 
         Match match = new HistoricalMatch(playerOne, playerTwo);
 
@@ -66,7 +70,7 @@ public class PredictionGui {
             if (!display.readAndDispatch())
                 display.sleep();
         }
-
+        
         display.dispose();
 
     }
@@ -82,7 +86,14 @@ public class PredictionGui {
 
         ScorePanel sc = new ScorePanel(composite, match);
 
-        ProbabilityPanel probabilityPanel = new ProbabilityPanel(composite);
+        Score score = new Score();
+        Statistics playerOneStats = new Statistics();
+        Statistics playerTwoStats = new Statistics();
+    	PlayerEnum server = PlayerEnum.PLAYER1;	
+        
+        PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
+        predict.calculate();
+        ProbabilityPanel probabilityPanel = new ProbabilityPanel(composite, predict);
 
         statisticsTable = createStatisticsTable(parent);
 
