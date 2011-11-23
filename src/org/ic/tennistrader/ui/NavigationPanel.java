@@ -20,7 +20,9 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import org.ic.tennistrader.domain.Tournament;
+import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 import org.ic.tennistrader.utils.Pair;
 
@@ -31,7 +33,7 @@ public class NavigationPanel {
 	private final Text searchBox;
 	private Stack<List<Pair<String, Pair<Integer, Integer>>>> treeStates = new Stack<List<Pair<String, Pair<Integer, Integer>>>>();
 
-	private List<Listener> listeners;
+	private List<MatchSelectionListener> listeners;
 
 	private String prevSearchBoxText = "";
 
@@ -71,7 +73,7 @@ public class NavigationPanel {
 		folder.setLayoutData(gridData);
 		NavigationPanel.tree = new Tree(composite, SWT.NONE);
 		loadTennisMatches(tree);
-		listeners = new ArrayList<Listener>();
+		listeners = new ArrayList<MatchSelectionListener>();
 
 		GridData tgridData = new GridData();
 		tgridData.horizontalAlignment = GridData.FILL;
@@ -98,14 +100,19 @@ public class NavigationPanel {
 
 		tree.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				for (Listener l : listeners)
-					l.handleEvent(event);
+			    
+			    TreeItem ti = (TreeItem) event.item;
+		    
+		        Match match = getMatch(ti);
+			    
+				for (MatchSelectionListener msl : listeners)
+					msl.handleMatchSelection(match);
 			}
 		});
 
 	}
 
-	public void addListener(Listener listener) {
+	public void addListener(MatchSelectionListener listener) {
 		listeners.add(listener);
 	}
 
@@ -167,14 +174,6 @@ public class NavigationPanel {
 
 	public static RealMatch getMatch(TreeItem treeItem) {
 		return matchMap.get(treeItem);
-	}
-	
-	public static RealMatch getMatch(String title){
-	    for (TreeItem ti : matchMap.keySet()){
-	        if (getMatch(ti).toString().equals(title))
-	            return getMatch(ti);
-	     }
-	    return null;
 	}
 
 	public static TreeItem getSelection(){

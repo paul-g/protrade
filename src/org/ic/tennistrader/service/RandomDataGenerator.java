@@ -76,7 +76,7 @@ public class RandomDataGenerator {
         }
         
         // make a few more entries
-        int prev = i, j = 0;
+        int j = 0;
         for (;j<5;j++)
             makeNewEntry();
         i+=j;
@@ -154,7 +154,7 @@ public class RandomDataGenerator {
         
         int size = 3; 
                 
-        int [] scores = new int[3];
+        int [] scores = new int[size];
         
         for (int i=1;i<4;i++) {
             SetScore setScore = score.getSetScore(i);
