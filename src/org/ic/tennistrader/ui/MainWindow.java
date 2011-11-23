@@ -52,6 +52,7 @@ public class MainWindow {
     }
 
     private void show(Display display) {
+
         notifyLoadEvent("Login successful! Starting application...");
         
         this.shell = new Shell(display);
@@ -60,15 +61,7 @@ public class MainWindow {
         /***********************/
         shell.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
-        GridLayout layout = new GridLayout();
-        layout.horizontalSpacing = 10;
-        layout.verticalSpacing = 10;
-        layout.numColumns = 3;
-        layout.makeColumnsEqualWidth = true;
-        // layout.justify = true;
-
-        shell.setLayout(layout);
-        shell.setText(Main.TITLE);
+        makeLayout();
 
         // Menu and Tool bar set-up
         @SuppressWarnings("unused")
@@ -76,24 +69,6 @@ public class MainWindow {
 
         @SuppressWarnings("unused")
         MenuPanel mp = new MenuPanel(this);
-
-        // Sashform set-up
-        this.sashForm = new SashForm(shell, SWT.HORIZONTAL);
-        GridData layoutData = new GridData();
-        layoutData.grabExcessHorizontalSpace = true;
-        layoutData.grabExcessVerticalSpace = true;
-        layoutData.horizontalAlignment = GridData.FILL;
-        layoutData.horizontalSpan = 3;
-        layoutData.verticalAlignment = GridData.FILL;
-        sashForm.setLayoutData(layoutData);
-        sashForm.setLayout(layout);
-
-        this.sashFormLeft = new SashForm(sashForm, SWT.VERTICAL);
-        this.sashFormRight = new SashForm(sashForm, SWT.VERTICAL);
-
-        
-        sashForm.setFocus();
-        sashForm.setWeights(new int[]{20,80});
 
         this.np = new NavigationPanel(sashFormLeft);
         notifyLoadEvent("Fetching betfair data");
@@ -118,6 +93,35 @@ public class MainWindow {
         }
         
         notifyLoadEvent("Done!");
+    }
+
+    private void makeLayout() {
+        GridLayout layout = new GridLayout();
+        layout.horizontalSpacing = 10;
+        layout.verticalSpacing = 10;
+        layout.numColumns = 3;
+        layout.makeColumnsEqualWidth = true;
+        // layout.justify = true;
+
+        shell.setLayout(layout);
+        shell.setText(Main.TITLE);
+
+        // Sashform set-up
+        this.sashForm = new SashForm(shell, SWT.HORIZONTAL);
+        GridData layoutData = new GridData();
+        layoutData.grabExcessHorizontalSpace = true;
+        layoutData.grabExcessVerticalSpace = true;
+        layoutData.horizontalAlignment = GridData.FILL;
+        layoutData.horizontalSpan = 3;
+        layoutData.verticalAlignment = GridData.FILL;
+        sashForm.setLayoutData(layoutData);
+        sashForm.setLayout(layout);
+
+        this.sashFormLeft = new SashForm(sashForm, SWT.VERTICAL);
+        this.sashFormRight = new SashForm(sashForm, SWT.VERTICAL);
+        
+        sashForm.setFocus();
+        sashForm.setWeights(new int[]{20,80});
     }
     
     public void run(Display display) {

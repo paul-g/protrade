@@ -28,17 +28,16 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
-import org.eclipse.swt.widgets.TreeItem;
 
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
-import org.ic.tennistrader.utils.MatchUtils;
 
-public class DisplayPanel implements Listener {
+public class DisplayPanel implements MatchSelectionListener {
 
     private final CTabFolder folder;
     private Display display;
@@ -72,17 +71,7 @@ public class DisplayPanel implements Listener {
         new PredictionGui(composite, match);
     }
 
-    public void handleEvent(Event event) {
-        TreeItem ti = (TreeItem) event.item;
-
-        String name = ti.getText();
-
-        // if it's not a match, don't display
-        if (!MatchUtils.isMatch(name))
-            return;
-
-        Match match = NavigationPanel.getMatch(name);
-
+    public void handleMatchSelection(Match match) {
         addMatchView(match);
     }
 

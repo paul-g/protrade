@@ -1,8 +1,11 @@
 package org.ic.tennistrader.ui.updatable;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -12,6 +15,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.ic.tennistrader.ui.GraphicsUtils;
+import org.pushingpixels.trident.Timeline;
 
 public class OddsButton {
 	private Composite comp;
@@ -21,11 +26,15 @@ public class OddsButton {
     private final Display display;
     private Color initialColor;
     private Color clickColor;
-    private Color hoverColor;    
+    private Color hoverColor;
+    
+    private Image backgroundImage;
+    private Image highlightImage;
 
     OddsButton(Composite parent, Color color, Font oddsFont, UpdatableMarketDataGrid dataGrid) {     	 
     	this.dataGrid = dataGrid;
         comp = new Composite(parent, SWT.BORDER);
+        comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
         initColors(color);
         this.display = parent.getDisplay(); 
         RowLayout rowLayout = new RowLayout();
@@ -35,16 +44,44 @@ public class OddsButton {
         comp.setBackground(color);
         comp.setLayoutData(gd);
         comp.setLayout(rowLayout);
+        
         this.odds = new Label(comp, SWT.NONE);
         this.odds.setFont(oddsFont);
         this.amount = new Label(comp, SWT.NONE);
-        odds.setBackground(color);
-        amount.setBackground(color);
 
          addClickListener();
-         addEnterListener();
-         addExitListener();
+        /* addEnterListener();
+         addExitListener();*/
          
+        parent.layout();
+        this.highlightImage  = GraphicsUtils.makeGradientBackgroundImage(comp, 155, 205, 155, 193, 255, 193);
+        this.backgroundImage = GraphicsUtils.makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210, 238 );
+            
+         //final Timeline rolloverTimeline = new Timeline(comp);
+        // rolloverTimeline.addPropertyToInterpolate("backgroundImage", backgroundImage, highlightImage);
+         //rolloverTimeline.setDuration(100);
+         comp.addMouseTrackListener(new MouseTrackListener() {
+
+             @Override
+             public void mouseEnter(MouseEvent arg0) {
+                 comp.setBackgroundImage(highlightImage);
+                //rolloverTimeline.play();
+             }
+
+             @Override
+             public void mouseExit(MouseEvent e) {
+                // if ( !odds.isFocusControl() && !amount.isFocusControl())
+                     //rolloverTimeline.playReverse();
+             
+                 comp.setBackgroundImage(backgroundImage);
+             }
+
+             @Override
+             public void mouseHover(MouseEvent arg0) {
+                 // TODO Auto-generated method stub
+
+             }
+         });
          
          Menu menu = makeMenu(comp);
          comp.setMenu(menu);
@@ -83,9 +120,7 @@ public class OddsButton {
         });
     }
 
-    void setBackgroundColor(Color color){
-        odds.setBackground(color);
-        amount.setBackground(color);
+    public void setBackground(Color color){
         comp.setBackground(color);
     }
     
@@ -95,12 +130,12 @@ public class OddsButton {
             public void handleEvent(Event e) {
             	//BetController.addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
             	dataGrid.getBetController().addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
-                setBackgroundColor(clickColor);
+                setBackground(clickColor);
                 
                 display.timerExec(100, new Runnable() {
                     @Override
                     public void run() {
-                        setBackgroundColor(hoverColor);
+                        setBackground(hoverColor);
                     }
                 });
               }
@@ -110,34 +145,7 @@ public class OddsButton {
         odds.addListener(SWT.MouseUp, l);
         amount.addListener(SWT.MouseUp, l);
     }
-            
-    
-    void addEnterListener(){
-        Listener l = new Listener() {
-            @Override
-            public void handleEvent(Event e) {
-                setBackgroundColor(hoverColor);
-              }
-         };
-                
-        comp.addListener(SWT.MouseEnter, l); 
-        odds.addListener(SWT.MouseEnter, l);
-        amount.addListener(SWT.MouseEnter, l);
-    }
-    
-    void addExitListener(){
-        Listener l = new Listener() {
-            @Override
-            public void handleEvent(Event e) {
-                setBackgroundColor(initialColor);
-              }
-         };
-                
-        comp.addListener(SWT.MouseExit, l); 
-        odds.addListener(SWT.MouseExit, l);
-        amount.addListener(SWT.MouseExit, l);
-    }
-
+           
     void setOdds(String odds) {
         this.odds.setText(odds);
     }
