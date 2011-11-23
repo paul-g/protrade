@@ -28,7 +28,7 @@ public class ChartData {
 		xSeries = new ArrayList<Date>();
 	}
 	
-	public void addValues(MOddsMarketData data){
+	public void updateData(MOddsMarketData data){
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
 		pl1YSeries = addValue(pl1YSeries,  data.getPl1Back());
 		pl2YSeries = addValue(pl2YSeries,  data.getPl2Back());

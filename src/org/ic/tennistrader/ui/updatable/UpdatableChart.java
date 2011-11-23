@@ -155,12 +155,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	public void fillData(MOddsMarketData data) {
 		// add new market data to the data structures
 		int i = chartData.getDataSize();
-		chartData.addValues(data);
-		
-
+		chartData.updateData(data);
 		// update size of the slider and selection based on what user was
 		// previously viewing
-		updateSlider(chartData.getDataSize());
+		updateSlider(i);
 		// set serieses values
 		showSeries(i, false);
 		if (!this.isDisposed()){
@@ -242,11 +240,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 						pow))
 						* k;
 			}
-			
-			for (int b = 0; b<dataArray.get(0).length; b++){
-				System.out.print(showXSeries[b] + " " + dataArray.get(0)[b]+ " ");
-			}
-			System.out.println();
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(	dataArray.get(0));
 			secondSeries.setXDateSeries(showXSeries);
