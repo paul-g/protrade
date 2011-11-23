@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -22,11 +26,12 @@ import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.exceptions.LoginFailedException;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
+import org.pushingpixels.trident.Timeline;
 
 public class LoginShell {
 
     List<Listener> loginSucces = new ArrayList<Listener>();
-    
+
     private Shell loginShell;
 
     private Label result;
@@ -34,21 +39,21 @@ public class LoginShell {
     private static Logger log = Logger.getLogger(LoginShell.class);
 
     private static final String TITLE = "Tennis Trader Login";
-    
+
     public static final String SUCCESS = "Login successful! Please wait...";
 
     public static final String FAIL = "Login failed! Please try again...";
-    
+
     private ProgressBar bar;
-    
-    public Shell show(){
+
+    public Shell show() {
         return loginShell;
     }
 
     public LoginShell(final Display display) {
         this.loginShell = new Shell(display, SWT.MAX/* SWT.NO_TRIM|SWT.ON_TOP */);// SWT.TRANSPARENCY_ALPHA);
-        loginShell.setSize(400,160);
-        loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT); 
+        loginShell.setSize(400, 160);
+        loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
         final Image logoUp = new Image(loginShell.getDisplay(),
                 "images/sports_tennis.jpg");
@@ -66,7 +71,7 @@ public class LoginShell {
         GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData.horizontalSpan = 1;
-        
+
         GridData gridData2 = new GridData(150, 16);
         gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData2.horizontalSpan = 4;
@@ -94,10 +99,7 @@ public class LoginShell {
         @SuppressWarnings("unused")
         Label blankLabel2 = new Label(loginShell, SWT.NONE);
 
-        Button login = new Button(loginShell, SWT.PUSH);
-        GridData buttonData = new GridData();
-        login.setText("Login");
-        login.setLayoutData(buttonData);
+        Button login = makeLoginButton(display);
 
         // test account button
         makeTestAccount(display);
@@ -141,7 +143,44 @@ public class LoginShell {
 
     }
 
-  public void run(final Display display) {
+    private Button makeLoginButton(final Display display) {
+        Button login = new Button(loginShell, SWT.PUSH);
+        GridData buttonData = new GridData();
+        login.setText("Login");
+        login.setLayoutData(buttonData);
+
+        Color init = new org.eclipse.swt.graphics.Color(display, 3, 3, 3); 
+        Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
+        
+        login.setForeground(init);
+
+        final Timeline rolloverTimeline = new Timeline(login);
+        rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
+        rolloverTimeline.setDuration(100);
+        login.addMouseTrackListener(new MouseTrackListener() {
+
+            @Override
+            public void mouseEnter(MouseEvent arg0) {
+                rolloverTimeline.play();
+
+            }
+
+            @Override
+            public void mouseExit(MouseEvent arg0) {
+                rolloverTimeline.playReverse();
+
+            }
+
+            @Override
+            public void mouseHover(MouseEvent arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        return login;
+    }
+
+    public void run(final Display display) {
         while (!loginShell.isDisposed()) {
             if (!display.readAndDispatch())
                 display.sleep();
@@ -201,26 +240,26 @@ public class LoginShell {
         loginShell.dispose();
     }
 
-    public void addLoginSuccessListener(Listener listener){
-      loginSucces.add(listener);  
+    public void addLoginSuccessListener(Listener listener) {
+        loginSucces.add(listener);
     }
-    
-    public void handleLoginSuccess(){
+
+    public void handleLoginSuccess() {
         for (Listener l : loginSucces)
             l.handleEvent(new Event());
     }
-    
-    public void setText(String text){
+
+    public void setText(String text) {
         result.setText(text + "...");
     }
-    
-    public void updateProgressBar(int amount){
+
+    public void updateProgressBar(int amount) {
         if (!bar.getVisible())
             bar.setVisible(true);
         bar.setSelection(bar.getSelection() + amount);
     }
-    
-    public void finishProgressBar(){
+
+    public void finishProgressBar() {
         bar.setSelection(bar.getMaximum());
     }
 }
