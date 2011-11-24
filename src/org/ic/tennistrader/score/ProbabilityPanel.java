@@ -39,7 +39,7 @@ public class ProbabilityPanel {
         TableItem item = new TableItem(table, SWT.NONE);
         int c = 0;
         item.setText(c++, "Player 1");
-        item.setText(c++, "62%");
+        item.setText(c++, "0");//+(predict.calculate()[0]));
         item.setText(c++, "78%");
         item.setText(c++, "57%");
         item.setText(c++, "63%");

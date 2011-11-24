@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
@@ -17,6 +18,8 @@ public class ScorePanel implements UpdatableWidget {
     private Match match;
 
     private Table scoreTable;
+    
+    private PlayerEnum server;
 
     private TableColumn[] columns;
 
@@ -89,7 +92,23 @@ public class ScorePanel implements UpdatableWidget {
 
         ti2.setText(c, score.getPlayerTwoPoints() + "");
     }
+    
+    public void setServer( PlayerEnum player )
+    {
+    	if(player == PlayerEnum.PLAYER1)
+        	scoreTable.getItem(0).setText(0, "S");
+    	else 
+    		scoreTable.getItem(1).setText(0, "S");
+    	
+    	server = player;
+    }
+    
+    public PlayerEnum getServer()
+    {
+    	return this.server;
+    }
 
+    
     @Override
     public void handleUpdate(MOddsMarketData newData) {
         display.asyncExec(new Runnable() {

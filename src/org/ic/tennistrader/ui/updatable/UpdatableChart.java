@@ -158,7 +158,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     public void fillData(MOddsMarketData data) {
         // add new market data to the data structures
         int i = chartData.getDataSize();
-        chartData.addValues(data);
+        chartData.updateData(data);
 
         // update size of the slider and selection based on what user was
         // previously viewing
