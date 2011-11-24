@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.EventBetfair;
@@ -41,11 +43,13 @@ public class LiveDataFetcher {
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
-        widget.setDisposeListener(new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				unregisterLive(widget, match);
-			}        	
+        widget.setDisposeListener(new DisposeListener() {
+            @Override
+            public void widgetDisposed(DisposeEvent arg0) {
+                // TODO Auto-generated method stub
+                unregisterLive(widget, match);
+                System.out.println("Disposed widget");
+            }        	
         });
         // start the thread
         if (!started){
@@ -82,11 +86,13 @@ public class LiveDataFetcher {
             widgets = fileListeners.get(match);
         widgets.add(widget);
         fileListeners.put(match, widgets);
-        widget.setDisposeListener(new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				unregisterFromFile(widget, match);
-			}        	
+        widget.setDisposeListener(new DisposeListener() {
+            
+            @Override
+            public void widgetDisposed(DisposeEvent arg0) {
+                // TODO Auto-generated method stub
+                unregisterFromFile(widget, match);    
+            }
         });
         if(isNewMatch) {
             startFromFile(match, fileName);

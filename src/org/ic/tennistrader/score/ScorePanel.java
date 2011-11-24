@@ -1,9 +1,9 @@
 package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -120,7 +120,7 @@ public class ScorePanel implements UpdatableWidget {
     }
 
     @Override
-    public void setDisposeListener(Listener listener) {
+    public void setDisposeListener(DisposeListener listener) {
         // TODO Auto-generated method stub
     }
 }

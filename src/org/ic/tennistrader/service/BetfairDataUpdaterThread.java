@@ -59,11 +59,6 @@ public class BetfairDataUpdaterThread extends DataUpdaterThread {
 		log.info("Stopped Betfair thread");
     }
 
-	@Override
-	public void setStop() {
-		this.stop = true;
-	}
-	
 	public List<EventBetfair> getEvents() {
 		return synchronizedEvents.getEvents();
 	}

@@ -7,5 +7,7 @@ public abstract class DataUpdaterThread extends Thread{
 	
     public abstract void addEvent(RealMatch match);
     
-    public abstract void setStop();
+    public void setStop() {
+    	this.stop = true;
+    }
 }

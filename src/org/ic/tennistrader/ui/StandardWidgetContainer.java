@@ -20,4 +20,9 @@ public class StandardWidgetContainer extends Composite {
 
         });
     }
+    
+    public String getTitle(){
+        // containers only need a title if they'll be added to tabbedcontainer
+        return "";
+    }
 }

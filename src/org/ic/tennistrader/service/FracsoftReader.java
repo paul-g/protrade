@@ -186,11 +186,6 @@ public class FracsoftReader extends DataUpdaterThread {
         return pair(player1, player2);
     }
 
-    @Override
-    public void setStop() {
-        this.stop = true;
-    }
-
     public void setUpdatesPerSecond(int updates) {
         this.updatesPerSecond = updates;
     }
