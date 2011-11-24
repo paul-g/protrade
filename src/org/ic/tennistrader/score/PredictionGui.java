@@ -99,10 +99,9 @@ public class PredictionGui {
         Statistics playerTwoStats = statisticsUpdateThread.getPlayerOneStats();
     	PlayerEnum server = sc.getServer();	
         
-        PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
-        predict.calculate();
+        //PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
+        //predict.calculate();
         ProbabilityPanel probabilityPanel = new ProbabilityPanel(this.composite);
-
-        statisticsUpdateThread.start();
+      
     }   
 }
