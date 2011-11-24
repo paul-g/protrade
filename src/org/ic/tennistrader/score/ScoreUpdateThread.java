@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.service.MatchUpdaterThread;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
@@ -21,33 +22,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
-public class ScoreUpdateThread extends Thread {
-    
-    private Match match;
-    
-    private ScorePanel sc;
-    
+public class ScoreUpdateThread extends MatchUpdaterThread {    
+    private Match match;    
+    private ScorePanel sc;    
     private String scoreString;
 
     public ScoreUpdateThread(Match match, ScorePanel sc) {
         this.match = match;
         this.sc = sc;
-    }
-
-    @Override
-    public void run() {
-        // keep updating the score
-        while (true) {
-            try {
-                this.scoreString = extractScores();
-            } catch (Exception e) {
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
-        }
     }
 
     public Score getScore() {
@@ -268,5 +250,18 @@ public class ScoreUpdateThread extends Thread {
         }
         return string;
     }
+
+	@Override
+	protected void runBody() {
+		try {
+            this.scoreString = extractScores();
+        } catch (Exception e) {
+        }
+
+        try {
+            Thread.sleep(5000);
+        } catch (Exception e) {
+        }
+	}
 
 }

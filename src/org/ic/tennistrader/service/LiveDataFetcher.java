@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -100,7 +97,22 @@ public class LiveDataFetcher {
     }
 
     protected static void unregisterFromFile(UpdatableWidget widget, Match match) {
-		// TODO Auto-generated method stub		
+    	//System.out.println("Unregister live entered");
+    	List<UpdatableWidget> widgets = null;
+    	if (fileListeners.containsKey(match)) {
+            widgets = fileListeners.get(match);
+        }
+    	if (widgets != null) {
+    		widgets.remove(widget);
+    		if (widgets.size() == 0) {
+    			FracsoftReader fracsoftReaderThread = fileReaders.get(match);
+    			//removeMatch(match);
+    			fracsoftReaderThread.setStop();
+    			fracsoftReaderThread.interrupt();
+    			fileListeners.remove(match);
+    			
+    		}
+    	}
 	}
 
 	public static void start() {
@@ -130,8 +142,7 @@ public class LiveDataFetcher {
         }
     }
 
-    public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {
-        
+    public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
         match.setScore(dataScore.second());
         if (fileListeners.containsKey(match)) {
             List<UpdatableWidget> widgets = fileListeners.get(match);
