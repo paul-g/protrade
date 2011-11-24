@@ -23,7 +23,7 @@ import static org.ic.tennistrader.utils.Pair.pair;
  * @author Paul Grigoras
  * 
  */
-public class FracsoftReader extends DataUpdaterThread {
+public class FracsoftReader extends MatchUpdaterThread {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
 
@@ -82,7 +82,7 @@ public class FracsoftReader extends DataUpdaterThread {
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
 
                 Score s = new Score();
-                
+
                 if (lines1.length > GAMES_OFFSET) {
                     // score data is provided
                     int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
@@ -136,16 +136,13 @@ public class FracsoftReader extends DataUpdaterThread {
     }
 
     @Override
-    public void run() {
-        while (!this.stop) {
-            LiveDataFetcher.handleFileEvent(this.match, getMarketData());
-            try {
-                Thread.sleep(1000 / this.updatesPerSecond);
-            } catch (InterruptedException e) {
-                log.info("Fracsoft thread interrupted");
-            }
+    public void runBody() {
+        LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+        try {
+            Thread.sleep(1000 / this.updatesPerSecond);
+        } catch (InterruptedException e) {
+            log.info("Fracsoft thread interrupted");
         }
-        log.info("Stopped Fracsoft thread");
     }
 
     public Pair<MOddsMarketData, Score> getMarketData() {
