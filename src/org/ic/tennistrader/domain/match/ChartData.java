@@ -35,7 +35,7 @@ public class ChartData {
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
-		maPl2 = addMaValue(maPl2, pl2YSeries);
+		maPl2 = addMaValue(maPl2, pl2YSeries); 
 		setDataSize(pl1YSeries.size());
 	}
 	private ArrayList<Pair<Double, Double>> addLay(ArrayList<Pair<Double, Double>> array, 
