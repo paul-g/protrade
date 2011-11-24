@@ -7,14 +7,15 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.ui.BetsDisplay;
-import org.ic.tennistrader.utils.Pair;
+
+import static org.ic.tennistrader.utils.Pair.pair;
 
 public class BetManager {    
     private static List<Bet> matchedBets = new ArrayList<Bet>();
     private static List<Bet> unmatchedBets = new ArrayList<Bet>();
     
     public static void placeBet(Match match, Player player, BetTypeEnum betType, double odds, double amount) {        
-        Bet newBet = new Bet(match, player, betType, new Pair<Double, Double>(odds, amount));
+        Bet newBet = new Bet(match, player, betType, pair(odds, amount));
         matchedBets.add(newBet);
         BetsDisplay.addBet(newBet);            
     }

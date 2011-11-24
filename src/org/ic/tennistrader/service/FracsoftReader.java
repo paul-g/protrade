@@ -13,7 +13,9 @@ import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
+
 import org.ic.tennistrader.utils.Pair;
+import static org.ic.tennistrader.utils.Pair.pair;
 
 /**
  * Reads data in Fracsoft format from a given file
@@ -95,7 +97,7 @@ public class FracsoftReader extends DataUpdaterThread {
                     s.setSets(pl1games, pl2games);
                 }
 
-                matchDataList.add(new Pair<MOddsMarketData, Score>(data, s));
+                matchDataList.add(pair(data, s));
                 if (data.getDelay() != 0 && inPlayPointer == -1)
                     inPlayPointer = i;
                 i++;
@@ -127,7 +129,7 @@ public class FracsoftReader extends DataUpdaterThread {
         for (int i = 0; i < 3; i++) {
             double odds = Double.parseDouble(lines1[offset + i * 2]);
             double amount = Double.parseDouble(lines1[offset + i * 2 + 1]);
-            Pair<Double, Double> p = new Pair<Double, Double>(odds, amount);
+            Pair<Double, Double> p = pair(odds, amount);
             pl1Backs.add(p);
         }
         return pl1Backs;
@@ -181,7 +183,7 @@ public class FracsoftReader extends DataUpdaterThread {
             log.error(e.getMessage());
         }
 
-        return new Pair<String, String>(player1, player2);
+        return pair(player1, player2);
     }
 
     @Override

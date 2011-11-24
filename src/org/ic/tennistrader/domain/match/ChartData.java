@@ -5,7 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
+
 import org.ic.tennistrader.utils.Pair;
+import static org.ic.tennistrader.utils.Pair.pair;
 
 public class ChartData {
 	private ArrayList<Double> pl1YSeries;
@@ -45,15 +47,15 @@ public class ChartData {
 		double minus;
 		// if data has been read from Betfair
 		if (back != null && lay != null && back.size() > 0 && lay.size() > 0) {
-			minus = back.get(back.size()-1).getI();
-			plus = lay.get(lay.size()-1).getI();
-			array.add(new Pair<Double, Double>(plus,minus));
+			minus = back.get(back.size()-1).first();
+			plus = lay.get(lay.size()-1).first();
+			array.add( pair(plus,minus));
 		} else {
 			if (i > 0) // keep previous value if it exists
 				array.add(i,array.get(i-1));
 			else
 				// put zero if no previous value
-				array.add(i, new Pair<Double, Double>(0.0,0.0));
+				array.add(i, pair(0.0,0.0));
 		}
 		return array;
 	}
@@ -82,7 +84,7 @@ public class ChartData {
 		int i = this.getDataSize();
 		// if data has been read from Betfair
 		if (oddData != null && oddData.size() > 0) {
-			pl1ySeries2.add(i, oddData.get(0).getI());
+			pl1ySeries2.add(i, oddData.get(0).first());
 		} else {
 			if (i > 0) // keep previous value if it exists
 				pl1ySeries2.add(i, pl1ySeries2.get(i - 1));
@@ -157,6 +159,4 @@ public class ChartData {
 	public int getDataSize() {
 		return dataSize;
 	}
-	
-	
 }

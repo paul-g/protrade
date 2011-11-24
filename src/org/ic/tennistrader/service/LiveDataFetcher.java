@@ -126,11 +126,11 @@ public class LiveDataFetcher {
 
     public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {
         
-        match.setScore(dataScore.getJ());
+        match.setScore(dataScore.second());
         if (fileListeners.containsKey(match)) {
             List<UpdatableWidget> widgets = fileListeners.get(match);
             for (UpdatableWidget w : widgets) {
-                w.handleUpdate(dataScore.getI());
+                w.handleUpdate(dataScore.first());
             }
         }
     }

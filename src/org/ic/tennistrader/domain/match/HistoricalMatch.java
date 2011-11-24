@@ -26,15 +26,15 @@ public class HistoricalMatch implements Match {
 
         Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
         
-        System.out.println(p.getI());
-        System.out.println(p.getJ());
+        System.out.println(p.first());
+        System.out.println(p.second());
         
-        String names [] = p.getI().split(" ");
+        String names [] = p.first().split(" ");
         
         this.player1.setFirstname(names[0]);
         this.player1.setLastname(names[1]);
         
-        names = p.getJ().split(" ");
+        names = p.second().split(" ");
         this.player2.setFirstname(names[0]);
         this.player2.setLastname(names[1]);
         

@@ -24,12 +24,11 @@ import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.ui.StandardWidgetContainer;
 
-public class PredictionGui {
+public class PredictionGui extends StandardWidgetContainer{
 
     private static Logger log = Logger.getLogger(Main.class);
-
-    private Composite composite;
 
     private TableColumn[] columns;
 
@@ -58,7 +57,7 @@ public class PredictionGui {
 
         Match match = new HistoricalMatch(playerOne, playerTwo);
 
-        new PredictionGui(shell, match);
+        new PredictionGui(shell, SWT.BORDER, match);
 
         shell.open();
 
@@ -71,18 +70,17 @@ public class PredictionGui {
 
     }
 
-    public PredictionGui(final Composite parent, Match match) {
+    public PredictionGui(final Composite parent, int style, Match match) {
+        super(parent, style);
         this.statisticsUpdateThread = new StatisticsUpdateThread(match);
 
         this.updateThread = new ScoreUpdateThread(match.getName());
 
-        this.composite = new Composite(parent, SWT.BORDER);
+        this.setLayout(new GridLayout());
 
-        composite.setLayout(new GridLayout());
+        ScorePanel sc = new ScorePanel(this, match);
 
-        ScorePanel sc = new ScorePanel(composite, match);
-
-        ProbabilityPanel probabilityPanel = new ProbabilityPanel(composite);
+        ProbabilityPanel probabilityPanel = new ProbabilityPanel(this);
 
         statisticsTable = createStatisticsTable(parent);
 
