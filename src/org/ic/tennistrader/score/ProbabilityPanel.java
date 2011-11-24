@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class ProbabilityPanel {
 
-    public ProbabilityPanel(Composite composite, PredictionCalculator predict) {
+    public ProbabilityPanel(Composite composite) {
 
         final Table table = new Table(composite, SWT.NONE);
         table.setBounds(new Rectangle(10, 110, 370, 90));
@@ -39,7 +39,7 @@ public class ProbabilityPanel {
         TableItem item = new TableItem(table, SWT.NONE);
         int c = 0;
         item.setText(c++, "Player 1");
-        item.setText(c++, ""+(predict.calculate()[0]));
+        item.setText(c++, "0");//+(predict.calculate()[0]));
         item.setText(c++, "78%");
         item.setText(c++, "57%");
         item.setText(c++, "63%");

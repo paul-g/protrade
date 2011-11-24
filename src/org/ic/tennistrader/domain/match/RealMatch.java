@@ -28,6 +28,7 @@ public class RealMatch implements Match{
 	    if ( names.length == 2){
 	        this.player1.setLastname(names[0]);
 		    this.player2.setLastname(names[1]);
+		    //System.out.println(player1 + "  --- " + player2 + " --- " + names[0]);
 	    }
 		this.setEventBetfair(eb);
 		setMarketDatas(new ArrayList<MOddsMarketData>());
