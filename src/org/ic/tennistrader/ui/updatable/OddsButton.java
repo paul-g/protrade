@@ -15,7 +15,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.ui.GraphicsUtils;
+import org.ic.tennistrader.ui.LoginShell;
 import org.pushingpixels.trident.Timeline;
 
 public class OddsButton {
@@ -30,7 +32,27 @@ public class OddsButton {
     
     private Image backgroundImage;
     private Image highlightImage;
+    private Image clickImage;
+    /* 
+      public static void main(){
+     
+        final Display display = new Display();
+        final Shell shell = new Shell(display, SWT.NONE);
+        
+        shell.setLayout(new FillLayout());
+        
+        OddsButton oddsButton = new OddsButton(shell, new org.eclipse.swt.graphics.Color(
+                composite.getDisplay(), 238, 210, 238), oddsFont, dataGrid)
+        
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch())
+                display.sleep();
+        }
 
+        display.dispose();
+    }
+    
+    */
     OddsButton(Composite parent, Color color, Font oddsFont, UpdatableMarketDataGrid dataGrid) {     	 
     	this.dataGrid = dataGrid;
         comp = new Composite(parent, SWT.BORDER);
@@ -49,14 +71,8 @@ public class OddsButton {
         this.odds.setFont(oddsFont);
         this.amount = new Label(comp, SWT.NONE);
 
-         addClickListener();
-        /* addEnterListener();
-         addExitListener();*/
+        addClickListener();
          
-        parent.layout();
-        this.highlightImage  = GraphicsUtils.makeGradientBackgroundImage(comp, 155, 205, 155, 193, 255, 193);
-        this.backgroundImage = GraphicsUtils.makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210, 238 );
-            
          //final Timeline rolloverTimeline = new Timeline(comp);
         // rolloverTimeline.addPropertyToInterpolate("backgroundImage", backgroundImage, highlightImage);
          //rolloverTimeline.setDuration(100);
@@ -152,6 +168,18 @@ public class OddsButton {
 
     void setAmount(String amount) {
         this.amount.setText("£" + amount);
+    }
+ 
+    public void setBackgroundImage(Image backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
+    public void setHighlightImage(Image highlightImage) {
+        this.highlightImage = highlightImage;
+    }
+    
+    public void setClickImage(Image clickImage) {
+        this.clickImage = clickImage;
     }
 
     void layout() {

@@ -59,13 +59,15 @@ public class MainWindow {
         shell.setMaximized(true);
         
         /***********************/
-        shell.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-
-        makeLayout();
+        //shell.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
+        shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
         // Menu and Tool bar set-up
         @SuppressWarnings("unused")
         UpperToolBar tp = new UpperToolBar(this);
+
+        makeLayout();
 
         @SuppressWarnings("unused")
         MenuPanel mp = new MenuPanel(this);
@@ -73,7 +75,7 @@ public class MainWindow {
         this.np = new NavigationPanel(sashFormLeft);
         notifyLoadEvent("Fetching betfair data");
 
-        this.dp = new DisplayPanel(sashFormRight);
+        this.dp = new DisplayPanel(sashFormRight, SWT.BORDER);
         
         notifyLoadEvent("Preparing display");
         np.addListener(dp);
@@ -140,7 +142,7 @@ public class MainWindow {
     }
     
     private void addActiveBetsDisplay(Composite composite) {
-        new BetsDisplay(composite);
+        new BetsDisplay(composite, SWT.BORDER);
     }
 
     public void addMatchNavigator() {

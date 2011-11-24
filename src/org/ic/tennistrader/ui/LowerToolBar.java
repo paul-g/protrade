@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 
 
-public class LowerToolBar {
+public class LowerToolBar{
 	
 	private ToolBar toolbar;
 	private static boolean stop = false;
@@ -38,7 +38,13 @@ public class LowerToolBar {
 		final Image off = new Image(display, "images/connection_lost.png");
 		final Image on = new Image(display, "images/connection_on.png");
 		widgetItem.setImage(on);
-		new Thread(new Runnable() {
+		
+		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
+	}
+
+    private void createAndStartNetworkCheckThread(final Shell shell,
+            final ToolItem widgetItem, final Image off, final Image on) {
+        new Thread(new Runnable() {
 			public void run() {
 				while (!stop) {
 					try {
@@ -61,7 +67,7 @@ public class LowerToolBar {
 				}
 			}
 		}).start();
-	}
+    }
 	
 	/** Thread stopping value */
 	public static void setStop() {

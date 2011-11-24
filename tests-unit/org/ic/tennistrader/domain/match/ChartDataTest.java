@@ -5,9 +5,11 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
-import org.ic.tennistrader.utils.Pair;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.ic.tennistrader.utils.Pair;
+import static org.ic.tennistrader.utils.Pair.pair;
 
 public class ChartDataTest {
 
@@ -38,7 +40,7 @@ public class ChartDataTest {
 		assertEquals(1, chartData.getPl1YSeries().size());
 		assertEquals(1, chartData.getPl2Lay().size());
 		assertEquals(1, chartData.getPl2YSeries().size());
-		data.getPl1Back().add(new Pair<Double, Double>(1.5,100.0));
+		data.getPl1Back().add(pair(1.5,100.0));
 		chartData.updateData(data);
 		assertEquals(2, chartData.getDataSize());
 		
@@ -48,11 +50,11 @@ public class ChartDataTest {
 	@Test
 	public void testMA(){
 		
-		data.getPl1Back().add(new Pair<Double, Double>(1.5,100.0));
+		data.getPl1Back().add( pair(1.5,100.0));
 		chartData.updateData(data);
-		data.getPl1Back().add(0, new Pair<Double, Double>(2.0,100.0));
+		data.getPl1Back().add(0, pair(2.0,100.0));
 		chartData.updateData(data);
-		data.getPl1Back().add(0, new Pair<Double, Double>(2.5,100.0));
+		data.getPl1Back().add(0, pair(2.5,100.0));
 		chartData.updateData(data);
 		ArrayList<Double> ma = chartData.getMaPl1();
 		int x = ma.get(2).intValue();
@@ -62,15 +64,15 @@ public class ChartDataTest {
 
 	@Test
 	public void testAddLay(){
-		data.getPl1Back().add(new Pair<Double, Double>(1.5,100.0));
-		data.getPl1Lay().add(new Pair<Double, Double>(2.1,100.0));
+		data.getPl1Back().add(pair(1.5,100.0));
+		data.getPl1Lay().add(pair(2.1,100.0));
 		chartData.updateData(data);
 		ArrayList<Pair<Double, Double>> res = new ArrayList<Pair<Double,Double>>();
-		res.add(new Pair<Double, Double>(2.1,1.5));
-		System.out.println(chartData.getPl1Lay().get(0).getI());
-		System.out.println(res.get(0).getI());
-		System.out.println(chartData.getPl1Lay().get(0).getJ());
-		System.out.println(res.get(0).getJ());
+		res.add(pair(2.1,1.5));
+		System.out.println(chartData.getPl1Lay().get(0).first());
+		System.out.println(res.get(0).first());
+		System.out.println(chartData.getPl1Lay().get(0).second());
+		System.out.println(res.get(0).second());
 		assertEquals(res.size(),chartData.getPl1Lay().size());
 //		Pair p1 = res.get(0);
 //		Pair p2 = chartData.getPl1Lay().get(0);

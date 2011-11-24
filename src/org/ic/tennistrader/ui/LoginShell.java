@@ -157,6 +157,8 @@ public class LoginShell {
         final Timeline rolloverTimeline = new Timeline(login);
         rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
         rolloverTimeline.setDuration(100);
+        
+      
         login.addMouseTrackListener(new MouseTrackListener() {
 
             @Override
