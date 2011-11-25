@@ -8,6 +8,8 @@ import org.ic.tennistrader.utils.Pair;
 public class MOddsMarketData {
     String player1;
     String player2;
+    double pl1MatchedPrice;
+    double pl2MatchedPrice;
     ArrayList<Pair<Double, Double>> pl1Lay;
     ArrayList<Pair<Double, Double>> pl1Back;
     ArrayList<Pair<Double, Double>> pl2Lay;
@@ -109,5 +111,23 @@ public class MOddsMarketData {
     public int getDelay() {
         return delay;
     }
+
+	public double getPl1MatchedPrice() {
+		return pl1MatchedPrice;
+	}
+
+	public void setPl1MatchedPrice(double pl1MatchedPrice) {
+		this.pl1MatchedPrice = pl1MatchedPrice;
+	}
+
+	public double getPl2MatchedPrice() {
+		return pl2MatchedPrice;
+	}
+
+	public void setPl2MatchedPrice(double pl2MatchedPrice) {
+		this.pl2MatchedPrice = pl2MatchedPrice;
+	}
+    
+    
 
 }

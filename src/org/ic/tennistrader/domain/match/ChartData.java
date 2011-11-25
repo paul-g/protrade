@@ -32,8 +32,8 @@ public class ChartData {
 	
 	public void updateData(MOddsMarketData data){
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
-		pl1YSeries = addValue(pl1YSeries,  data.getPl1Back());
-		pl2YSeries = addValue(pl2YSeries,  data.getPl2Back());
+		pl1YSeries = addValue(pl1YSeries,  data.getPl1MatchedPrice());
+		pl2YSeries = addValue(pl2YSeries,  data.getPl2MatchedPrice());
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
@@ -80,18 +80,9 @@ public class ChartData {
 	}
 
 	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, 
-			ArrayList<Pair<Double, Double>> oddData) {
+			double d) {
 		int i = this.getDataSize();
-		// if data has been read from Betfair
-		if (oddData != null && oddData.size() > 0) {
-			pl1ySeries2.add(i, oddData.get(0).first());
-		} else {
-			if (i > 0) // keep previous value if it exists
-				pl1ySeries2.add(i, pl1ySeries2.get(i - 1));
-			else
-				// put zero if no previous value
-				pl1ySeries2.add(i, (double) 0);
-		}
+		pl1ySeries2.add(i, d);
 		return pl1ySeries2;
 	}
 

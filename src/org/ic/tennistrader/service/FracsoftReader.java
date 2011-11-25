@@ -41,7 +41,7 @@ public class FracsoftReader extends MatchUpdaterThread {
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
-
+    private static final int LPM_OFFSET = 18;
     private static final int POINTS_OFFSET = 22;
 
     private static final int GAMES_OFFSET = 19;
@@ -77,11 +77,13 @@ public class FracsoftReader extends MatchUpdaterThread {
                 data.setPlayer1(lines1[NAME_OFFSET]);
                 data.setPl1Back(getOdds(lines1, BACK_OFFSET));
                 data.setPl1Lay(getOdds(lines1, LAY_OFFSET));
+                data.setPl1MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
 
                 // player 2 data
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
+                data.setPl2MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
 
                 Score s = new Score();
 

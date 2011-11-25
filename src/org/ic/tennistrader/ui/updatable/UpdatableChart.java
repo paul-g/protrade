@@ -163,7 +163,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
         // update size of the slider and selection based on what user was
         // previously viewing
-        updateSlider(chartData.getDataSize());
+        updateSlider(i);
         // set serieses values
         showSeries(i, false);
         if (!this.isDisposed()) {
