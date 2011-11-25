@@ -37,6 +37,7 @@ public class FracsoftReader extends MatchUpdaterThread {
     private int updatesPerSecond = 1;
 
     private static final int DELAY_OFFSET = 1;
+    private static final int STATUS_OFFSET = 2;
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
@@ -70,6 +71,7 @@ public class FracsoftReader extends MatchUpdaterThread {
 
                 MOddsMarketData data = new MOddsMarketData();
                 data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));
+                data.setMatchStatus(lines1[STATUS_OFFSET]);
 
                 // player 1 data
                 data.setPlayer1(lines1[NAME_OFFSET]);

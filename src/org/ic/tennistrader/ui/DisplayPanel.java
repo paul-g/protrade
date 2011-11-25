@@ -138,7 +138,8 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
      * @param ti
      */
     private void addMatchData(Composite comp, final Match match) {
-        new MatchDataView(comp, SWT.BORDER, match);
+    	MatchDataView matchDataView = new MatchDataView(comp, SWT.BORDER, match);
+    	match.registerForUpdate(matchDataView);
     }
 
     /**
