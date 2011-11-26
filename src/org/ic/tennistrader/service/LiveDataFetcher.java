@@ -30,7 +30,7 @@ public class LiveDataFetcher {
     public static void registerLive(final UpdatableWidget widget, final RealMatch match) {
         if (dataUpdater == null)
             dataUpdater = new BetfairDataUpdaterThread();
-        dataUpdater.addEvent(match);
+        dataUpdater.addMatch(match);
         List<UpdatableWidget> widgets;
         // add the widget as listener to the given match
         if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {

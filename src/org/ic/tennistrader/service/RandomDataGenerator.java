@@ -175,7 +175,7 @@ public class RandomDataGenerator {
     }
 
     private static void writeHeaders(){
-        String filename = "full-data/fulldata1.dat";
+        String filename = "data/full/fulldata1.dat";
         try {
             // Create file 
             FileWriter fstream = new FileWriter(filename);

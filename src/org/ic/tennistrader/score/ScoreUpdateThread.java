@@ -7,7 +7,7 @@ import java.util.Iterator;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
-import org.ic.tennistrader.service.MatchUpdaterThread;
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
@@ -23,7 +23,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
 public class ScoreUpdateThread extends MatchUpdaterThread {    
-    private Match match;    
     private ScorePanel sc;    
     private String scoreString;
 
