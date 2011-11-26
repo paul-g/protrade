@@ -13,6 +13,7 @@ import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
@@ -144,6 +145,9 @@ public class LiveDataFetcher {
 
     public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
         match.setScore(dataScore.second());
+        //System.out.println("Market status - " + dataScore.first().getMatchStatus());
+        if (dataScore.first().getMatchStatus().toLowerCase().equals("closed"))
+        	BetManager.setBetsOutcome(match);
         if (fileListeners.containsKey(match)) {
             List<UpdatableWidget> widgets = fileListeners.get(match);
             for (UpdatableWidget w : widgets) {
@@ -151,6 +155,10 @@ public class LiveDataFetcher {
             }
         }
     }
+    
+    public static void handleEndOfFile(Match match) {
+		BetManager.setBetsOutcome(match);
+	}
     
     public static void stopAllThreads() {
     	if (dataUpdater != null) {

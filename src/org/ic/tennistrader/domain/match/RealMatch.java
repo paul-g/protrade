@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
@@ -120,4 +121,9 @@ public class RealMatch implements Match{
     public void setScore(Score score) {
        this.score = score;
     }
+
+	@Override
+	public PlayerEnum getWinner() throws MatchNotFinishedException {
+		return this.score.getWinner();
+	}
 }

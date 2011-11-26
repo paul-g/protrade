@@ -9,6 +9,7 @@ import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.FracsoftReader;
 import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,7 +52,8 @@ public class UpdatableChartTest{
 	        	assertTrue(d >= 0);
 	        }*/
 		} catch (FileNotFoundException e) {		
-		}        
+		} catch (EndOfFracsoftFileException e) {			
+		}
     }    
     
 }

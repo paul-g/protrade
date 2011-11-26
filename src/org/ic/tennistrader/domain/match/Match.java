@@ -1,5 +1,6 @@
 package org.ic.tennistrader.domain.match;
 
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public interface Match {    
@@ -10,4 +11,5 @@ public interface Match {
     public Score getScore();
     public void setScore(Score score);    
     public void registerForUpdate(UpdatableWidget widget);
+    public PlayerEnum getWinner() throws MatchNotFinishedException;
 }

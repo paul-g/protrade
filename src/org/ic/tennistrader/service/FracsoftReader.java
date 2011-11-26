@@ -13,6 +13,7 @@ import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
 
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
@@ -141,7 +142,12 @@ public class FracsoftReader extends MatchUpdaterThread {
 
     @Override
     public void runBody() {
-        LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+        try {
+			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+		} catch (EndOfFracsoftFileException e1) {
+			LiveDataFetcher.handleEndOfFile(this.match);
+			this.setStop();
+		}
         try {
             Thread.sleep(1000 / this.updatesPerSecond);
         } catch (InterruptedException e) {
@@ -149,10 +155,10 @@ public class FracsoftReader extends MatchUpdaterThread {
         }
     }
 
-    public Pair<MOddsMarketData, Score> getMarketData() {
+    public Pair<MOddsMarketData, Score> getMarketData() throws EndOfFracsoftFileException {
         if (pointer.hasNext())
             return pointer.next();
-        return null;
+        throw new EndOfFracsoftFileException();
     }
 
     @Override

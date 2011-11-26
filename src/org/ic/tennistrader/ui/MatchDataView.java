@@ -75,8 +75,7 @@ public class MatchDataView extends StandardWidgetContainer implements UpdatableW
 
 	@Override
 	public void setDisposeListener(DisposeListener listener) {
-		// TODO Auto-generated method stub
-		
+		this.addDisposeListener(listener);
 	}
 
 }

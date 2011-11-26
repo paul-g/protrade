@@ -3,6 +3,8 @@ package org.ic.tennistrader.domain.match;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.service.FracsoftReader;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
@@ -100,4 +102,9 @@ public class HistoricalMatch implements Match {
     public void setScore(Score score) {
         this.score = score;
     }
+
+	@Override
+	public PlayerEnum getWinner() throws MatchNotFinishedException {
+		return this.score.getWinner();
+	}
 }

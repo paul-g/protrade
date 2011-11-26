@@ -298,6 +298,15 @@ public class UpperToolBar {
                 openMatchView("data/full/fulldata1.csv");
             }
         });
+		
+		MenuItem usOpenFinalFullShort = new MenuItem(playDropDown, SWT.PUSH);
+		usOpenFinalFullShort.setText("US Open Final 2011(full, but short)");
+		usOpenFinalFullShort.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                openMatchView("data/full/fulldataShort.csv");
+            }
+        });
 
 		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
 		playItem.setText("From File");

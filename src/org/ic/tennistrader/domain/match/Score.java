@@ -3,6 +3,8 @@ package org.ic.tennistrader.domain.match;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
+
 public class Score {
 
     public static final int AD = 50;
@@ -212,5 +214,14 @@ public class Score {
             scores.add(sc);
         }
     }
+
+	public PlayerEnum getWinner() throws MatchNotFinishedException {
+		if (!this.isFinished())
+			throw new MatchNotFinishedException();
+		if (getPlayerOneSets() > maximumSetsPlayed / 2)
+			return PlayerEnum.PLAYER1;
+		else
+			return PlayerEnum.PLAYER2;
+	}
     
 }

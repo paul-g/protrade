@@ -2,7 +2,6 @@ package org.ic.tennistrader.ui.updatable;
 
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeListener;
@@ -23,11 +22,9 @@ import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
-
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.ChartData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.StandardWidgetResizeListener;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
@@ -42,7 +39,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     private boolean decimalOdds;
     private String xAxisTitle = "Time";
     private String yAxisDecimalTitle = "Decimal Odds";
-    private String yAxisFractionalTitle = "Implied Odds";
+    private String yAxisFractionalTitle = "Implied Odds (%)";
     private boolean pl1Selected;
     private boolean pl2Selected;
     private boolean maPl2Selected;
