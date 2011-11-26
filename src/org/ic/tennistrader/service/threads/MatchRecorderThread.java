@@ -26,7 +26,7 @@ public class MatchRecorderThread extends MatchThread{
     private void openFile(){
         try {
             // Create file 
-            FileWriter fstream = new FileWriter(filename);
+            FileWriter fstream = new FileWriter(this.filename);
             out = new BufferedWriter(fstream);
             out.write("Starting to record match ");
             out.write("Timestamp,Inplay delay,Market status,Selection ID,Selection name,BP1,BV1,BP2,BV2,BP3,BV3,LP1,LV1,LP2,LV2,LP3,LV3,Total matched,LPM, Set1, Set2, Set3, Points \n");
