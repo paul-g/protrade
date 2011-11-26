@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
@@ -162,7 +163,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
         // update size of the slider and selection based on what user was
         // previously viewing
-        updateSlider(chartData.getDataSize());
+        updateSlider(i);
         // set serieses values
         showSeries(i, false);
         if (!this.isDisposed()) {
@@ -244,11 +245,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
                         chartData.getPl2Lay().get(b).second(), pow)) * k;
             }
 
-            for (int b = 0; b < dataArray.get(0).length; b++) {
-                System.out.print(showXSeries[b] + " " + dataArray.get(0)[b]
-                        + " ");
-            }
-            System.out.println();
             firstSeries.setXDateSeries(showXSeries);
             firstSeries.setYSeries(dataArray.get(0));
             secondSeries.setXDateSeries(showXSeries);
@@ -449,8 +445,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     }
 
     @Override
-    public void setDisposeListener(Listener listener) {
-        this.addListener(SWT.Dispose, listener);
+    public void setDisposeListener(DisposeListener listener) {
+        this.addDisposeListener(listener);
     }
 
     /*

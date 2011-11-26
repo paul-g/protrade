@@ -1,6 +1,6 @@
 package org.ic.tennistrader.ui.updatable;
 
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.events.DisposeListener;
 import org.ic.tennistrader.domain.MOddsMarketData;
 
 public interface UpdatableWidget {
@@ -10,5 +10,5 @@ public interface UpdatableWidget {
 	public void handleUpdate(MOddsMarketData newData);
 	
 	// adds the given listener when the widget is disposed
-	public void setDisposeListener(Listener listener);
+	public void setDisposeListener(DisposeListener listener);
 }

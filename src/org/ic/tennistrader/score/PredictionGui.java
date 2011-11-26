@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.EventMarketBetfair;
-import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
@@ -76,7 +75,8 @@ public class PredictionGui extends StandardWidgetContainer{
             public void run() {
             	statisticsUpdateThread.checkStatisticsUpdate();
                 if (!statisticsUpdateThread.isStatisticsPopulated())
-                    parent.getDisplay().timerExec(5000, this);
+                    if (!parent.isDisposed())
+                        parent.getDisplay().timerExec(5000, this);
             }
         });
 
@@ -87,7 +87,8 @@ public class PredictionGui extends StandardWidgetContainer{
                 @Override
                 public void run() {
                     scoreUpdateThread.handleUpdate();
-                    parent.getDisplay().timerExec(5000, this);
+                    if (!parent.isDisposed())
+                        parent.getDisplay().timerExec(5000, this);
                 }
             });
 
@@ -103,5 +104,10 @@ public class PredictionGui extends StandardWidgetContainer{
         //PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
         //predict.calculate();
         ProbabilityPanel probabilityPanel = new ProbabilityPanel(this);
+    }
+
+    @Override
+    public String getTitle() {
+        return "Prediction";
     }   
 }

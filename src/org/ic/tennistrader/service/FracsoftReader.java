@@ -23,7 +23,7 @@ import static org.ic.tennistrader.utils.Pair.pair;
  * @author Paul Grigoras
  * 
  */
-public class FracsoftReader extends DataUpdaterThread {
+public class FracsoftReader extends MatchUpdaterThread {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
 
@@ -37,10 +37,11 @@ public class FracsoftReader extends DataUpdaterThread {
     private int updatesPerSecond = 1;
 
     private static final int DELAY_OFFSET = 1;
+    private static final int STATUS_OFFSET = 2;
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
-
+    private static final int LPM_OFFSET = 18;
     private static final int POINTS_OFFSET = 22;
 
     private static final int GAMES_OFFSET = 19;
@@ -70,19 +71,22 @@ public class FracsoftReader extends DataUpdaterThread {
 
                 MOddsMarketData data = new MOddsMarketData();
                 data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));
+                data.setMatchStatus(lines1[STATUS_OFFSET]);
 
                 // player 1 data
                 data.setPlayer1(lines1[NAME_OFFSET]);
                 data.setPl1Back(getOdds(lines1, BACK_OFFSET));
                 data.setPl1Lay(getOdds(lines1, LAY_OFFSET));
+                data.setPl1MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
 
                 // player 2 data
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
+                data.setPl2MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
 
                 Score s = new Score();
-                
+
                 if (lines1.length > GAMES_OFFSET) {
                     // score data is provided
                     int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
@@ -136,16 +140,13 @@ public class FracsoftReader extends DataUpdaterThread {
     }
 
     @Override
-    public void run() {
-        while (!this.stop) {
-            LiveDataFetcher.handleFileEvent(this.match, getMarketData());
-            try {
-                Thread.sleep(1000 / this.updatesPerSecond);
-            } catch (InterruptedException e) {
-                log.info("Fracsoft thread interrupted");
-            }
+    public void runBody() {
+        LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+        try {
+            Thread.sleep(1000 / this.updatesPerSecond);
+        } catch (InterruptedException e) {
+            log.info("Fracsoft thread interrupted");
         }
-        log.info("Stopped Fracsoft thread");
     }
 
     public Pair<MOddsMarketData, Score> getMarketData() {
@@ -184,11 +185,6 @@ public class FracsoftReader extends DataUpdaterThread {
         }
 
         return pair(player1, player2);
-    }
-
-    @Override
-    public void setStop() {
-        this.stop = true;
     }
 
     public void setUpdatesPerSecond(int updates) {

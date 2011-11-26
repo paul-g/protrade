@@ -34,12 +34,6 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
         super(parent, style);
     }
 
-    public void addTab(String text) {
-        CTabItem cti = new CTabItem(folder, SWT.CLOSE);
-        cti.setText(text);
-        folder.setSelection(cti);
-    }
-
     private void addPredictionGui(Composite composite, Match match) {
         new PredictionGui(composite, SWT.BORDER, match);
     }
@@ -64,10 +58,8 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
         // check new tab has been open
         if (pos == -1) {
             
-            CTabItem item = new CTabItem(folder, SWT.CLOSE);
-            
-            item.setText(matchName);
-
+            final CTabItem item = addTab(matchName);
+     
             Composite control = new Composite(folder, SWT.NONE);
             control.setLayout(new FillLayout());
             
@@ -90,23 +82,26 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
 
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             
-			/*if (match.isInPlay()) {
-				addPredictionGui(horizontal, match);
-			}*/
+            /*if (match.isInPlay()) {
+                addPredictionGui(horizontal, match);
+            }*/
             
-			addPredictionGui(horizontal, match);
+            addPredictionGui(horizontal, match);
             
-			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
-			addChart(chartSash, match);
-			addMatchViewer(chartSash);
-			chartSash.setWeights(new int[]{60,40});
-
+            this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
+            addChart(chartSash, match);
+            addMatchViewer(chartSash);
+            chartSash.setWeights(new int[]{60,40});
+            
             item.setControl(control);
             
             folder.setSelection(item);
 
             infoAndBack.setWeights(new int[]{20, 80});
             comp.setWeights(new int[]{20,25,50,5});
+            
+        
+            
         } else
             // just bring the required tab under focus
             folder.setSelection(pos);
@@ -143,7 +138,8 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
      * @param ti
      */
     private void addMatchData(Composite comp, final Match match) {
-        new MatchDataView(comp, SWT.BORDER, match);
+    	MatchDataView matchDataView = new MatchDataView(comp, SWT.BORDER, match);
+    	match.registerForUpdate(matchDataView);
     }
 
     /**

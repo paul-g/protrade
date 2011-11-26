@@ -3,6 +3,8 @@ package org.ic.tennistrader.ui.updatable;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
@@ -52,7 +54,6 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements 
 
         player1 = initLayout(p1BackButtons, p1LayButtons, true);
         player2 = initLayout(p2BackButtons, p2LayButtons, false);
-
 
         
     }
@@ -126,11 +127,6 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements 
                 this.getDisplay(), 240, 240, 240);
     }
    
-    @Override
-    public void setDisposeListener(Listener listener) {
-        this.addListener(SWT.Dispose, listener);
-    }
-    
     public OddsButton[] getP1BackButtons() {
 		return p1BackButtons;
 	}
@@ -171,4 +167,10 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements 
 	public BetController getBetController() {
 		return betController;
 	}
+
+    @Override
+    public void setDisposeListener(DisposeListener listener) {
+        this.addDisposeListener(listener);
+        
+    }
 }

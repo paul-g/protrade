@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -41,11 +40,13 @@ public class LiveDataFetcher {
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
-        widget.setDisposeListener(new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				unregisterLive(widget, match);
-			}        	
+        widget.setDisposeListener(new DisposeListener() {
+            @Override
+            public void widgetDisposed(DisposeEvent arg0) {
+                // TODO Auto-generated method stub
+                unregisterLive(widget, match);
+                System.out.println("Disposed widget");
+            }        	
         });
         // start the thread
         if (!started){
@@ -82,11 +83,13 @@ public class LiveDataFetcher {
             widgets = fileListeners.get(match);
         widgets.add(widget);
         fileListeners.put(match, widgets);
-        widget.setDisposeListener(new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				unregisterFromFile(widget, match);
-			}        	
+        widget.setDisposeListener(new DisposeListener() {
+            
+            @Override
+            public void widgetDisposed(DisposeEvent arg0) {
+                // TODO Auto-generated method stub
+                unregisterFromFile(widget, match);    
+            }
         });
         if(isNewMatch) {
             startFromFile(match, fileName);
@@ -94,7 +97,22 @@ public class LiveDataFetcher {
     }
 
     protected static void unregisterFromFile(UpdatableWidget widget, Match match) {
-		// TODO Auto-generated method stub		
+    	//System.out.println("Unregister live entered");
+    	List<UpdatableWidget> widgets = null;
+    	if (fileListeners.containsKey(match)) {
+            widgets = fileListeners.get(match);
+        }
+    	if (widgets != null) {
+    		widgets.remove(widget);
+    		if (widgets.size() == 0) {
+    			FracsoftReader fracsoftReaderThread = fileReaders.get(match);
+    			//removeMatch(match);
+    			fracsoftReaderThread.setStop();
+    			fracsoftReaderThread.interrupt();
+    			fileListeners.remove(match);
+    			
+    		}
+    	}
 	}
 
 	public static void start() {
@@ -124,8 +142,7 @@ public class LiveDataFetcher {
         }
     }
 
-    public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {
-        
+    public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
         match.setScore(dataScore.second());
         if (fileListeners.containsKey(match)) {
             List<UpdatableWidget> widgets = fileListeners.get(match);

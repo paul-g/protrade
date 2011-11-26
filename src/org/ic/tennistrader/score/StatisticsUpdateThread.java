@@ -12,14 +12,15 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Statistics;
+import org.ic.tennistrader.service.MatchUpdaterThread;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -36,7 +37,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
-public class StatisticsUpdateThread extends Thread{ 
+public class StatisticsUpdateThread extends MatchUpdaterThread{ 
 	
     private List<Listener> listeners = new ArrayList<Listener>();
     
@@ -71,16 +72,7 @@ public class StatisticsUpdateThread extends Thread{
     
     @Override
     public void run() {
-        System.out.println(match.getPlayerOne().toString() + " vs " + match.getPlayerTwo().toString());
-        // try to get stats
-        try {
-            page = getStatistics();
-        } catch (Exception e) {
-            //log.error(e.getMessage());
-            //log.error(e.getStackTrace());
-        }
-        
-      // updateAll();
+   
     }
     public String getPage(){
         return page;
@@ -454,6 +446,28 @@ public class StatisticsUpdateThread extends Thread{
     public boolean isStatisticsPopulated()
     {
     	return this.statisticsPopulated;
+    }
+
+    @Override
+    public void addEvent(RealMatch match) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void runBody() {
+        // TODO Auto-generated method stub
+        System.out.println(match.getPlayerOne().toString() + " vs " + match.getPlayerTwo().toString());
+        // try to get stats
+        try {
+            page = getStatistics();
+        } catch (Exception e) {
+            //log.error(e.getMessage());
+            //log.error(e.getStackTrace());
+        }
+        
+      // updateAll();
+        this.stop = true;
     }
 
 }

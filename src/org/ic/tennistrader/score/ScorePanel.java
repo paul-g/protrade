@@ -1,9 +1,9 @@
 package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -11,26 +11,23 @@ import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class ScorePanel implements UpdatableWidget {
-
+public class ScorePanel extends StandardWidgetContainer implements UpdatableWidget {
     private Match match;
-
-    private Table scoreTable;
-    
+    private Table scoreTable;    
     private PlayerEnum server;
-
     private TableColumn[] columns;
-
     private Display display;
 
-    public ScorePanel(Composite composite, Match match) {
+    public ScorePanel(Composite parent, Match match) {
+    	super(parent, SWT.NONE);
         this.match = match;
 
-        this.display = composite.getDisplay();
+        this.display = parent.getDisplay();
 
-        this.scoreTable = new Table(composite, SWT.NONE);
+        this.scoreTable = new Table(parent, SWT.NONE);
         scoreTable.setHeaderVisible(true);
 
         scoreTable.setLinesVisible(true);
@@ -120,7 +117,7 @@ public class ScorePanel implements UpdatableWidget {
     }
 
     @Override
-    public void setDisposeListener(Listener listener) {
-        // TODO Auto-generated method stub
+    public void setDisposeListener(DisposeListener listener) {
+        this.addDisposeListener(listener);
     }
 }
