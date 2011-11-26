@@ -286,7 +286,7 @@ public class UpperToolBar {
 		usOpenFinal.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				openMatchView("fracsoft-data/fracsoft1.csv");
+				openMatchView("data/fracsoft/fracsoft1.csv");
 			}
 		});
 		
@@ -295,7 +295,7 @@ public class UpperToolBar {
 		usOpenFinalFull.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event arg0) {
-                openMatchView("full-data/fulldata1.csv");
+                openMatchView("data/full/fulldata1.csv");
             }
         });
 
