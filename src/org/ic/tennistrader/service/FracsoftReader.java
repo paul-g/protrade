@@ -15,6 +15,7 @@ import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
 
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
 
@@ -34,7 +35,6 @@ public class FracsoftReader extends MatchUpdaterThread {
 
     private int inPlayPointer = -1;
 
-    private Match match;
     private int updatesPerSecond = 1;
 
     private static final int DELAY_OFFSET = 1;
@@ -162,7 +162,7 @@ public class FracsoftReader extends MatchUpdaterThread {
     }
 
     @Override
-    public void addEvent(RealMatch match) {
+    public void addMatch(RealMatch match) {
         this.match = match;
     }
 

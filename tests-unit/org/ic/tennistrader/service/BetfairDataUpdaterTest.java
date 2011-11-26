@@ -31,7 +31,7 @@ public class BetfairDataUpdaterTest {
 	public void testOneEvent() {		
 		EventBetfair eb = new EventBetfair("name", 1);
 		RealMatch match = new RealMatch("pl1", "pl2", eb);
-		betfairDataUpdaterThread.addEvent(match);
+		betfairDataUpdaterThread.addMatch(match);
 		assertEquals(1, betfairDataUpdaterThread.getEvents().size());
 	}
 	
@@ -41,7 +41,7 @@ public class BetfairDataUpdaterTest {
 		for (int i = 0; i < n; i++) {
 			EventBetfair eb = new EventBetfair("name", i);
 			RealMatch match = new RealMatch("pl1", "pl2", eb);
-			betfairDataUpdaterThread.addEvent(match);
+			betfairDataUpdaterThread.addMatch(match);
 		}
 		assertEquals(n, betfairDataUpdaterThread.getEvents().size());
 	}

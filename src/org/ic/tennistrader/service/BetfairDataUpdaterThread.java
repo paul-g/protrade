@@ -7,6 +7,7 @@ import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +26,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
         synchronizedEvents = new BetfairUpdaterEvents();
     }
 
-    public void addEvent(RealMatch match) {
+    public void addMatch(RealMatch match) {
         EventBetfair eventBetfair = match.getEventBetfair();
         matches.put(eventBetfair, match);
         // events.add(eventBetfair);
