@@ -357,31 +357,45 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     	Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
     	oChart.setMenu(menu);
     	oChart.getPlotArea().setMenu(menu);
-    	final MenuItem overround = new MenuItem(menu, SWT.CHECK);
-    	overround.setText("Overround");
-    	overround.setSelection(true);
+    	final MenuItem overroundBack = new MenuItem(menu, SWT.CHECK);
+    	overroundBack.setText("Overround Back");
+    	overroundBack.setSelection(true);
+    	final MenuItem overroundLay = new MenuItem(menu, SWT.CHECK);
+    	overroundLay.setText("Overround Lay");
+    	overroundLay.setSelection(false);
     	final MenuItem volume = new MenuItem(menu, SWT.CHECK);
     	volume.setText("Volume");
-    	overround.addListener(SWT.Selection, new Listener() {
+    	overroundBack.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event arg0) {
-				if (!overround.getSelection()){
-					overround.setSelection(true);
-					volume.setSelection(false);
+				if (!overroundBack.getSelection() && !overroundLay.getSelection()){
+					overroundBack.setSelection(true);
 				} else {
 					volume.setSelection(false);
-					oChart.setOptionOverround(true);
-					oChart.visibility(pl1Selected, pl2Selected);
 				}
+				oChart.setBackOverround(overroundBack.getSelection());
+				oChart.visibility(pl1Selected, pl2Selected);
+			}
+    	});
+    	overroundLay.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event arg0) {
+				if (!overroundLay.getSelection() && !overroundBack.getSelection()){
+					overroundLay.setSelection(true);
+				} else {
+					volume.setSelection(false);
+				}
+				oChart.setLayOverround(overroundLay.getSelection());
+				oChart.visibility(pl1Selected, pl2Selected);
 			}
     	});
     	volume.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event arg0) {
 				if (!volume.getSelection()){
 					volume.setSelection(true);
-					overround.setSelection(false);
 				} else {
-					overround.setSelection(false);
-					oChart.setOptionOverround(false);
+					overroundBack.setSelection(false);
+					overroundLay.setSelection(false);
+					oChart.setBackOverround(false);
+					oChart.setLayOverround(false);
 					oChart.visibility(pl1Selected, pl2Selected);
 				}
 			}

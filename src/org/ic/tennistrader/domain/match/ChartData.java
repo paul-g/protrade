@@ -48,8 +48,8 @@ public class ChartData {
 		maPl2 = addMaValue(maPl2, pl2YSeries);
 		backOverround = addOverround(backOverround, data.getPl1Back(), data.getPl2Back());
 		layOverround = addOverround(layOverround, data.getPl1Lay(), data.getPl2Lay());
-		pl1Volume = addVolume(pl1Volume, data.getPl1Volume());
-		pl2Volume = addVolume(pl2Volume, data.getPl2Volume());
+		pl1Volume = addVolume(pl1Volume, data.getPlayer1TotalAmountMatched());
+		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched());
 		setDataSize(pl1YSeries.size());
 	}
 	

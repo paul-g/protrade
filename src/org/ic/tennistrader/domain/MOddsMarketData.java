@@ -7,10 +7,6 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.utils.Pair;
 
 public class MOddsMarketData {
-    double pl1MatchedPrice;
-    double pl2MatchedPrice;
-    double pl1Volume;
-    double pl2Volume;
     String Exchange;
     private String player1;
     private String player2;
@@ -176,21 +172,6 @@ public class MOddsMarketData {
 		return player2TotalAmountMatched;
 	}
 
-	public double getPl1Volume() {
-		return pl1Volume;
-	}
-
-	public void setPl1Volume(double pl1Volume) {
-		this.pl1Volume = pl1Volume;
-	}
-
-	public double getPl2Volume() {
-		return pl2Volume;
-	}
-
-	public void setPl2Volume(double pl2Volume) {
-		this.pl2Volume = pl2Volume;
-	}
 
 	public void setPlayer2TotalAmountMatched(double player2TotalAmountMatched) {
 		this.player2TotalAmountMatched = player2TotalAmountMatched;

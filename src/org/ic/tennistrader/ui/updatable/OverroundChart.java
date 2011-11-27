@@ -19,14 +19,15 @@ public class OverroundChart extends Chart{
 	private ILineSeries layOverround;
 	private IBarSeries pl1Volume;
 	private IBarSeries pl2Volume;
-	private boolean optionOverround; 
+	private boolean isBackOverround;
+	private boolean isLayOverround;
 	
 	public OverroundChart(Composite parent, int style, GridData gridData, Match match) {
 		super(parent, style);
 		this.setLayoutData(gridData);
 		this.getTitle().setVisible(false);
 		createSeries(match);
-		optionOverround = true;
+		setBackOverround(true);
 		this.getLegend().setPosition(SWT.BOTTOM);
 		this.getAxisSet().getYAxis(0).getTitle().setText("Overround");
 		this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
@@ -54,12 +55,12 @@ public class OverroundChart extends Chart{
 	}
 	
 	public void visibility(boolean pl1, boolean pl2){
-		if (optionOverround){
+		if (isBackOverround || isLayOverround){
 			this.getAxisSet().getYAxis(0).getTitle().setText("Overround");
 			pl1Volume.setVisible(false);
 			pl2Volume.setVisible(false);
-			backOverround.setVisible(pl1);
-			layOverround.setVisible(pl2);
+			backOverround.setVisible(isBackOverround());
+			layOverround.setVisible(isLayOverround());
 		} else {
 			this.getAxisSet().getYAxis(0).getTitle().setText("Volume");
 			backOverround.setVisible(false);
@@ -122,15 +123,27 @@ public class OverroundChart extends Chart{
 	public void setBackOverroundY(double[] yData){
 		backOverround.setYSeries(yData);
 	}
-	
-	
 
-	public boolean isOptionOverround() {
-		return optionOverround;
+	public boolean isBackOverround() {
+		return isBackOverround;
 	}
 
-	public void setOptionOverround(boolean optionOverround) {
-		this.optionOverround = optionOverround;
+
+
+	public void setBackOverround(boolean isBackOverround) {
+		this.isBackOverround = isBackOverround;
+	}
+
+
+
+	public boolean isLayOverround() {
+		return isLayOverround;
+	}
+
+
+
+	public void setLayOverround(boolean isLayOverround) {
+		this.isLayOverround = isLayOverround;
 	}
 
 

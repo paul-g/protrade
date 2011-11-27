@@ -42,7 +42,7 @@ public class FracsoftReader extends MatchUpdaterThread {
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
-    private static final int VOLUME_OFFSET = 17;
+    private static final int AMOUNT_OFFSET = 17;
     private static final int LPM_OFFSET = 18;
     private static final int POINTS_OFFSET = 22;
     
@@ -78,25 +78,17 @@ public class FracsoftReader extends MatchUpdaterThread {
                 data.setPlayer1(lines1[NAME_OFFSET]);
                 data.setPl1Back(getOdds(lines1, BACK_OFFSET));
                 data.setPl1Lay(getOdds(lines1, LAY_OFFSET));
-<<<<<<< HEAD
-                data.setPl1MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
-                data.setPl1Volume((Double.parseDouble(lines1[VOLUME_OFFSET])));
-=======
+			
                 data.setPl1LastMatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
->>>>>>> c202cf0347672b7021c7b01786f8606adb9a5cde
+				data.setPlayer1TotalAmountMatched((Double.parseDouble(lines1[AMOUNT_OFFSET])));
 
                 // player 2 data
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
-<<<<<<< HEAD
-                data.setPl2MatchedPrice(Double.parseDouble(lines2[LPM_OFFSET]));
-                data.setPl2Volume((Double.parseDouble(lines2[VOLUME_OFFSET])));
-                
-=======
-                data.setPl2LastMatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
-
->>>>>>> c202cf0347672b7021c7b01786f8606adb9a5cde
+                data.setPl2LastMatchedPrice(Double.parseDouble(lines2[LPM_OFFSET]));
+				data.setPlayer2TotalAmountMatched((Double.parseDouble(lines2[AMOUNT_OFFSET])));
+				
                 Score s = new Score();
 
                 if (lines1.length > GAMES_OFFSET) {
