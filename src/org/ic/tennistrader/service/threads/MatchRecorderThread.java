@@ -23,7 +23,7 @@ public class MatchRecorderThread extends MatchThread{
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.info("Match Updater thread interupted");
         }
     }
     

@@ -78,13 +78,13 @@ public class FracsoftReader extends MatchUpdaterThread {
                 data.setPlayer1(lines1[NAME_OFFSET]);
                 data.setPl1Back(getOdds(lines1, BACK_OFFSET));
                 data.setPl1Lay(getOdds(lines1, LAY_OFFSET));
-                data.setPl1MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
+                data.setPl1LastMatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
 
                 // player 2 data
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
-                data.setPl2MatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
+                data.setPl2LastMatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
 
                 Score s = new Score();
 

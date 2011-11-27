@@ -51,13 +51,13 @@ public class ChartDataTest {
 	public void testMA(){
 		
 		data.getPl1Back().add( pair(1.5,100.0));
-		data.setPl1MatchedPrice(1.5);
+		data.setPl1LastMatchedPrice(1.5);
 		chartData.updateData(data);
 		data.getPl1Back().add(0, pair(2.0,100.0));
-		data.setPl1MatchedPrice(2.0);
+		data.setPl1LastMatchedPrice(2.0);
 		chartData.updateData(data);
 		data.getPl1Back().add(0, pair(2.5,100.0));
-		data.setPl1MatchedPrice(2.5);
+		data.setPl1LastMatchedPrice(2.5);
 		chartData.updateData(data);
 		ArrayList<Double> ma = chartData.getMaPl1();
 		double x = ma.get(2);
