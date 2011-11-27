@@ -16,6 +16,16 @@ public class Score {
     private SetScore currentSet;
     
     private int maximumSetsPlayed = 3;
+    
+    private PlayerEnum server;
+
+    public PlayerEnum getServer() {
+        return server;
+    }
+
+    public void setServer(PlayerEnum server) {
+        this.server = server;
+    }
 
     public Score() {
         init();

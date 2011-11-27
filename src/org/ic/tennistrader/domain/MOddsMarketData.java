@@ -143,8 +143,11 @@ public class MOddsMarketData {
 	}
 	
 	private String getAsCsvString(ArrayList<Pair<Double, Double>> list){
-	    String l = list.toString();
-	    return l.substring(1, l.length() - 1);
+	    if (list != null) {
+	        String l = list.toString();
+	        return l.substring(1, l.length() - 1);
+	    }
+	    return "";
 	}
 	
 	public double getLastPriceMatched(PlayerEnum player){

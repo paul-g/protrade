@@ -77,4 +77,12 @@ public abstract class Match {
         scoresString += score.getPlayerPoints(player);
         return scoresString;
     }
+    
+    public void setPlayer1(Player player){
+        this.player1 = player;
+    }
+    
+    public void setPlayer2(Player player){
+        this.player2 = player;
+    }
 }

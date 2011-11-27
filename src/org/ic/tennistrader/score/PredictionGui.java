@@ -38,10 +38,12 @@ public class PredictionGui extends StandardWidgetContainer{
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        Player playerOne = new Player("Pedro", "Sousa");
-        Player playerTwo = new Player("Joao", "Souza");
+        Player playerOne = new Player("Roger", "Federer");
+        Player playerTwo = new Player("Jo-Wilfried", "Tsonga");
 
         Match match = new RealMatch("","", new EventBetfair("Sousa v Souza", new ArrayList<EventMarketBetfair>(), 1));
+        match.setPlayer1(playerOne);
+        match.setPlayer2(playerTwo);
 
         new PredictionGui(shell, SWT.BORDER, match);
 
@@ -58,17 +60,15 @@ public class PredictionGui extends StandardWidgetContainer{
     public PredictionGui(final Composite parent, int style, Match match) {
         super(parent, style);
 
-
         this.setLayout(new GridLayout());
 
         ScorePanel sc = new ScorePanel(this, match);
-
         
         StatisticsPanel st = new StatisticsPanel(parent, match);
     	
         this.statisticsUpdateThread = new StatisticsUpdateThread(match, st);
 
-        this.scoreUpdateThread = new ScoreUpdateThread(match, sc);
+        this.scoreUpdateThread = new ScoreUpdateThread(match);
 
         parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
@@ -80,20 +80,11 @@ public class PredictionGui extends StandardWidgetContainer{
             }
         });
 
-        if (match.isInPlay()) {
+       if (match.isInPlay()) {
             // only start score fetching for live matches
-            parent.getDisplay().timerExec(5000, new Runnable() {
-
-                @Override
-                public void run() {
-                    scoreUpdateThread.handleUpdate();
-                    if (!parent.isDisposed())
-                        parent.getDisplay().timerExec(5000, this);
-                }
-            });
-
-            scoreUpdateThread.start();
+             scoreUpdateThread.start();
         }
+       
         statisticsUpdateThread.start();
         
         Score score = scoreUpdateThread.getScore();
