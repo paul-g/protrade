@@ -13,6 +13,8 @@ public class MOddsMarketData {
     private double pl2LastMatchedPrice;
     private double player1TotalAmountMatched;
     private double player2TotalAmountMatched;
+    private int player1SelectiondId;
+    private int player2SelectionId;
     private ArrayList<Pair<Double, Double>> pl1Lay, pl1Back, pl2Lay, pl2Back;
     private Date date;
     String exchange;
@@ -171,5 +173,21 @@ public class MOddsMarketData {
 
 	public void setPlayer2TotalAmountMatched(double player2TotalAmountMatched) {
 		this.player2TotalAmountMatched = player2TotalAmountMatched;
+	}
+	
+	public int getPlayer1SelectiondId() {
+		return player1SelectiondId;
+	}
+
+	public void setPlayer1SelectiondId(int player1SelectiondId) {
+		this.player1SelectiondId = player1SelectiondId;
+	}
+
+	public int getPlayer2SelectionId() {
+		return player2SelectionId;
+	}
+
+	public void setPlayer2SelectionId(int player2SelectionId) {
+		this.player2SelectionId = player2SelectionId;
 	}
 }
