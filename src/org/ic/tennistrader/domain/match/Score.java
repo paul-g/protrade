@@ -126,6 +126,16 @@ public class Score {
         return currentSet;
     }
 
+    public int getPlayerPoints(PlayerEnum player){
+        
+        switch (player){
+            case PLAYER1: return playerOnePoints;
+            case PLAYER2: return playerTwoPoints;
+        }
+        
+        return -1;
+    }
+    
     public int getPlayerOnePoints() {
         return playerOnePoints;
     }
@@ -179,7 +189,7 @@ public class Score {
         return getPlayerScores(PlayerEnum.PLAYER2);
     }
     
-    private int[] getPlayerScores(PlayerEnum player){
+    public int[] getPlayerScores(PlayerEnum player){
         
         int playerScores [] = new int[maximumSetsPlayed];
         for (int i=0;i<playerScores.length;i++)

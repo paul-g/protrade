@@ -116,7 +116,6 @@ public class RandomDataGenerator {
     }
     
     private static String generateLine(boolean player1){
-        //return "1315828903864,0,ACTIVE,2249229,Novak Djokovic,1.66,1054.07,1.65,81228.71,1.64,27237.41,1.67,27104.33,1.68,17129.58,1.69,3856.4,794149.1,1.66,";
         String backOdds = makeCsvWithoutTermination(makeOdds());
         
         String layOdds  = makeCsvWithoutTermination(makeOdds());

@@ -3,19 +3,17 @@ package org.ic.tennistrader.domain;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.utils.Pair;
 
 public class MOddsMarketData {
     String player1;
     String player2;
-    double pl1MatchedPrice;
-    double pl2MatchedPrice;
-    ArrayList<Pair<Double, Double>> pl1Lay;
-    ArrayList<Pair<Double, Double>> pl1Back;
-    ArrayList<Pair<Double, Double>> pl2Lay;
-    ArrayList<Pair<Double, Double>> pl2Back;
+    double pl1LastMatchedPrice;
+    double pl2LastMatchedPrice;
+    ArrayList<Pair<Double, Double>> pl1Lay, pl1Back, pl2Lay, pl2Back;
     Date date;
-    String Exchange;
+    String exchange;
     String matchStatus;
     String location;
     int delay;
@@ -97,11 +95,11 @@ public class MOddsMarketData {
     }
 
     public String getExchange() {
-        return Exchange;
+        return exchange;
     }
 
     public void setExchange(String exchange) {
-        Exchange = exchange;
+       this.exchange = exchange;
     }
 
     public void setDelay(int delay) {
@@ -113,21 +111,47 @@ public class MOddsMarketData {
     }
 
 	public double getPl1MatchedPrice() {
-		return pl1MatchedPrice;
+		return pl1LastMatchedPrice;
 	}
 
 	public void setPl1MatchedPrice(double pl1MatchedPrice) {
-		this.pl1MatchedPrice = pl1MatchedPrice;
+		this.pl1LastMatchedPrice = pl1MatchedPrice;
 	}
 
 	public double getPl2MatchedPrice() {
-		return pl2MatchedPrice;
+		return pl2LastMatchedPrice;
 	}
 
 	public void setPl2MatchedPrice(double pl2MatchedPrice) {
-		this.pl2MatchedPrice = pl2MatchedPrice;
+		this.pl2LastMatchedPrice = pl2MatchedPrice;
 	}
-    
-    
-
+	
+	public String getBackValues(PlayerEnum player){
+	    switch (player){
+	        case PLAYER1: return getAsCsvString(getPl1Back());
+	        case PLAYER2: return getAsCsvString(getPl2Back());
+	    }
+	    return "";
+	}
+	
+	public String getLayValues(PlayerEnum player){
+	    switch (player){
+            case PLAYER1: return getAsCsvString(getPl1Lay());
+            case PLAYER2: return getAsCsvString(getPl2Lay());
+        }
+        return "";
+	}
+	
+	private String getAsCsvString(ArrayList<Pair<Double, Double>> list){
+	    String l = list.toString();
+	    return l.substring(1, l.length() - 1);
+	}
+	
+	public double getLastPriceMatched(PlayerEnum player){
+	    switch (player){
+            case PLAYER1: return pl1LastMatchedPrice;
+            case PLAYER2: return pl2LastMatchedPrice;
+        }
+        return -1.0;
+	}
 }

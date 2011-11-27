@@ -1,40 +1,36 @@
 package org.ic.tennistrader.service.threads;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
+import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.service.MatchCsvWriter;
 
 public class MatchRecorderThread extends MatchThread{
     
-    private String filename = null;
-    private BufferedWriter out;
+    private MatchCsvWriter writer;
     
-    public MatchRecorderThread(String filename, Match match){
+    private final Logger log = Logger.getLogger(MatchRecorderThread.class);
+    
+    public MatchRecorderThread(Match match){
         super(match);
-        
-        this.filename = filename;
-        
-        openFile();
+        writer = new MatchCsvWriter(match, match.toString()+".csv");
     }
     
     protected void runBody() {
+        writer.writeMatchDetails();
         
-    }
-    
-    private void openFile(){
+        log.info("Wrote match info to file");
+        
         try {
-            // Create file 
-            FileWriter fstream = new FileWriter(this.filename);
-            out = new BufferedWriter(fstream);
-            out.write("Starting to record match ");
-            out.write("Timestamp,Inplay delay,Market status,Selection ID,Selection name,BP1,BV1,BP2,BV2,BP3,BV3,LP1,LV1,LP2,LV2,LP3,LV3,Total matched,LPM, Set1, Set2, Set3, Points \n");
-            //Close the output stream
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            throw new RuntimeException("IO error writing headers: " + ioe.getMessage());
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
     
+    @Override
+    public void setStop(){
+        this.stop = true;
+        
+        writer.close();
+    }
 }

@@ -13,7 +13,7 @@ public abstract class MatchThread extends StoppableThread{
         this.match=match;
     }
 
-    public void addMatch(RealMatch match) {
+    public void setMatch(RealMatch match) {
         this.match = match;
     }
 

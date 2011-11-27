@@ -162,7 +162,7 @@ public class FracsoftReader extends MatchUpdaterThread {
     }
 
     @Override
-    public void addMatch(RealMatch match) {
+    public void setMatch(RealMatch match) {
         this.match = match;
     }
 

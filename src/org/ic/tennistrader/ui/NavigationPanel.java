@@ -44,14 +44,7 @@ public class NavigationPanel {
 		this.folder = new CTabFolder(shell, SWT.RESIZE | SWT.BORDER);
 		folder.setSimple(false);
 		
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 1;
-		gridData.verticalAlignment = GridData.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-
-		folder.setLayoutData(gridData);
+		GridData gridData = makeLayoutData();
 
 		CTabItem navigation = new CTabItem(folder, SWT.CLOSE);
 		navigation.setText("Match Navigator");
@@ -72,7 +65,7 @@ public class NavigationPanel {
 		NavigationPanel.tree = new Tree(composite, SWT.NONE);
 		tree.addListener(SWT.Resize, new StandardWidgetResizeListener(tree));
 		
-		loadTennisMatches(tree);
+		fetchTennisMatches(tree);
 		listeners = new ArrayList<MatchSelectionListener>();
 
 		GridData tgridData = new GridData();
@@ -113,6 +106,18 @@ public class NavigationPanel {
 
 	}
 
+    private GridData makeLayoutData() {
+        GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 1;
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+
+		folder.setLayoutData(gridData);
+        return gridData;
+    }
+
 	public void addListener(MatchSelectionListener listener) {
 		listeners.add(listener);
 	}
@@ -147,7 +152,8 @@ public class NavigationPanel {
 		}
 	}
 
-	private void loadTennisMatches(Tree tree) {
+	// only fetches matches from Betfair
+	private void fetchTennisMatches(Tree tree) {
 		List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
 		for (Tournament t : tours) {
 			TreeItem item = new TreeItem(tree, SWT.NONE);
@@ -171,7 +177,7 @@ public class NavigationPanel {
 		folder.setSelection(cti);
 	}
 
-	public static RealMatch getMatch(TreeItem treeItem) {
+	public static Match getMatch(TreeItem treeItem) {
 		return matchMap.get(treeItem);
 	}
 
@@ -179,7 +185,7 @@ public class NavigationPanel {
 	    return tree.getSelection()[0];
 	}
 	
-	public static RealMatch getSelectedMatch(){
+	public static Match getSelectedMatch(){
 	    return getMatch(getSelection());
 	}
 	

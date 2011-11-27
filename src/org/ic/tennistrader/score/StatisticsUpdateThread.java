@@ -447,7 +447,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     }
 
     @Override
-    public void addMatch(RealMatch match) {
+    public void setMatch(RealMatch match) {
         // TODO Auto-generated method stub
         
     }

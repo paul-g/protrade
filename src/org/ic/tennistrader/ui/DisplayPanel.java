@@ -21,6 +21,7 @@ import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
+import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
@@ -139,7 +140,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
      */
     private void addMatchData(Composite comp, final Match match) {
     	MatchDataView matchDataView = new MatchDataView(comp, SWT.BORDER, match);
-    	match.registerForUpdate(matchDataView);
+    	LiveDataFetcher.registerForMatchUpdate(matchDataView, match);
     }
 
     /**
@@ -158,9 +159,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
         slider.setMaximum(1);
         slider.setValues(0, 0, 1, 0, 0, 0);
         final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match,slider);
-        
-        match.registerForUpdate(chart);
-        
+        LiveDataFetcher.registerForMatchUpdate(chart, match);
         comp.update();
     }
 
@@ -171,12 +170,12 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
      * @param ti
      */
 	private void addMarketDataGrid(Composite comp, Match match) {
-		UpdatableMarketDataGrid table = new UpdatableMarketDataGrid(comp, SWT.NONE);
-		BetController betController = new BetController(Arrays.asList(table.getP1BackButtons()),
-				Arrays.asList(table.getP1LayButtons()),	Arrays.asList(table.getP2BackButtons()), 
-				Arrays.asList(table.getP2LayButtons()), match);
-		table.setBetController(betController);
-		match.registerForUpdate(table);
+		UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp, SWT.NONE);
+		BetController betController = new BetController(Arrays.asList(grid.getP1BackButtons()),
+				Arrays.asList(grid.getP1LayButtons()),	Arrays.asList(grid.getP2BackButtons()), 
+				Arrays.asList(grid.getP2LayButtons()), match);
+		grid.setBetController(betController);
+		LiveDataFetcher.registerForMatchUpdate(grid, match);
 		//BetManager.registerGrid(match, table);
 	}
 
