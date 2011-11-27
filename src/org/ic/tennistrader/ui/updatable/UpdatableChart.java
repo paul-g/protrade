@@ -9,6 +9,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -27,7 +28,6 @@ import org.swtchart.ISeries.SeriesType;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.ChartData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.StandardWidgetResizeListener;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
@@ -38,7 +38,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     private IErrorBar pl1Spread;
     private IErrorBar pl2Spread;
     private int sampleSize = 200;
-    private int seriesNr = 8;
+    private int seriesNr = 12;
     private boolean decimalOdds;
     private String xAxisTitle = "Time";
     private String yAxisDecimalTitle = "Decimal Odds";
@@ -52,10 +52,19 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     private ChartData chartData;
     private Match match;
     private Slider slider;
-
+    private OverroundChart oChart;
+    
     public UpdatableChart(Composite parent, int style, Match match,
             Slider slider) {
-        super(parent, style);
+    	super(parent, style);
+    	GridData gridData = new GridData();
+    	gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessVerticalSpace = true;
+		this.setLayoutData(gridData);
+		oChart = new OverroundChart(parent, style, gridData, match);
+		makeOChartMenu(parent);
         chartData = new ChartData();
         createSlider(slider);
         this.match = match;
@@ -63,6 +72,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
         decimalOdds = true;
         pl1Selected = true;
         this.getAxisSet().getXAxis(0).getTitle().setText(xAxisTitle);
+        this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
         this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
         this.getTitle().setText(match.getName());
         makeMenus(parent);
@@ -73,7 +83,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
         this.addListener(SWT.Resize, new StandardWidgetResizeListener(this));
     }
 
-    private void addListeners() {
+
+	private void addListeners() {
         this.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseScrolled(MouseEvent e) {
@@ -243,6 +254,15 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
                 dataArray.get(nr)[a] = (Math.pow(
                         chartData.getPl2YSeries().get(b), pow) - Math.pow(
                         chartData.getPl2Lay().get(b).second(), pow)) * k;
+                nr++;
+                dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
+                nr++;
+                dataArray.get(nr)[a] = chartData.getLayOverround().get(b);
+                nr++;
+                dataArray.get(nr)[a] = chartData.getPl1Volume().get(b);
+                nr++;
+                dataArray.get(nr)[a] = chartData.getPl2Volume().get(b);
+                
             }
 
             firstSeries.setXDateSeries(showXSeries);
@@ -257,6 +277,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
             pl1Spread.setMinusErrors(dataArray.get(5));
             pl2Spread.setPlusErrors(dataArray.get(6));
             pl2Spread.setMinusErrors(dataArray.get(7));
+            oChart.setBackOverround(showXSeries, dataArray.get(8));
+            oChart.setLayOverround(showXSeries, dataArray.get(9));
+            oChart.setPl1Volume(showXSeries, dataArray.get(10));
+            oChart.setPl2Volume(showXSeries, dataArray.get(11));
+            oChart.adjust();
             updateDisplay();
         }
     }
@@ -299,12 +324,15 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
     private void updateDisplay() {
         final Composite comp = this.getParent();
         final UpdatableChart chart = this;
+        final OverroundChart oChart = this.oChart;
         if (comp != null) {
             comp.getDisplay().asyncExec(new Runnable() {
                 @Override
                 public void run() {
                     if (!chart.isDisposed())
                         chart.redraw();
+                    if (!oChart.isDisposed())
+                        oChart.redraw();
                     if (!comp.isDisposed())
                         comp.update();
                 }
@@ -326,6 +354,43 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
             });
         }
     }
+    
+    private void makeOChartMenu(Composite parent){
+    	Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
+    	oChart.setMenu(menu);
+    	oChart.getPlotArea().setMenu(menu);
+    	final MenuItem overround = new MenuItem(menu, SWT.CHECK);
+    	overround.setText("Overround");
+    	overround.setSelection(true);
+    	final MenuItem volume = new MenuItem(menu, SWT.CHECK);
+    	volume.setText("Volume");
+    	overround.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event arg0) {
+				if (!overround.getSelection()){
+					overround.setSelection(true);
+					volume.setSelection(false);
+				} else {
+					volume.setSelection(false);
+					oChart.setOptionOverround(true);
+					oChart.visibility(pl1Selected, pl2Selected);
+				}
+			}
+    	});
+    	volume.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event arg0) {
+				if (!volume.getSelection()){
+					volume.setSelection(true);
+					overround.setSelection(false);
+				} else {
+					overround.setSelection(false);
+					oChart.setOptionOverround(false);
+					oChart.visibility(pl1Selected, pl2Selected);
+				}
+			}
+    	});
+    	
+    	
+    }
 
     private void makeMenus(Composite parent) {
         Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
@@ -333,7 +398,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
         toggle.setText("Toggle");
         this.setMenu(menu);
         this.getPlotArea().setMenu(menu);
-
+        
         toggle.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event arg0) {
@@ -371,9 +436,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
                     player1.setSelection(true);
                     return;
                 }
-
                 pl1Selected = !pl1Selected;
                 firstSeries.setVisible(pl1Selected);
+                oChart.visibility(pl1Selected, pl2Selected);
                 updateDisplay();
 
             }
@@ -389,6 +454,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
                 }
                 pl2Selected = !pl2Selected;
                 secondSeries.setVisible(pl2Selected);
+                oChart.visibility(pl1Selected, pl2Selected);
                 updateDisplay();
             }
         });

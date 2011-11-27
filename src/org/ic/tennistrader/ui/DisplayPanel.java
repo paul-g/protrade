@@ -12,6 +12,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -152,11 +154,16 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
         // Select values on chart
         Composite c = new Composite(comp, SWT.NONE);
         c.setLayout(new FillLayout());
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 1;
+        c.setLayout(gridLayout);
+        //c.setLayout(new GridLayout());
         Composite slideComp = new Composite(comp.getParent(), SWT.NONE);
         slideComp.setLayout(new FillLayout());
         Slider slider = new Slider(slideComp,SWT.HORIZONTAL);
         slider.setMaximum(1);
         slider.setValues(0, 0, 1, 0, 0, 0);
+       // new Charts(c,SWT.BORDER,match,slider);
         final UpdatableChart chart = new UpdatableChart(c, SWT.BORDER, match,slider);
         
         match.registerForUpdate(chart);

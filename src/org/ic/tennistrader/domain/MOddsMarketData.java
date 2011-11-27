@@ -10,6 +10,8 @@ public class MOddsMarketData {
     String player2;
     double pl1MatchedPrice;
     double pl2MatchedPrice;
+    double pl1Volume;
+    double pl2Volume;
     ArrayList<Pair<Double, Double>> pl1Lay;
     ArrayList<Pair<Double, Double>> pl1Back;
     ArrayList<Pair<Double, Double>> pl2Lay;
@@ -127,7 +129,24 @@ public class MOddsMarketData {
 	public void setPl2MatchedPrice(double pl2MatchedPrice) {
 		this.pl2MatchedPrice = pl2MatchedPrice;
 	}
-    
+
+	public double getPl1Volume() {
+		return pl1Volume;
+	}
+
+	public void setPl1Volume(double pl1Volume) {
+		this.pl1Volume = pl1Volume;
+	}
+
+	public double getPl2Volume() {
+		return pl2Volume;
+	}
+
+	public void setPl2Volume(double pl2Volume) {
+		this.pl2Volume = pl2Volume;
+	}
+
+	    
     
 
 }
