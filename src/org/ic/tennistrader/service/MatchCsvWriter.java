@@ -38,8 +38,8 @@ public class MatchCsvWriter {
             // "Timestamp,Inplay delay,Market status,Selection ID,Selection name,BP1,BV1,BP2,BV2,BP3,BV3,LP1,LV1,LP2,LV2,LP3,LV3,Total matched,LPM, Set1, Set2, Set3, Points \n";
             line += Calendar.getInstance().getTimeInMillis() + ",";
 
-            line += data.getDelay() + "," + data.getMatchStatus() + ","
-                    + "-13,";
+            line += data.getDelay() + "," + data.getMatchStatus() + ",";
+            line += (player.equals(PlayerEnum.PLAYER1) ? data.getPlayer1SelectiondId() : data.getPlayer2SelectionId()) + ",";
             line += match.getPlayer(player).toString() + ",";
             line += data.getBackValues(player) + ",";
             line += data.getLayValues(player) + ",";
