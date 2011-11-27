@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.tennistrader.ui.BetShell;
 import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.LoginShell;
 import org.pushingpixels.trident.Timeline;
@@ -146,8 +147,10 @@ public class OddsButton {
             public void handleEvent(Event e) {
             	//BetController.addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
             	dataGrid.getBetController().addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
-                setBackground(clickColor);
-                
+            	
+            	BetShell betShell = new BetShell(OddsButton.this.comp.getDisplay(), OddsButton.this.odds.getText());
+            	
+                setBackground(clickColor);                
                 display.timerExec(100, new Runnable() {
                     @Override
                     public void run() {

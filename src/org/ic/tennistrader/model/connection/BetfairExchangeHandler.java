@@ -70,12 +70,14 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 						}
 					}
 					if (i == 0) {
-						modds.setPl1MatchedPrice(r.getLastPriceMatched());
+						modds.setPl1LastMatchedPrice(r.getLastPriceMatched());
+						modds.setPlayer1TotalAmountMatched(r.getTotalAmountMatched());
 						modds.setPlayer1(marketRunner.getName());
 						modds.setPl1Back(setBackValues(r));
 						modds.setPl1Lay(setLayValues(r));
 					} else {
-						modds.setPl2MatchedPrice(r.getLastPriceMatched());
+						modds.setPl2LastMatchedPrice(r.getLastPriceMatched());
+						modds.setPlayer2TotalAmountMatched(r.getTotalAmountMatched());
 						modds.setPlayer2(marketRunner.getName());
 						modds.setPl2Back(setBackValues(r));
 						modds.setPl2Lay(setLayValues(r));

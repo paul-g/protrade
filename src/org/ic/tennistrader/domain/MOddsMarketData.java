@@ -7,16 +7,18 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.utils.Pair;
 
 public class MOddsMarketData {
-    String player1;
-    String player2;
-    double pl1LastMatchedPrice;
-    double pl2LastMatchedPrice;
-    ArrayList<Pair<Double, Double>> pl1Lay, pl1Back, pl2Lay, pl2Back;
-    Date date;
+    private String player1;
+    private String player2;
+    private double pl1LastMatchedPrice;
+    private double pl2LastMatchedPrice;
+    private double player1TotalAmountMatched;
+    private double player2TotalAmountMatched;
+    private ArrayList<Pair<Double, Double>> pl1Lay, pl1Back, pl2Lay, pl2Back;
+    private Date date;
     String exchange;
-    String matchStatus;
-    String location;
-    int delay;
+    private String matchStatus;
+    private String location;
+    private int delay;
 
     public MOddsMarketData() {
         this.delay = 0;
@@ -110,19 +112,19 @@ public class MOddsMarketData {
         return delay;
     }
 
-	public double getPl1MatchedPrice() {
+	public double getPl1LastMatchedPrice() {
 		return pl1LastMatchedPrice;
 	}
 
-	public void setPl1MatchedPrice(double pl1MatchedPrice) {
+	public void setPl1LastMatchedPrice(double pl1MatchedPrice) {
 		this.pl1LastMatchedPrice = pl1MatchedPrice;
 	}
 
-	public double getPl2MatchedPrice() {
+	public double getPl2LastMatchedPrice() {
 		return pl2LastMatchedPrice;
 	}
 
-	public void setPl2MatchedPrice(double pl2MatchedPrice) {
+	public void setPl2LastMatchedPrice(double pl2MatchedPrice) {
 		this.pl2LastMatchedPrice = pl2MatchedPrice;
 	}
 	
@@ -153,5 +155,21 @@ public class MOddsMarketData {
             case PLAYER2: return pl2LastMatchedPrice;
         }
         return -1.0;
+	}
+	
+	public double getPlayer1TotalAmountMatched() {
+		return player1TotalAmountMatched;
+	}
+
+	public void setPlayer1TotalAmountMatched(double player1TotalAmountMatched) {
+		this.player1TotalAmountMatched = player1TotalAmountMatched;
+	}
+
+	public double getPlayer2TotalAmountMatched() {
+		return player2TotalAmountMatched;
+	}
+
+	public void setPlayer2TotalAmountMatched(double player2TotalAmountMatched) {
+		this.player2TotalAmountMatched = player2TotalAmountMatched;
 	}
 }
