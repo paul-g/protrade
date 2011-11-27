@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class MatchDataView extends StandardWidgetContainer implements UpdatableWidget {
@@ -75,8 +74,7 @@ public class MatchDataView extends StandardWidgetContainer implements UpdatableW
 
 	@Override
 	public void setDisposeListener(DisposeListener listener) {
-		// TODO Auto-generated method stub
-		
+		this.addDisposeListener(listener);
 	}
 
 }

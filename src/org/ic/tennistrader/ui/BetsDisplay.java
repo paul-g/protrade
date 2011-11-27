@@ -37,9 +37,24 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 	public static void addBet(Bet bet) {
 		Label betLabel = new Label(composite, SWT.NONE);
 		betLabel.setText((bet.getType() == BetTypeEnum.B ? "Back " : "Lay ")
-				+ bet.getPlayer().toString() + " for " + bet.getValue().second()
-				+ "£ at " + bet.getValue().first() + "");
+				+ bet.getPlayer().toString() + " for " + bet.getAmount()
+				+ "£ at " + bet.getOdds() + "");
 		activeBets.add(betLabel);
 		composite.layout();
+	}
+
+	public static void addSettledBet(final Bet bet) {
+		composite.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				Label betLabel = new Label(composite, SWT.NONE);
+				betLabel.setText((bet.getType() == BetTypeEnum.B ? "Back " : "Lay ")
+						+ bet.getPlayer().toString() + " for " + bet.getAmount()
+						+ "£ at " + bet.getOdds() + " was " + ((bet.getIncome() > 0) ? "" : "not ")
+						+ " successful and your total income is: " + bet.getIncome() + "");
+				activeBets.add(betLabel);
+				composite.layout();
+			}			
+		});		
 	}
 }

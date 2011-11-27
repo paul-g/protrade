@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +27,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
         synchronizedEvents = new BetfairUpdaterEvents();
     }
 
-    public void addEvent(RealMatch match) {
+    public void setMatch(RealMatch match) {
         EventBetfair eventBetfair = match.getEventBetfair();
         matches.put(eventBetfair, match);
         // events.add(eventBetfair);
@@ -39,17 +41,19 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
                 synchronizedEvents.getEvents());
         for (EventBetfair eb : events) {
             // System.out.println("Size of events - " + events.size());
-            RealMatch match = matches.get(eb);
-            if (match.isInPlay() || match.getRecentMarketData() == null
+        	/*
+        	Match match = matches.get(eb);            
+            if (match.isInPlay() || match.getLastMarketData() == null
                     || i == 0) {
+            */
                 MOddsMarketData marketData = BetfairExchangeHandler
                         .getMarketOdds(eb);
                 if (marketData.getPl1Back() != null) {
                     matches.get(eb).addMarketData(marketData);
                 }
                 newMap.put(eb, marketData);
-            }
-            i = (i + 1) % 10;
+            //}
+            //i = (i + 1) % 10;
         }
         LiveDataFetcher.handleEvent(newMap);
         try {

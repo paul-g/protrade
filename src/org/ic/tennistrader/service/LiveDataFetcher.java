@@ -6,19 +6,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.service.threads.MatchRecorderThread;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
 public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
     private static BetfairDataUpdaterThread dataUpdater = null;    
+    private static HashMap<Match, MatchRecorderThread>  recordersMap = new HashMap<Match, MatchRecorderThread>();
     private static HashMap<Match, FracsoftReader> fileReaders = new HashMap<Match, FracsoftReader>();    
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
@@ -27,10 +28,31 @@ public class LiveDataFetcher {
     private static Logger log = Logger.getLogger(LiveDataFetcher.class);
     private static boolean started = false;
 
-    public static void registerLive(final UpdatableWidget widget, final RealMatch match) {
+    public static void registerForMatchUpdate(final UpdatableWidget widget, final Match match){
+        if (match.isFromFile())
+            registerFromFile(widget, match, match.getFilename());
+        else
+            registerLive(widget, (RealMatch)match);
+        
+        if (recordersMap.get(match) == null){
+            
+            MatchRecorderThread mrt = new MatchRecorderThread(match);
+            recordersMap.put(match, mrt);
+            mrt.start();
+        }
+    }
+    
+    public static void unregister(final UpdatableWidget widget, final Match match){
+        if (match.isFromFile())
+            unregisterFromFile(widget, match);
+        else
+            unregisterLive(widget, (RealMatch)match);
+    }
+    
+    private static void registerLive(final UpdatableWidget widget, final RealMatch match) {
         if (dataUpdater == null)
             dataUpdater = new BetfairDataUpdaterThread();
-        dataUpdater.addEvent(match);
+        dataUpdater.setMatch(match);
         List<UpdatableWidget> widgets;
         // add the widget as listener to the given match
         if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
@@ -40,14 +62,9 @@ public class LiveDataFetcher {
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
-        widget.setDisposeListener(new DisposeListener() {
-            @Override
-            public void widgetDisposed(DisposeEvent arg0) {
-                // TODO Auto-generated method stub
-                unregisterLive(widget, match);
-                System.out.println("Disposed widget");
-            }        	
-        });
+        
+        widget.setDisposeListener(new ThreadDisposeListener(widget, match));
+
         // start the thread
         if (!started){
             started = true;
@@ -55,7 +72,7 @@ public class LiveDataFetcher {
         }
     }
     
-    protected static void unregisterLive(UpdatableWidget widget, RealMatch match) {
+    private static void unregisterLive(UpdatableWidget widget, RealMatch match) {
     	//System.out.println("Unregister live entered");
     	List<UpdatableWidget> widgets = null;
     	if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
@@ -74,7 +91,7 @@ public class LiveDataFetcher {
 		dataUpdater.removeEvent(match.getEventBetfair());
 	}
 	
-	public static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName) {
+	private static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName) {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !fileListeners.containsKey(match);
         if (isNewMatch)
@@ -83,20 +100,13 @@ public class LiveDataFetcher {
             widgets = fileListeners.get(match);
         widgets.add(widget);
         fileListeners.put(match, widgets);
-        widget.setDisposeListener(new DisposeListener() {
-            
-            @Override
-            public void widgetDisposed(DisposeEvent arg0) {
-                // TODO Auto-generated method stub
-                unregisterFromFile(widget, match);    
-            }
-        });
+        widget.setDisposeListener(new ThreadDisposeListener(widget, match));
         if(isNewMatch) {
             startFromFile(match, fileName);
         }
     }
 
-    protected static void unregisterFromFile(UpdatableWidget widget, Match match) {
+    private static void unregisterFromFile(UpdatableWidget widget, Match match) {
     	//System.out.println("Unregister live entered");
     	List<UpdatableWidget> widgets = null;
     	if (fileListeners.containsKey(match)) {
@@ -110,7 +120,6 @@ public class LiveDataFetcher {
     			fracsoftReaderThread.setStop();
     			fracsoftReaderThread.interrupt();
     			fileListeners.remove(match);
-    			
     		}
     	}
 	}
@@ -144,6 +153,9 @@ public class LiveDataFetcher {
 
     public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
         match.setScore(dataScore.second());
+        //System.out.println("Market status - " + dataScore.first().getMatchStatus());
+        if (dataScore.first().getMatchStatus().toLowerCase().equals("closed"))
+        	BetManager.setBetsOutcome(match);
         if (fileListeners.containsKey(match)) {
             List<UpdatableWidget> widgets = fileListeners.get(match);
             for (UpdatableWidget w : widgets) {
@@ -152,14 +164,24 @@ public class LiveDataFetcher {
         }
     }
     
+    public static void handleEndOfFile(Match match) {
+		BetManager.setBetsOutcome(match);
+	}
+    
     public static void stopAllThreads() {
     	if (dataUpdater != null) {
     		dataUpdater.setStop();
     		dataUpdater.interrupt();
     	}
+    	
     	for (FracsoftReader fr : fileReaders.values()) {
     		fr.setStop();
     		fr.interrupt();
+    	}
+    	
+    	for (MatchRecorderThread mrt : recordersMap.values()){
+    	    mrt.setStop();
+    	    mrt.interrupt();
     	}
     }
     

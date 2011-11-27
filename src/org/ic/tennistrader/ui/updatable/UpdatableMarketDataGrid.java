@@ -20,6 +20,7 @@ import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.utils.Pair;
 
 public class UpdatableMarketDataGrid extends StandardWidgetContainer implements UpdatableWidget {
+    
     private BetController betController;
     private OddsButton[] p1BackButtons = new OddsButton[3];
     private OddsButton[] p1LayButtons = new OddsButton[3];

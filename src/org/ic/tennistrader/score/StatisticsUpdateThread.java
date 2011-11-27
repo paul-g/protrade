@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Statistics;
-import org.ic.tennistrader.service.MatchUpdaterThread;
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -42,8 +42,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     private List<Listener> listeners = new ArrayList<Listener>();
     
     private String page = null;
-    
-    private Match match;
     
     private StatisticsPanel st;
     
@@ -449,7 +447,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     }
 
     @Override
-    public void addEvent(RealMatch match) {
+    public void setMatch(RealMatch match) {
         // TODO Auto-generated method stub
         
     }

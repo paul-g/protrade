@@ -1,24 +1,19 @@
 package org.ic.tennistrader.domain.match;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
-import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 /**
  * An upcoming or in play match
  * @author pg1709
  *
  */
-public class RealMatch implements Match{
-	private Player player1 = new Player();
-	private Player player2 = new Player();
+public class RealMatch extends Match{
+    
 	private EventBetfair eventBetfair;
-	private List<MOddsMarketData> marketDatas;
-	private Score score;
 	private boolean namesSet = false;
 	
 	public RealMatch(String player1, String player2, EventBetfair eb) {
@@ -73,51 +68,23 @@ public class RealMatch implements Match{
         }
     }
 	
-	public MOddsMarketData getRecentMarketData() {
-		if (this.marketDatas.size() == 0)
-			return null;
-		return this.marketDatas.get(this.marketDatas.size() - 1);
-	}
-	
-	public void setMarketDatas(List<MOddsMarketData> marketDatas) {
-		this.marketDatas = marketDatas;
-	}
-
-	public List<MOddsMarketData> getMarketDatas() {
-		return marketDatas;
-	}
-	
 	public boolean isInPlay(){
-        if (this.getRecentMarketData() == null)
+        if (this.getLastMarketData() == null)
             this.addMarketData(BetfairExchangeHandler.getMarketOdds(this.getEventBetfair()));
-        return this.getRecentMarketData().getDelay() > 0;
+        return this.getLastMarketData().getDelay() > 0;
 	}
 	
 	public String getName(){
 	    return toString();
 	}
 	
-	public void registerForUpdate(UpdatableWidget widget){
-	    LiveDataFetcher.registerLive(widget, this);
+    @Override
+	public PlayerEnum getWinner() throws MatchNotFinishedException {
+		return this.score.getWinner();
 	}
 
     @Override
-    public Player getPlayerOne() {
-        return player1;
-    }
-
-    @Override
-    public Player getPlayerTwo() {
-        return player2;
-    }
-
-    @Override
-    public Score getScore() {
-        return score;
-    }
-
-    @Override
-    public void setScore(Score score) {
-       this.score = score;
+    public boolean isFromFile() {
+        return false;
     }
 }

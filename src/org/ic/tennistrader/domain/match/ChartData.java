@@ -40,8 +40,8 @@ public class ChartData {
 	
 	public void updateData(MOddsMarketData data){
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
-		pl1YSeries = addValue(pl1YSeries,  data.getPl1MatchedPrice());
-		pl2YSeries = addValue(pl2YSeries,  data.getPl2MatchedPrice());
+		pl1YSeries = addValue(pl1YSeries,  data.getPl1LastMatchedPrice());
+		pl2YSeries = addValue(pl2YSeries,  data.getPl2LastMatchedPrice());
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
