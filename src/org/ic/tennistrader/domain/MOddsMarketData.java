@@ -7,6 +7,7 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.utils.Pair;
 
 public class MOddsMarketData {
+    String Exchange;
     private String player1;
     private String player2;
     private double pl1LastMatchedPrice;
@@ -173,6 +174,7 @@ public class MOddsMarketData {
 	public double getPlayer2TotalAmountMatched() {
 		return player2TotalAmountMatched;
 	}
+
 
 	public void setPlayer2TotalAmountMatched(double player2TotalAmountMatched) {
 		this.player2TotalAmountMatched = player2TotalAmountMatched;

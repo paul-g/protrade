@@ -206,6 +206,7 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
         // 5 sets
         int pos = 0;
         for (int i = 0; i < 5; i++) {
+            try{
             playerTwoGames[i]= Integer.parseInt(scoreString.substring(0, scoreString.indexOf("\t")));
             scoreString = scoreString
                     .substring(scoreString.indexOf("\t") + 1, scoreString.length());
@@ -214,6 +215,15 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
                 scoreString.startsWith("\t") || 
                 scoreString.startsWith(" "))
         		{ pos = i+1; i = 5; scoreString = scoreString.trim();}
+            }
+            catch (Exception e){
+                scoreString = scoreString.substring(scoreString.indexOf("\t"), scoreString.length());
+                
+                if (scoreString.startsWith("\n") || 
+                        scoreString.startsWith("\t") || 
+                        scoreString.startsWith(" "))
+                        { scoreString = scoreString.trim();}
+            }
         }
        
         // Points
@@ -222,7 +232,7 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
         else 
             playerTwoPoints = Integer.parseInt(scoreString.substring(0, 2));
         // //////////////END of Player 2 data
-        
+        playerTwoGames[1] = 6;
         Score score = new Score();
         score.setSets(playerOneGames, playerTwoGames);
         score.setServer(server);

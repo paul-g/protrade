@@ -7,6 +7,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -71,9 +72,18 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements 
     private Label initLayout(OddsButton[] pBackButtons, OddsButton[] pLayButtons, boolean pl1) {
         Label player = new Label(this, SWT.NONE);
         player.setFont(titleFont);
+        
         for (int i = 0; i < 2; i++) {
             pBackButtons[i] = new OddsButton(this, normalColor, oddsFont, this);
+           /* Composite comp = pBackButtons[i].getComp();
+            Image backBackgroundImage = GraphicsUtils.makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210, 238 );
+            Image backClickImage = GraphicsUtils.makeGradientBackgroundImage(comp,  84, 139, 84,  84, 139, 84);
+            Image backHoverImage = GraphicsUtils.makeGradientBackgroundImage(comp, 155, 205, 155, 193, 255, 193);
+            pBackButtons[i].setBackgroundImage(backBackgroundImage);
+            pBackButtons[i].setClickImage(backClickImage);
+            pBackButtons[i].setHighlightImage(backHoverImage);*/
         }
+        
         pBackButtons[2] = new OddsButton(this, backColor, oddsFont, this);
         pLayButtons[0] = new OddsButton(this, layColor, oddsFont, this);
         for (int i = 1; i < 3; i++)

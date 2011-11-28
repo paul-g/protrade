@@ -24,21 +24,42 @@ public class BetController {
 	}
 		
 	public void addBet(OddsButton button, double amount, double odds) {
+		Player player = getBetPlayer(button);
+		BetTypeEnum betType = getBetType(button);		
+		BetManager.placeBet(match, player, betType, odds, amount);
+	}
+
+	private Player getBetPlayer(OddsButton button) {
 		Player player;
+		if (this.player1BackButtons.contains(button)) {
+			player = match.getPlayerOne();
+		} else if (this.player1LayButtons.contains(button)) {
+			player = match.getPlayerOne();
+		} else if (this.player2BackButtons.contains(button)) {
+			player = match.getPlayerTwo();
+		} else {
+			player = match.getPlayerTwo();
+		}
+		return player;
+	}
+
+	private BetTypeEnum getBetType(OddsButton button) {
 		BetTypeEnum betType;
 		if (this.player1BackButtons.contains(button)) {
 			betType = BetTypeEnum.B;
-			player = match.getPlayerOne();
 		} else if (this.player1LayButtons.contains(button)) {
 			betType = BetTypeEnum.L;
-			player = match.getPlayerOne();
 		} else if (this.player2BackButtons.contains(button)) {
 			betType = BetTypeEnum.B;
-			player = match.getPlayerTwo();
 		} else {
 			betType = BetTypeEnum.L;
-			player = match.getPlayerTwo();
 		}
-		BetManager.placeBet(match, player, betType, odds, amount);
+		return betType;
+	}
+
+	public String getBettingDetails(OddsButton button) {	
+		String info = "You are betting on " + getBetPlayer(button).toString();
+		info += " to " + (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");		
+		return info;
 	}
 }

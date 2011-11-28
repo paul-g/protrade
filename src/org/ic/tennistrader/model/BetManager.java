@@ -43,7 +43,7 @@ public class BetManager {
     }
 
 	public static void setBetsOutcome(Match match) {
-		System.out.println("In BetManager.setBetsOutcome");
+		//System.out.println("In BetManager.setBetsOutcome");
 		PlayerEnum winner;
 		try {
 			winner = match.getWinner();
@@ -82,18 +82,15 @@ public class BetManager {
 	
 	private static void settleBet(Bet bet, boolean betSuccessful) {
 		if (betSuccessful) {
-			bet.setIncome( bet.getOdds() * bet.getAmount() );
-			/*
 			if (bet.getType().equals(BetTypeEnum.B))
-				bet.setIncome( bet.getOdds() * bet.getAmount() );
+				bet.setProfit( (bet.getOdds() - 1) * bet.getAmount() );
 			else
-				bet.setIncome( bet.getOdds() * bet.getAmount() );
-			*/
+				bet.setProfit( bet.getAmount() );
 		} else {
 			if (bet.getType().equals(BetTypeEnum.B))
-				bet.setIncome( (-1) * bet.getAmount() );
+				bet.setProfit( (-1) * bet.getAmount() );
 			else
-				bet.setIncome( (-1) * (bet.getOdds() - 1) * bet.getAmount() );
+				bet.setProfit( (-1) * (bet.getOdds() - 1) * bet.getAmount() );
 		}		
 	}
 }

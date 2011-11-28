@@ -6,12 +6,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.ic.tennistrader.domain.match.Match;
 
 public class ProbabilityPanel {
+    public Table table;
+	
+    public ProbabilityPanel(Composite composite, Match match) {
 
-    public ProbabilityPanel(Composite composite) {
-
-        final Table table = new Table(composite, SWT.NONE);
+        table = new Table(composite, SWT.NONE);
         table.setBounds(new Rectangle(10, 110, 370, 90));
         table.setHeaderVisible(true);
         // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
@@ -35,23 +37,24 @@ public class ProbabilityPanel {
 
         // Filling the probabilities table with data
         table.setRedraw(false);
-
+        
         TableItem item = new TableItem(table, SWT.NONE);
         int c = 0;
-        item.setText(c++, "Player 1");
-        item.setText(c++, "0");//+(predict.calculate()[0]));
-        item.setText(c++, "78%");
-        item.setText(c++, "57%");
-        item.setText(c++, "63%");
+        item.setText(c++, match.getPlayerOne().getLastname());
+        item.setText(c++, "-");
+        item.setText(c++, "-");
+        item.setText(c++, "-");
+        item.setText(c++, "-");
 
         TableItem item2 = new TableItem(table, SWT.NONE);
         c = 0;
-        item2.setText(c++, "Player 2");
-        item2.setText(c++, "38%");
-        item2.setText(c++, "22%");
-        item2.setText(c++, "43%");
-        item2.setText(c++, "37%");
+        item2.setText(c++, match.getPlayerTwo().getLastname());
+        item2.setText(c++, "-");
+        item2.setText(c++, "-");
+        item2.setText(c++, "-");
+        item2.setText(c++, "-");
 
+        
         table.setRedraw(true);
 
         for (int i = 0, n = column.length; i < n; i++) {
