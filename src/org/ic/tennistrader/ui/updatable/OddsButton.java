@@ -145,12 +145,9 @@ public class OddsButton {
         Listener l = new Listener() {
             @Override
             public void handleEvent(Event e) {
-            	//BetController.addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
-            	dataGrid.getBetController().addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
-            	
-            	BetShell betShell = new BetShell(OddsButton.this.comp.getDisplay(), OddsButton.this.odds.getText());
-            	
-                setBackground(clickColor);                
+            	//dataGrid.getBetController().addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
+            	BetShell betShell = new BetShell(OddsButton.this, dataGrid.getBetController());
+            	setBackground(clickColor);                
                 display.timerExec(100, new Runnable() {
                     @Override
                     public void run() {
@@ -184,6 +181,14 @@ public class OddsButton {
     public void setClickImage(Image clickImage) {
         this.clickImage = clickImage;
     }
+    
+    public Composite getComp() {
+		return comp;
+	}
+
+	public Label getOdds() {
+		return odds;
+	}
 
     void layout() {
         comp.layout();

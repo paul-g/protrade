@@ -10,14 +10,14 @@ public class Bet {
     private Match match;
     private Player player;
     private BetTypeEnum type;
-    private double income; // includes profit and stake
+    private double profit;
 
     public Bet(Match m, Player p, BetTypeEnum type, Pair<Double, Double> value){
         this.match = m;
         this.player = p;
         this.type = type;
         this.value = value;
-        this.income = 0;
+        this.profit = 0;
     }
     
     public Match getMatch() {
@@ -63,11 +63,11 @@ public class Bet {
     	return this.value.first();
     }
 
-	public void setIncome(double profit) {
-		this.income = profit;
+	public void setProfit(double profit) {
+		this.profit = profit;
 	}
 
-	public double getIncome() {
-		return income;
+	public double getProfit() {
+		return profit;
 	}
 }

@@ -2,6 +2,7 @@ package org.ic.tennistrader.domain.match;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
@@ -21,6 +22,7 @@ public class HistoricalMatch extends Match {
     
     public HistoricalMatch(String filename){
         this.score = new Score();
+        this.marketDatas = new ArrayList<MOddsMarketData>();
 
         Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
         
