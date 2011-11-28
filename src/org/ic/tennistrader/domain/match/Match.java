@@ -10,7 +10,7 @@ public abstract class Match {
     
     protected Player player1 = new Player();
     protected Player player2 = new Player();
-    protected Score score;
+    protected Score score = new Score();
     
     protected List<MOddsMarketData> marketDatas;
     

@@ -56,6 +56,8 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     public StatisticsUpdateThread(Match match, StatisticsPanel st) {
         this.match = match;
         this.st = st;
+        playerOneStats = new Statistics();
+        playerTwoStats = new Statistics();
     }
     
     public Statistics getPlayerOneStats()
@@ -70,7 +72,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     
     @Override
     public void run() {
-   
+    	
     }
     public String getPage(){
         return page;
@@ -143,32 +145,33 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
                 "input").get(0);
         HtmlPasswordInput pass = (HtmlPasswordInput) login
                 .getElementsByTagName("input").get(1);
-        HtmlElement submitButton = (HtmlElement) login.getElementsByTagName(
-                "img").get(0);
+        HtmlElement submitButton = (HtmlElement) login.getElementsByAttribute(
+                        "img", "onclick", "goForGold()").get(0);
 
-        name.setText("radubal");
+        name.setText("radubal2");
         pass.setText("placintacumere");
 
         System.out.println("Logging in to site");
-        HtmlPage Loggedpage = (HtmlPage) submitButton.click();
+        
+        HtmlPage loggedPage = (HtmlPage) submitButton.click();
+        loggedPage.initialize();
+        
         System.out.println("Successfully Logged in to site");
 
-        HtmlTextInput player1 = (HtmlTextInput) Loggedpage
+        HtmlTextInput player1 = (HtmlTextInput) loggedPage
                 .getElementByName("match_preview_search1");
-        HtmlTextInput player2 = (HtmlTextInput) Loggedpage
+        HtmlTextInput player2 = (HtmlTextInput) loggedPage
                 .getElementByName("match_preview_search2");
-        HtmlElement body = (HtmlElement) Loggedpage
+        HtmlElement body = (HtmlElement) loggedPage
                 .getElementsByTagName("body").get(0);
         HtmlElement submitButton2 = (HtmlElement) body.getElementsByAttribute(
-                "td", "background", "/images/GO_green2.jpg").get(0);
+                "td", "onclick", "match_preview_form_top_right.submit()").get(0);
         
-        player1.setText(match.getPlayerOne().toString());
-        player2.setText(match.getPlayerTwo().toString());
-    
-        System.out.println(match.getPlayerOne().toString());
-        System.out.println(match.getPlayerTwo().toString());
-        
+        player1.setText(match.getPlayerOne().getLastname().toString());
+        player2.setText(match.getPlayerTwo().getLastname().toString());
+
         HtmlPage intermPage = (HtmlPage) submitButton2.click();
+        intermPage.initialize();
 
         HtmlElement btnContinue = (HtmlElement) intermPage
                 .getElementById("addinsight");
@@ -177,22 +180,20 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
         if (btnContinue != null)
             page = (HtmlPage) btnContinue.click();
         else
-            page = intermPage;
-     
-        
+            page = intermPage;     
 
-        for (int i = 0; i < 20; i++) {
+       /* for (int i = 0; i < 20; i++) {
             System.out.println("Waiting");
             // page
             String stats = page.asText();
-            
             if ( stats.indexOf("Head to Head Match Preview") != -1 ) 
                 break;
             
             synchronized (page) {
                 page.wait(500);
             }
-        }
+        }*/
+        page.initialize();
         
         webClient.closeAllWindows();
         
@@ -390,7 +391,23 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
             stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
             item.setText(2, stats.substring(0, stats.indexOf("\n")));
             stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
+            
+           
+            if (i == 2){
+            	//System.out.println(Double.parseDouble(item.getText(0).substring(0,item.getText(0).length() -1)));
+            	playerOneStats.setFirstServePercent(Double.parseDouble(item.getText(0).substring(0,item.getText(0).length() -1))/100);
+            	playerTwoStats.setFirstServePercent(Double.parseDouble(item.getText(2).substring(0,item.getText(2).length() -1))/100);
+            }
+            if (i == 3){
+            	playerOneStats.setFirstServeWins(Double.parseDouble(item.getText(0).substring(0,item.getText(0).length() -1))/100);
+            	playerTwoStats.setFirstServeWins(Double.parseDouble(item.getText(2).substring(0,item.getText(2).length() -1))/100);
+            }
+            if (i == 4){
+            	playerOneStats.setSecondServeWins(Double.parseDouble(item.getText(0).substring(0,item.getText(0).length() -1))/100);
+            	playerTwoStats.setSecondServeWins(Double.parseDouble(item.getText(2).substring(0,item.getText(2).length() -1))/100);
+            }
         }
+        
     }
 
     private String skipEmptyLines(String string) {
@@ -425,13 +442,13 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     }
 
     public void checkStatisticsUpdate() {
-
+    	runBody();
         if (!statisticsPopulated) {
             try {
                 String stats = this.getPage();
                 if (stats != null) {
-                    statisticsPopulated = true;
                     parseStatistics(stats);
+                    statisticsPopulated = true;
                 }
             } catch (Exception e) {
                 // if something goes wrong

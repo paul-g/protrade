@@ -4,13 +4,15 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.domain.match.SetScore;
 import org.ic.tennistrader.domain.match.Statistics;
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
-public class PredictionCalculator {
+public class PredictionCalculator extends MatchUpdaterThread{
 	
 	private Score score;
 	private Statistics playerOneStats;
 	private Statistics playerTwoStats;
-	private PlayerEnum server;	
+	private PlayerEnum server;
+	public double[] result = new double[8];
 	
 	// Probability of player one/two to win on their serve in a game by ability
 	private double playerOnePWG = 0;
@@ -35,16 +37,31 @@ public class PredictionCalculator {
         this.server = server;
         
         playerOnePWG = calculatePWG(calculatePWOS(playerOneStats));
+        System.out.println(calculatePWOS(playerOneStats));
+        System.out.println(calculatePWOS(playerTwoStats));
 		playerTwoPWG = calculatePWG(calculatePWOS(playerTwoStats));       
 	}
 	
-	public double[] calculate()
+	@Override
+    protected void runBody() {
+		calculate();
+	}
+	
+	public void calculate()
 	{
-		double pwg = 0;
-		pwg = (server == PlayerEnum.PLAYER1)? playerOnePWG : playerTwoPWG;
-		double[] probs = new double[3];
-		probs[1] = calculateGamePercent(score.getPlayerOnePoints(), score.getPlayerTwoPoints(), pwg);
-		return probs;
+		// Even indices correspond to player 1, odd ones to player 2;
+		
+		result[0] = calculatePWOS(playerOneStats);
+		result[1] = calculatePWOS(playerTwoStats);
+		
+		if (server == PlayerEnum.PLAYER1){
+			result[2] = calculateGamePercent(score.getPlayerOnePoints(), score.getPlayerTwoPoints(), playerOnePWG);
+			result[3] = 1 - result[2];
+		}
+		else { 
+			result[2] = 1 - result[3];
+			result[3] = calculateGamePercent(score.getPlayerOnePoints(), score.getPlayerTwoPoints(), playerTwoPWG);
+		}
 	}
 	
 	// Probability of winning a point on service

@@ -29,6 +29,8 @@ public class PredictionGui extends StandardWidgetContainer{
     private ScoreUpdateThread scoreUpdateThread;
 
     private StatisticsUpdateThread statisticsUpdateThread;
+    
+    private PredictionUpdateThread predictionUpdateThread;
         
     /**
      * For running the prediction gui separately
@@ -38,10 +40,10 @@ public class PredictionGui extends StandardWidgetContainer{
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        Player playerOne = new Player("Pedro", "Sousa");
-        Player playerTwo = new Player("Joao", "Souza");
+        Player playerOne = new Player("Roger", "Federer");
+        Player playerTwo = new Player("Jo-Wilfried", "Tsonga");
 
-        Match match = new RealMatch("","", new EventBetfair("Sousa v Souza", new ArrayList<EventMarketBetfair>(), 1));
+        Match match = new RealMatch("","", new EventBetfair("Federer v Tsonga", new ArrayList<EventMarketBetfair>(), 1));
 
         new PredictionGui(shell, SWT.BORDER, match);
 
@@ -61,22 +63,29 @@ public class PredictionGui extends StandardWidgetContainer{
 
         this.setLayout(new GridLayout());
 
-        ScorePanel sc = new ScorePanel(this, match);
-
-        
+        ScorePanel sc = new ScorePanel(this, match);      
+        ProbabilityPanel probabilityPanel = new ProbabilityPanel(this, match);
         StatisticsPanel st = new StatisticsPanel(parent, match);
+        
     	
         this.statisticsUpdateThread = new StatisticsUpdateThread(match, st);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match, sc);
+        
+        this.predictionUpdateThread = new PredictionUpdateThread(match, probabilityPanel);
 
         parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
             public void run() {
             	statisticsUpdateThread.checkStatisticsUpdate();
-                if (!statisticsUpdateThread.isStatisticsPopulated())
+                if (!statisticsUpdateThread.isStatisticsPopulated()){
                     if (!parent.isDisposed())
                         parent.getDisplay().timerExec(5000, this);
+                }
+                else 
+                {
+                	
+                }
             }
         });
 
@@ -96,14 +105,48 @@ public class PredictionGui extends StandardWidgetContainer{
         }
         statisticsUpdateThread.start();
         
-        Score score = scoreUpdateThread.getScore();
-        Statistics playerOneStats = statisticsUpdateThread.getPlayerOneStats();
-        Statistics playerTwoStats = statisticsUpdateThread.getPlayerOneStats();
-    	PlayerEnum server = sc.getServer();	
         
-        //PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
-        //predict.calculate();
-        ProbabilityPanel probabilityPanel = new ProbabilityPanel(this);
+        
+        parent.getDisplay().timerExec(5000, new Runnable() {
+        	
+        	private volatile boolean stop = false;
+        	//private 
+        	
+            @Override
+            public void run() {
+            	
+                if (!stop && !statisticsUpdateThread.isStatisticsPopulated()){
+                    if (!parent.isDisposed())
+                        parent.getDisplay().timerExec(5000, this);
+                }
+                Score score = scoreUpdateThread.getScore();
+                PlayerEnum server = PlayerEnum.PLAYER1;
+                Statistics playerOneStats = statisticsUpdateThread.getPlayerOneStats();
+                Statistics playerTwoStats = statisticsUpdateThread.getPlayerTwoStats();
+                
+                PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
+                predict.calculate();
+                predictionUpdateThread.updateTable(predict);
+                System.out.println(playerOneStats.getFirstServePercent());
+                System.out.println(playerTwoStats.getFirstServePercent());
+                System.out.println("CALCULATING ONCE");
+                requestStop();
+             
+            }
+            
+            public void requestStop() {
+                stop = true;
+              }
+        });
+        
+       /* while (!statisticsUpdateThread.isStatisticsPopulated()){
+        	try{
+        	synchronized (statisticsUpdateThread) {
+        		statisticsUpdateThread.wait(500);
+            }
+        	}catch(Exception e){}
+        }*/
+    	
     }
 
     @Override
