@@ -14,12 +14,8 @@ import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.EventMarketBetfair;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.StandardWidgetContainer;
-import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.RealMatch;
-import org.ic.tennistrader.domain.match.Score;
-import org.ic.tennistrader.domain.match.Statistics;
+import org.ic.tennistrader.ui.StandardWidgetContainer;
 
 public class PredictionGui extends StandardWidgetContainer{
 
@@ -67,15 +63,13 @@ public class PredictionGui extends StandardWidgetContainer{
 
         ScorePanel sc = new ScorePanel(this, match);
         
-        //StatisticsPanel st = new StatisticsPanel(parent, match);
+        StatisticsPanel st = new StatisticsPanel(parent, match);
     	
-        //this.statisticsUpdateThread = new StatisticsUpdateThread(match, st);
+        this.statisticsUpdateThread = new StatisticsUpdateThread(match, st);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match);
         
-       // this.predictionUpdateThread = new PredictionUpdateThread(match, probabilityPanel);
-
-        /*parent.getDisplay().timerExec(5000, new Runnable() {
+        parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
             public void run() {
             	statisticsUpdateThread.checkStatisticsUpdate();
@@ -89,56 +83,13 @@ public class PredictionGui extends StandardWidgetContainer{
                 }
             }
         });
-        */
+        
        if (match.isInPlay()) {
             // only start score fetching for live matches
              scoreUpdateThread.start();
         }
        
-        //statisticsUpdateThread.start();
-
-        /*
-        parent.getDisplay().timerExec(5000, new Runnable() {
-        	
-        	private volatile boolean stop = false;
-        	//private 
-        	
-            @Override
-            public void run() {
-            	
-                if (!stop && !statisticsUpdateThread.isStatisticsPopulated()){
-                    if (!parent.isDisposed())
-                        parent.getDisplay().timerExec(5000, this);
-                } else {
-                Score score = scoreUpdateThread.getScore();
-                PlayerEnum server = PlayerEnum.PLAYER1;
-                Statistics playerOneStats = statisticsUpdateThread.getPlayerOneStats();
-                Statistics playerTwoStats = statisticsUpdateThread.getPlayerTwoStats();
-                
-                PredictionCalculator predict = new PredictionCalculator(score, playerOneStats, playerTwoStats, server);
-                predict.calculate();
-                predictionUpdateThread.updateTable(predict);
-                System.out.println(playerOneStats.getFirstServePercent());
-                System.out.println(playerTwoStats.getFirstServePercent());
-                System.out.println("CALCULATING ONCE");
-                requestStop();
-                }
-             
-            }
-            
-            public void requestStop() {
-                stop = true;
-              }
-        });
-        */
-       /* while (!statisticsUpdateThread.isStatisticsPopulated()){
-        	try{
-        	synchronized (statisticsUpdateThread) {
-        		statisticsUpdateThread.wait(500);
-            }
-        	}catch(Exception e){}
-        }*/
-    	
+        statisticsUpdateThread.start();
     }
 
     @Override
