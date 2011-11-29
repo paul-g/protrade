@@ -2,6 +2,7 @@ package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
@@ -26,9 +27,10 @@ public class ScorePanel extends StandardWidgetContainer implements UpdatableWidg
     	super(parent, SWT.NONE);
         this.match = match;
 
+        this.setLayout(new FillLayout());
         this.display = parent.getDisplay();
 
-        this.scoreTable = new Table(parent, SWT.NONE);
+        this.scoreTable = new Table(this, SWT.NONE);
         scoreTable.setHeaderVisible(true);
 
         scoreTable.setLinesVisible(true);

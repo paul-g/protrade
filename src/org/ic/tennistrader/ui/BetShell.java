@@ -14,6 +14,7 @@ import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 
 public class BetShell {
+	
 	private Shell betShell;
 	//private BetController betController;
 	//private OddsButton oddsButton;
@@ -126,6 +127,10 @@ public class BetShell {
         gridLayout.numColumns = 5;
         gridLayout.marginTop = 0;
         betShell.setLayout(gridLayout);
+	}
+	
+	public void setLocation(int x, int y){
+		betShell.setLocation(x, y);
 	}
 
 }

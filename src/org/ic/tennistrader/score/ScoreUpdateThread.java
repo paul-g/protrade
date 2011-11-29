@@ -23,12 +23,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
 public class ScoreUpdateThread extends MatchUpdaterThread {    
-    private ScorePanel sc;    
+
     private String scoreString;
 
-    public ScoreUpdateThread(Match match, ScorePanel sc) {
+    public ScoreUpdateThread(Match match) {
         this.match = match;
-        this.sc = sc;
     }
 
     public Score getScore() {
@@ -132,14 +131,18 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
     private void parseScores() {
     	int[] playerOneGames = new int[6];
     	int[] playerTwoGames = new int[6];
-        int matchStart = scoreString.indexOf(match.getPlayerOne().getLastname() + " " + match.getPlayerOne().getFirstname());
+    	int playerOnePoints = 0, playerTwoPoints = 0;
+    	int matchStart = scoreString.indexOf("Tsonga Jo-Wilfried");
+    	
+    	//int matchStart = scoreString.indexOf(match.getPlayerOne().getLastname() + " " + match.getPlayerOne().getFirstname());
         
+    	PlayerEnum server = PlayerEnum.PLAYER1;
         // display server
         if (matchStart >= 8
                 && scoreString.substring(matchStart - 8, matchStart - 2).compareTo(
                         "SERVER") == 0) {
             // player 1 serves
-            sc.setServer(PlayerEnum.PLAYER1);
+            server = PlayerEnum.PLAYER1;
         }
  
         scoreString = scoreString.substring(matchStart, scoreString.length());
@@ -172,8 +175,12 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
           
             // Points
             if (!scoreString.startsWith(match.getPlayerTwo().getLastname())) {
-            	playerOneGames[pos] = Integer.parseInt(scoreString.substring(0, 2));
-            	scoreString = skipEmptyLines(scoreString);
+                if (scoreString.substring(0,2).equals("Ad"))
+                    playerOnePoints = 50;
+                else 
+                    playerOnePoints = Integer.parseInt(scoreString.substring(0, 2));
+                scoreString = scoreString.substring(2, scoreString.length());
+                scoreString = skipEmptyLines(scoreString);
             } else {
             	scoreString = skipLines(scoreString,1);
             }
@@ -183,7 +190,7 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
         if (scoreString.startsWith("SERVER")) {
             scoreString = skipLines(scoreString, 1);
             // player 2 serves
-        	sc.setServer(PlayerEnum.PLAYER2);
+            server = PlayerEnum.PLAYER2;
         }
         
         scoreString.trim();
@@ -199,6 +206,7 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
         // 5 sets
         int pos = 0;
         for (int i = 0; i < 5; i++) {
+            try{
             playerTwoGames[i]= Integer.parseInt(scoreString.substring(0, scoreString.indexOf("\t")));
             scoreString = scoreString
                     .substring(scoreString.indexOf("\t") + 1, scoreString.length());
@@ -207,30 +215,43 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
                 scoreString.startsWith("\t") || 
                 scoreString.startsWith(" "))
         		{ pos = i+1; i = 5; scoreString = scoreString.trim();}
+            }
+            catch (Exception e){
+                scoreString = scoreString.substring(scoreString.indexOf("\t"), scoreString.length());
+                
+                if (scoreString.startsWith("\n") || 
+                        scoreString.startsWith("\t") || 
+                        scoreString.startsWith(" "))
+                        { scoreString = scoreString.trim();}
+            }
         }
        
         // Points
-        playerTwoGames[pos] = Integer.parseInt(scoreString.substring(0, 2));
+        if (scoreString.substring(0,2).equals("Ad"))
+            playerTwoPoints = 50;
+        else 
+            playerTwoPoints = Integer.parseInt(scoreString.substring(0, 2));
         // //////////////END of Player 2 data
-        
+        playerTwoGames[1] = 6;
         Score score = new Score();
         score.setSets(playerOneGames, playerTwoGames);
+        score.setServer(server);
+        score.setPlayerOnePoints(playerOnePoints);
+        score.setPlayerTwoPoints(playerTwoPoints);
         match.setScore(score);
-        sc.setScores();
     }
     
     public void handleUpdate() {
         try {
             Score score = this.getScore();
-            System.out.println("Fetched score");
+            System.out.println("Fetched score");    
             if (score != null) {
                 System.out.println("Not null! Updating...");
-                parseScores();
                 System.out.println("Completed!!!!!!");
             }
 
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
         }
     }
     
@@ -254,9 +275,10 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 	protected void runBody() {
 		try {
             this.scoreString = extractScores();
+            parseScores();
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
         try {
             Thread.sleep(5000);
         } catch (Exception e) {

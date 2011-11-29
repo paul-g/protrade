@@ -6,6 +6,7 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -64,9 +65,11 @@ public class OddsButton {
         rowLayout.type = SWT.VERTICAL;
         GridData gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
-        comp.setBackground(color);
         comp.setLayoutData(gd);
         comp.setLayout(rowLayout);
+        comp.setBackground(color);
+        
+        this.initialColor = color;
         
         this.odds = new Label(comp, SWT.NONE);
         this.odds.setFont(oddsFont);
@@ -81,6 +84,7 @@ public class OddsButton {
 
              @Override
              public void mouseEnter(MouseEvent arg0) {
+            	 comp.setBackground(hoverColor);
                  comp.setBackgroundImage(highlightImage);
                 //rolloverTimeline.play();
              }
@@ -89,7 +93,7 @@ public class OddsButton {
              public void mouseExit(MouseEvent e) {
                 // if ( !odds.isFocusControl() && !amount.isFocusControl())
                      //rolloverTimeline.playReverse();
-             
+            	 comp.setBackground(initialColor);
                  comp.setBackgroundImage(backgroundImage);
              }
 
@@ -147,11 +151,15 @@ public class OddsButton {
             public void handleEvent(Event e) {
             	//dataGrid.getBetController().addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
             	BetShell betShell = new BetShell(OddsButton.this, dataGrid.getBetController());
+            	Rectangle rect = comp.getClientArea();
+            	betShell.setLocation(rect.x,rect.y);
+            	comp.setBackgroundImage(clickImage);
             	setBackground(clickColor);                
                 display.timerExec(100, new Runnable() {
                     @Override
                     public void run() {
-                        setBackground(hoverColor);
+                    	comp.setBackground(initialColor);
+                        //comp.setBackgroundImage(backgroundImage);
                     }
                 });
               }

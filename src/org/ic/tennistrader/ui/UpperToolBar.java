@@ -307,6 +307,15 @@ public class UpperToolBar {
                 openMatchView("data/full/fulldataShort.csv");
             }
         });
+		
+		MenuItem barclays = new MenuItem(playDropDown, SWT.PUSH);
+		barclays.setText("Barclays ATP World Tour Finals 2011 Tsonga v Federer - set 3");
+		barclays.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                openMatchView("data/recorded/tso-fed-set-3.csv");
+            }
+        });
 
 		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
 		playItem.setText("From File");

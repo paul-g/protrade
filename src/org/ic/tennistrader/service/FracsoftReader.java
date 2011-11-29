@@ -42,11 +42,19 @@ public class FracsoftReader extends MatchUpdaterThread {
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
+    /*
     private static final int AMOUNT_OFFSET = 17;
     private static final int LPM_OFFSET = 18;
     private static final int POINTS_OFFSET = 22;
-    
+        
     private static final int GAMES_OFFSET = 19;
+
+    */
+    private static final int AMOUNT_OFFSET = 17;
+    private static final int LPM_OFFSET = 18 - 1;
+    private static final int POINTS_OFFSET = 22 - 1;
+    private static final int GAMES_OFFSET = 19 - 1;
+    
 
     public FracsoftReader(Match match, String filename)
             throws FileNotFoundException {
@@ -70,6 +78,11 @@ public class FracsoftReader extends MatchUpdaterThread {
                 line2 = scanner.nextLine();
                 String[] lines1 = line1.split(",");
                 String[] lines2 = line2.split(",");
+                
+                for (int kk=0;kk<lines1.length;kk++)
+                	lines1[kk] = lines1[kk].trim();
+                for (int kk=0;kk<lines2.length;kk++)
+                	lines2[kk] = lines2[kk].trim();
 
                 MOddsMarketData data = new MOddsMarketData();
                 data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));

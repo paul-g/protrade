@@ -70,10 +70,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     	return this.playerTwoStats;
     }
     
-    @Override
-    public void run() {
-    	
-    }
     public String getPage(){
         return page;
     }
@@ -442,7 +438,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     }
 
     public void checkStatisticsUpdate() {
-    	runBody();
+    	//runBody();
         if (!statisticsPopulated) {
             try {
                 String stats = this.getPage();

@@ -12,7 +12,7 @@ public class MatchRecorderThread extends MatchThread{
     
     public MatchRecorderThread(Match match){
         super(match);
-        writer = new MatchCsvWriter(match, match.toString()+".csv");
+        writer = new MatchCsvWriter(match, "data/recorded/" + match.toString()+".csv");
     }
     
     protected void runBody() {

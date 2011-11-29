@@ -1,18 +1,29 @@
 package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class ProbabilityPanel {
+public class ProbabilityPanel implements UpdatableWidget{
+	
     public Table table;
+    private Match match;
+    private final Display display;
+    private Composite comp;
 	
     public ProbabilityPanel(Composite composite, Match match) {
-
+    	this.comp = composite;
+    	this.display=composite.getDisplay();
+    	this.match = match;
         table = new Table(composite, SWT.NONE);
         table.setBounds(new Rectangle(10, 110, 370, 90));
         table.setHeaderVisible(true);
@@ -60,5 +71,53 @@ public class ProbabilityPanel {
         for (int i = 0, n = column.length; i < n; i++) {
             column[i].pack();
         }
-    }
+        
+        LiveDataFetcher.registerForMatchUpdate(this, match);
+        
+        System.out.println("Registered " + this.getClass());
+    }	
+    
+    public void updateTable() {
+    	
+    	double[] result = PredictionCalculator.calculate(this.match);
+    	//double[] result = {0,0,0,0,0};
+    	
+		Table table = this.table;
+		// Filling the probabilities table with data
+        table.setRedraw(false);       
+       
+		TableItem item = table.getItem(0);
+        int c = 0;
+        item.setText(c++, match.getPlayerOne().getLastname());
+        item.setText(c++, Double.toString(result[0]));
+        item.setText(c++, Double.toString(result[2]));
+        item.setText(c++, "57%");
+        item.setText(c++, "63%");
+
+        TableItem item2 = table.getItem(1);
+        c = 0;
+        item2.setText(c++, match.getPlayerTwo().getLastname());
+        item2.setText(c++, Double.toString(result[1]));
+        item2.setText(c++, Double.toString(result[3]));
+        item2.setText(c++, "43%");
+        item2.setText(c++, "37%");
+        
+        table.setRedraw(true);
+
+	}
+
+	@Override
+	public void handleUpdate(MOddsMarketData newData) {
+		display.asyncExec(new Runnable() {
+            @Override
+            public void run() {
+            	updateTable();
+            }
+        });
+	}
+
+	@Override
+	public void setDisposeListener(DisposeListener listener) {
+		comp.addDisposeListener(listener);
+	}
 }
