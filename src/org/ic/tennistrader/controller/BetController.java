@@ -30,7 +30,7 @@ public class BetController {
 		
 	public void addBet(OddsButton button, double amount, double odds) throws MaximumBetAmountExceededException{
 		Player player;
-		Double maxAmount = Double.parseDouble(button.getAmount().getText());
+		Double maxAmount = button.getAmount();
 		if (amount > maxAmount)
 		    throw new MaximumBetAmountExceededException();
         try {
