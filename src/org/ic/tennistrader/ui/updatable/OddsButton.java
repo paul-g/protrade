@@ -202,13 +202,10 @@ public class OddsButton {
 
     void layout() {
         comp.layout();
-    }
+    }    
     
-    public Label getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Label amount) {
-        this.amount = amount;
+    public double getAmount() {
+        String amount = this.amount.getText().substring(1);
+        return Double.parseDouble(amount);
     }
 }
