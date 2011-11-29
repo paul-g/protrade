@@ -144,6 +144,7 @@ public class LiveDataFetcher {
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();
+            //TODO check if market closed - then display result of bets
             List<UpdatableWidget> widgets = listeners.get(eb.getBetfairId());
             for (UpdatableWidget w : widgets)
                 w.handleUpdate(data.get(eb));
@@ -153,6 +154,7 @@ public class LiveDataFetcher {
     public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
         match.setScore(dataScore.second());
         //System.out.println("Market status - " + dataScore.first().getMatchStatus());
+        BetManager.updateMarketAvailableMatches(match, dataScore.first());
         if (dataScore.first().getMatchStatus().toLowerCase().equals("closed"))
         	BetManager.setBetsOutcome(match);
         if (fileListeners.containsKey(match)) {

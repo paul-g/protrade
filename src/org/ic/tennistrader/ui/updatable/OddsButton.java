@@ -132,13 +132,7 @@ public class OddsButton {
         a.addListener(SWT.Selection, new Listener(){
             @Override
             public void handleEvent(Event arg0) {
-            	//BetController.addBet(OddsButton.this, amount, Double.parseDouble(odds.getText()));
-            	try {
-                    dataGrid.getBetController().addBet(OddsButton.this, amount, Double.parseDouble(odds.getText()));
-            	} catch (MaximumBetAmountExceededException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                    dataGrid.getBetController().addBet(OddsButton.this, amount, Double.parseDouble(odds.getText()));            	
             }
         });
     }
@@ -151,7 +145,6 @@ public class OddsButton {
         Listener l = new Listener() {
             @Override
             public void handleEvent(Event e) {
-            	//dataGrid.getBetController().addBet(OddsButton.this, 10.0, Double.parseDouble(odds.getText()));
             	BetShell betShell = new BetShell(OddsButton.this, dataGrid.getBetController());
             	Rectangle rect = comp.getClientArea();
             	betShell.setLocation(rect.x,rect.y);
