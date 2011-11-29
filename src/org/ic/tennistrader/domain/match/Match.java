@@ -85,4 +85,8 @@ public abstract class Match {
     public void setPlayer2(Player player){
         this.player2 = player;
     }
+    
+    public PlayerEnum getServer(){
+    	return score.getServer();
+    }
 }

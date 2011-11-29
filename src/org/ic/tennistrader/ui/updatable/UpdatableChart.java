@@ -400,8 +400,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				}
 			}
     	});
-    	
-    	
     }
 
     private void makeMenus(Composite parent) {
