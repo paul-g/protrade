@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.controller.BetController;
+import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 
@@ -72,9 +73,14 @@ public class BetShell {
 		submitButton.addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				betController.addBet(oddsButton, Double.parseDouble(amountText
-						.getText()), Double.parseDouble(oddsText.getText()));
-				betShell.dispose();
+				try {
+                    betController.addBet(oddsButton, Double.parseDouble(amountText
+                    		.getText()), Double.parseDouble(oddsText.getText()));
+                    betShell.dispose();
+                } catch (MaximumBetAmountExceededException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 			}
 		});
 	}

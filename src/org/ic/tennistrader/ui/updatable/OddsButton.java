@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.ui.BetShell;
 
 public class OddsButton {
@@ -132,7 +133,12 @@ public class OddsButton {
             @Override
             public void handleEvent(Event arg0) {
             	//BetController.addBet(OddsButton.this, amount, Double.parseDouble(odds.getText()));
-            	dataGrid.getBetController().addBet(OddsButton.this, amount, Double.parseDouble(odds.getText()));
+            	try {
+                    dataGrid.getBetController().addBet(OddsButton.this, amount, Double.parseDouble(odds.getText()));
+            	} catch (MaximumBetAmountExceededException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -196,5 +202,13 @@ public class OddsButton {
 
     void layout() {
         comp.layout();
+    }
+    
+    public Label getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Label amount) {
+        this.amount = amount;
     }
 }

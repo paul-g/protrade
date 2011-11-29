@@ -7,6 +7,7 @@ import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 
@@ -27,8 +28,11 @@ public class BetController {
 		this.match = match;
 	}
 		
-	public void addBet(OddsButton button, double amount, double odds) {
+	public void addBet(OddsButton button, double amount, double odds) throws MaximumBetAmountExceededException{
 		Player player;
+		Double maxAmount = Double.parseDouble(button.getAmount().getText());
+		if (amount > maxAmount)
+		    throw new MaximumBetAmountExceededException();
         try {
             player = getBetPlayer(button);
             BetTypeEnum betType = getBetType(button);       
