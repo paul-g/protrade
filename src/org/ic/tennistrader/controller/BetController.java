@@ -7,6 +7,7 @@ import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
@@ -28,30 +29,34 @@ public class BetController {
 		this.match = match;
 	}
 		
-	public void addBet(OddsButton button, double amount, double odds) throws MaximumBetAmountExceededException{
-		Player player;
-		Double maxAmount = button.getAmount();
-		if (amount > maxAmount)
-		    throw new MaximumBetAmountExceededException();
-        try {
-            player = getBetPlayer(button);
-            BetTypeEnum betType = getBetType(button);       
-            BetManager.placeBet(match, player, betType, odds, amount);
-        } catch (OddsButtonNotFoundException e) {
-            log.error(e.getMessage());
-        }		
-	}
+    public void addBet(OddsButton button, double amount, double odds) {
+        PlayerEnum player;
+        /*
+        Double maxAmount = button.getAmount();
+        if (amount > maxAmount) {
+            // do smth
+        } else {
+        */
+            try {
+                player = getBetPlayer(button);
+                BetTypeEnum betType = getBetType(button);
+                BetManager.placeBet(match, player, betType, odds, amount);
+            } catch (OddsButtonNotFoundException e) {
+                log.error(e.getMessage());
+            }
+        //}
+    }
 
-	private Player getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {
-		Player player;
+	private PlayerEnum getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {
+		PlayerEnum player;
 		if (this.player1BackButtons.contains(button)) {
-			player = match.getPlayerOne();
+			player = PlayerEnum.PLAYER1;
 		} else if (this.player1LayButtons.contains(button)) {
-			player = match.getPlayerOne();
+			player = PlayerEnum.PLAYER1;
 		} else if (this.player2BackButtons.contains(button)) {
-			player = match.getPlayerTwo();
+			player = PlayerEnum.PLAYER2;
 		} else if (this.player2LayButtons.contains(button)){
-			player = match.getPlayerTwo();
+			player = PlayerEnum.PLAYER2;
 		} else {
 		    throw new OddsButtonNotFoundException();
 		}
