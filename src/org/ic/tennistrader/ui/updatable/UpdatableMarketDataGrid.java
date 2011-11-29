@@ -3,20 +3,15 @@ package org.ic.tennistrader.ui.updatable;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.MOddsMarketData;
-import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.utils.Pair;
 

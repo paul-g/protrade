@@ -41,19 +41,17 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
                 synchronizedEvents.getEvents());
         for (EventBetfair eb : events) {
             // System.out.println("Size of events - " + events.size());
-        	/*
         	Match match = matches.get(eb);            
             if (match.isInPlay() || match.getLastMarketData() == null
                     || i == 0) {
-            */
                 MOddsMarketData marketData = BetfairExchangeHandler
                         .getMarketOdds(eb);
                 if (marketData.getPl1Back() != null) {
                     matches.get(eb).addMarketData(marketData);
                 }
                 newMap.put(eb, marketData);
-            //}
-            //i = (i + 1) % 10;
+            }
+            i = (i + 1) % 3;
         }
         LiveDataFetcher.handleEvent(newMap);
         try {

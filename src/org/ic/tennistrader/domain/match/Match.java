@@ -4,16 +4,12 @@ import java.util.List;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
-import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public abstract class Match {
-    
+public abstract class Match {    
     protected Player player1 = new Player();
     protected Player player2 = new Player();
-    protected Score score = new Score();
-    
-    protected List<MOddsMarketData> marketDatas;
-    
+    protected Score score = new Score();    
+    protected List<MOddsMarketData> marketDatas;    
     protected String filename = null;
     
     public abstract boolean isInPlay();

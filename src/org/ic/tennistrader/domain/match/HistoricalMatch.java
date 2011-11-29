@@ -8,8 +8,6 @@ import java.util.Scanner;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.service.FracsoftReader;
-import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
 public class HistoricalMatch extends Match {

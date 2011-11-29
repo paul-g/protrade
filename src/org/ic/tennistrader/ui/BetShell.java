@@ -1,25 +1,26 @@
 package org.ic.tennistrader.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.controller.BetController;
+import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 
-public class BetShell {
-	
+public class BetShell {	
 	private Shell betShell;
 	//private BetController betController;
 	//private OddsButton oddsButton;
 	private Text amountText;
 	private Text oddsText;
+	private static Logger log = Logger.getLogger(BetShell.class);
 	
 	public BetShell(final OddsButton oddsButton, final BetController betController) {
 		//this.betController = betController;
@@ -42,12 +43,16 @@ public class BetShell {
 		betShell.open();
 	}
 
-	private void createInfoLabel(final OddsButton oddsButton,
-			final BetController betController, GridData infoGridData) {
-		Label infoLabel = new Label(betShell, SWT.NONE);
-		infoLabel.setText(betController.getBettingDetails(oddsButton));
-		infoLabel.setLayoutData(infoGridData);
-	}
+    private void createInfoLabel(final OddsButton oddsButton,
+            final BetController betController, GridData infoGridData) {
+        try {
+            Label infoLabel = new Label(betShell, SWT.NONE);
+            infoLabel.setText(betController.getBettingDetails(oddsButton));
+            infoLabel.setLayoutData(infoGridData);
+        } catch (OddsButtonNotFoundException e) {
+            log.error(e.getMessage());
+        }
+    }
 	
 	private void createCancelButton() {
 		Button cancelButton = new Button(betShell, SWT.NONE);

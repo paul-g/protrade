@@ -53,7 +53,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	private boolean firstTime = true;
 
 	public void addMatchView(Match match) {
-		CTabItem[] items = folder.getItems();
+		//CTabItem[] items = folder.getItems();
 		String matchName = match.toString();
 
 		int pos = getTabPosition(matchName);
@@ -88,7 +88,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			 * if (match.isInPlay()) { addPredictionGui(horizontal, match); }
 			 */
 
-			//addPredictionGui(horizontal, match);
+			addPredictionGui(horizontal, match);
 
 			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
 			addChart(chartSash, match);

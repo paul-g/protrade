@@ -1,10 +1,13 @@
 package org.ic.tennistrader.controller;
 
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 
 public class BetController {
@@ -13,6 +16,7 @@ public class BetController {
 	private List<OddsButton> player2BackButtons;
 	private List<OddsButton> player2LayButtons;
 	private Match match;
+	private static Logger log = Logger.getLogger(BetController.class);
 	
 	public BetController(List<OddsButton> player1Backbuttons, List<OddsButton> player1LayButtons, 
 			List<OddsButton> player2BackButtons, List<OddsButton> player2LayButtons, Match match) {
@@ -24,12 +28,17 @@ public class BetController {
 	}
 		
 	public void addBet(OddsButton button, double amount, double odds) {
-		Player player = getBetPlayer(button);
-		BetTypeEnum betType = getBetType(button);		
-		BetManager.placeBet(match, player, betType, odds, amount);
+		Player player;
+        try {
+            player = getBetPlayer(button);
+            BetTypeEnum betType = getBetType(button);       
+            BetManager.placeBet(match, player, betType, odds, amount);
+        } catch (OddsButtonNotFoundException e) {
+            log.error(e.getMessage());
+        }		
 	}
 
-	private Player getBetPlayer(OddsButton button) {
+	private Player getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {
 		Player player;
 		if (this.player1BackButtons.contains(button)) {
 			player = match.getPlayerOne();
@@ -37,13 +46,15 @@ public class BetController {
 			player = match.getPlayerOne();
 		} else if (this.player2BackButtons.contains(button)) {
 			player = match.getPlayerTwo();
-		} else {
+		} else if (this.player2LayButtons.contains(button)){
 			player = match.getPlayerTwo();
+		} else {
+		    throw new OddsButtonNotFoundException();
 		}
 		return player;
 	}
 
-	private BetTypeEnum getBetType(OddsButton button) {
+	private BetTypeEnum getBetType(OddsButton button) throws OddsButtonNotFoundException {
 		BetTypeEnum betType;
 		if (this.player1BackButtons.contains(button)) {
 			betType = BetTypeEnum.B;
@@ -51,13 +62,15 @@ public class BetController {
 			betType = BetTypeEnum.L;
 		} else if (this.player2BackButtons.contains(button)) {
 			betType = BetTypeEnum.B;
-		} else {
+		} else if (this.player2LayButtons.contains(button)){
 			betType = BetTypeEnum.L;
+		} else {
+		    throw new OddsButtonNotFoundException();
 		}
 		return betType;
 	}
 
-	public String getBettingDetails(OddsButton button) {	
+	public String getBettingDetails(OddsButton button) throws OddsButtonNotFoundException {	
 		String info = "You are betting on " + getBetPlayer(button).toString();
 		info += " to " + (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");		
 		return info;
