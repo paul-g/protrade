@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 public class StandardTabbedWidgetContainer {
-
     protected final CTabFolder folder;
     protected Display display;
     protected CTabItem selected;
@@ -157,4 +156,14 @@ public class StandardTabbedWidgetContainer {
         
         item.setControl(swc);
     }
+
+	public int getTabPosition(String matchName) {
+		int pos = -1;
+		CTabItem[] items = folder.getItems();
+	    for (int i = 0; pos == -1 && i < items.length; i++)
+	        if (items[i].getText().equals(matchName)) {
+	            pos = i;
+	        }
+		return pos;
+	}
 }

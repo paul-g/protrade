@@ -2,7 +2,6 @@ package org.ic.tennistrader.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.match.Match;
@@ -10,7 +9,6 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.BetsDisplay;
 
 import static org.ic.tennistrader.utils.Pair.pair;
@@ -22,6 +20,12 @@ public class BetManager {
     
     public static void placeBet(Match match, Player player, BetTypeEnum betType, double odds, double amount) {        
         Bet newBet = new Bet(match, player, betType, pair(odds, amount));
+        
+        double firstWinnerProfit = getBetProfit(newBet, isBetSuccessful(newBet, PlayerEnum.PLAYER1));
+        newBet.setFirstPlayerWinnerProfit(firstWinnerProfit);
+        double secondWinnerProfit = getBetProfit(newBet, isBetSuccessful(newBet, PlayerEnum.PLAYER2));
+        newBet.setSecondPlayerWinnerProfit(secondWinnerProfit);
+        
         matchedBets.add(newBet);
         BetsDisplay.addBet(newBet);            
     }
@@ -49,7 +53,7 @@ public class BetManager {
 			winner = match.getWinner();
 			for (Bet bet : matchedBets) {
 				if (bet.getMatch().equals(match)) {
-					settleBet(bet, isBetSuccessful(bet, winner));
+					bet.setProfit(getBetProfit(bet, isBetSuccessful(bet, winner)));
 					BetsDisplay.addSettledBet(bet);
 				}
 			}
@@ -80,17 +84,23 @@ public class BetManager {
 		return won;
 	}
 	
-	private static void settleBet(Bet bet, boolean betSuccessful) {
+	private static double getBetProfit(Bet bet, boolean betSuccessful) {
+		double profit;
 		if (betSuccessful) {
 			if (bet.getType().equals(BetTypeEnum.B))
-				bet.setProfit( (bet.getOdds() - 1) * bet.getAmount() );
+				//bet.setProfit( (bet.getOdds() - 1) * bet.getAmount() );
+				profit = (bet.getOdds() - 1) * bet.getAmount();
 			else
-				bet.setProfit( bet.getAmount() );
+				//bet.setProfit( bet.getAmount() );
+				profit = bet.getAmount();
 		} else {
 			if (bet.getType().equals(BetTypeEnum.B))
-				bet.setProfit( (-1) * bet.getAmount() );
+				//bet.setProfit( (-1) * bet.getAmount() );
+				profit = (-1) * bet.getAmount();
 			else
-				bet.setProfit( (-1) * (bet.getOdds() - 1) * bet.getAmount() );
-		}		
+				//bet.setProfit( (-1) * (bet.getOdds() - 1) * bet.getAmount() );
+				profit = (-1) * (bet.getOdds() - 1) * bet.getAmount();
+		}
+		return profit;
 	}
 }

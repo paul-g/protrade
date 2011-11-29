@@ -48,19 +48,10 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
     private boolean firstTime = true;
 
     public void addMatchView(Match match) {
-        CTabItem[] items = folder.getItems();
-        int pos = -1;
-
-        String matchName = match.toString();
-
-        for (int i = 0; pos == -1 && i < items.length; i++)
-            if (items[i].getText().equals(matchName)) {
-                pos = i;
-            }
-
+        String matchName = match.toString();        
+        int pos = getTabPosition(matchName);
         // check new tab has been open
-        if (pos == -1) {
-            
+        if (pos == -1) {            
             final CTabItem item = addTab(matchName);
      
             Composite control = new Composite(folder, SWT.NONE);
@@ -80,9 +71,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
             }
             
             addMatchData(infoAndBack, match);
-
             addMarketDataGrid(infoAndBack, match);
-
             SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
             
             /*if (match.isInPlay()) {
@@ -102,15 +91,12 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements Match
 
             infoAndBack.setWeights(new int[]{20, 80});
             comp.setWeights(new int[]{20,25,50,5});
-            
-        
-            
         } else
             // just bring the required tab under focus
             folder.setSelection(pos);
     }
 
-    private Image setColor(CTabItem item, SashForm comp) {
+	private Image setColor(CTabItem item, SashForm comp) {
         final Display display = comp.getDisplay();
         final Color foregroundColor = new org.eclipse.swt.graphics.Color(
                 display, 105, 105, 105);

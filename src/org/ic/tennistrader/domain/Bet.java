@@ -11,6 +11,8 @@ public class Bet {
     private Player player;
     private BetTypeEnum type;
     private double profit;
+    private double firstPlayerWinnerProfit;
+    private double secondPlayerWinnerProfit;
 
     public Bet(Match m, Player p, BetTypeEnum type, Pair<Double, Double> value){
         this.match = m;
@@ -69,5 +71,21 @@ public class Bet {
 
 	public double getProfit() {
 		return profit;
+	}
+
+	public void setFirstPlayerWinnerProfit(double firstPlayerWinnerProfit) {
+		this.firstPlayerWinnerProfit = firstPlayerWinnerProfit;
+	}
+
+	public double getFirstPlayerWinnerProfit() {
+		return firstPlayerWinnerProfit;
+	}
+
+	public void setSecondPlayerWinnerProfit(double secondPlayerWinnerProfit) {
+		this.secondPlayerWinnerProfit = secondPlayerWinnerProfit;
+	}
+
+	public double getSecondPlayerWinnerProfit() {
+		return secondPlayerWinnerProfit;
 	}
 }
