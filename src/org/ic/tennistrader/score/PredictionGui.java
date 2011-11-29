@@ -1,6 +1,7 @@
 package org.ic.tennistrader.score;
 
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,7 +18,7 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 
-public class PredictionGui extends StandardWidgetContainer{
+public class PredictionGui extends StandardWidgetContainer {
 
     private static Logger log = Logger.getLogger(Main.class);
 
@@ -27,20 +28,17 @@ public class PredictionGui extends StandardWidgetContainer{
 
     private StatisticsUpdateThread statisticsUpdateThread;
     
-    /**
-     * For running the prediction gui separately
-     */
     public static void main(String args[]) {
         final Display display = new Display();
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        Player playerOne = new Player("Roger", "Federer");
-        Player playerTwo = new Player("Jo-Wilfried", "Tsonga");
+        Player playerOne = new Player("Jo-Wilfried", "Tsonga");
+        Player playerTwo = new Player("Roger", "Federer");
 
         Match match = new RealMatch("","", new EventBetfair("Federer v Tsonga", new ArrayList<EventMarketBetfair>(), 1));
-		match.setPlayer1(playerOne);
-		match.setPlayer2(playerTwo);
+        match.setPlayer1(playerOne);
+        match.setPlayer2(playerTwo);
 
         new PredictionGui(shell, SWT.BORDER, match);
 
@@ -53,7 +51,7 @@ public class PredictionGui extends StandardWidgetContainer{
         
         display.dispose();
     }
-
+    
     public PredictionGui(final Composite parent, int style, Match match) {
         super(parent, style);
 
@@ -62,38 +60,23 @@ public class PredictionGui extends StandardWidgetContainer{
         ProbabilityPanel probabilityPanel = new ProbabilityPanel(this, match);
 
         ScorePanel sc = new ScorePanel(this, match);
-        
-        //StatisticsPanel st = new StatisticsPanel(parent, match);
-    	
-        //this.statisticsUpdateThread = new StatisticsUpdateThread(match);
+
+        StatisticsPanel st = new StatisticsPanel(this, match);
+        this.statisticsUpdateThread = new StatisticsUpdateThread(match,st);
+        this.statisticsUpdateThread.addListener(st);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match);
-        
-       /* parent.getDisplay().timerExec(5000, new Runnable() {
-            @Override
-            public void run() {
-            	statisticsUpdateThread.checkStatisticsUpdate();
-                if (!statisticsUpdateThread.isStatisticsPopulated()){
-                    if (!parent.isDisposed())
-                        parent.getDisplay().timerExec(5000, this);
-                }
-                else 
-                {
-                	
-                }
-            }
-        });*/
-        
-       if (match.isInPlay()) {
+
+        if (match.isInPlay()) {
             // only start score fetching for live matches
-             scoreUpdateThread.start();
+            scoreUpdateThread.start();
         }
-       
-        //statisticsUpdateThread.start();
+
+        statisticsUpdateThread.start();
     }
 
     @Override
     public String getTitle() {
         return "Prediction";
-    }   
+    }
 }

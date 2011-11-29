@@ -35,7 +35,6 @@ public class Statistics {
        return secondServeWins;
     }
 	
-	
 	public void setFirstServePercent( double FirstServePercent ) {
         this.firstServePercent = FirstServePercent;
     }
@@ -47,5 +46,4 @@ public class Statistics {
 	public void setSecondServeWins( double SecondServeWins ) {
         this.secondServeWins = SecondServeWins;
     }	
-	
 }

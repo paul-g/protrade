@@ -74,7 +74,6 @@ public class ProbabilityPanel implements UpdatableWidget{
         
         LiveDataFetcher.registerForMatchUpdate(this, match);
         
-        System.out.println("Registered " + this.getClass());
     }	
     
     public void updateTable() {
