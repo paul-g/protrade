@@ -92,7 +92,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
 			addChart(chartSash, match);
-			addMatchViewer(chartSash);
+			//addMatchViewer(chartSash);
 			try{
 				chartSash.setWeights(new int[] { 60, 40 });
 			} catch (Exception e){}

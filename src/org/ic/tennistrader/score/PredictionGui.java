@@ -63,13 +63,13 @@ public class PredictionGui extends StandardWidgetContainer{
 
         ScorePanel sc = new ScorePanel(this, match);
         
-        StatisticsPanel st = new StatisticsPanel(parent, match);
+        //StatisticsPanel st = new StatisticsPanel(parent, match);
     	
-        this.statisticsUpdateThread = new StatisticsUpdateThread(match, st);
+        //this.statisticsUpdateThread = new StatisticsUpdateThread(match);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match);
         
-        parent.getDisplay().timerExec(5000, new Runnable() {
+       /* parent.getDisplay().timerExec(5000, new Runnable() {
             @Override
             public void run() {
             	statisticsUpdateThread.checkStatisticsUpdate();
@@ -82,14 +82,14 @@ public class PredictionGui extends StandardWidgetContainer{
                 	
                 }
             }
-        });
+        });*/
         
        if (match.isInPlay()) {
             // only start score fetching for live matches
              scoreUpdateThread.start();
         }
        
-        statisticsUpdateThread.start();
+        //statisticsUpdateThread.start();
     }
 
     @Override

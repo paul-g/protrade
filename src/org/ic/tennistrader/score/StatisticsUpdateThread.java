@@ -53,9 +53,8 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     
     private static Logger log = Logger.getLogger(StatisticsUpdateThread.class);
     
-    public StatisticsUpdateThread(Match match, StatisticsPanel st) {
+    public StatisticsUpdateThread(Match match) {
         this.match = match;
-        this.st = st;
         playerOneStats = new Statistics();
         playerTwoStats = new Statistics();
     }
@@ -438,7 +437,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread{
     }
 
     public void checkStatisticsUpdate() {
-    	//runBody();
         if (!statisticsPopulated) {
             try {
                 String stats = this.getPage();
