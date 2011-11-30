@@ -286,7 +286,7 @@ public class UpperToolBar {
 		usOpenFinal.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				openMatchView("fracsoft-data/fracsoft1.csv");
+				openMatchView("data/fracsoft/fracsoft1.csv");
 			}
 		});
 		
@@ -295,7 +295,25 @@ public class UpperToolBar {
 		usOpenFinalFull.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event arg0) {
-                openMatchView("full-data/fulldata1.csv");
+                openMatchView("data/full/fulldata1.csv");
+            }
+        });
+		
+		MenuItem usOpenFinalFullShort = new MenuItem(playDropDown, SWT.PUSH);
+		usOpenFinalFullShort.setText("US Open Final 2011(full, but short)");
+		usOpenFinalFullShort.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                openMatchView("data/full/fulldataShort.csv");
+            }
+        });
+		
+		MenuItem barclays = new MenuItem(playDropDown, SWT.PUSH);
+		barclays.setText("Barclays ATP World Tour Finals 2011 Tsonga v Federer - set 3");
+		barclays.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event arg0) {
+                openMatchView("data/recorded/tso-fed-set-3.csv");
             }
         });
 

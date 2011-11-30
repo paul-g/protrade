@@ -14,7 +14,9 @@ import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
+
 import org.ic.tennistrader.utils.Pair;
+import static org.ic.tennistrader.utils.Pair.pair;
 
 public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);
@@ -68,13 +70,19 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 						}
 					}
 					if (i == 0) {
+						modds.setPl1LastMatchedPrice(r.getLastPriceMatched());
+						modds.setPlayer1TotalAmountMatched(r.getTotalAmountMatched());
 						modds.setPlayer1(marketRunner.getName());
 						modds.setPl1Back(setBackValues(r));
 						modds.setPl1Lay(setLayValues(r));
+						modds.setPlayer1SelectiondId(r.getSelectionId());
 					} else {
+						modds.setPl2LastMatchedPrice(r.getLastPriceMatched());
+						modds.setPlayer2TotalAmountMatched(r.getTotalAmountMatched());
 						modds.setPlayer2(marketRunner.getName());
 						modds.setPl2Back(setBackValues(r));
 						modds.setPl2Lay(setLayValues(r));
+						modds.setPlayer2SelectionId(r.getSelectionId());
 					}
 					i++;
 				}
@@ -172,8 +180,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 			InflatedRunner r) {
 		ArrayList<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
 		for (InflatedPrice p : r.getBackPrices()) {
-			result.add(new Pair<Double, Double>(p.getPrice(), p
-					.getAmountAvailable()));
+			result.add(pair(p.getPrice(), p.getAmountAvailable()));
 		}
 		return result;
 	}
@@ -181,8 +188,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static ArrayList<Pair<Double, Double>> setLayValues(InflatedRunner r) {
 		ArrayList<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
 		for (InflatedPrice p : r.getLayPrices()) {
-			result.add(new Pair<Double, Double>(p.getPrice(), p
-					.getAmountAvailable()));
+			result.add(pair(p.getPrice(), p.getAmountAvailable()));
 		}
 		return result;
 	}

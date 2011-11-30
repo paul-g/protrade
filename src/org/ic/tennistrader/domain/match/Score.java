@@ -3,6 +3,8 @@ package org.ic.tennistrader.domain.match;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
+
 public class Score {
 
     public static final int AD = 50;
@@ -14,6 +16,16 @@ public class Score {
     private SetScore currentSet;
     
     private int maximumSetsPlayed = 3;
+    
+    private PlayerEnum server;
+
+    public PlayerEnum getServer() {
+        return server;
+    }
+
+    public void setServer(PlayerEnum server) {
+        this.server = server;
+    }
 
     public Score() {
         init();
@@ -124,6 +136,16 @@ public class Score {
         return currentSet;
     }
 
+    public int getPlayerPoints(PlayerEnum player){
+        
+        switch (player){
+            case PLAYER1: return playerOnePoints;
+            case PLAYER2: return playerTwoPoints;
+        }
+        
+        return -1;
+    }
+    
     public int getPlayerOnePoints() {
         return playerOnePoints;
     }
@@ -177,7 +199,7 @@ public class Score {
         return getPlayerScores(PlayerEnum.PLAYER2);
     }
     
-    private int[] getPlayerScores(PlayerEnum player){
+    public int[] getPlayerScores(PlayerEnum player){
         
         int playerScores [] = new int[maximumSetsPlayed];
         for (int i=0;i<playerScores.length;i++)
@@ -212,5 +234,14 @@ public class Score {
             scores.add(sc);
         }
     }
+
+	public PlayerEnum getWinner() throws MatchNotFinishedException {
+		if (!this.isFinished())
+			throw new MatchNotFinishedException();
+		if (getPlayerOneSets() > maximumSetsPlayed / 2)
+			return PlayerEnum.PLAYER1;
+		else
+			return PlayerEnum.PLAYER2;
+	}
     
 }

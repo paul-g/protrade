@@ -28,10 +28,10 @@ To COMMIT:
   NOTE!!!!!! 
   Please do not commit any local configuration files, build outputs, test outputs etc. to the respository.
 
-  ant clean                -> removes build output
-  git status               -> shows a list of changed / added files
-  git add <file1> <file2>  -> list all the files you want to commit
-  git commit -m "<Comment for commit>"
+ ant clean                -> removes build output
+ git status               -> shows a list of changed / added files
+ git add <file1> <file2>  -> list all the files you want to commit
+ git commit -m "<Comment for commit>"
 
 
 To CHECKIN to github:

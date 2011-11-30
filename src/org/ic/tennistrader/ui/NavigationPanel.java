@@ -25,6 +25,7 @@ import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 import org.ic.tennistrader.utils.Pair;
+import static org.ic.tennistrader.utils.Pair.pair;
 
 public class NavigationPanel {
 
@@ -43,17 +44,7 @@ public class NavigationPanel {
 		this.folder = new CTabFolder(shell, SWT.RESIZE | SWT.BORDER);
 		folder.setSimple(false);
 		
-		/***********************/
-        folder.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 1;
-		gridData.verticalAlignment = GridData.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-
-		folder.setLayoutData(gridData);
+		GridData gridData = makeLayoutData();
 
 		CTabItem navigation = new CTabItem(folder, SWT.CLOSE);
 		navigation.setText("Match Navigator");
@@ -72,7 +63,9 @@ public class NavigationPanel {
 
 		folder.setLayoutData(gridData);
 		NavigationPanel.tree = new Tree(composite, SWT.NONE);
-		loadTennisMatches(tree);
+		tree.addListener(SWT.Resize, new StandardWidgetResizeListener(tree));
+		
+		fetchTennisMatches(tree);
 		listeners = new ArrayList<MatchSelectionListener>();
 
 		GridData tgridData = new GridData();
@@ -105,12 +98,25 @@ public class NavigationPanel {
 		    
 		        Match match = getMatch(ti);
 			    
-				for (MatchSelectionListener msl : listeners)
-					msl.handleMatchSelection(match);
+		        if ( match != null )
+		            for (MatchSelectionListener msl : listeners)
+		                msl.handleMatchSelection(match);
 			}
 		});
 
 	}
+
+    private GridData makeLayoutData() {
+        GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 1;
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+
+		folder.setLayoutData(gridData);
+        return gridData;
+    }
 
 	public void addListener(MatchSelectionListener listener) {
 		listeners.add(listener);
@@ -127,9 +133,7 @@ public class NavigationPanel {
 					String txt = children[j].getText();
 					if (!txt.contains(text)) {
 						removedPairs
-								.add(new Pair<String, Pair<Integer, Integer>>(
-										children[j].getText(),
-										new Pair<Integer, Integer>(i, j)));
+								.add(pair(children[j].getText(),pair(i,j)));
 						children[j].dispose();
 					}
 				}
@@ -140,15 +144,16 @@ public class NavigationPanel {
 			List<Pair<String, Pair<Integer, Integer>>> previousState = treeStates
 					.pop();
 			for (Pair<String, Pair<Integer, Integer>> p : previousState) {
-				TreeItem ti = new TreeItem(items[p.getJ().getI()], SWT.NONE, p
-						.getJ().getJ());
-				ti.setText(p.getI());
+				TreeItem ti = new TreeItem(items[p.second().first()], SWT.NONE, p
+						.second().second());
+				ti.setText(p.first());
 			}
 
 		}
 	}
 
-	private void loadTennisMatches(Tree tree) {
+	// only fetches matches from Betfair
+	private void fetchTennisMatches(Tree tree) {
 		List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
 		for (Tournament t : tours) {
 			TreeItem item = new TreeItem(tree, SWT.NONE);
@@ -172,7 +177,7 @@ public class NavigationPanel {
 		folder.setSelection(cti);
 	}
 
-	public static RealMatch getMatch(TreeItem treeItem) {
+	public static Match getMatch(TreeItem treeItem) {
 		return matchMap.get(treeItem);
 	}
 
@@ -180,7 +185,7 @@ public class NavigationPanel {
 	    return tree.getSelection()[0];
 	}
 	
-	public static RealMatch getSelectedMatch(){
+	public static Match getSelectedMatch(){
 	    return getMatch(getSelection());
 	}
 	
