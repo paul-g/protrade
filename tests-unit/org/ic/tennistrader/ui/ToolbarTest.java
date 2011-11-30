@@ -1,5 +1,6 @@
 package org.ic.tennistrader.ui;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.swt.widgets.Display;
@@ -50,11 +51,13 @@ public class ToolbarTest {
 	
 	@Test
 	public void widgetLowerToolbarCheck() {
-		// Lower Toolbar
+		// Lower tool bar
 		LowerToolBar ltb = new LowerToolBar(mw);
+		boolean test = ltb.isInternetReachable();
         SWTBotToolbarButton connection = bot.toolbarButtonWithTooltip("Internet Connection");
         assertNotNull(connection);
         assertNotNull(connection.widget.getImage());
         assertNotNull(ltb);
+        assertEquals(test,true);
 	}
 }

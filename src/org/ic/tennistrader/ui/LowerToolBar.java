@@ -69,7 +69,7 @@ public class LowerToolBar {
 	}
 	
 	/** Method checking the internet availability */
-	private boolean isInternetReachable() {
+	public boolean isInternetReachable() {
 		try {
 			// URL to a source
 			URL url = new URL("http://www.google.com");
