@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -47,11 +49,13 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     private Statistics playerTwoStats;
 
-    private  StatisticsPanel st;
-    
+    private StatisticsPanel st;
+
     private boolean statisticsPopulated = false;
 
     private static final int RETRY_LIMIT = 5;
+
+    private static final int N_STATS_LINE = 4;
     private int retries;
 
     private static Logger log = Logger.getLogger(StatisticsUpdateThread.class);
@@ -179,20 +183,20 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
             page = (HtmlPage) btnContinue.click();
         else
             page = intermPage;
-        
+
         System.out.println("page: " + page);
 
-        //page.initialize();
+        // page.initialize();
 
-        //webClient.closeAllWindows();
+        // webClient.closeAllWindows();
 
         return (page.asText());
     }
 
     private String stats;
-   
+
     private void parseStatistics(String statsString) {
-        this.stats = statsString; 
+        this.stats = statsString;
         stats = stats.substring(stats.indexOf("Head to Head Match Preview"),
                 stats.indexOf("Player Comparison"));
         stats = stats.substring(stats.indexOf("stats\n") + 6, stats.length());
@@ -201,118 +205,96 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         stats = getImages(stats);
 
         stats = skipLines(stats, 2);
-        
+
         Player playerOne = match.getPlayerOne();
         Player playerTwo = match.getPlayerTwo();
-        
+
         stats = skipEmptyLines(stats);
         // Fill in stats (dob, country, age etc.)
         setPlayerInfo(playerOne);
-        
+
         stats = skipEmptyLines(stats);
         stats = skipLines(stats, 6);
         stats = skipEmptyLines(stats);
         stats = skipLines(stats, 1);
         setPlayerInfo(playerTwo);
-        
+
         stats = skipEmptyLines(stats);
 
         // ////////////////////////
         // Match Statistics
         // ////////////////////////
 
-  /*      TreeItem match = new TreeItem(table, SWT.CENTER);
-        match.setText(1, "Match Stats");
-        match.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-        match.setBackground(table.getDisplay().getSystemColor(
-                SWT.COLOR_DARK_GREEN));
-        match.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
+        String[] playerOneWonLost = new String[6];
+        String[] playerTwoWonLost = new String[6];
 
         stats = stats.substring(stats.indexOf("Match Statistics\t") + 17, stats
                 .length());
         stats = skipEmptyLines(stats);
 
-        // Match W/L
-        TreeItem item1 = new TreeItem(match, SWT.CENTER);
-        item1.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
-        item1.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-        item1.setText(1, "Match W/L %");
-        stats = skipEmptyLines(stats);
-        item1.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-        stats = skipLines(stats, 1);*/
+        // Matches, sets, games
+        for (int i = 0; i < 3; i++) {
+            playerOneWonLost[i] = stats.substring(0, stats.indexOf(")") + 1);
+            stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
+            stats = skipEmptyLines(stats);
+            playerTwoWonLost[i] = stats.substring(0, stats.indexOf(")") + 1);
+            stats = skipLines(stats, 1);
+        }
 
-        // Set W/L
-       /* TreeItem item2 = new TreeItem(match, SWT.CENTER);
-        item2.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
-        item2.setText(0, stats.substring(0, stats.indexOf(")") + 1));
+        // Points
+        playerOneWonLost[3] = stats.substring(0, stats.indexOf("%") + 1);
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-        item2.setText(1, "Set W/L %");
         stats = skipEmptyLines(stats);
-        item2.setText(2, stats.substring(0, stats.indexOf(")") + 1));
+        playerTwoWonLost[3] = stats.substring(0, stats.indexOf("%") + 1);
         stats = skipLines(stats, 1);
-*/
-        // Game W/L
-     /*   TreeItem item3 = new TreeItem(match, SWT.CENTER);
-        item3.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
-        item3.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-        item3.setText(1, "Game W/L %");
-        stats = skipEmptyLines(stats);
-        item3.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-        stats = skipLines(stats, 1);*/
 
-        // Points W/L
-      /*  TreeItem item4 = new TreeItem(match, SWT.CENTER);
-        item4.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
-        item4.setText(0, stats.substring(0, stats.indexOf("%") + 1));
+        // Tiebreaks
+        playerOneWonLost[4] = stats.substring(0, stats.indexOf(")") + 1);
         stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-        item4.setText(1, "Points W/L %");
         stats = skipEmptyLines(stats);
-        item4.setText(2, stats.substring(0, stats.indexOf("%") + 1));
-        stats = skipLines(stats, 1);*/
+        playerTwoWonLost[4] = stats.substring(0, stats.indexOf(")") + 1);
+        stats = skipLines(stats, 1);
 
-        // Tiebreaks W/L
-/*        TreeItem item5 = new TreeItem(match, SWT.CENTER);
-        item5.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
-        item5.setText(0, stats.substring(0, stats.indexOf(")") + 1));
-        stats = stats.substring(stats.indexOf("W/L") + 3, stats.length());
-        item5.setText(1, "Tiebreaks W/L %");
-        stats = skipEmptyLines(stats);
-        item5.setText(2, stats.substring(0, stats.indexOf(")") + 1));
-        stats = skipLines(stats, 1);*/
-
-        // Tiebreaks W/L
-/*        TreeItem item6 = new TreeItem(match, SWT.CENTER);
-        item6.setBackground(1, table.getDisplay().getSystemColor(
-                SWT.COLOR_YELLOW));
-        item6.setText(0, stats.substring(0, stats.indexOf("\t")));
+        playerOneWonLost[5] = stats.substring(0, stats.indexOf("\t") + 1);
         stats = stats.substring(stats.indexOf("Set") + 4, stats.length());
-        item6.setText(1, "Tiebreaks/Set");
-        item6.setText(2, stats.substring(0, stats.indexOf("\n")));
-        stats = skipLines(stats, 2);*/
+        stats = skipEmptyLines(stats);
+        playerTwoWonLost[5] = stats.substring(0, stats.indexOf("\n") + 1);
+        stats = skipLines(stats, 1);
 
+        match.setPlayerOneWonLost(playerOneWonLost);
+        match.setPlayerTwoWonLost(playerTwoWonLost);
         // ////////////////////////
         // Service Statistics
         // ////////////////////////
 
-    /*    TreeItem serves = new TreeItem(table, SWT.CENTER);
-        serves.setText(1, "Serve Stats");
-        serves
-                .setForeground(table.getDisplay().getSystemColor(
-                        SWT.COLOR_WHITE));
-        serves.setBackground(table.getDisplay().getSystemColor(
-                SWT.COLOR_DARK_GREEN));
-        serves.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
-
-        for (int i = 0; i < 6; i++) {
+       Map<String, String [][]> statisticsMap = new HashMap<String, String[][]>();
+       int[] sizes = {6, 4, 6, 4};
+       for (int i=0;i<N_STATS_LINE;i++) {
+           
+           String statsName = getAndSkip();
+           String[][] values = new String[sizes[i]][3];
+           
+           for (int j=0;j<sizes[i];j++) {
+               values[j][0] = stats.substring(0, stats.indexOf("\t"));
+               stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
+               values[j][1] = stats.substring(0, stats.indexOf("\t"));
+               stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
+               values[j][2] = stats.substring(0, stats.indexOf("\n"));
+               stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
+           }
+           
+           statisticsMap.put(statsName, values);
+           
+               
+       }
+       
+       match.setStatisticsMap(statisticsMap);
+       
+       /*
+       for (int i = 0; i < 6; i++) {
+           
             TreeItem item = new TreeItem(serves, SWT.CENTER);
-            item.setText(0, stats.substring(0, stats.indexOf("\t")));
+            item.setText(0, ));
             stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
             item.setText(1, stats.substring(0, stats.indexOf("\t")));
             item.setBackground(1, table.getDisplay().getSystemColor(
@@ -320,7 +302,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
             stats = stats.substring(stats.indexOf("\t") + 1, stats.length());
             item.setText(2, stats.substring(0, stats.indexOf("\n")));
             stats = stats.substring(stats.indexOf("\n") + 1, stats.length());
-
+/*
             if (i == 2) {
                 // System.out.println(Double.parseDouble(item.getText(0).substring(0,item.getText(0).length()
                 // -1)));
@@ -349,15 +331,15 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
                         .setSecondServeWins(Double.parseDouble(item.getText(2)
                                 .substring(0, item.getText(2).length() - 1)) / 100);
             }
-        }
-*/
+        }*/
+          
     }
 
     private void setPlayerInfo(Player playerOne) {
         playerOne.setCountry(getAndSkip());
         playerOne.setDob(getAndSkip());
         String heightAndPlays = getAndSkip();
-        String [] values = heightAndPlays.split("/"); 
+        String[] values = heightAndPlays.split("/");
         playerOne.setHeight(values[0].trim());
         playerOne.setPlays(values[1].trim());
         playerOne.setWonLost(getAndSkip());
@@ -373,7 +355,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     private String getImages(String stats) {
         String player1 = stats.substring(0, stats.indexOf('\n'));
-      //  table.getColumn(0).setText(player1);
+        // table.getColumn(0).setText(player1);
         int index = 0;
         String imagePlayer = "";
         String cPlayer = player1;
@@ -388,18 +370,18 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         Image imgPlayer = getImage("http://www.tennisinsight.com/images/"
                 + imagePlayer + ".jpg");
         try {
-        //    table.getColumn(0).setImage(imgPlayer);
+            // table.getColumn(0).setImage(imgPlayer);
             imgPlayer.dispose();
         } catch (NullPointerException ex) {
-           // table
-            //        .getColumn(0)
-          //          .setImage(
-           //                 getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+            // table
+            // .getColumn(0)
+            // .setImage(
+            // getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
         }
         stats = skipLines(stats, 2);
 
         String player2 = stats.substring(0, stats.indexOf('\n'));
-        //table.getColumn(2).setText(player2);
+        // table.getColumn(2).setText(player2);
         imagePlayer = "";
         cPlayer = player2;
         while (cPlayer.indexOf(' ') > -1) {
@@ -413,13 +395,13 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         imgPlayer = getImage("http://www.tennisinsight.com/images/"
                 + imagePlayer + ".jpg");
         try {
-         //   table.getColumn(2).setImage(imgPlayer);
+            // table.getColumn(2).setImage(imgPlayer);
             imgPlayer.dispose();
         } catch (NullPointerException ex) {
-           // table
-           //         .getColumn(2)
-          //          .setImage(
-           //                 getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+            // table
+            // .getColumn(2)
+            // .setImage(
+            // getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
         }
         return stats;
     }
@@ -479,8 +461,8 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
                     Thread.sleep(5000);
             } catch (Exception e) {
                 e.printStackTrace();
-                //log.error(e.getMessage());
-                //log.error(e.getStackTrace());
+                // log.error(e.getMessage());
+                // log.error(e.getStackTrace());
             }
     }
 

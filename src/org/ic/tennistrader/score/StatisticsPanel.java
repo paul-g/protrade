@@ -1,5 +1,8 @@
 package org.ic.tennistrader.score;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
@@ -75,6 +78,40 @@ public class StatisticsPanel implements Listener {
                 makeTreeLine(basics, "W-L", pl1.getWonLost(), pl2.getWonLost());
                 makeTreeLine(basics, "Plays", pl1.getPlays(), pl2.getPlays());
                 makeTreeLine(basics, "Rank", pl1.getRank(), pl2.getRank());
+                
+                TreeItem matchTree = new TreeItem(tree, SWT.CENTER);
+                matchTree.setText(1, "Match Stats");
+                matchTree.setForeground(tree.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+                matchTree.setBackground(tree.getDisplay().getSystemColor(
+                        SWT.COLOR_DARK_GREEN));
+                matchTree.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
+                
+                String [] playerOneWonLost = match.getPlayerOneWonLost();
+                String [] playerTwoWonLost = match.getPlayerTwoWonLost();
+                
+                String[] matchTreeTitles = {"Match W/L %", "Set W/L %", "Game W/L %", "Points W/L %", "Tiebreaks W/L %", "Tiebreaks/Set"};
+                for (int i=0;i<playerOneWonLost.length;i++){
+                    makeTreeLine(matchTree, matchTreeTitles[i], playerOneWonLost[i], playerTwoWonLost[i]);    
+                }
+                
+               TreeItem serves = new TreeItem(tree, SWT.CENTER); serves.setText(1,"Serve Stats"); 
+               serves.setForeground(tree.getDisplay().getSystemColor( SWT.COLOR_WHITE));
+               serves.setBackground(tree.getDisplay().getSystemColor( SWT.COLOR_DARK_GREEN)); 
+               serves.setFont(new Font(null, "BOLD", 12, SWT.ITALIC));
+               
+               Map<String, String [][]> statisticsMap = match.getStatisticsMap();
+               
+               
+               for ( String s : statisticsMap.keySet() ){
+
+                   String[][] values = statisticsMap.get(s);
+                   TreeItem item = new TreeItem(serves, SWT.CENTER);
+                   item.setText(1, s);
+                   for (int i=0;i<values.length;i++) {
+                       makeTreeLine(item, values[i][1], values[i][0], values[i][2]);
+                   }
+               }
+               
             }
         });
   
