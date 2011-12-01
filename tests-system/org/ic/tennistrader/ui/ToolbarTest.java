@@ -33,6 +33,7 @@ public class ToolbarTest {
 	public void widgetUpperLeftCheck() {
 		// Left corner widgets
 		UpperToolBar utb = new UpperToolBar(mw);
+		if (!utb.openPreferencesWindow()) assertNotNull(null);
 		SWTBotToolbarDropDownButton widget_menu = bot.toolbarDropDownButtonWithTooltip("Widget Menu");
 		SWTBotToolbarDropDownButton play_menu = bot.toolbarDropDownButtonWithTooltip("Play from a file");
 		assertNotNull(widget_menu);

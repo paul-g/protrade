@@ -29,8 +29,8 @@ import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 public class UpperToolBar {
 	private ToolBar toolbar;
 	private ToolBar login;
-	private Shell profileWindow;
-	private Shell preferencesWindow;
+	private Shell profileWindow = null;
+	private Shell preferencesWindow = null;
 	private ProfileData profileData;
 	private static Logger log = Logger.getLogger(UpperToolBar.class);
 	private MainWindow mainWindow;
@@ -347,7 +347,8 @@ public class UpperToolBar {
 		}
 	}
 	
-	private boolean openProfileWindow() {
+	/** Method invoking the Profile Window appearance */
+	public boolean openProfileWindow() {
     	if (profileWindow == null || profileWindow.isDisposed()) {
             profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
             profileWindow.setLayout(new FillLayout());
@@ -364,7 +365,8 @@ public class UpperToolBar {
     	}
 	}
 	
-	private boolean openPreferencesWindow() {
+	/** Method for Preferences Window invocation */
+	public boolean openPreferencesWindow() {
 		if (preferencesWindow == null || preferencesWindow.isDisposed()) {
             preferencesWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
             preferencesWindow.setLayout(new FillLayout());
