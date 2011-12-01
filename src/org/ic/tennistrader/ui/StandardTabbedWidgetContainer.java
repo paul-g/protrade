@@ -4,6 +4,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,7 +21,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 public class StandardTabbedWidgetContainer {
-
     protected final CTabFolder folder;
     protected Display display;
     protected CTabItem selected;
@@ -119,5 +120,50 @@ public class StandardTabbedWidgetContainer {
             }
         });
     }
+    
+    public CTabItem addTab(String title){
+        final CTabItem item = new CTabItem(folder, SWT.CLOSE);
+        
+        item.setText(title);
+        
+        folder.setSelection(item);
+        
+        item.addDisposeListener(new DisposeListener() {
+            @Override
+            public void widgetDisposed(DisposeEvent arg0) {
+                // dispose children on close
+                item.getControl().dispose();
+            }
+        });
+        
+        return item;
+    }
+    
+    public void addWidgetAsTab(StandardWidgetContainer swc){
+        final CTabItem item = new CTabItem(folder, SWT.CLOSE);
+        
+        item.setText(swc.getTitle());
+        
+        folder.setSelection(item);
+        
+        item.addDisposeListener(new DisposeListener() {
+            @Override
+            public void widgetDisposed(DisposeEvent arg0) {
+                // dispose children on close
+                item.getControl().dispose();
+            }
+        });
+        
+        item.setControl(swc);
+    }
 
+	public int getTabPosition(String matchName) {
+		int pos = -1;
+		CTabItem[] items = folder.getItems();
+	    for (int i = 0; pos == -1 && i < items.length; i++)
+	        if (items[i].getText().equals(matchName)) {
+	            pos = i;
+	        }
+		return pos;
+	}
 }

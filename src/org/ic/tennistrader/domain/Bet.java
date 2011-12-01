@@ -10,12 +10,16 @@ public class Bet {
     private Match match;
     private Player player;
     private BetTypeEnum type;
+    private double profit;
+    private double firstPlayerWinnerProfit;
+    private double secondPlayerWinnerProfit;
 
     public Bet(Match m, Player p, BetTypeEnum type, Pair<Double, Double> value){
         this.match = m;
         this.player = p;
         this.type = type;
         this.value = value;
+        this.profit = 0;
     }
     
     public Match getMatch() {
@@ -42,11 +46,46 @@ public class Bet {
         this.type = betType;
     }
     
+    
     public void setValue(Pair<Double, Double> value) {
         this.value = value;
     }
 
+    /*
     public Pair<Double, Double> getValue() {
         return value;
     }
+    */
+    
+    public double getAmount() {
+    	return this.value.second();
+    }
+    
+    public double getOdds() {
+    	return this.value.first();
+    }
+
+	public void setProfit(double profit) {
+		this.profit = profit;
+	}
+
+	public double getProfit() {
+		return profit;
+	}
+
+	public void setFirstPlayerWinnerProfit(double firstPlayerWinnerProfit) {
+		this.firstPlayerWinnerProfit = firstPlayerWinnerProfit;
+	}
+
+	public double getFirstPlayerWinnerProfit() {
+		return firstPlayerWinnerProfit;
+	}
+
+	public void setSecondPlayerWinnerProfit(double secondPlayerWinnerProfit) {
+		this.secondPlayerWinnerProfit = secondPlayerWinnerProfit;
+	}
+
+	public double getSecondPlayerWinnerProfit() {
+		return secondPlayerWinnerProfit;
+	}
 }

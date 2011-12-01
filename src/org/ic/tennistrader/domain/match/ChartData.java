@@ -17,7 +17,13 @@ public class ChartData {
 	private ArrayList<Double> maPl1;
 	private ArrayList<Double> maPl2;
 	private ArrayList<Date> xSeries;
+	private ArrayList<Double> backOverround;
+	private ArrayList<Double> layOverround;
+	private ArrayList<Double> pl1Volume;
+	private ArrayList<Double> pl2Volume;
 	private int dataSize;
+	
+	public ArrayList<Integer> endOfSets;
 	
 	public ChartData(){
 		dataSize = 0;
@@ -28,18 +34,61 @@ public class ChartData {
 		maPl1 = new ArrayList<Double>(); 
 		maPl2 = new ArrayList<Double>();
 		xSeries = new ArrayList<Date>();
+		backOverround = new ArrayList<Double>();
+		layOverround = new ArrayList<Double>();
+		pl1Volume = new ArrayList<Double>();
+		pl2Volume = new ArrayList<Double>();
+		endOfSets = new ArrayList<Integer>();
 	}
 	
 	public void updateData(MOddsMarketData data){
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
-		pl1YSeries = addValue(pl1YSeries,  data.getPl1Back());
-		pl2YSeries = addValue(pl2YSeries,  data.getPl2Back());
+		pl1YSeries = addValue(pl1YSeries,  data.getPl1LastMatchedPrice());
+		pl2YSeries = addValue(pl2YSeries,  data.getPl2LastMatchedPrice());
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
-		maPl2 = addMaValue(maPl2, pl2YSeries); 
+		maPl2 = addMaValue(maPl2, pl2YSeries);
+		backOverround = addOverround(backOverround, data.getPl1Back(), data.getPl2Back());
+		layOverround = addOverround(layOverround, data.getPl1Lay(), data.getPl2Lay());
+		pl1Volume = addVolume(pl1Volume, data.getPlayer1TotalAmountMatched());
+		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched());
 		setDataSize(pl1YSeries.size());
+		addEndOfSet();
+		
 	}
+	
+	
+	private void addEndOfSet() {
+		if (getDataSize() % 10 == 0) {
+			endOfSets.add(1);
+		} else endOfSets.add(0);
+		
+		
+	}
+
+	private ArrayList<Double> addVolume(ArrayList<Double> volume,
+			double value) {
+		volume.add(value);
+		return volume;
+	}
+
+	private ArrayList<Double> addOverround(ArrayList<Double> overround,
+			ArrayList<Pair<Double, Double>> back,
+			ArrayList<Pair<Double, Double>> lay) {
+		int i = this.getDataSize();
+		if (back != null && lay != null && back.size() > 0 && lay.size() > 0) {
+			overround.add(100* (1/back.get(0).first() + 1/lay.get(0).first()));
+		} else {
+			if (i > 0) // keep previous value if it exists
+				overround.add(i,overround.get(i-1));
+			else
+				// put zero if no previous value
+				overround.add(i,0.0);
+		}		
+		return overround;
+	}
+
 	private ArrayList<Pair<Double, Double>> addLay(ArrayList<Pair<Double, Double>> array, 
 			ArrayList<Pair<Double, Double>> back, ArrayList<Pair<Double, Double>> lay) {
 		int i = this.getDataSize();
@@ -80,18 +129,9 @@ public class ChartData {
 	}
 
 	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, 
-			ArrayList<Pair<Double, Double>> oddData) {
+			double d) {
 		int i = this.getDataSize();
-		// if data has been read from Betfair
-		if (oddData != null && oddData.size() > 0) {
-			pl1ySeries2.add(i, oddData.get(0).first());
-		} else {
-			if (i > 0) // keep previous value if it exists
-				pl1ySeries2.add(i, pl1ySeries2.get(i - 1));
-			else
-				// put zero if no previous value
-				pl1ySeries2.add(i, (double) 0);
-		}
+		pl1ySeries2.add(i, d);
 		return pl1ySeries2;
 	}
 
@@ -158,5 +198,40 @@ public class ChartData {
 
 	public int getDataSize() {
 		return dataSize;
+	}	
+
+	public ArrayList<Double> getBackOverround() {
+		return backOverround;
 	}
+
+	public void setBackOverround(ArrayList<Double> backOverround) {
+		this.backOverround = backOverround;
+	}
+
+	public ArrayList<Double> getLayOverround() {
+		return layOverround;
+	}
+
+	public void setLayOverround(ArrayList<Double> layOverround) {
+		this.layOverround = layOverround;
+	}
+
+	public ArrayList<Double> getPl1Volume() {
+		return pl1Volume;
+	}
+
+	public void setPl1Volume(ArrayList<Double> pl1Volume) {
+		this.pl1Volume = pl1Volume;
+	}
+
+	public ArrayList<Double> getPl2Volume() {
+		return pl2Volume;
+	}
+
+	public void setPl2Volume(ArrayList<Double> pl2Volume) {
+		this.pl2Volume = pl2Volume;
+	}
+
+	
+	
 }

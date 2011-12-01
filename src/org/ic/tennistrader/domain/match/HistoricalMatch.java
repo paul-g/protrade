@@ -2,19 +2,16 @@ package org.ic.tennistrader.domain.match;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.service.FracsoftReader;
-import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
-public class HistoricalMatch implements Match {
+public class HistoricalMatch extends Match {
     private String name;
-    private String filename;
-    private Score score;
-    private Player player1 = new Player();
-    private Player player2 = new Player();
-    
     public HistoricalMatch(Player player1, Player player2){
         this.score = new Score(3);
         this.player1 = player1;
@@ -23,6 +20,7 @@ public class HistoricalMatch implements Match {
     
     public HistoricalMatch(String filename){
         this.score = new Score();
+        this.marketDatas = new ArrayList<MOddsMarketData>();
 
         Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
         
@@ -58,11 +56,6 @@ public class HistoricalMatch implements Match {
         return this.name;
     }
 
-    @Override
-    public void registerForUpdate(UpdatableWidget widget) {
-        LiveDataFetcher.registerFromFile(widget, this, filename);
-    }
-    
     // needs to be in a different class!!!
 	public String getMatchName() {
 		Scanner scanner;
@@ -82,22 +75,17 @@ public class HistoricalMatch implements Match {
 	}
 
     @Override
-    public Player getPlayerOne() {
-        return player1;
+	public PlayerEnum getWinner() throws MatchNotFinishedException {
+		return this.score.getWinner();
+	}
+
+    @Override
+    public void addMarketData(MOddsMarketData data) {
+        this.marketDatas.add(data);
     }
 
     @Override
-    public Player getPlayerTwo() {
-        return player2;
-    }
-
-    @Override
-    public Score getScore() {
-        return score;
-    }
-
-    @Override
-    public void setScore(Score score) {
-        this.score = score;
+    public boolean isFromFile() {
+        return true;
     }
 }

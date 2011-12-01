@@ -15,6 +15,12 @@ public class SetScore {
     public SetScore(int playerOneGames, int playerTwoGames){
         this.playerOneGames = playerOneGames;
         this.playerTwoGames = playerTwoGames;
+        if (isFinished()) {
+        	if (this.playerOneGames > this.playerTwoGames)
+        		winner = PlayerEnum.PLAYER1;
+        	else
+        		winner = PlayerEnum.PLAYER2;
+        }
     }
 
     private void addPlayerGame(PlayerEnum player) {

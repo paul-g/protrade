@@ -1,43 +1,51 @@
 package org.ic.tennistrader.domain.match;
 
 public class Statistics {
-	private int FirstServePercent;
-	private int FirstServeWins;
-	private int SecondServeWins;
+	private double firstServePercent;
+	private double firstServeWins;
+	private double secondServeWins;
 	
 	public Statistics() {
         init();
     }
 	
+	public Statistics(double firstServePercent, double firstServeWins,
+			double secondServeWins) {
+		super();
+		this.firstServePercent = firstServePercent;
+		this.firstServeWins = firstServeWins;
+		this.secondServeWins = secondServeWins;
+	}
+
 	private void init() {
-		FirstServePercent = 0;
-		FirstServeWins = 0;
-		SecondServeWins = 0;
+		firstServePercent = 0;
+		firstServeWins = 0;
+		secondServeWins = 0;
     }
 	
-	public int getFirstServePercent() {
-        return FirstServePercent;
+	public double getFirstServePercent() {
+        return firstServePercent;
     }
 	
-	public int getFirstServeWins() {
-       return FirstServeWins;
+	public double getFirstServeWins() {
+       return firstServeWins;
     }
 	
-	public int getSecondServeWins() {
-       return SecondServeWins;
+	public double getSecondServeWins() {
+       return secondServeWins;
     }
 	
 	
-	public void setFirstServePercent( int FirstServePercent ) {
-        this.FirstServePercent = FirstServePercent;
+	public void setFirstServePercent( double FirstServePercent ) {
+        this.firstServePercent = FirstServePercent;
     }
 	
-	public void setFirstServeWins( int FirstServeWins ) {
-        this.FirstServeWins = FirstServeWins;
+	public void setFirstServeWins( double FirstServeWins ) {
+        this.firstServeWins = FirstServeWins;
     }
 	
-	public void setSecondServeWins( int SecondServeWins ) {
-        this.SecondServeWins = SecondServeWins;
+	public void setSecondServeWins( double SecondServeWins ) {
+        this.secondServeWins = SecondServeWins;
     }	
 	
 }

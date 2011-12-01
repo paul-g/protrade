@@ -13,7 +13,9 @@ import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
+import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
 
+import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
 
@@ -23,7 +25,7 @@ import static org.ic.tennistrader.utils.Pair.pair;
  * @author Paul Grigoras
  * 
  */
-public class FracsoftReader extends DataUpdaterThread {
+public class FracsoftReader extends MatchUpdaterThread {
 
     private static Logger log = Logger.getLogger(FracsoftReader.class);
 
@@ -33,17 +35,20 @@ public class FracsoftReader extends DataUpdaterThread {
 
     private int inPlayPointer = -1;
 
-    private Match match;
     private int updatesPerSecond = 1;
 
     private static final int DELAY_OFFSET = 1;
+    private static final int STATUS_OFFSET = 2;
     private static final int NAME_OFFSET = 4;
     private static final int BACK_OFFSET = 5;
     private static final int LAY_OFFSET = 11;
 
+    private static final int AMOUNT_OFFSET = 17;
+    private static final int LPM_OFFSET = 18;
     private static final int POINTS_OFFSET = 22;
-
     private static final int GAMES_OFFSET = 19;
+
+    
 
     public FracsoftReader(Match match, String filename)
             throws FileNotFoundException {
@@ -67,22 +72,32 @@ public class FracsoftReader extends DataUpdaterThread {
                 line2 = scanner.nextLine();
                 String[] lines1 = line1.split(",");
                 String[] lines2 = line2.split(",");
+                
+                for (int kk=0;kk<lines1.length;kk++)
+                	lines1[kk] = lines1[kk].trim();
+                for (int kk=0;kk<lines2.length;kk++)
+                	lines2[kk] = lines2[kk].trim();
 
                 MOddsMarketData data = new MOddsMarketData();
                 data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));
-
+                data.setMatchStatus(lines1[STATUS_OFFSET]);
                 // player 1 data
                 data.setPlayer1(lines1[NAME_OFFSET]);
                 data.setPl1Back(getOdds(lines1, BACK_OFFSET));
                 data.setPl1Lay(getOdds(lines1, LAY_OFFSET));
+			
+                data.setPl1LastMatchedPrice(Double.parseDouble(lines1[LPM_OFFSET]));
+				data.setPlayer1TotalAmountMatched((Double.parseDouble(lines1[AMOUNT_OFFSET])));
 
                 // player 2 data
                 data.setPlayer2(lines2[NAME_OFFSET]);
                 data.setPl2Back(getOdds(lines2, BACK_OFFSET));
                 data.setPl2Lay(getOdds(lines2, LAY_OFFSET));
-
+                data.setPl2LastMatchedPrice(Double.parseDouble(lines2[LPM_OFFSET]));
+				data.setPlayer2TotalAmountMatched((Double.parseDouble(lines2[AMOUNT_OFFSET])));
+				
                 Score s = new Score();
-                
+
                 if (lines1.length > GAMES_OFFSET) {
                     // score data is provided
                     int pl1Points = Integer.parseInt(lines1[POINTS_OFFSET]);
@@ -136,26 +151,28 @@ public class FracsoftReader extends DataUpdaterThread {
     }
 
     @Override
-    public void run() {
-        while (!this.stop) {
-            LiveDataFetcher.handleFileEvent(this.match, getMarketData());
-            try {
-                Thread.sleep(1000 / this.updatesPerSecond);
-            } catch (InterruptedException e) {
-                log.info("Fracsoft thread interrupted");
-            }
+    public void runBody() {
+        try {
+			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+		} catch (EndOfFracsoftFileException e1) {
+			LiveDataFetcher.handleEndOfFile(this.match);
+			this.setStop();
+		}
+        try {
+            Thread.sleep(1000 / this.updatesPerSecond);
+        } catch (InterruptedException e) {
+            log.info("Fracsoft thread interrupted");
         }
-        log.info("Stopped Fracsoft thread");
     }
 
-    public Pair<MOddsMarketData, Score> getMarketData() {
+    public Pair<MOddsMarketData, Score> getMarketData() throws EndOfFracsoftFileException {
         if (pointer.hasNext())
             return pointer.next();
-        return null;
+        throw new EndOfFracsoftFileException();
     }
 
     @Override
-    public void addEvent(RealMatch match) {
+    public void setMatch(RealMatch match) {
         this.match = match;
     }
 
@@ -184,11 +201,6 @@ public class FracsoftReader extends DataUpdaterThread {
         }
 
         return pair(player1, player2);
-    }
-
-    @Override
-    public void setStop() {
-        this.stop = true;
     }
 
     public void setUpdatesPerSecond(int updates) {

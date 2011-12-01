@@ -84,11 +84,6 @@ public class BetfairConnectionHandler {
 				tournaments.add(newTournament);
 			}
 		}
-		/*
-		log.info("Go into printTours, when tournaments has " + tournaments.size() + " elements");
-		for(Tournament t: tournaments)
-			printTours(t);
-		*/	
 		return tournaments;		
 	}
 	

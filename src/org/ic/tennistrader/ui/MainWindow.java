@@ -58,12 +58,9 @@ public class MainWindow {
         this.shell = new Shell(display);
         shell.setMaximized(true);
         
-        /***********************/
-        //shell.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-        // Menu and Tool bar set-up
         @SuppressWarnings("unused")
         UpperToolBar tp = new UpperToolBar(this);
 
@@ -90,7 +87,6 @@ public class MainWindow {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         
@@ -131,9 +127,10 @@ public class MainWindow {
             if (!display.readAndDispatch())
                 display.sleep();
         }
+        
         LiveDataFetcher.stopAllThreads();
         LowerToolBar.setStop();
-        //System.out.println("Application is closing...");
+        
         display.dispose();
     }
 
