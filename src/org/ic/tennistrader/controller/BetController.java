@@ -6,9 +6,7 @@ import org.apache.log4j.Logger;
 import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 
@@ -79,9 +77,14 @@ public class BetController {
 		return betType;
 	}
 
-	public String getBettingDetails(OddsButton button) throws OddsButtonNotFoundException {	
-		String info = "You are betting on " + getBetPlayer(button).toString();
-		info += " to " + (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");		
-		return info;
-	}
+    public String getBettingDetails(OddsButton button)
+            throws OddsButtonNotFoundException {
+        String info = "You are betting on "
+                + (getBetPlayer(button).equals(PlayerEnum.PLAYER1) ? match
+                        .getPlayerOne().toString() : match.getPlayerTwo()
+                        .toString());
+        info += " to "
+                + (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");
+        return info;
+    }
 }

@@ -98,4 +98,15 @@ public class Bet {
     public double getUnmatchedValue() {
         return unmatchedValue;
     }
+
+    public String getDescription() {
+        return (this.getType() == BetTypeEnum.B ? "Back "
+                : "Lay ")
+                + (this.player.equals(PlayerEnum.PLAYER1) ? this.match
+                        .getPlayerOne().toString() : this.match
+                        .getPlayerTwo().toString())
+                + " for "
+                + this.getAmount()
+                + "£ at " + this.getOdds() + "";
+    }
 }
