@@ -19,6 +19,7 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
     private static List<Label> activeBets = new ArrayList<Label>();
     private static Composite composite = null;
     private static HashMap<Match, BetDisplayInfo> matchBets = new HashMap<Match, BetDisplayInfo>();
+    private static HashMap<Bet, Label> unmatchedBetsLabels = new HashMap<Bet, Label>();
     
     public BetsDisplay(Composite parent, int style){
         super(parent, style);
@@ -39,16 +40,16 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
         
         parent.layout();
     }
-    
-	public static void addBet(Bet bet) {
-		Label betLabel = new Label(composite, SWT.NONE);
-		betLabel.setText((bet.getType() == BetTypeEnum.B ? "Back " : "Lay ")
-				+ bet.getPlayer().toString() + " for " + bet.getAmount()
-				+ "£ at " + bet.getOdds() + "");
-		activeBets.add(betLabel);
-		updateMatchTab(bet, betLabel);
-		composite.layout();
-	}
+
+    public static void addBet(Bet bet) {
+        Label betLabel = new Label(composite, SWT.NONE);
+        setBetLabelText(bet, betLabel);
+        if (bet.getUnmatchedValue() > 0)
+            unmatchedBetsLabels.put(bet, betLabel);
+        activeBets.add(betLabel);
+        updateMatchTab(bet, betLabel);
+        composite.layout();
+    }
 
 	private static void updateMatchTab(Bet bet, Label betLabel) {
 		betsDisplay.updateTab(bet, betLabel);
@@ -82,7 +83,7 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 				+ bet.getFirstPlayerWinnerProfit(), betDisplayInfo
 				.getSecondPlayerWinnerProfit()
 				+ bet.getSecondPlayerWinnerProfit());
-		betDisplayInfo.addBet(betLabel);
+		betDisplayInfo.addBet(bet, betLabel);
 	}
 
 	public static void addSettledBet(final Bet bet) {
@@ -98,9 +99,40 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 						+ "");
 				activeBets.add(betLabel);
 				BetDisplayInfo betDisplayInfo = matchBets.get(bet.getMatch());
-				betDisplayInfo.addBet(betLabel);
+				betDisplayInfo.addBet(bet, betLabel);
 				composite.layout();
 			}			
 		});		
 	}
+
+    public static void updateUnmatchedBet(final Bet bet) {
+        if (unmatchedBetsLabels.containsKey(bet)) {
+            final Label betLabel = unmatchedBetsLabels.get(bet);
+            composite.getDisplay().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    setBetLabelText(bet, betLabel);
+                    betsDisplay.updateTabLabel(bet, betLabel);
+                    composite.layout();
+                }
+            });
+            if (bet.getUnmatchedValue() == 0)
+                unmatchedBetsLabels.remove(bet);
+        }
+    }
+
+    protected void updateTabLabel(Bet bet, Label betLabel) {
+        if (matchBets.containsKey(bet.getMatch())) {
+            BetDisplayInfo betDisplayInfo = matchBets.get(bet.getMatch());
+            betDisplayInfo.updateBetLabel(bet, betLabel);
+        } 
+    }
+
+    private static void setBetLabelText(Bet bet, Label betLabel) {
+        String betLabelText = bet.getDescription(); 
+        if (bet.getUnmatchedValue() > 0) {            
+            betLabelText += ". Yet unmatched value: " + bet.getUnmatchedValue() + "";
+        }
+        betLabel.setText(betLabelText);
+    }
 }

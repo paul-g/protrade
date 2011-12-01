@@ -83,8 +83,13 @@ public class BetManager {
                 maxMarketAmount = data.getLaySecondPlayerAvailableMatches().get(bet.getOdds());
                 playedAmount = data.getMatchedLayBetsSecondPlayer().get(bet.getOdds());
             }
-        }        
-        return maxMarketAmount - playedAmount;
+        }
+        double maxAvAmount = 0.0;
+        if (maxMarketAmount != null)
+            maxAvAmount = maxMarketAmount;
+        if (playedAmount != null)
+            maxAvAmount -= playedAmount;
+        return maxAvAmount;
     }
     
     public static void updateMarketAvailableMatches(Match match, MOddsMarketData newMarketData) {
@@ -95,10 +100,58 @@ public class BetManager {
         addNewMarketValues(virtualMarketInfo.getLayFirstPlayerAvailableMatches(), newMarketData.getPl1Lay());
         addNewMarketValues(virtualMarketInfo.getBackSecondPlayerAvailableMatches(), newMarketData.getPl2Back());
         addNewMarketValues(virtualMarketInfo.getLaySecondPlayerAvailableMatches(), newMarketData.getPl2Lay());
-        // TODO check if any unmatched bets can be matched
+        matchMarketData.put(match, virtualMarketInfo);
+        reviewUnmatchedBets(match);
     }
 
-	private static void addNewMarketValues(HashMap<Double, Double> availableMatches,
+	private static void reviewUnmatchedBets(Match match) {
+	    VirtualBetMarketInfo virtualMarketInfo = matchMarketData.get(match);
+        if (virtualMarketInfo != null) {
+            List<Bet> newMatchedBets = new ArrayList<Bet>();
+            for (Bet bet : unmatchedBets) {
+                if (bet.getMatch().equals(match)) {
+                    double availableAmount = getMaxAvailableAmount(bet);
+                    if (availableAmount > 0) {
+                        matchBet(virtualMarketInfo, availableAmount, bet);
+                        BetsDisplay.updateUnmatchedBet(bet);
+                        if (bet.getUnmatchedValue() == 0)
+                            newMatchedBets.add(bet);
+                    }
+                }
+            }
+            for (Bet newMatchedBet :newMatchedBets) {
+                unmatchedBets.remove(newMatchedBet);
+                matchedBets.add(newMatchedBet);
+            }
+        }        
+    }
+
+    private static void matchBet(VirtualBetMarketInfo virtualMarketInfo,
+            double availableAmount, Bet bet) {
+        double toMatch;
+        if (availableAmount >= bet.getUnmatchedValue())
+            toMatch = bet.getUnmatchedValue();
+        else
+            toMatch = availableAmount;
+        bet.setUnmatchedValue(bet.getUnmatchedValue() - toMatch);
+        if (bet.getType().equals(BetTypeEnum.B)) {
+            if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
+                virtualMarketInfo.addMatchedBackBetsFirstPlayer(bet.getOdds(), toMatch);
+            }
+            else {
+                virtualMarketInfo.addMatchedBackBetsSecondPlayer(bet.getOdds(), toMatch);
+            }
+        } else {
+            if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
+                virtualMarketInfo.addMatchedLayBetsFirstPlayer(bet.getOdds(), toMatch);
+            }
+            else {
+                virtualMarketInfo.addMatchedLayBetsSecondPlayer(bet.getOdds(), toMatch);
+            }
+        }        
+    }
+    
+    private static void addNewMarketValues(HashMap<Double, Double> availableMatches,
             ArrayList<Pair<Double, Double>> pl1Back) {
         for (Pair<Double, Double> pair : pl1Back) {
             availableMatches.put(pair.first(), pair.second());
@@ -106,7 +159,6 @@ public class BetManager {
     }
 
     public static void setBetsOutcome(Match match) {
-		//System.out.println("In BetManager.setBetsOutcome");
 		PlayerEnum winner;
 		try {
 			winner = match.getWinner();
@@ -122,25 +174,16 @@ public class BetManager {
 	}
 
 	private static boolean isBetSuccessful(Bet bet, PlayerEnum winner) {
-		boolean won;
-		if (winner == PlayerEnum.PLAYER1) {
-			if ((bet.getPlayer().equals(bet.getMatch().getPlayerOne()) && bet
-					.getType().equals(BetTypeEnum.B))
-					|| (bet.getPlayer().equals(bet.getMatch().getPlayerTwo()) && bet
-							.getType().equals(BetTypeEnum.L))) {
-				won = true;
-			} else
-				won = false;
-		} else {
-			if ((bet.getPlayer().equals(bet.getMatch().getPlayerOne()) && bet
-					.getType().equals(BetTypeEnum.B))
-					|| (bet.getPlayer().equals(bet.getMatch().getPlayerTwo()) && bet
-							.getType().equals(BetTypeEnum.L))) {
-				won = false;
-			} else
-				won = true;
-		}
-		return won;
+		if (winner == bet.getPlayer())
+		    if (bet.getType().equals(BetTypeEnum.B))
+		        return true;
+		    else
+		        return false;
+		else
+		    if (bet.getType().equals(BetTypeEnum.B))
+                return false;
+            else
+                return true;
 	}
 	
 	private static double getBetProfit(Bet bet, boolean betSuccessful) {
