@@ -26,14 +26,14 @@ public class ScorePanel extends StandardWidgetContainer implements UpdatableWidg
     public ScorePanel(Composite parent, Match match) {
     	super(parent, SWT.NONE);
         this.match = match;
-
-        this.setLayout(new FillLayout());
         this.display = parent.getDisplay();
+        
+        this.setLayout(new FillLayout());
 
         this.scoreTable = new Table(this, SWT.NONE);
         scoreTable.setHeaderVisible(true);
-
         scoreTable.setLinesVisible(true);
+
         this.columns = new TableColumn[8];
         columns[0] = new TableColumn(scoreTable, SWT.NONE);
         columns[0].setText("Serving");

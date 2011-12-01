@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -21,8 +22,6 @@ import org.ic.tennistrader.ui.StandardWidgetContainer;
 public class PredictionGui extends StandardWidgetContainer {
 
     private static Logger log = Logger.getLogger(Main.class);
-
-    private TableColumn[] columns;
 
     private ScoreUpdateThread scoreUpdateThread;
 
@@ -55,15 +54,28 @@ public class PredictionGui extends StandardWidgetContainer {
     public PredictionGui(final Composite parent, int style, Match match) {
         super(parent, style);
 
-        this.setLayout(new GridLayout());
+        RowLayout mainLayout = new RowLayout();
+        mainLayout.type = SWT.HORIZONTAL;
+        mainLayout.pack = true;
 
-        ProbabilityPanel probabilityPanel = new ProbabilityPanel(this, match);
+        this.setLayout(mainLayout);
+        
+        Composite comp = new Composite(this, SWT.NONE);
 
-        ScorePanel sc = new ScorePanel(this, match);
+        RowLayout rl = new RowLayout();
+        rl.type = SWT.VERTICAL;
+        rl.pack = false;
+        comp.setLayout(rl);
+        
+        @SuppressWarnings("unused")
+        ScorePanel sc = new ScorePanel(comp, match);
+
+        @SuppressWarnings("unused")
+        ProbabilityPanel probabilityPanel = new ProbabilityPanel(comp, match);
 
         StatisticsPanel st = new StatisticsPanel(this, match);
-        this.statisticsUpdateThread = new StatisticsUpdateThread(match,st);
-        this.statisticsUpdateThread.addListener(st);
+        //this.statisticsUpdateThread = new StatisticsUpdateThread(match);
+        //this.statisticsUpdateThread.addListener(st);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match);
 
@@ -72,7 +84,7 @@ public class PredictionGui extends StandardWidgetContainer {
             scoreUpdateThread.start();
         }
 
-        statisticsUpdateThread.start();
+        //statisticsUpdateThread.start();
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -68,8 +69,14 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			SashForm comp = new SashForm(control, SWT.VERTICAL);
 
 			SashForm infoAndBack = new SashForm(comp, SWT.HORIZONTAL);
+			
+	        RowLayout mainLayout = new RowLayout();
+	        mainLayout.type = SWT.HORIZONTAL;
+	        mainLayout.pack = true;
+	        
+	        infoAndBack.setLayout(mainLayout);
 
-			if (firstTime) {
+	        if (firstTime) {
 				firstTime = false;
 				Image newImage = setColor(item, comp);
 
@@ -101,7 +108,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			folder.setSelection(item);
 
-			infoAndBack.setWeights(new int[] { 20, 80 });
+			//infoAndBack.setWeights(new int[] { 20, 80 });
 			comp.setWeights(new int[] { 20, 25, 50, 5 });
 
 		} else

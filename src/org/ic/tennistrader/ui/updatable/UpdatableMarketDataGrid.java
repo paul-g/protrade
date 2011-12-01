@@ -87,8 +87,8 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements 
     }
 
     private void initFonts() {
-        this.oddsFont = new Font(this.getDisplay(), "Arial", 12, SWT.BOLD);
-        this.titleFont = new Font(this.getDisplay(), "Arial", 13, SWT.None);
+        this.oddsFont = new Font(this.getDisplay(), "Arial", 10, SWT.BOLD);
+        this.titleFont = new Font(this.getDisplay(), "Arial", 10, SWT.None);
     }
 
     public void updateButtons(ArrayList<Pair<Double, Double>> valueList,
