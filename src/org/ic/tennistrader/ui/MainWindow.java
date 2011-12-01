@@ -81,8 +81,8 @@ public class MainWindow {
         
         notifyLoadEvent("Configuring toolbars");
         
-//        @SuppressWarnings("unused")
-//        LowerToolBar bottomPanel = new LowerToolBar(this);
+        @SuppressWarnings("unused")
+        LowerToolBar bottomPanel = new LowerToolBar(this);
         
         try {
             Thread.sleep(500);

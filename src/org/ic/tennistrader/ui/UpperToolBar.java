@@ -200,7 +200,7 @@ public class UpperToolBar {
 			final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 		widgetItem.setToolTipText("Widget Menu");
-		final Image img = new Image(shell.getDisplay(), "images/plus_item.png");
+		final Image img = new Image(shell.getDisplay(), "images/plus.png");
 		widgetItem.setImage(img);
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
 		MenuItem matchNavigator = new MenuItem(widgetDropDown, SWT.PUSH);
