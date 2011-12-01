@@ -18,9 +18,9 @@ public class Statistics {
 	}
 
 	private void init() {
-		firstServePercent = 0;
-		firstServeWins = 0;
-		secondServeWins = 0;
+		firstServePercent = 0.0;
+		firstServeWins = 0.0;
+		secondServeWins = 0.0;
     }
 	
 	public double getFirstServePercent() {
@@ -35,8 +35,8 @@ public class Statistics {
        return secondServeWins;
     }
 	
-	public void setFirstServePercent( double FirstServePercent ) {
-        this.firstServePercent = FirstServePercent;
+	public void setFirstServePercent( double firstServePercent ) {
+        this.firstServePercent = firstServePercent;
     }
 	
 	public void setFirstServeWins( double FirstServeWins ) {

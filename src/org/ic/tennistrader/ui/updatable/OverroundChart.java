@@ -31,6 +31,7 @@ public class OverroundChart extends Chart{
 		this.getLegend().setPosition(SWT.BOTTOM);
 		this.getAxisSet().getYAxis(0).getTitle().setText("Overround");
 		this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
+		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
 	}
 
 

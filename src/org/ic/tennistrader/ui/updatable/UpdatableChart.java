@@ -78,7 +78,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
         // addListeners();
         this.getAxisSet().adjustRange();
         this.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        this.addListener(SWT.Resize, new StandardWidgetResizeListener(this));
     }
 
 

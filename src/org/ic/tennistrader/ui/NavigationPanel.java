@@ -93,11 +93,8 @@ public class NavigationPanel {
 
 		tree.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-			    
 			    TreeItem ti = (TreeItem) event.item;
-		    
 		        Match match = getMatch(ti);
-			    
 		        if ( match != null )
 		            for (MatchSelectionListener msl : listeners)
 		                msl.handleMatchSelection(match);

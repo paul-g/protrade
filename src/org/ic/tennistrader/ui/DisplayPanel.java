@@ -14,20 +14,17 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Slider;
 
-import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableChart;
-import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 import uk.co.caprica.vlcj.player.embedded.videosurface.linux.LinuxVideoSurfaceAdapter;
@@ -44,7 +41,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	}
 
 	private void addPredictionGui(Composite composite, Match match) {
-		new PredictionGui(composite, SWT.BORDER, match);
+		new PredictionGui(composite, SWT.BORDER, match).start();
 	}
 
 	public void handleMatchSelection(Match match) {
@@ -67,33 +64,17 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			control.setLayout(new FillLayout());
 
 			SashForm comp = new SashForm(control, SWT.VERTICAL);
-
-			SashForm infoAndBack = new SashForm(comp, SWT.HORIZONTAL);
 			
-	        RowLayout mainLayout = new RowLayout();
-	        mainLayout.type = SWT.HORIZONTAL;
-	        mainLayout.pack = true;
-	        
-	        infoAndBack.setLayout(mainLayout);
 
 	        if (firstTime) {
 				firstTime = false;
 				Image newImage = setColor(item, comp);
-
 				folder.setSelectionBackground(newImage);
-				folder.setBackgroundImage(newImage);
-
 			}
 
-			addMatchData(infoAndBack, match);
-
-			addMarketDataGrid(infoAndBack, match);
+			addMatchData(comp, match);
 
 			SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
-
-			/*
-			 * if (match.isInPlay()) { addPredictionGui(horizontal, match); }
-			 */
 
 			addPredictionGui(horizontal, match);
 
@@ -108,8 +89,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			folder.setSelection(item);
 
-			//infoAndBack.setWeights(new int[] { 20, 80 });
-			comp.setWeights(new int[] { 20, 25, 50, 5 });
+			comp.setWeights(new int[] { 5, 30, 60, 5 });
 
 		} else
 			// just bring the required tab under focus
@@ -175,25 +155,6 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 				slider);
 		LiveDataFetcher.registerForMatchUpdate(chart, match);
 		comp.update();
-	}
-
-
-    /**
-     * Adds the market data grid with back and lay values and amounts
-     * 
-     * @param comp
-     * @param ti
-     */
-	private void addMarketDataGrid(Composite comp, Match match) {
-		UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
-				SWT.NONE);
-		BetController betController = new BetController(Arrays.asList(grid
-				.getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
-				Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
-						.getP2LayButtons()), match);
-		grid.setBetController(betController);
-		LiveDataFetcher.registerForMatchUpdate(grid, match);
-		// BetManager.registerGrid(match, table);
 	}
 
 	public Control getControl() {

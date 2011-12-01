@@ -31,8 +31,6 @@ public abstract class Match {
     
     private Map<String, String [][]> statisticsMap = new HashMap<String, String[][]>();
     
-    
-    
     public Map<String, String[][]> getStatisticsMap() {
         return statisticsMap;
     }
