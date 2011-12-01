@@ -1,34 +1,31 @@
 package org.ic.tennistrader.ui.updatable;
 
-import java.io.FileNotFoundException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
+import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.FracsoftReader;
 import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class UpdatableChartTest{
 	private UpdatableChart chart;
 	private String filename;
 	private Match match;
 	private Display display = new Display();
-	private Shell shell = new Shell(display, SWT.NONE);
+	private Shell shell;
+	private Slider slider;
 	
 	@Before
 	public void setUp() {
-		
-		filename = "fracsoft-data/fracsoft1.csv";
+	    shell = new Shell(display, SWT.NONE);
+		filename = "data/test/fracsoft-reader/tso-fed.csv";
 	    match = new HistoricalMatch(filename);
-	    Slider slider = new Slider(shell, SWT.BORDER);
+	    slider = new Slider(shell, SWT.BORDER);
 		chart = new UpdatableChart(shell, SWT.BORDER, match, slider);
 	}	
 	
@@ -38,22 +35,16 @@ public class UpdatableChartTest{
 		display.dispose();
 	}
 	
+	@Test
+    public void invertAxis(){
+        chart.fillData(new MOddsMarketData());
+        chart.invertAxis();
+    }
+	
+	/*
     @Test
-    public void testInvertAxis() {
-    	try {
-			FracsoftReader reader = new FracsoftReader(match, filename);
-				chart.handleUpdate(reader.getMarketData().first());
-				chart.handleUpdate(reader.getMarketData().first());
-				chart.handleUpdate(reader.getMarketData().first());
-				chart.handleUpdate(reader.getMarketData().first());
-			/*chart.invertAxis();
-	        for (double d : chart.getFirstSeries().getYSeries()) {
-	        	assertTrue(d <= 1);
-	        	assertTrue(d >= 0);
-	        }*/
-		} catch (FileNotFoundException e) {		
-		} catch (EndOfFracsoftFileException e) {			
-		}
-    }    
-    
+    public void showSeries() {
+        chart.fillData(new MOddsMarketData());
+        chart.showSeries(0, false);
+    }*/
 }

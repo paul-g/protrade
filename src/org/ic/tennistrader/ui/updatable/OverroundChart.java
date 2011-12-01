@@ -33,6 +33,7 @@ public class OverroundChart extends Chart{
 		this.getAxisSet().getYAxis(0).getTitle().setText(yAxisTitle);
 		this.getAxisSet().getYAxis(0).getTitle().setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
 		this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
+		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		//this.getAxisSet().getXAxis(0).adjustRange();
 		this.getAxisSet().adjustRange();
 		//this.getAxisSet().getYAxis(0).setRange(new Range(90,110));

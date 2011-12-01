@@ -2,7 +2,7 @@ package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
@@ -11,26 +11,29 @@ import org.eclipse.swt.widgets.TableItem;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class ProbabilityPanel implements UpdatableWidget{
-	
-    public Table table;
+public class ProbabilityPanel extends StandardWidgetContainer implements
+        UpdatableWidget {
+
+    private Table table;
     private Match match;
     private final Display display;
-    private Composite comp;
-	
-    public ProbabilityPanel(Composite composite, Match match) {
-    	this.comp = composite;
-    	this.display=composite.getDisplay();
-    	this.match = match;
-        table = new Table(composite, SWT.NONE);
-        table.setBounds(new Rectangle(10, 110, 370, 90));
-        table.setHeaderVisible(true);
-        // table.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-        table.setLinesVisible(true);
-        TableColumn[] column = new TableColumn[5];
 
+    public ProbabilityPanel(Composite parent, Match match) {
+        super(parent, SWT.NONE);
+        this.match = match;
+        this.display = parent.getDisplay();
+
+        this.setLayout(new FillLayout());
+
+        table = new Table(this, SWT.NONE);
+        // table.setLayout(new FillLayout());
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+
+        TableColumn[] column = new TableColumn[5];
         column[0] = new TableColumn(table, SWT.NONE);
         column[0].setText("Probability of winning:");
 
@@ -48,7 +51,7 @@ public class ProbabilityPanel implements UpdatableWidget{
 
         // Filling the probabilities table with data
         table.setRedraw(false);
-        
+
         TableItem item = new TableItem(table, SWT.NONE);
         int c = 0;
         item.setText(c++, match.getPlayerOne().getLastname());
@@ -65,28 +68,28 @@ public class ProbabilityPanel implements UpdatableWidget{
         item2.setText(c++, "-");
         item2.setText(c++, "-");
 
-        
         table.setRedraw(true);
 
         for (int i = 0, n = column.length; i < n; i++) {
             column[i].pack();
         }
-        
+
+        table.getParent().layout();
+
         LiveDataFetcher.registerForMatchUpdate(this, match);
-        
-        System.out.println("Registered " + this.getClass());
-    }	
-    
+
+    }
+
     public void updateTable() {
-    	
-    	double[] result = PredictionCalculator.calculate(this.match);
-    	//double[] result = {0,0,0,0,0};
-    	
-		Table table = this.table;
-		// Filling the probabilities table with data
-        table.setRedraw(false);       
-       
-		TableItem item = table.getItem(0);
+
+        double[] result = PredictionCalculator.calculate(this.match);
+        // double[] result = {0,0,0,0,0};
+
+        Table table = this.table;
+        // Filling the probabilities table with data
+        table.setRedraw(false);
+
+        TableItem item = table.getItem(0);
         int c = 0;
         item.setText(c++, match.getPlayerOne().getLastname());
         item.setText(c++, Double.toString(result[0]));
@@ -101,23 +104,24 @@ public class ProbabilityPanel implements UpdatableWidget{
         item2.setText(c++, Double.toString(result[3]));
         item2.setText(c++, "43%");
         item2.setText(c++, "37%");
-        
+
         table.setRedraw(true);
 
-	}
+    }
 
-	@Override
-	public void handleUpdate(MOddsMarketData newData) {
-		display.asyncExec(new Runnable() {
-            @Override
-            public void run() {
-            	updateTable();
-            }
-        });
-	}
+    @Override
+    public void handleUpdate(MOddsMarketData newData) {
+        if (match.getPlayerOne().getStatistics() != null)
+            display.asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    updateTable();
+                }
+            });
+    }
 
-	@Override
-	public void setDisposeListener(DisposeListener listener) {
-		comp.addDisposeListener(listener);
-	}
+    @Override
+    public void setDisposeListener(DisposeListener listener) {
+        this.addDisposeListener(listener);
+    }
 }

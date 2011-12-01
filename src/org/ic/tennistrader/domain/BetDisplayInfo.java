@@ -1,8 +1,6 @@
 package org.ic.tennistrader.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -12,7 +10,7 @@ public class BetDisplayInfo {
 	private Composite parent;
 	private Label firstPlayerWinnerSummary;
 	private Label secondPlayerWinnerSummary;
-	private List<Label> bets;
+	private HashMap<Bet, Label> betLabels; 
 	private String firstPlayerWinnerText;
 	private String secondPlayerWinnerText;
 	private double firstPlayerWinnerProfit;
@@ -20,7 +18,7 @@ public class BetDisplayInfo {
 	
 	public BetDisplayInfo(Composite composite, Player firstPlayer, Player secondPlayer) {
 		this.parent = composite;
-		this.bets = new ArrayList<Label>();
+		this.betLabels = new HashMap<Bet, Label>();
 		initPlayerWinnerSummaryLabels(firstPlayer.toString(), secondPlayer.toString());		
 	}
 
@@ -70,23 +68,22 @@ public class BetDisplayInfo {
 		this.secondPlayerWinnerProfit = secondPlayerWinnerProfit;
 	}
 
-	public void setBets(List<Label> bets) {
-		for (Label bet : bets) {
-			Label newBet = new Label(parent, SWT.NONE);
-			newBet.setText(bet.getText());
-			this.bets.add(newBet);
-		}
+	public HashMap<Bet, Label> getBets() {
+		return betLabels;
+	}
+	
+	public void addBet(Bet bet, Label betLabel) {
+		Label newBet = new Label(parent, SWT.NONE);
+		newBet.setText(betLabel.getText());
+		this.betLabels.put(bet, newBet);
 		parent.layout();
 	}
 
-	public List<Label> getBets() {
-		return bets;
-	}
-	
-	public void addBet(Label bet) {
-		Label newBet = new Label(parent, SWT.NONE);
-		newBet.setText(bet.getText());
-		this.bets.add(newBet);
-		parent.layout();
-	}
+    public void updateBetLabel(Bet bet, Label betLabel) {
+        if (betLabels.containsKey(bet)) {
+            Label oldLabel = betLabels.get(bet);
+            oldLabel.setText(betLabel.getText());
+            parent.layout();
+        }        
+    }
 }

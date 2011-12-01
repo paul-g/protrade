@@ -29,8 +29,8 @@ import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 public class UpperToolBar {
 	private ToolBar toolbar;
 	private ToolBar login;
-	private Shell profileWindow;
-	private Shell preferencesWindow;
+	private Shell profileWindow = null;
+	private Shell preferencesWindow = null;
 	private ProfileData profileData;
 	private static Logger log = Logger.getLogger(UpperToolBar.class);
 	private MainWindow mainWindow;
@@ -172,18 +172,7 @@ public class UpperToolBar {
 
 	            @Override
 	            public void widgetSelected(SelectionEvent e) {
-	            	if (profileWindow == null || profileWindow.isDisposed()) {
-	                    profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
-	                    profileWindow.setLayout(new FillLayout());
-	                    profileWindow.setText("Profile");
-	                    profileWindow.setSize(200,200);
-	                    profileWindow.setLocation(1100,80);
-	                    Label profData = new Label(profileWindow,SWT.BORDER);
-	                    profData.setText(textProfile());
-	                    profileWindow.open();
-	            	} else {
-	            		profileWindow.forceActive();
-	            	}
+	            	openProfileWindow();
 	            }
 	        });
 			MenuItem preferencesButton = new MenuItem(profileDropDown, SWT.PUSH);
@@ -195,19 +184,7 @@ public class UpperToolBar {
 
 	            @Override
 	            public void widgetSelected(SelectionEvent e) {
-	            	if (preferencesWindow == null || preferencesWindow.isDisposed()) {
-	                    preferencesWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
-	                    preferencesWindow.setLayout(new FillLayout());
-	                    preferencesWindow.setText("Preferences");
-	                    preferencesWindow.setSize(200,200);
-	                    preferencesWindow.setLocation(1120,100);
-	                    ToolBar prefData = new ToolBar(preferencesWindow, SWT.VERTICAL);
-	                    new ToolItem(prefData, SWT.CHECK).setText("Remember Me");
-	                    new ToolItem(prefData, SWT.CHECK).setText("Display my name");
-	                    preferencesWindow.open();
-	            	} else {
-	            		preferencesWindow.forceActive();
-	            	}
+	            	openPreferencesWindow();
 	            }
 	        });
 			profileItem.addListener(SWT.Selection, new RightDropDownListener(
@@ -223,7 +200,7 @@ public class UpperToolBar {
 			final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 		widgetItem.setToolTipText("Widget Menu");
-		final Image img = new Image(shell.getDisplay(), "images/plus_item.png");
+		final Image img = new Image(shell.getDisplay(), "images/plus.png");
 		widgetItem.setImage(img);
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
 		MenuItem matchNavigator = new MenuItem(widgetDropDown, SWT.PUSH);
@@ -370,6 +347,43 @@ public class UpperToolBar {
 		}
 	}
 	
+	/** Method invoking the Profile Window appearance */
+	public boolean openProfileWindow() {
+    	if (profileWindow == null || profileWindow.isDisposed()) {
+            profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
+            profileWindow.setLayout(new FillLayout());
+            profileWindow.setText("Profile");
+            profileWindow.setSize(200,200);
+            profileWindow.setLocation(1100,80);
+            Label profData = new Label(profileWindow,SWT.BORDER);
+            profData.setText(textProfile());
+            profileWindow.open();
+            return true;
+    	} else {
+    		profileWindow.forceActive();
+    		return false;
+    	}
+	}
+	
+	/** Method for Preferences Window invocation */
+	public boolean openPreferencesWindow() {
+		if (preferencesWindow == null || preferencesWindow.isDisposed()) {
+            preferencesWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
+            preferencesWindow.setLayout(new FillLayout());
+            preferencesWindow.setText("Preferences");
+            preferencesWindow.setSize(200,200);
+            preferencesWindow.setLocation(1120,100);
+            ToolBar prefData = new ToolBar(preferencesWindow, SWT.VERTICAL);
+            new ToolItem(prefData, SWT.CHECK).setText("Remember Me");
+            new ToolItem(prefData, SWT.CHECK).setText("Display my name");
+            preferencesWindow.open();
+            return true;
+    	} else {
+    		preferencesWindow.forceActive();
+    		return false;
+    	}
+	}
+	
 	/** Listener for the left hand side buttons */
 	private class LeftDropDownListener implements Listener {
 
@@ -390,7 +404,7 @@ public class UpperToolBar {
 				menu.setVisible(true);
 			}
 		}
-
+		
 	}
 
 	/** Listener for right hand side buttons */
@@ -413,7 +427,7 @@ public class UpperToolBar {
 				menu.setVisible(true);
 			}
 		}
+		
 	}
 	
-
 }

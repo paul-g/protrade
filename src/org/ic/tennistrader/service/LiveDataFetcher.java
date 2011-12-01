@@ -17,6 +17,7 @@ import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
 public class LiveDataFetcher {
+    
     // one Betfair updater and many Fracsoft updater
     private static BetfairDataUpdaterThread dataUpdater = null;    
     private static HashMap<Match, MatchRecorderThread>  recordersMap = new HashMap<Match, MatchRecorderThread>();
@@ -140,10 +141,24 @@ public class LiveDataFetcher {
         }
     }
 
+    /*
+    public static void handleMatchUpdate(Match match){
+        if (match.isFromFile()){
+            List<UpdatableWidget> widgets = fileListeners.get(match);
+            for (UpdatableWidget w : widgets) {
+                w.handleUpdate(new MOddsMarketData());
+            }
+        } else{
+            
+        }
+            
+    }
+    */
     public static void handleEvent(HashMap<EventBetfair, MOddsMarketData> data) {
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();
+            //TODO check if market closed - then display result of bets
             List<UpdatableWidget> widgets = listeners.get(eb.getBetfairId());
             for (UpdatableWidget w : widgets)
                 w.handleUpdate(data.get(eb));
@@ -153,6 +168,7 @@ public class LiveDataFetcher {
     public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
         match.setScore(dataScore.second());
         //System.out.println("Market status - " + dataScore.first().getMatchStatus());
+        BetManager.updateMarketAvailableMatches(match, dataScore.first());
         if (dataScore.first().getMatchStatus().toLowerCase().equals("closed"))
         	BetManager.setBetsOutcome(match);
         if (fileListeners.containsKey(match)) {

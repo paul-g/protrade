@@ -1,5 +1,6 @@
 package org.ic.tennistrader.ui;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.swt.widgets.Display;
@@ -32,6 +33,7 @@ public class ToolbarTest {
 	public void widgetUpperLeftCheck() {
 		// Left corner widgets
 		UpperToolBar utb = new UpperToolBar(mw);
+		if (!utb.openPreferencesWindow()) assertNotNull(null);
 		SWTBotToolbarDropDownButton widget_menu = bot.toolbarDropDownButtonWithTooltip("Widget Menu");
 		SWTBotToolbarDropDownButton play_menu = bot.toolbarDropDownButtonWithTooltip("Play from a file");
 		assertNotNull(widget_menu);
@@ -50,11 +52,13 @@ public class ToolbarTest {
 	
 	@Test
 	public void widgetLowerToolbarCheck() {
-		// Lower Toolbar
+		// Lower tool bar
 		LowerToolBar ltb = new LowerToolBar(mw);
+		boolean test = ltb.isInternetReachable();
         SWTBotToolbarButton connection = bot.toolbarButtonWithTooltip("Internet Connection");
         assertNotNull(connection);
         assertNotNull(connection.widget.getImage());
         assertNotNull(ltb);
+        assertEquals(test,true);
 	}
 }
