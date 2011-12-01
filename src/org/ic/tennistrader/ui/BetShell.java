@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.controller.BetController;
-import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 

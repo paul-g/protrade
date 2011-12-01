@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.ic.tennistrader.exceptions.MaximumBetAmountExceededException;
 import org.ic.tennistrader.ui.BetShell;
 
 public class OddsButton {

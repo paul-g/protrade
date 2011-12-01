@@ -23,6 +23,8 @@ public class ChartData {
 	private ArrayList<Double> pl2Volume;
 	private int dataSize;
 	
+	public ArrayList<Integer> endOfSets;
+	
 	public ChartData(){
 		dataSize = 0;
 		pl1YSeries = new ArrayList<Double>();
@@ -36,6 +38,7 @@ public class ChartData {
 		layOverround = new ArrayList<Double>();
 		pl1Volume = new ArrayList<Double>();
 		pl2Volume = new ArrayList<Double>();
+		endOfSets = new ArrayList<Integer>();
 	}
 	
 	public void updateData(MOddsMarketData data){
@@ -51,12 +54,21 @@ public class ChartData {
 		pl1Volume = addVolume(pl1Volume, data.getPlayer1TotalAmountMatched());
 		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched());
 		setDataSize(pl1YSeries.size());
+		addEndOfSet();
+		
 	}
 	
 	
+	private void addEndOfSet() {
+		if (getDataSize() % 10 == 0) {
+			endOfSets.add(1);
+		} else endOfSets.add(0);
+		
+		
+	}
+
 	private ArrayList<Double> addVolume(ArrayList<Double> volume,
 			double value) {
-		//int size = volume.size() - 1;
 		volume.add(value);
 		return volume;
 	}

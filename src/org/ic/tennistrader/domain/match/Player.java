@@ -3,7 +3,7 @@ package org.ic.tennistrader.domain.match;
 public class Player {
     private String firstname;
     private String lastname;
-    private Statistics statistics;
+    private Statistics statistics = null;
 
     private String country;
     private String dob;

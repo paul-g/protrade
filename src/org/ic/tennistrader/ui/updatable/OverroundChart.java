@@ -4,13 +4,14 @@ import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.ic.tennistrader.domain.match.Match;
 import org.swtchart.Chart;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
+import org.swtchart.Range;
 import org.swtchart.ISeries.SeriesType;
 import org.swtchart.ISeriesSet;
 
@@ -21,16 +22,23 @@ public class OverroundChart extends Chart{
 	private IBarSeries pl2Volume;
 	private boolean isBackOverround;
 	private boolean isLayOverround;
+	private String yAxisTitle = "Overround";
 	
-	public OverroundChart(Composite parent, int style, GridData gridData, Match match) {
+	public OverroundChart(Composite parent, int style, Match match) {
 		super(parent, style);
-		this.setLayoutData(gridData);
 		this.getTitle().setVisible(false);
 		createSeries(match);
 		setBackOverround(true);
 		this.getLegend().setPosition(SWT.BOTTOM);
-		this.getAxisSet().getYAxis(0).getTitle().setText("Overround");
+		this.getAxisSet().getYAxis(0).getTitle().setText(yAxisTitle);
+		this.getAxisSet().getYAxis(0).getTitle().setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
 		this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
+		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		//this.getAxisSet().getXAxis(0).adjustRange();
+		this.getAxisSet().adjustRange();
+		//this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
+		System.out.println("main chart x: " +  this.getPlotArea().getBounds().x);
+        System.out.println("main chart y : " +  this.getPlotArea().getBounds().y);
 	}
 
 
@@ -150,7 +158,8 @@ public class OverroundChart extends Chart{
 
 	public void adjust() {
 		this.getAxisSet().adjustRange();
-		
+		//this.getAxisSet().getXAxis(0).adjustRange();
+		//this.getAxisSet().getYAxis(0).setRange(new Range(0,150));
 	}
 
 }

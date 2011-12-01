@@ -16,18 +16,19 @@ import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class ScorePanel extends StandardWidgetContainer implements UpdatableWidget {
+public class ScorePanel extends StandardWidgetContainer implements
+        UpdatableWidget {
     private Match match;
-    private Table scoreTable;    
+    private Table scoreTable;
     private PlayerEnum server;
     private TableColumn[] columns;
     private Display display;
 
     public ScorePanel(Composite parent, Match match) {
-    	super(parent, SWT.NONE);
+        super(parent, SWT.NONE);
         this.match = match;
         this.display = parent.getDisplay();
-        
+
         this.setLayout(new FillLayout());
 
         this.scoreTable = new Table(this, SWT.NONE);
@@ -51,11 +52,11 @@ public class ScorePanel extends StandardWidgetContainer implements UpdatableWidg
 
         int c = 1;
         TableItem ti = new TableItem(scoreTable, SWT.NONE);
-        ti.setText(c++, match.getPlayerOne().toString());
+        ti.setText(c++, match.getPlayerOne().getLastname());
 
         c = 1;
         TableItem ti2 = new TableItem(scoreTable, SWT.NONE);
-        ti2.setText(c++, match.getPlayerTwo().toString());
+        ti2.setText(c++, match.getPlayerTwo().getLastname());
 
         setScores();
 
@@ -92,23 +93,20 @@ public class ScorePanel extends StandardWidgetContainer implements UpdatableWidg
 
         ti2.setText(c, score.getPlayerTwoPoints() + "");
     }
-    
-    public void setServer( PlayerEnum player )
-    {
-    	if(player == PlayerEnum.PLAYER1)
-        	scoreTable.getItem(0).setText(0, "S");
-    	else 
-    		scoreTable.getItem(1).setText(0, "S");
-    	
-    	server = player;
-    }
-    
-    public PlayerEnum getServer()
-    {
-    	return this.server;
+
+    public void setServer(PlayerEnum player) {
+        if (player == PlayerEnum.PLAYER1)
+            scoreTable.getItem(0).setText(0, "S");
+        else
+            scoreTable.getItem(1).setText(0, "S");
+
+        server = player;
     }
 
-    
+    public PlayerEnum getServer() {
+        return this.server;
+    }
+
     @Override
     public void handleUpdate(MOddsMarketData newData) {
         display.asyncExec(new Runnable() {

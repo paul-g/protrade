@@ -1,4 +1,4 @@
-package org.ic.tennistrader.score;
+package org.ic.tennistrader.ui.updatable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -10,8 +10,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PredictionGuiTest {
-    
+public class UpdatableMarketDataGridTest {
+
+    private UpdatableMarketDataGrid grid;
     private String filename;
     private Match match;
     private Display display = new Display();
@@ -21,21 +22,17 @@ public class PredictionGuiTest {
     public void setUp() {
         filename = "data/test/fracsoft-reader/tso-fed.csv";
         match = new HistoricalMatch(filename);
-        new PredictionGui(shell, SWT.BORDER, match);
+        grid = new UpdatableMarketDataGrid(shell, SWT.NONE, match);
     }   
     
     @After
     public void tearDown() {
         LiveDataFetcher.stopAllThreads();
-        while (display.readAndDispatch()){
-            // handle remaining work
-        }
         display.dispose();
     }
     
     @Test
     public void testStartup() {
-        
+        // init was successfull
     }
-	
 }

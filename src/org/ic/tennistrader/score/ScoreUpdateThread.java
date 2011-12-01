@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.Iterator;
 
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 

@@ -30,11 +30,8 @@ public class StandardTabbedWidgetContainer {
         folder.setSimple(false);
         folder.setMinimizeVisible(true);
         folder.setMaximizeVisible(true);
-
         folder.layout();
-        
         folder.setLayoutData(makeLayoutData());
-
         setOnClickMenu();
     }
 

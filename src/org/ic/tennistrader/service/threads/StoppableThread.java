@@ -9,7 +9,7 @@ public abstract class StoppableThread extends Thread{
     @Override
     public void run() {
         final Logger log = Logger.getLogger(this.getClass());
-        log.info("Starting " + this.getClass());        
+        log.info("Starting " + this.getClass());
         while(!stop){
             runBody();
         }        
