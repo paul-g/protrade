@@ -155,7 +155,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		Color colorSr2 = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		secondSeries.setLineColor(colorSr2);
 		secondSeries.setSymbolSize(4);
-		secondSeries.setSymbolType(PlotSymbolType.DIAMOND);
+		secondSeries.setSymbolType(PlotSymbolType.NONE);
+		secondSeries.enableStep(true);
 		secondSeries.setVisible(false);
 		pl2Spread = secondSeries.getYErrorBar();
 		pl2Spread.setType(ErrorBarType.BOTH);

@@ -21,6 +21,7 @@ public class ChartData {
 	private ArrayList<Double> layOverround;
 	private ArrayList<Double> pl1Volume;
 	private ArrayList<Double> pl2Volume;
+	private double pl1TotalPrevVol, pl2TotalPrevVol;
 	private int dataSize;
 	
 	public ArrayList<Integer> endOfSets;
@@ -51,8 +52,8 @@ public class ChartData {
 		maPl2 = addMaValue(maPl2, pl2YSeries);
 		backOverround = addOverround(backOverround, data.getPl1Back(), data.getPl2Back());
 		layOverround = addOverround(layOverround, data.getPl1Lay(), data.getPl2Lay());
-		pl1Volume = addVolume(pl1Volume, data.getPlayer1TotalAmountMatched());
-		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched());
+		pl1Volume = addVolume(pl1Volume, data.getPlayer1TotalAmountMatched(),1);
+		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched(),2);
 		setDataSize(pl1YSeries.size());
 		addEndOfSet();
 		
@@ -68,8 +69,24 @@ public class ChartData {
 	}
 
 	private ArrayList<Double> addVolume(ArrayList<Double> volume,
-			double value) {
-		volume.add(value);
+			double value, int selection) {	
+		if (getDataSize() == 0) {
+			if (selection == 1 ) pl1TotalPrevVol = value;
+			if (selection == 2 ) pl2TotalPrevVol = value;
+			volume.add(0.0);
+			return volume;
+		} 
+		double prev = 0;
+		if (selection == 1) {
+			prev = pl1TotalPrevVol;
+			volume.add(value-prev);
+			pl1TotalPrevVol = value;
+		} else if (selection == 2) {
+			prev = pl2TotalPrevVol;
+			volume.add(value-prev);
+			pl2TotalPrevVol = value;
+		}
+		
 		return volume;
 	}
 

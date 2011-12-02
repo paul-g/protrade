@@ -26,6 +26,9 @@ public class ToolbarTest {
 
 	@After
 	public void putDown() {
+	    while (display.readAndDispatch()){
+            // handle remaining work
+        }
 		display.dispose();
 	}
 

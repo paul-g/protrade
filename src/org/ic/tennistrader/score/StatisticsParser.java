@@ -222,8 +222,8 @@ public class StatisticsParser extends SiteParser {
     }
 
     public static Image getImage(String url) {
-        Image img;
-        try {
+        Image img = null;
+        /*try {
             URL web = new URL(url);
             InputStream stream = web.openStream();
             ImageLoader loader = new ImageLoader();
@@ -232,7 +232,7 @@ public class StatisticsParser extends SiteParser {
         } catch (Exception e) {
             // System.err.println("No image " + url + ", " + e);
             return null;
-        }
+        }*/
         return img;
     }
 

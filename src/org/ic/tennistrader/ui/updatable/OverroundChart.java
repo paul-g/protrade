@@ -22,26 +22,26 @@ public class OverroundChart extends Chart{
 	private IBarSeries pl2Volume;
 	private boolean isBackOverround;
 	private boolean isLayOverround;
-	private String yAxisTitle = "Overround";
+	private String yOverroundTitle = "Overround";
+	private String yVolumeTitle = "Volume";
+	
 	
 	public OverroundChart(Composite parent, int style, Match match) {
 		super(parent, style);
 		this.getTitle().setVisible(false);
 		createSeries(match);
-		setBackOverround(true);
+		//setBackOverround(true);
 		this.getLegend().setPosition(SWT.BOTTOM);
-		this.getAxisSet().getYAxis(0).getTitle().setText(yAxisTitle);
+		this.getAxisSet().getYAxis(0).getTitle().setText(yVolumeTitle);
 		this.getAxisSet().getYAxis(0).getTitle().setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
 		this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
 		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		//this.getAxisSet().getXAxis(0).adjustRange();
-		this.getAxisSet().adjustRange();
+		//this.getAxisSet().adjustRange();
 		//this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
 		System.out.println("main chart x: " +  this.getPlotArea().getBounds().x);
         System.out.println("main chart y : " +  this.getPlotArea().getBounds().y);
 	}
-
-
 
 	private void createSeries(Match match) {
 		ISeriesSet seriesSet = this.getSeriesSet();
@@ -54,23 +54,26 @@ public class OverroundChart extends Chart{
 		pl1Volume = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, match.getPlayerOne() +  " Volume");
 		color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		pl1Volume.setBarColor(color);
+		pl1Volume.setBarPadding(90);
 		pl2Volume = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, match.getPlayerTwo() + " Volume");
 		color = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		pl2Volume.setBarColor(color);
+		pl2Volume.setBarPadding(90);
+		backOverround.setVisible(false);
 		layOverround.setVisible(false);
-		pl1Volume.setVisible(false);
+		//pl1Volume.setVisible(false);
 		pl2Volume.setVisible(false);
 	}
 	
 	public void visibility(boolean pl1, boolean pl2){
 		if (isBackOverround || isLayOverround){
-			this.getAxisSet().getYAxis(0).getTitle().setText("Overround");
+			this.getAxisSet().getYAxis(0).getTitle().setText(yOverroundTitle);
 			pl1Volume.setVisible(false);
 			pl2Volume.setVisible(false);
 			backOverround.setVisible(isBackOverround());
 			layOverround.setVisible(isLayOverround());
 		} else {
-			this.getAxisSet().getYAxis(0).getTitle().setText("Volume");
+			this.getAxisSet().getYAxis(0).getTitle().setText(yVolumeTitle);
 			backOverround.setVisible(false);
 			layOverround.setVisible(false);
 			pl1Volume.setVisible(pl1);

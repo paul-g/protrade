@@ -32,8 +32,11 @@ public class LoginShellTest {
 
     }
 
-    @After
+    @After  
     public void tearDown() {
+        while (display.readAndDispatch()){
+            // handle remaining work
+        }
         display.dispose();
     }
 
