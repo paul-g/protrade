@@ -1,9 +1,3 @@
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,11 +11,11 @@ import java.awt.Canvas;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 import uk.co.caprica.vlcj.player.embedded.videosurface.linux.LinuxVideoSurfaceAdapter;
+
 /*
-javac -cp ../lib/swt-32/swt.jar:../lib/vlcj-1.2.1.jar:. MinimalTestPlayer.java
-
-
-java -Djna.library.path=/home/linux/vlc/install/lib/ -cp ../lib/swt-32/swt.jar:../lib/vlcj-1.2.1.jar:. MinimalTestPlayer "/media/A-DATA CH91/Federer-Tsonga-Barclays-Final-Short.mpeg"
+To run: 
+ javac -cp ../lib/swt-32/swt.jar:../lib/vlcj-1.2.1.jar:. MinimalTestPlayer.java
+ java -Djna.library.path=/home/linux/vlc/install/lib/ -cp ../lib/swt-32/swt.jar:../lib/vlcj-1.2.1.jar:. MinimalTestPlayer "path/to/mpeg"
 */
 
 /**
