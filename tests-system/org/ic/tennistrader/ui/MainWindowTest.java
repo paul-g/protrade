@@ -24,6 +24,9 @@ public class MainWindowTest{
 
     @After
     public void tearDown(){
+        while (display.readAndDispatch()){
+            // handle remaining work
+        }
         display.dispose();
     }
 
