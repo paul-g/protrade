@@ -23,7 +23,6 @@ public class StatisticsParserTest {
 		Player player1 = new Player();
 		Player player2 = new Player();
 		Match match = new HistoricalMatch(player1, player2);
-		System.out.println(testString);
 		new StatisticsParser(testString, match).parseAndSetStatistics();
 		assertEquals(player1.getCountry().trim(), "France");
 		assertEquals(player2.getCountry().trim(), "Switzerland");
