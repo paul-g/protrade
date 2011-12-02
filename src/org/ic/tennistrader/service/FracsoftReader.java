@@ -43,10 +43,10 @@ public class FracsoftReader extends MatchUpdaterThread {
 	private static final int BACK_OFFSET = 5;
 	private static final int LAY_OFFSET = 11;
 
-	private static int AMOUNT_OFFSET = 17;
-	private static int LPM_OFFSET = 18;
-	private static int GAMES_OFFSET = 19;
-	private static int POINTS_OFFSET = 22;
+	private int AMOUNT_OFFSET = 17;
+	private int LPM_OFFSET = 18;
+	private int GAMES_OFFSET = 19;
+	private int POINTS_OFFSET = 22;
 
 	public FracsoftReader(Match match, String filename)
 			throws FileNotFoundException {

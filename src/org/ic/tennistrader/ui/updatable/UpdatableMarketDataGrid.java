@@ -118,10 +118,12 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
     }
 
     public void handleUpdate(final MOddsMarketData newData) {
-        this.getDisplay().asyncExec(new Runnable() {
+    	this.getDisplay().asyncExec(new Runnable() {
             @Override
             public void run() {
                 if (newData.getPl1Back() != null) {
+                	System.out.println(newData.getPl1Back());
+                	System.out.println(newData.getPl1Lay());
                     updateButtons(newData.getPl1Back(), p1BackButtons, true);
                     updateButtons(newData.getPl1Lay(), p1LayButtons, false);
                     updateButtons(newData.getPl2Back(), p2BackButtons, true);
