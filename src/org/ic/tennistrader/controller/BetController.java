@@ -61,7 +61,7 @@ public class BetController {
 		return player;
 	}
 
-	private BetTypeEnum getBetType(OddsButton button) throws OddsButtonNotFoundException {
+	public BetTypeEnum getBetType(OddsButton button) throws OddsButtonNotFoundException {
 		BetTypeEnum betType;
 		if (this.player1BackButtons.contains(button)) {
 			betType = BetTypeEnum.B;
@@ -77,14 +77,15 @@ public class BetController {
 		return betType;
 	}
 
-    public String getBettingDetails(OddsButton button)
-            throws OddsButtonNotFoundException {
-        String info = "You are betting on "
-                + (getBetPlayer(button).equals(PlayerEnum.PLAYER1) ? match
-                        .getPlayerOne().toString() : match.getPlayerTwo()
-                        .toString());
-        info += " to "
-                + (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");
-        return info;
-    }
+	public String getBettingDetails(OddsButton button)
+			throws OddsButtonNotFoundException {
+		String info = (getBetType(button) == BetTypeEnum.B ? "Back: " : "Lay: ")
+				+ "You are betting on "
+				+ (getBetPlayer(button).equals(PlayerEnum.PLAYER1) ? match
+						.getPlayerOne().toString() : match.getPlayerTwo()
+						.toString());
+		info += " to "
+				+ (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");
+		return info;
+	}
 }

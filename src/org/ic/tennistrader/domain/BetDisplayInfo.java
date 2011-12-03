@@ -5,6 +5,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.ui.BetsDisplay;
 
 public class BetDisplayInfo {
 	private Composite parent;
@@ -39,11 +40,13 @@ public class BetDisplayInfo {
 	}
 
 	private void setFirstPlayerLabel() {
-		firstPlayerWinnerSummary.setText(firstPlayerWinnerText + firstPlayerWinnerProfit);
+		firstPlayerWinnerSummary.setText(firstPlayerWinnerText
+				+ BetsDisplay.DOUBLE_FORMAT.format(firstPlayerWinnerProfit));
 	}
 	
 	private void setSecondPlayerLabel() {
-		secondPlayerWinnerSummary.setText(secondPlayerWinnerText + secondPlayerWinnerProfit);
+		secondPlayerWinnerSummary.setText(secondPlayerWinnerText
+				+ BetsDisplay.DOUBLE_FORMAT.format(secondPlayerWinnerProfit));
 	}
 	
 	public void setPlayerWinnerProfits(double firstPlayerWinnerProfit, double secondPlayerWinnerProfit) {

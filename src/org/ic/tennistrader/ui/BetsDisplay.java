@@ -1,5 +1,6 @@
 package org.ic.tennistrader.ui;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
     private static Composite composite = null;
     private static HashMap<Match, BetDisplayInfo> matchBets = new HashMap<Match, BetDisplayInfo>();
     private static HashMap<Bet, Label> unmatchedBetsLabels = new HashMap<Bet, Label>();
+    public final static DecimalFormat DOUBLE_FORMAT = new DecimalFormat("#.##");
     
     public BetsDisplay(Composite parent, int style){
         super(parent, style);
@@ -128,11 +130,12 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
         } 
     }
 
-    private static void setBetLabelText(Bet bet, Label betLabel) {
-        String betLabelText = bet.getDescription(); 
-        if (bet.getUnmatchedValue() > 0) {            
-            betLabelText += ". Yet unmatched value: " + bet.getUnmatchedValue() + "";
-        }
-        betLabel.setText(betLabelText);
-    }
+	private static void setBetLabelText(Bet bet, Label betLabel) {
+		String betLabelText = bet.getDescription();
+		if (bet.getUnmatchedValue() > 0) {
+			betLabelText += ". Yet unmatched value: "
+					+ DOUBLE_FORMAT.format(bet.getUnmatchedValue()) + "";
+		}
+		betLabel.setText(betLabelText);
+	}
 }

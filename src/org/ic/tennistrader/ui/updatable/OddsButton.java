@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.ic.tennistrader.ui.BetShell;
+import org.ic.tennistrader.ui.BetPlacingShell;
 
 public class OddsButton {
 	private Composite comp;
@@ -144,9 +144,9 @@ public class OddsButton {
         Listener l = new Listener() {
             @Override
             public void handleEvent(Event e) {
-            	BetShell betShell = new BetShell(OddsButton.this, dataGrid.getBetController());
+            	BetPlacingShell betPlacingShell = new BetPlacingShell(OddsButton.this, dataGrid.getBetController());
             	Rectangle rect = comp.getClientArea();
-            	betShell.setLocation(rect.x,rect.y);
+            	betPlacingShell.setLocation(rect.x,rect.y);
             	comp.setBackgroundImage(clickImage);
             	setBackground(clickColor);                
                 display.timerExec(100, new Runnable() {

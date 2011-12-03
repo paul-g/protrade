@@ -14,6 +14,7 @@ import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
+import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.utils.Pair;
 
 public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
@@ -26,8 +27,6 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
     private OddsButton[] p2LayButtons = new OddsButton[3];
 
     private Color normalColor;
-    private Color layColor;
-    private Color backColor;
     private Font oddsFont;
     private Font titleFont;
 
@@ -49,8 +48,8 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         headerData.horizontalSpan = 3;
         headerData.horizontalAlignment = GridData.FILL;
 
-        createLabel("Back", backColor, headerData, SWT.RIGHT);
-        createLabel("Lay", layColor, headerData, SWT.NONE);
+        createLabel("Back", Colours.backColor, headerData, SWT.RIGHT);
+        createLabel("Lay", Colours.layColor, headerData, SWT.NONE);
 
         initLayout(match.getPlayerOne().getLastname(), p1BackButtons,
                 p1LayButtons, true);
@@ -90,8 +89,8 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
              */
         }
 
-        pBackButtons[2] = new OddsButton(this, backColor, oddsFont, this);
-        pLayButtons[0] = new OddsButton(this, layColor, oddsFont, this);
+        pBackButtons[2] = new OddsButton(this, Colours.backColor, oddsFont, this);
+        pLayButtons[0] = new OddsButton(this, Colours.layColor, oddsFont, this);
 
         for (int i = 1; i < 3; i++)
             pLayButtons[i] = new OddsButton(this, normalColor, oddsFont, this);
@@ -136,9 +135,9 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
 
     private void initColors() {
         // The application's current background colour is 238, 238, 224
-        this.layColor = new org.eclipse.swt.graphics.Color(this.getDisplay(),
+        Colours.layColor = new org.eclipse.swt.graphics.Color(this.getDisplay(),
                 238, 210, 238);
-        this.backColor = new org.eclipse.swt.graphics.Color(this.getDisplay(),
+        Colours.backColor = new org.eclipse.swt.graphics.Color(this.getDisplay(),
                 198, 226, 255);
         this.normalColor = new org.eclipse.swt.graphics.Color(
                 this.getDisplay(), 240, 240, 240);
