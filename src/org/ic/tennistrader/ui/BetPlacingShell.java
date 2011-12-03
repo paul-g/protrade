@@ -22,10 +22,10 @@ public class BetPlacingShell {
 	private Text oddsText;
 	private Label errorLabel, profitLabel, liabilityLabel;
 	private static Logger log = Logger.getLogger(BetPlacingShell.class);
-	private static String amountNumberException = "Please ensure the amount is a valid number.";
-	private static String oddsNumberException = "Please ensure the odds are a valid number.";
-	private static String profitText = "Your possible profit: ";
-	private static String liabilityText = "Your total liability: ";
+	private static final String amountNumberException = "Please ensure the amount is a valid number.";
+	private static final String oddsNumberException = "Please ensure the odds are a valid number.";
+	private static final String profitText = "Your possible profit: ";
+	private static final String liabilityText = "Your total liability: ";
 	
 	public BetPlacingShell(final OddsButton oddsButton, final BetController betController) {
 		createBetShell(oddsButton);
@@ -47,7 +47,7 @@ public class BetPlacingShell {
         
         createErrorLabel(infoGridData);
         
-        betShell.pack();
+        //betShell.pack();
 		betShell.open();
 	}
 
@@ -65,7 +65,6 @@ public class BetPlacingShell {
 					setErrorText(amountNumberException);
 					return;
 				}
-				betShell.layout();
 			}
 		});
 		oddsText.addListener(SWT.CHANGED, new Listener() {
@@ -76,10 +75,9 @@ public class BetPlacingShell {
 					Double.parseDouble(oddsText.getText());
 					errorLabel.setVisible(false);
 				} catch (NumberFormatException nfe) {
-					setErrorText(amountNumberException);
+					setErrorText(oddsNumberException);
 					return;
 				}
-				betShell.layout();
 			}			
 		});
 	}
@@ -210,7 +208,6 @@ public class BetPlacingShell {
 	protected void setErrorText(String message) {
 		errorLabel.setText(message);
 		errorLabel.setVisible(true);
-		betShell.layout();
 	}
 
 	private void createBetShell(OddsButton oddsButton) {
@@ -249,7 +246,7 @@ public class BetPlacingShell {
 	}
 
 	private GridData getSecondGridData() {
-		GridData gridData2 = new GridData(150, 16);
+		GridData gridData2 = new GridData();
         gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData2.horizontalSpan = 4;
 		return gridData2;
@@ -265,7 +262,7 @@ public class BetPlacingShell {
 	private void setGridLayout() {
 		GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 5;
-        gridLayout.marginTop = 0;
+        //gridLayout.makeColumnsEqualWidth = true;
         betShell.setLayout(gridLayout);
 	}
 	
