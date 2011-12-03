@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.ToolItem;
 public class LowerToolBar{
 	
 	private ToolBar toolbar;
-	private ProgressBar usage;
 	private static boolean stop = false;
 	private static Logger log = Logger.getLogger(LowerToolBar.class);
 	
@@ -49,13 +48,13 @@ public class LowerToolBar{
     	name.setText("Memory Usage");
     	name.setAlignment(SWT.LEFT);
     	name.setBounds(55,15,90,20);
-		usage = new ProgressBar(toolbar, SWT.SMOOTH);
+		ProgressBar usage = new ProgressBar(toolbar, SWT.SMOOTH);
     	usage.setBounds(150,11,150,22);
 		shell.open();
 		
 		/* Check threads */
 		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		createUsageBarCheck(shell, usage);
+		createUsageBarCheck(shell, usage, mainWindow);
 	}
 
 	/** Method invoking the Internet check thread */
@@ -88,7 +87,7 @@ public class LowerToolBar{
 
     
     /** Method invoking the memory usage check */
-    private void createUsageBarCheck (final Shell shell, final ProgressBar usage) {
+    private void createUsageBarCheck (final Shell shell, final ProgressBar usage, final MainWindow mw) {
     	new Thread(new Runnable() {
 			public void run() {
 				while (!stop) {
@@ -100,7 +99,7 @@ public class LowerToolBar{
 						toolbar.getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								double max = (double) Runtime.getRuntime().maxMemory();
-								double fraction = max - (double) Runtime.getRuntime().totalMemory();
+								double fraction = max - (double) Runtime.getRuntime().freeMemory();
 								double selection = (fraction / max) * 100;
 								Runtime.getRuntime().gc();
 								int selection_int = (int) (selection);
