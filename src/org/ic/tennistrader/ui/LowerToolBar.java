@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-
-
 public class LowerToolBar{
 	
 	private ToolBar toolbar;
@@ -28,30 +26,34 @@ public class LowerToolBar{
 	public LowerToolBar(final MainWindow mainWindow) {
 
 		final Shell shell = mainWindow.getShell();
-		// Setting span throughout the columns
+		
+		/* Setting span throughout the columns */
 		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
 		gridData.horizontalSpan = 3;
 		Display display = shell.getDisplay();
 
+		/* Setting the tool bar */
 		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(gridData);
-
+		
 		/* Internet availability */
-		final ToolItem widgetItem = new ToolItem(toolbar, SWT.POP_UP);
+		ToolItem widgetItem = new ToolItem(toolbar, SWT.NULL);
 		widgetItem.setToolTipText("Internet Connection");
 		final Image off = new Image(display, "images/connection_lost.png");
 		final Image on = new Image(display, "images/connection_on.png");
 		widgetItem.setImage(on);
 		
 		/* Memory usage bar */
-		usage = new ProgressBar(shell, SWT.SMOOTH);
-    	Label name = new Label(shell, SWT.NULL);
+		Label name = new Label(toolbar, SWT.NULL);
     	name.setText("Memory Usage");
-    	name.setAlignment(SWT.RIGHT);
-    	name.setBounds(10,10,80,20);
-    	usage.setBounds(90, 10, 200, 20);
+    	name.setAlignment(SWT.LEFT);
+    	name.setBounds(55,15,90,20);
+		usage = new ProgressBar(toolbar, SWT.SMOOTH);
+    	usage.setBounds(150,11,150,22);
 		shell.open();
 		
+		/* Check threads */
 		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
 		createUsageBarCheck(shell, usage);
 	}
@@ -98,8 +100,9 @@ public class LowerToolBar{
 						toolbar.getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								double max = (double) Runtime.getRuntime().maxMemory();
-								double fraction = max - (double) Runtime.getRuntime().freeMemory();
+								double fraction = max - (double) Runtime.getRuntime().totalMemory();
 								double selection = (fraction / max) * 100;
+								Runtime.getRuntime().gc();
 								int selection_int = (int) (selection);
 						    	usage.setSelection(selection_int);
 							}

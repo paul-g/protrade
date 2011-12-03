@@ -327,15 +327,20 @@ public class UpperToolBar {
 
 	/** Text representation of the profile */
 	public String textProfile() {
-		AccountFunds af = profileData.getUkAccountFunds();
-		String res =
-		"Username : " + Main.USERNAME +
-		"\nBetfair points : " + af.getBetfairPoints() +
-		"\nCurrent balance : " + af.getBalance() +
-		"\nAvailable balance : " + af.getAvailable() +
-		"\nCredit limit : " + af.getCreditLimit() +
-		"\nExposure : " + af.getExposure() +
-		"\nExposure limit : " + af.getExposureLimit();
+		String res ="";
+		try {
+			AccountFunds af = profileData.getUkAccountFunds();
+			res =
+				"Username : " + Main.USERNAME +
+				"\nBetfair points : " + af.getBetfairPoints() +
+				"\nCurrent balance : " + af.getBalance() +
+				"\nAvailable balance : " + af.getAvailable() +
+				"\nCredit limit : " + af.getCreditLimit() +
+				"\nExposure : " + af.getExposure() +
+				"\nExposure limit : " + af.getExposureLimit();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 		return res;
 	}
 	

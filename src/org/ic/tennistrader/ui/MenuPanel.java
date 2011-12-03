@@ -40,7 +40,7 @@ public class MenuPanel {
 		
 		// About button
 		MenuItem aboutMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		aboutMenuHeader.setText("&About");
+		aboutMenuHeader.setText("A&bout");
 		shell.setMenuBar(menuBar);
 		
 		// About drop down menu

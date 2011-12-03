@@ -35,13 +35,10 @@ public class ToolbarTest {
 	@Test
 	public void widgetUpperLeftCheck() {
 		// Left corner widgets
-		UpperToolBar utb = new UpperToolBar(mw);
-		if (!utb.openPreferencesWindow()) assertNotNull(null);
 		SWTBotToolbarDropDownButton widget_menu = bot.toolbarDropDownButtonWithTooltip("Widget Menu");
 		SWTBotToolbarDropDownButton play_menu = bot.toolbarDropDownButtonWithTooltip("Play from a file");
 		assertNotNull(widget_menu);
 		assertNotNull(play_menu);
-		assertNotNull(utb);
 	}
 	
 	@Test
@@ -63,5 +60,16 @@ public class ToolbarTest {
         assertNotNull(connection.widget.getImage());
         assertNotNull(ltb);
         assertEquals(test,true);
+	}
+	
+	@Test
+	public void profileWindowsCheck() {
+		// Checking the profile and preferences options in the login menu
+		UpperToolBar utb = new UpperToolBar(mw);
+		boolean testProfile = utb.openProfileWindow();
+		boolean testPreferences = utb.openPreferencesWindow();
+		assertEquals(testProfile,true);
+		assertEquals(testPreferences,true);
+		assertNotNull(utb);
 	}
 }
