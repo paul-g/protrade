@@ -37,13 +37,22 @@ public class BetManager {
         newBet.setFirstPlayerWinnerProfit(firstWinnerProfit);
         double secondWinnerProfit = getBetProfit(newBet, isBetSuccessful(newBet, PlayerEnum.PLAYER2));
         newBet.setSecondPlayerWinnerProfit(secondWinnerProfit);        
+        updatePossibleProfits(newBet);
         
         addMatchedBetAmount(newBet);
         
         BetsDisplay.addBet(newBet);            
     }
     
-    private static void addMatchedBetAmount(Bet bet) {
+    private static void updatePossibleProfits(Bet newBet) {
+		if (matchMarketData.containsKey(newBet.getMatch())) {
+			VirtualBetMarketInfo marketInfo = matchMarketData.get(newBet.getMatch());
+			marketInfo.addFirstPlayerWinnerProfit(newBet.getFirstPlayerWinnerProfit());
+			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());
+		}
+	}
+
+	private static void addMatchedBetAmount(Bet bet) {
         VirtualBetMarketInfo virtualMarketInfo = matchMarketData.get(bet.getMatch());
         if (bet.getType().equals(BetTypeEnum.B)) {
             if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
@@ -220,5 +229,19 @@ public class BetManager {
 
     public static List<Bet> getUnmatchedBets() {
         return unmatchedBets;
+    }
+    
+    public static double getFirstPlayerWinnerProfit(Match match) {
+    	if (matchMarketData.containsKey(match))
+    		return matchMarketData.get(match).getFirstPlayerWinnerProfit();
+    	else
+    		return 0.0;
+    }
+    
+    public static double getSecondPlayerWinnerProfit(Match match) {
+    	if (matchMarketData.containsKey(match))
+    		return matchMarketData.get(match).getSecondPlayerWinnerProfit();
+    	else
+    		return 0.0;
     }
 }

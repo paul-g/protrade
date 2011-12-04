@@ -13,6 +13,9 @@ public class VirtualBetMarketInfo {
     private HashMap<Double, Double> matchedLayBetsFirstPlayer;
     private HashMap<Double, Double> matchedBackBetsSecondPlayer;
     private HashMap<Double, Double> matchedLayBetsSecondPlayer;
+    // possible profits considering bets so far
+    private double firstPlayerWinnerProfit;
+    private double secondPlayerWinnerProfit;
 
     public VirtualBetMarketInfo() {
         backFirstPlayerAvailableMatches = new HashMap<Double, Double>();
@@ -140,4 +143,28 @@ public class VirtualBetMarketInfo {
             previousAmount = 0.0;
         this.matchedLayBetsSecondPlayer.put(odds, previousAmount + amount);
     }
+
+	public void setFirstPlayerWinnerProfit(double firstPlayerWinnerProfit) {
+		this.firstPlayerWinnerProfit = firstPlayerWinnerProfit;
+	}
+
+	public double getFirstPlayerWinnerProfit() {
+		return firstPlayerWinnerProfit;
+	}
+	
+	public void addFirstPlayerWinnerProfit(double newProfit) {
+		this.firstPlayerWinnerProfit += newProfit;
+	}
+
+	public void setSecondPlayerWinnerProfit(double secondPlayerWinnerProfit) {
+		this.secondPlayerWinnerProfit = secondPlayerWinnerProfit;
+	}
+
+	public double getSecondPlayerWinnerProfit() {
+		return secondPlayerWinnerProfit;
+	}
+	
+	public void addSecondPlayerWinnerProfit(double newProfit) {
+		this.secondPlayerWinnerProfit += newProfit;
+	}
 }
