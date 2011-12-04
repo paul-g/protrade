@@ -312,14 +312,14 @@ public class BetPlacingShell {
 	}
 
 	private GridData getSecondGridData() {
-		GridData gridData2 = new GridData();
+		GridData gridData2 = new GridData(150, 20);
         gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData2.horizontalSpan = 4;
 		return gridData2;
 	}
 
 	private GridData getFirstGridData() {
-		GridData gridData = new GridData();
+		GridData gridData = new GridData(75, 20);
         gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData.horizontalSpan = 2;
 		return gridData;
