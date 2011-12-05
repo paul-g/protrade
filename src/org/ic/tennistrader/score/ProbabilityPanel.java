@@ -3,6 +3,7 @@ package org.ic.tennistrader.score;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
@@ -26,7 +27,7 @@ public class ProbabilityPanel extends StandardWidgetContainer implements
         this.match = match;
         this.display = parent.getDisplay();
 
-        this.setLayout(new FillLayout());
+        this.setLayout(new GridLayout());
 
         table = new Table(this, SWT.NONE);
         // table.setLayout(new FillLayout());
@@ -35,19 +36,24 @@ public class ProbabilityPanel extends StandardWidgetContainer implements
 
         TableColumn[] column = new TableColumn[5];
         column[0] = new TableColumn(table, SWT.NONE);
-        column[0].setText("Probability of winning:");
+        column[0].setText("Prob/win:");
+        column[0].setResizable(false);
 
         column[1] = new TableColumn(table, SWT.NONE);
-        column[1].setText("Point");
+        column[1].setText("Point   ");
+        column[1].setResizable(false);
 
         column[2] = new TableColumn(table, SWT.NONE);
-        column[2].setText("Game");
+        column[2].setText("Game   ");
+        column[2].setResizable(false);
 
         column[3] = new TableColumn(table, SWT.NONE);
-        column[3].setText("Set");
+        column[3].setText("Set       ");
+        column[3].setResizable(false);
 
         column[4] = new TableColumn(table, SWT.NONE);
         column[4].setText("Match");
+        column[4].setResizable(false);
 
         // Filling the probabilities table with data
         table.setRedraw(false);
@@ -94,16 +100,16 @@ public class ProbabilityPanel extends StandardWidgetContainer implements
         item.setText(c++, match.getPlayerOne().getLastname());
         item.setText(c++, Double.toString(result[0]));
         item.setText(c++, Double.toString(result[2]));
-        item.setText(c++, "57%");
-        item.setText(c++, "63%");
+        item.setText(c++, Double.toString(result[4]));
+        item.setText(c++, Double.toString(result[6]));
 
         TableItem item2 = table.getItem(1);
         c = 0;
         item2.setText(c++, match.getPlayerTwo().getLastname());
         item2.setText(c++, Double.toString(result[1]));
         item2.setText(c++, Double.toString(result[3]));
-        item2.setText(c++, "43%");
-        item2.setText(c++, "37%");
+        item2.setText(c++, Double.toString(result[5]));
+        item2.setText(c++, Double.toString(result[7]));
 
         table.setRedraw(true);
 

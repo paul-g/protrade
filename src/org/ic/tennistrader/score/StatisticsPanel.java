@@ -1,23 +1,42 @@
 package org.ic.tennistrader.score;
 
+import java.awt.PopupMenu;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.PopupList;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.ui.StandardWidgetContainer;
+import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 
-public class StatisticsPanel implements Listener {
+public class StatisticsPanel extends StandardWidgetContainer implements
+Listener {
 
     private Match match;
 
@@ -26,28 +45,34 @@ public class StatisticsPanel implements Listener {
     private final Display display;
 
     public StatisticsPanel(Composite composite, Match match) {
+    	super(composite, SWT.NONE);
         this.match = match;
         this.display = composite.getDisplay();
-        composite.setLayout(new FillLayout());
-        this.tree = new Tree(composite, SWT.MULTI | SWT.FULL_SELECTION
-                | SWT.CENTER);
+        this.setLayout(new GridLayout());     
+        
+        this.tree = new Tree(this, SWT.NONE);
         tree.setHeaderVisible(true);
-        tree.setLinesVisible(true);
+        
         TreeColumn[] tcolumn = new TreeColumn[3];
         tcolumn[0] = new TreeColumn(tree, SWT.LEFT);
-        tcolumn[0].setText(match.getPlayerOne().toString());
-        tcolumn[0].setWidth(220);
+        tcolumn[0].setText(match.getPlayerOne().getLastname());
+        tcolumn[0].setWidth(140);
         tcolumn[0].setResizable(false);
 
         tcolumn[1] = new TreeColumn(tree, SWT.CENTER);
         tcolumn[1].setText("VS");
-        tcolumn[1].setWidth(150);
+        tcolumn[1].setWidth(140);
         tcolumn[1].setResizable(false);
 
         tcolumn[2] = new TreeColumn(tree, SWT.RIGHT);
-        tcolumn[2].setText(match.getPlayerTwo().toString());
-        tcolumn[2].setWidth(200);
+        tcolumn[2].setText(match.getPlayerTwo().getLastname());
+        tcolumn[2].setWidth(140);
         tcolumn[2].setResizable(false);
+             
+        tree.setItemCount(0);
+        composite.pack();
+        
+
     }
 
     public Tree getTree() {
@@ -60,6 +85,10 @@ public class StatisticsPanel implements Listener {
         display.asyncExec(new Runnable(){
             @Override
             public void run() {
+            	SiteParser parser = new SiteParser();
+                tree.getColumn(0).setImage(parser.getPlayerImage(match.getPlayerOne()));
+                tree.getColumn(2).setImage(parser.getPlayerImage(match.getPlayerTwo()));
+            	tree.setItemCount(0);
                 final TreeItem basics = new TreeItem(tree, SWT.MULTI | SWT.CENTER);
                 basics.setText(1, "Basics");
                 basics
@@ -110,8 +139,7 @@ public class StatisticsPanel implements Listener {
                    for (int i=0;i<values.length;i++) {
                        makeTreeLine(item, values[i][1], values[i][0], values[i][2]);
                    }
-               }
-               
+               }              
             }
         });
   
