@@ -78,7 +78,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			addChart(chartSash, match);
 			//addMatchViewer(chartSash);
 			try{
-				chartSash.setWeights(new int[] { 70, 30 });
+				//chartSash.setWeights(new int[] { 70, 30 });
 			} catch (Exception e){
 				e.printStackTrace();
 			}//

@@ -53,8 +53,8 @@ public class LowerToolBar{
 		shell.open();
 		
 		/* Check threads */
-		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		createUsageBarCheck(shell, usage, mainWindow);
+		//createAndStartNetworkCheckThread(shell, widgetItem, off, on);
+		//createUsageBarCheck(shell, usage, mainWindow);
 	}
 
 	/** Method invoking the Internet check thread */
@@ -92,7 +92,7 @@ public class LowerToolBar{
 			public void run() {
 				while (!stop) {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(5000);
 					} catch (Exception e) {
 					}
 					if (!shell.isDisposed()) {
