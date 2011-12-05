@@ -50,6 +50,7 @@ public class LowerToolBar{
     	name.setBounds(55,15,90,20);
 		ProgressBar usage = new ProgressBar(toolbar, SWT.SMOOTH);
     	usage.setBounds(150,11,150,22);
+    	usage.setSelection(100);
 		shell.open();
 		
 		/* Check threads */
@@ -92,7 +93,7 @@ public class LowerToolBar{
 			public void run() {
 				while (!stop) {
 					try {
-						Thread.sleep(5000);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 					}
 					if (!shell.isDisposed()) {
