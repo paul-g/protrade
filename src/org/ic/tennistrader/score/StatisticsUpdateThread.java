@@ -41,7 +41,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     private static final int RETRY_LIMIT = 5;
 
-
     private int retries;
 
     private static Logger log = Logger.getLogger(StatisticsUpdateThread.class);
@@ -187,16 +186,20 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     @Override
     protected void runBody() {
-        System.out.println(match.getPlayerOne().toString() + " vs "
+        System.out.println(match.getPlayerOne().toString() + " v "
                 + match.getPlayerTwo().toString());
         retries++;
-        if (retries > RETRY_LIMIT)
+        if (retries > RETRY_LIMIT) {
             setStop();
+        }
         else
             // try to get stats
             try {
+            	System.out.println("Started to fetch statistics");
                 page = getStatistics();
+                System.out.println("Fetched statistics");
                 if (page != null) {
+                	System.out.println("Started parsing");
                     (new StatisticsParser(page, this.match)).parseAndSetStatistics();
                     statisticsPopulated = true;
                     setStop();

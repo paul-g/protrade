@@ -36,9 +36,9 @@ public class LiveDataFetcher {
             registerLive(widget, (RealMatch)match);
         
         if (recordersMap.get(match) == null){
-            MatchRecorderThread mrt = new MatchRecorderThread(match);
-            recordersMap.put(match, mrt);
-            mrt.start();
+            //MatchRecorderThread mrt = new MatchRecorderThread(match);
+            //recordersMap.put(match, mrt);
+            //mrt.start();
         }
     }
     
