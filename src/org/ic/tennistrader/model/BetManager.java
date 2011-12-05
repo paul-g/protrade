@@ -244,4 +244,36 @@ public class BetManager {
     	else
     		return 0.0;
     }
+
+	public static boolean isValidPrice(Double odds) {
+		if (odds > 1000)
+			return false;
+		if (odds >= 20 && (Math.floor(odds) != odds) )
+			return false;
+		if (odds >= 100)
+			return odds % 10 == 0;
+		if (odds >= 50)
+			return odds % 5 == 0;
+		if (odds >= 30)
+			return odds % 2 == 0;
+		if (odds >= 20)
+			return true;
+		if (odds >= 4 && (Math.floor(odds * 10) != odds * 10))
+			return false;
+		if (odds >= 10)
+			return (odds * 10) % 5 == 0;
+		if (odds >= 6)
+			return (odds * 10) % 2 == 0;
+		if (odds >= 4)
+			return true;
+		if (odds > 1 && (Math.floor(odds * 100) != odds * 100))
+			return false;
+		if (odds >= 3)
+			return (odds * 100) % 5 == 0;
+		if (odds >= 2)
+			return (odds * 100) % 2 == 0;
+		if (odds > 1)
+			return true;
+		return false;
+	}
 }

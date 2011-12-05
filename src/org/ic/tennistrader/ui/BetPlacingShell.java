@@ -27,6 +27,7 @@ public class BetPlacingShell {
 	private static Logger log = Logger.getLogger(BetPlacingShell.class);
 	private static final String AMOUNT_NUMBER_EXCEPTION = "Please ensure the amount is a valid number.";
 	private static final String ODDS_NUMBER_EXCEPTION = "Please ensure the odds are a valid number.";
+	private static final String INVALID_PRICE = "Please ensure the odds are a valid price value.";
 	private static final String PROFIT_TEXT = "Your possible profit: ";
 	private static final String LIABILITY_TEXT = "Your possible liability: ";
 	private static final double INITIAL_AMOUNT = 10;
@@ -89,12 +90,9 @@ public class BetPlacingShell {
 		secondPlayerWinnerProfit += getPlayerWinnerProfit(oddsButton, betController, PlayerEnum.PLAYER2);
 
 		firstPlayerWinnerSummary.setText(firstPlayerWinnerText
-				+ firstPlayerWinnerProfit);
+				+ BetsDisplay.DOUBLE_FORMAT.format(firstPlayerWinnerProfit));
 		secondPlayerWinnerSummary.setText(secondPlayerWinnerText
-				+ secondPlayerWinnerProfit);
-		
-		firstPlayerWinnerSummary.setVisible(true);
-		secondPlayerWinnerSummary.setVisible(true);
+				+ BetsDisplay.DOUBLE_FORMAT.format(secondPlayerWinnerProfit));
 	}
 
 
@@ -120,9 +118,9 @@ public class BetPlacingShell {
 			@Override
 			public void handleEvent(Event arg0) {
 				updateProfitAndLiability(oddsButton, betController);
+				updateOverallPossibleProfits(oddsButton, betController);
 				try {
-					Double.parseDouble(amountText.getText());
-					updateOverallPossibleProfits(oddsButton, betController);
+					Double.parseDouble(amountText.getText());					
 					errorLabel.setVisible(false);
 				} catch (NumberFormatException nfe) {
 					setErrorText(AMOUNT_NUMBER_EXCEPTION);
@@ -134,10 +132,13 @@ public class BetPlacingShell {
 			@Override
 			public void handleEvent(Event arg0) {
 				updateProfitAndLiability(oddsButton, betController);
+				updateOverallPossibleProfits(oddsButton, betController);
 				try {
-					Double.parseDouble(oddsText.getText());
-					updateOverallPossibleProfits(oddsButton, betController);
-					errorLabel.setVisible(false);
+					double odds = Double.parseDouble(oddsText.getText());
+					if (BetManager.isValidPrice(odds))
+						errorLabel.setVisible(false);
+					else
+						setErrorText(INVALID_PRICE);
 				} catch (NumberFormatException nfe) {
 					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
@@ -263,8 +264,11 @@ public class BetPlacingShell {
 					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
 				}
-                betController.addBet(oddsButton, amount, odds);
-                betShell.dispose();
+				if (BetManager.isValidPrice(odds)) {
+					betController.addBet(oddsButton, amount, odds);
+					betShell.dispose();
+				} else
+					setErrorText(INVALID_PRICE);
 			}
 		});		
 	}
@@ -272,8 +276,6 @@ public class BetPlacingShell {
 	protected void setErrorText(String message) {
 		errorLabel.setText(message);
 		errorLabel.setVisible(true);
-		firstPlayerWinnerSummary.setVisible(false);
-		secondPlayerWinnerSummary.setVisible(false);
 	}
 
 	private void createBetShell(OddsButton oddsButton) {
