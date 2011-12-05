@@ -37,13 +37,22 @@ public class BetManager {
         newBet.setFirstPlayerWinnerProfit(firstWinnerProfit);
         double secondWinnerProfit = getBetProfit(newBet, isBetSuccessful(newBet, PlayerEnum.PLAYER2));
         newBet.setSecondPlayerWinnerProfit(secondWinnerProfit);        
+        updatePossibleProfits(newBet);
         
         addMatchedBetAmount(newBet);
         
         BetsDisplay.addBet(newBet);            
     }
     
-    private static void addMatchedBetAmount(Bet bet) {
+    private static void updatePossibleProfits(Bet newBet) {
+		if (matchMarketData.containsKey(newBet.getMatch())) {
+			VirtualBetMarketInfo marketInfo = matchMarketData.get(newBet.getMatch());
+			marketInfo.addFirstPlayerWinnerProfit(newBet.getFirstPlayerWinnerProfit());
+			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());
+		}
+	}
+
+	private static void addMatchedBetAmount(Bet bet) {
         VirtualBetMarketInfo virtualMarketInfo = matchMarketData.get(bet.getMatch());
         if (bet.getType().equals(BetTypeEnum.B)) {
             if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
@@ -221,4 +230,50 @@ public class BetManager {
     public static List<Bet> getUnmatchedBets() {
         return unmatchedBets;
     }
+    
+    public static double getFirstPlayerWinnerProfit(Match match) {
+    	if (matchMarketData.containsKey(match))
+    		return matchMarketData.get(match).getFirstPlayerWinnerProfit();
+    	else
+    		return 0.0;
+    }
+    
+    public static double getSecondPlayerWinnerProfit(Match match) {
+    	if (matchMarketData.containsKey(match))
+    		return matchMarketData.get(match).getSecondPlayerWinnerProfit();
+    	else
+    		return 0.0;
+    }
+
+	public static boolean isValidPrice(Double odds) {
+		if (odds > 1000)
+			return false;
+		if (odds >= 20 && (Math.floor(odds) != odds) )
+			return false;
+		if (odds >= 100)
+			return odds % 10 == 0;
+		if (odds >= 50)
+			return odds % 5 == 0;
+		if (odds >= 30)
+			return odds % 2 == 0;
+		if (odds >= 20)
+			return true;
+		if (odds >= 4 && (Math.floor(odds * 10) != odds * 10))
+			return false;
+		if (odds >= 10)
+			return (odds * 10) % 5 == 0;
+		if (odds >= 6)
+			return (odds * 10) % 2 == 0;
+		if (odds >= 4)
+			return true;
+		if (odds > 1 && (Math.floor(odds * 100) != odds * 100))
+			return false;
+		if (odds >= 3)
+			return (odds * 100) % 5 == 0;
+		if (odds >= 2)
+			return (odds * 100) % 2 == 0;
+		if (odds > 1)
+			return true;
+		return false;
+	}
 }

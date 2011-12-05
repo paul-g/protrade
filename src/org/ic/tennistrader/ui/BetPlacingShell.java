@@ -11,10 +11,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.controller.BetController;
+import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
+import org.ic.tennistrader.model.BetManager;
 
 public class BetPlacingShell {	
 	private Shell betShell;
@@ -22,10 +25,17 @@ public class BetPlacingShell {
 	private Text oddsText;
 	private Label errorLabel, profitLabel, liabilityLabel;
 	private static Logger log = Logger.getLogger(BetPlacingShell.class);
-	private static final String amountNumberException = "Please ensure the amount is a valid number.";
-	private static final String oddsNumberException = "Please ensure the odds are a valid number.";
-	private static final String profitText = "Your possible profit: ";
-	private static final String liabilityText = "Your total liability: ";
+	private static final String AMOUNT_NUMBER_EXCEPTION = "Please ensure the amount is a valid number.";
+	private static final String ODDS_NUMBER_EXCEPTION = "Please ensure the odds are a valid number.";
+	private static final String INVALID_PRICE = "Please ensure the odds are a valid price value.";
+	private static final String PROFIT_TEXT = "Your possible profit: ";
+	private static final String LIABILITY_TEXT = "Your possible liability: ";
+	private static final double INITIAL_AMOUNT = 10;
+	private double initialOdds;	
+	private Label firstPlayerWinnerSummary;
+	private Label secondPlayerWinnerSummary;
+	private String firstPlayerWinnerText;
+	private String secondPlayerWinnerText;
 	
 	public BetPlacingShell(final OddsButton oddsButton, final BetController betController) {
 		createBetShell(oddsButton);
@@ -35,8 +45,10 @@ public class BetPlacingShell {
 		GridData gridData = getFirstGridData();        
         GridData gridData2 = getSecondGridData();
         
+        initialOdds = Double.parseDouble(oddsButton.getOdds().getText());
+        
 		createInfoLabel(oddsButton, betController, infoGridData);		        
-		createOddsFields(oddsButton.getOdds().getText(), gridData, gridData2);
+		createOddsFields(gridData, gridData2);
         createAmountFields(gridData, gridData2);
         addTextFieldsListeners(betController, oddsButton);
         
@@ -44,6 +56,7 @@ public class BetPlacingShell {
         createCancelButton();
 		
         createProfitAndLiabilityLabels(oddsButton, betController, infoGridData);
+        createWinnerProfitLabels(oddsButton, betController, infoGridData);
         
         createErrorLabel(infoGridData);
         
@@ -52,17 +65,65 @@ public class BetPlacingShell {
 	}
 
 
+	private void createWinnerProfitLabels(OddsButton oddsButton, BetController betController,
+			GridData infoGridData) {
+		firstPlayerWinnerSummary = new Label(betShell, SWT.NONE);
+		firstPlayerWinnerSummary.setLayoutData(infoGridData);
+		firstPlayerWinnerText = "If " + betController.getMatch().getPlayerOne()
+				+ " wins, overall: ";
+
+		secondPlayerWinnerSummary = new Label(betShell, SWT.NONE);
+		secondPlayerWinnerSummary.setLayoutData(infoGridData);
+		secondPlayerWinnerText = "If "
+				+ betController.getMatch().getPlayerTwo() + " wins, overall: ";
+
+		updateOverallPossibleProfits(oddsButton, betController);
+	}
+
+	private void updateOverallPossibleProfits(OddsButton oddsButton, BetController betController) {
+		Match match = betController.getMatch();
+		double firstPlayerWinnerProfit = BetManager
+				.getFirstPlayerWinnerProfit(match);
+		double secondPlayerWinnerProfit = BetManager
+				.getSecondPlayerWinnerProfit(match);
+		firstPlayerWinnerProfit += getPlayerWinnerProfit(oddsButton, betController, PlayerEnum.PLAYER1);
+		secondPlayerWinnerProfit += getPlayerWinnerProfit(oddsButton, betController, PlayerEnum.PLAYER2);
+
+		firstPlayerWinnerSummary.setText(firstPlayerWinnerText
+				+ BetsDisplay.DOUBLE_FORMAT.format(firstPlayerWinnerProfit));
+		secondPlayerWinnerSummary.setText(secondPlayerWinnerText
+				+ BetsDisplay.DOUBLE_FORMAT.format(secondPlayerWinnerProfit));
+	}
+
+
+	private double getPlayerWinnerProfit(OddsButton oddsButton,
+			BetController betController, PlayerEnum winner) {
+		try {
+			if ((betController.getBetType(oddsButton).equals(BetTypeEnum.B) && betController
+					.getBetPlayer(oddsButton).equals(winner))
+					|| (betController.getBetType(oddsButton).equals(
+							BetTypeEnum.L) && !betController.getBetPlayer(
+							oddsButton).equals(winner)))
+				return getPossibleProfit(oddsButton, betController);
+			else
+				return (-1) * getPossibleLiability(oddsButton, betController);
+		} catch (OddsButtonNotFoundException e) {
+			return 0;
+		}
+	}
+
 	private void addTextFieldsListeners(final BetController betController,
 			final OddsButton oddsButton) {
 		amountText.addListener(SWT.CHANGED, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
 				updateProfitAndLiability(oddsButton, betController);
+				updateOverallPossibleProfits(oddsButton, betController);
 				try {
-					Double.parseDouble(amountText.getText());
+					Double.parseDouble(amountText.getText());					
 					errorLabel.setVisible(false);
 				} catch (NumberFormatException nfe) {
-					setErrorText(amountNumberException);
+					setErrorText(AMOUNT_NUMBER_EXCEPTION);
 					return;
 				}
 			}
@@ -71,11 +132,15 @@ public class BetPlacingShell {
 			@Override
 			public void handleEvent(Event arg0) {
 				updateProfitAndLiability(oddsButton, betController);
+				updateOverallPossibleProfits(oddsButton, betController);
 				try {
-					Double.parseDouble(oddsText.getText());
-					errorLabel.setVisible(false);
+					double odds = Double.parseDouble(oddsText.getText());
+					if (BetManager.isValidPrice(odds))
+						errorLabel.setVisible(false);
+					else
+						setErrorText(INVALID_PRICE);
 				} catch (NumberFormatException nfe) {
-					setErrorText(oddsNumberException);
+					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
 				}
 			}			
@@ -96,10 +161,10 @@ public class BetPlacingShell {
 
 	private void updateProfitAndLiability(OddsButton oddsButton,
 			BetController betController) {
-		profitLabel.setText(profitText
+		profitLabel.setText(PROFIT_TEXT
 				+ BetsDisplay.DOUBLE_FORMAT.format(getPossibleProfit(
 						oddsButton, betController)));
-		liabilityLabel.setText(liabilityText
+		liabilityLabel.setText(LIABILITY_TEXT
 				+ BetsDisplay.DOUBLE_FORMAT.format(getPossibleLiability(
 						oddsButton, betController)));
 	}
@@ -138,7 +203,7 @@ public class BetPlacingShell {
 
 	private void createErrorLabel(GridData infoGridData) {
     	errorLabel = new Label(betShell, SWT.NONE);
-    	errorLabel.setText(amountNumberException);
+    	errorLabel.setText(AMOUNT_NUMBER_EXCEPTION);
     	errorLabel.setVisible(false);
     	errorLabel.setLayoutData(infoGridData);
 	}
@@ -172,11 +237,11 @@ public class BetPlacingShell {
 
 	private void createSubmitButton(final OddsButton oddsButton,
 			final BetController betController) {
-		Button submitButton = new Button(betShell, SWT.NONE);
+		final Button submitButton = new Button(betShell, SWT.NONE);
 		submitButton.setText("Place bet");
 		try {
 			if (betController.getBetType(oddsButton).equals(BetTypeEnum.B)) {
-				submitButton.setBackground(Colours.backColor);
+				submitButton.setBackground(Colours.backColor);				
 			} else {
 				submitButton.setBackground(Colours.layColor);
 			}
@@ -190,17 +255,20 @@ public class BetPlacingShell {
 				amount = Double.parseDouble(amountText
                    		.getText());
 				} catch (NumberFormatException nfe) {
-					setErrorText(amountNumberException);
+					setErrorText(AMOUNT_NUMBER_EXCEPTION);
 					return;
 				}
 				try {
 				odds =  Double.parseDouble(oddsText.getText());
 				} catch (NumberFormatException nfe) {
-					setErrorText(oddsNumberException);
+					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
 				}
-                betController.addBet(oddsButton, amount, odds);
-                betShell.dispose();
+				if (BetManager.isValidPrice(odds)) {
+					betController.addBet(oddsButton, amount, odds);
+					betShell.dispose();
+				} else
+					setErrorText(INVALID_PRICE);
 			}
 		});		
 	}
@@ -223,45 +291,45 @@ public class BetPlacingShell {
         amountLabel.setLayoutData(gridData);
         
         amountText = new Text(betShell, SWT.NONE);
-        amountText.setText("10");
+        amountText.setText("" + INITIAL_AMOUNT);
         amountText.setLayoutData(gridData2);        
 	}
 
-	private void createOddsFields(String odds, GridData gridData,
+	private void createOddsFields(GridData gridData,
 			GridData gridData2) {
 		Label oddsLabel = new Label(betShell, SWT.NONE);
 		oddsLabel.setText("Odds: ");
 		oddsLabel.setLayoutData(gridData);
 
         oddsText = new Text(betShell, SWT.NONE);
-        oddsText.setText(odds);
+        oddsText.setText("" + initialOdds);
         oddsText.setLayoutData(gridData2);        
 	}
 
 	private GridData getInfoGridData() {
 		GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData.horizontalSpan = 5;
+        gridData.horizontalSpan = 6;
 		return gridData;
 	}
 
 	private GridData getSecondGridData() {
-		GridData gridData2 = new GridData();
+		GridData gridData2 = new GridData(150, 20);
         gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
         gridData2.horizontalSpan = 4;
 		return gridData2;
 	}
 
 	private GridData getFirstGridData() {
-		GridData gridData = new GridData();
+		GridData gridData = new GridData(75, 20);
         gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData.horizontalSpan = 1;
+        gridData.horizontalSpan = 2;
 		return gridData;
 	}
 
 	private void setGridLayout() {
 		GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 5;
+        gridLayout.numColumns = 6;
         //gridLayout.makeColumnsEqualWidth = true;
         betShell.setLayout(gridLayout);
 	}

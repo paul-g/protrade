@@ -14,6 +14,7 @@ import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.BetDisplayInfo;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
+import org.ic.tennistrader.model.BetManager;
 
 public class BetsDisplay extends StandardTabbedWidgetContainer{    
 	private static BetsDisplay betsDisplay;
@@ -80,11 +81,9 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 
 	private void addBetDisplay(Bet bet, Label betLabel,
 			BetDisplayInfo betDisplayInfo) {
-		betDisplayInfo.setPlayerWinnerProfits(betDisplayInfo
-				.getFirstPlayerWinnerProfit()
-				+ bet.getFirstPlayerWinnerProfit(), betDisplayInfo
-				.getSecondPlayerWinnerProfit()
-				+ bet.getSecondPlayerWinnerProfit());
+		betDisplayInfo.setPlayerWinnerProfits(BetManager
+				.getFirstPlayerWinnerProfit(bet.getMatch()), BetManager
+				.getSecondPlayerWinnerProfit(bet.getMatch()));
 		betDisplayInfo.addBet(bet, betLabel);
 	}
 

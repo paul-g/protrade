@@ -45,7 +45,7 @@ public class BetController {
         //}
     }
 
-	private PlayerEnum getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {
+	public PlayerEnum getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {
 		PlayerEnum player;
 		if (this.player1BackButtons.contains(button)) {
 			player = PlayerEnum.PLAYER1;
@@ -87,5 +87,13 @@ public class BetController {
 		info += " to "
 				+ (getBetType(button) == BetTypeEnum.B ? "win." : "lose.");
 		return info;
+	}
+	
+	public Match getMatch() {
+		return match;
+	}
+
+	public void setMatch(Match match) {
+		this.match = match;
 	}
 }
