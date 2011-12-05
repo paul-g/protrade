@@ -155,8 +155,8 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
                 "td", "onclick", "match_preview_form_top_right.submit()")
                 .get(0);
 
-        player1.setText(match.getPlayerOne().getLastname().toString());
-        player2.setText(match.getPlayerTwo().getLastname().toString());
+        player1.setText(match.getPlayerOne().toString());
+        player2.setText(match.getPlayerTwo().toString());
 
         HtmlPage intermPage = (HtmlPage) submitButton2.click();
         intermPage.initialize();

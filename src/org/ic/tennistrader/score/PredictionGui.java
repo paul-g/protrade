@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.EventBetfair;
@@ -73,7 +74,7 @@ public class PredictionGui extends StandardWidgetContainer {
         this.setLayout(rl);
         
         GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
+        gridLayout.numColumns = 3;
         Composite panels = new Composite(this, SWT.NONE);
         panels.setLayout(gridLayout);
         
@@ -83,9 +84,12 @@ public class PredictionGui extends StandardWidgetContainer {
         @SuppressWarnings("unused")
         ProbabilityPanel probabilityPanel = new ProbabilityPanel(panels, match);
         
-        addMarketDataGrid(panels, match);
-
+        ColumnLayout col = new ColumnLayout();
+        col.minNumColumns = 2;
+        this.setLayout(col);
         StatisticsPanel st = new StatisticsPanel(this, match);
+        
+        addMarketDataGrid(panels, match);
         this.statisticsUpdateThread = new StatisticsUpdateThread(match);
         this.statisticsUpdateThread.addListener(st);
 
