@@ -19,6 +19,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.ic.tennistrader.ui.BetPlacingShell;
 
 public class OddsButton {
+	
+	private String CURRENCY = "£";
+	
 	private Composite comp;
 	private UpdatableMarketDataGrid dataGrid;
     private Label odds;
@@ -31,26 +34,7 @@ public class OddsButton {
     private Image backgroundImage;
     private Image highlightImage;
     private Image clickImage;
-    /* 
-      public static void main(){
-     
-        final Display display = new Display();
-        final Shell shell = new Shell(display, SWT.NONE);
-        
-        shell.setLayout(new FillLayout());
-        
-        OddsButton oddsButton = new OddsButton(shell, new org.eclipse.swt.graphics.Color(
-                composite.getDisplay(), 238, 210, 238), oddsFont, dataGrid)
-        
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch())
-                display.sleep();
-        }
 
-        display.dispose();
-    }
-    
-    */
     OddsButton(Composite parent, Color color, Font oddsFont, UpdatableMarketDataGrid dataGrid) {     	 
     	this.dataGrid = dataGrid;
         comp = new Composite(parent, SWT.BORDER);
@@ -70,6 +54,7 @@ public class OddsButton {
         this.odds = new Label(comp, SWT.NONE);
         this.odds.setFont(oddsFont);
         this.amount = new Label(comp, SWT.NONE);
+        this.amount.setFont(oddsFont);
 
         addClickListener();
          
@@ -116,11 +101,8 @@ public class OddsButton {
     
     private Menu makeMenu(Composite comp) {
         Menu menu = new Menu(comp.getShell(), SWT.POP_UP);
-        makeItem(menu, 15.0);
-        makeItem(menu, 20.0);
-        makeItem(menu, 25.0);
-        makeItem(menu, 30.0);
-        makeItem(menu, 40.0);
+        for (int i=10;i<50;i+=10)
+        	makeItem(menu, i);
         return menu;
     }
     
@@ -168,8 +150,12 @@ public class OddsButton {
         this.odds.setText(odds);
     }
 
+    public void setCurrency(String c){
+    	this.CURRENCY = c;
+    }
+    
     void setAmount(String amount) {
-        this.amount.setText("£" + amount);
+        this.amount.setText(CURRENCY + amount);
     }
  
     public void setBackgroundImage(Image backgroundImage) {

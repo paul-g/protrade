@@ -6,8 +6,6 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -62,30 +60,28 @@ public class PredictionGui extends StandardWidgetContainer {
         this.match = match;
 
         RowLayout mainLayout = new RowLayout();
-        mainLayout.type = SWT.HORIZONTAL;
-        mainLayout.pack = true;
-
+        mainLayout.type = SWT.VERTICAL;
+        mainLayout.fill = true;
         this.setLayout(mainLayout);
         
         RowLayout rl = new RowLayout();
-        rl.type = SWT.VERTICAL;
-        rl.pack = true;
-        this.setLayout(rl);
-        
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
+        rl.type = SWT.HORIZONTAL;
+        rl.fill = true;
         Composite panels = new Composite(this, SWT.NONE);
-        panels.setLayout(gridLayout);
+        panels.setLayout(rl);
         
+        Composite c = new Composite(panels, SWT.NONE);
+        c.setLayout(mainLayout);
         @SuppressWarnings("unused")
-        ScorePanel sc = new ScorePanel(panels, match);
+        ScorePanel sc = new ScorePanel(c, match);
 
         @SuppressWarnings("unused")
-        ProbabilityPanel probabilityPanel = new ProbabilityPanel(panels, match);
-        
-        addMarketDataGrid(panels, match);
+        ProbabilityPanel probabilityPanel = new ProbabilityPanel(c, match);
 
-        StatisticsPanel st = new StatisticsPanel(this, match);
+        StatisticsPanel st = new StatisticsPanel(panels, match);
+
+        addMarketDataGrid(this, match);
+
         this.statisticsUpdateThread = new StatisticsUpdateThread(match);
         this.statisticsUpdateThread.addListener(st);
 
@@ -110,11 +106,6 @@ public class PredictionGui extends StandardWidgetContainer {
     private void addMarketDataGrid(Composite comp, Match match) {
         UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
                 SWT.NONE, match);
-        GridData gridData = new GridData();
-        gridData.horizontalSpan = 2;
-        gridData.grabExcessHorizontalSpace=true;
-        gridData.horizontalAlignment = GridData.FILL;
-        grid.setLayoutData(gridData);
         BetController betController = new BetController(Arrays.asList(grid
                 .getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
                 Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid

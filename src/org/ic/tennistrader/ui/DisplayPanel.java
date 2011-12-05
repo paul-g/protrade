@@ -2,7 +2,6 @@ package org.ic.tennistrader.ui;
 
 import java.awt.Canvas;
 import java.awt.Frame;
-import java.util.Arrays;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -13,7 +12,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -74,22 +72,22 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			addMatchData(comp, match);
 
-			SashForm horizontal = new SashForm(comp, SWT.HORIZONTAL);
-
-			addPredictionGui(horizontal, match);
+			addPredictionGui(comp, match);
 
 			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
 			addChart(chartSash, match);
 			//addMatchViewer(chartSash);
 			try{
-				chartSash.setWeights(new int[] { 60, 40 });
-			} catch (Exception e){}
+				chartSash.setWeights(new int[] { 70, 30 });
+			} catch (Exception e){
+				e.printStackTrace();
+			}//
 
 			item.setControl(control);
 
 			folder.setSelection(item);
 
-			comp.setWeights(new int[] { 5, 30, 60, 5 });
+			comp.setWeights(new int[] { 5, 40, 50, 5 });
 
 		} else
 			// just bring the required tab under focus
@@ -148,6 +146,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 		// c.setLayout(new GridLayout());
 		Composite slideComp = new Composite(comp.getParent(), SWT.NONE);
 		slideComp.setLayout(new FillLayout());
+		slideComp.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		Slider slider = new Slider(slideComp, SWT.HORIZONTAL);
 		slider.setMaximum(1);
 		slider.setValues(0, 0, 1, 0, 0, 0);
@@ -164,7 +163,6 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	}
 
 	public void addMatchViewer(Composite comp) {
-		comp.setLayout(new FillLayout());
 		Composite videoComposite; 
 		try {
 			final EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
@@ -173,7 +171,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			Canvas videoSurface = new Canvas();
 			videoSurface.setBackground(java.awt.Color.black);
 			videoFrame.add(videoSurface);
-			videoComposite.setBounds(100, 100, 450, 200);
+			//videoComposite.setBounds(100, 100, 450, 200);
 			videoComposite.setVisible(true);
 
 			// "mediaPlayer" is a regular vlcj MediaPlayer instance
@@ -190,8 +188,8 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			label.setText("Video loading failed");
 			label.pack();
 		}
-		videoComposite.dispose();
-		comp.getParent().layout();
+		//videoComposite.dispose();
+		//comp.getParent().layout();
 		/*
 		 * 
 		 * final Browser browser; try { browser = new Browser(comp, SWT.NONE); }

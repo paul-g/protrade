@@ -32,7 +32,7 @@ public class ScorePanel extends StandardWidgetContainer implements
         this.setLayout(new FillLayout());
 
         this.scoreTable = new Table(this, SWT.NONE);
-        scoreTable.setHeaderVisible(true);
+        //scoreTable.setHeaderVisible(true);
         scoreTable.setLinesVisible(true);
 
         this.columns = new TableColumn[8];
