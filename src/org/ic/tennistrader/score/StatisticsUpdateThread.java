@@ -196,7 +196,9 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
             // try to get stats
             try {
             	System.out.println("Started to fetch statistics");
-                page = getStatistics();
+            	try {
+            		page = getStatistics();
+            	} catch(Exception e){}
                 System.out.println("Fetched statistics");
                 if (page != null) {
                 	System.out.println("Started parsing");

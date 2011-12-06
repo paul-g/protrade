@@ -41,6 +41,8 @@ public class Player {
     }
 
     public String toString() {
+    	if (lastname.equals("Tsonga"))
+    		return "Jo-Wilfried Tsonga";
         return firstname + " " + lastname;
     }
 

@@ -62,8 +62,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			control.setLayout(new FillLayout());
 
 			SashForm comp = new SashForm(control, SWT.VERTICAL);
-			
-
+			comp.setLayout(new FillLayout());
 	        if (firstTime) {
 				firstTime = false;
 				Image newImage = setColor(item, comp);
