@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.betting;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;

@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.betting;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -11,10 +11,11 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.ic.tennistrader.domain.Bet;
-import org.ic.tennistrader.domain.BetDisplayInfo;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.ui.StandardTabbedWidgetContainer;
+import org.ic.tennistrader.ui.StandardWidgetContainer;
 
 public class BetsDisplay extends StandardTabbedWidgetContainer{    
 	private static BetsDisplay betsDisplay;
@@ -137,4 +138,12 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 		}
 		betLabel.setText(betLabelText);
 	}
+	
+	public static Composite getComposite() {
+        return composite;
+    }
+
+    public static void setComposite(Composite composite) {
+        BetsDisplay.composite = composite;
+    }
 }
