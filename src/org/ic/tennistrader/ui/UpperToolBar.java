@@ -348,7 +348,7 @@ public class UpperToolBar {
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
-			mainWindow.getDisplayPanel().addMatchView(match);
+			mainWindow.getDisplayPanel().handleMatchSelection(match);
 		}
 	}
 	
