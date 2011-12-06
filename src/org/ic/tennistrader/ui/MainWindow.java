@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.ui.betting.BetsDisplay;
 
 public class MainWindow {
 

@@ -1,11 +1,11 @@
-package org.ic.tennistrader.domain;
+package org.ic.tennistrader.ui.betting;
 
 import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.ui.BetsDisplay;
 
 public class BetDisplayInfo {
 	private Composite parent;

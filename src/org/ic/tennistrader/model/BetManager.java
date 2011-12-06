@@ -10,7 +10,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.ui.BetsDisplay;
+import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.utils.Pair;
 
 import static org.ic.tennistrader.utils.Pair.pair;
@@ -41,7 +41,8 @@ public class BetManager {
         
         addMatchedBetAmount(newBet);
         
-        BetsDisplay.addBet(newBet);            
+        if (BetsDisplay.getComposite() != null)
+            BetsDisplay.addBet(newBet);            
     }
     
     private static void updatePossibleProfits(Bet newBet) {
@@ -52,45 +53,63 @@ public class BetManager {
 		}
 	}
 
-	private static void addMatchedBetAmount(Bet bet) {
-        VirtualBetMarketInfo virtualMarketInfo = matchMarketData.get(bet.getMatch());
-        if (bet.getType().equals(BetTypeEnum.B)) {
-            if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
-                virtualMarketInfo.addMatchedBackBetsFirstPlayer(bet.getOdds(), bet.getAmount() - bet.getUnmatchedValue());
+    private static void addMatchedBetAmount(Bet bet) {
+        if (matchMarketData.containsKey(bet.getMatch())) {
+            VirtualBetMarketInfo virtualMarketInfo = matchMarketData.get(bet
+                    .getMatch());
+            if (bet.getType().equals(BetTypeEnum.B)) {
+                if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
+                    virtualMarketInfo.addMatchedBackBetsFirstPlayer(bet
+                            .getOdds(), bet.getAmount()
+                            - bet.getUnmatchedValue());
+                } else {
+                    virtualMarketInfo.addMatchedBackBetsSecondPlayer(bet
+                            .getOdds(), bet.getAmount()
+                            - bet.getUnmatchedValue());
+                }
+            } else {
+                if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
+                    virtualMarketInfo.addMatchedLayBetsFirstPlayer(bet
+                            .getOdds(), bet.getAmount()
+                            - bet.getUnmatchedValue());
+                } else {
+                    virtualMarketInfo.addMatchedLayBetsSecondPlayer(bet
+                            .getOdds(), bet.getAmount()
+                            - bet.getUnmatchedValue());
+                }
             }
-            else {
-                virtualMarketInfo.addMatchedBackBetsSecondPlayer(bet.getOdds(), bet.getAmount() - bet.getUnmatchedValue());
-            }
-        } else {
-            if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
-                virtualMarketInfo.addMatchedLayBetsFirstPlayer(bet.getOdds(), bet.getAmount() - bet.getUnmatchedValue());
-            }
-            else {
-                virtualMarketInfo.addMatchedLayBetsSecondPlayer(bet.getOdds(), bet.getAmount() - bet.getUnmatchedValue());
-            }
-        }        
+        }
     }
 
     private static Double getMaxAvailableAmount(Bet bet) {
-        Double maxMarketAmount, playedAmount;
-        VirtualBetMarketInfo data = matchMarketData.get(bet.getMatch());
-        if (bet.getType().equals(BetTypeEnum.B)) {
-            if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
-                maxMarketAmount = data.getBackFirstPlayerAvailableMatches().get(bet.getOdds());
-                playedAmount = data.getMatchedBackBetsFirstPlayer().get(bet.getOdds());
-            }
-            else {
-                maxMarketAmount = data.getBackSecondPlayerAvailableMatches().get(bet.getOdds());
-                playedAmount = data.getMatchedBackBetsSecondPlayer().get(bet.getOdds());
-            }
-        } else {
-            if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
-                maxMarketAmount = data.getLayFirstPlayerAvailableMatches().get(bet.getOdds());
-                playedAmount = data.getMatchedLayBetsFirstPlayer().get(bet.getOdds());
-            }
-            else {
-                maxMarketAmount = data.getLaySecondPlayerAvailableMatches().get(bet.getOdds());
-                playedAmount = data.getMatchedLayBetsSecondPlayer().get(bet.getOdds());
+        Double maxMarketAmount = null, playedAmount = null;
+        if (matchMarketData.containsKey(bet.getMatch())) {
+            VirtualBetMarketInfo data = matchMarketData.get(bet.getMatch());
+            if (bet.getType().equals(BetTypeEnum.B)) {
+                if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
+                    maxMarketAmount = data.getBackFirstPlayerAvailableMatches()
+                            .get(bet.getOdds());
+                    playedAmount = data.getMatchedBackBetsFirstPlayer().get(
+                            bet.getOdds());
+                } else {
+                    maxMarketAmount = data
+                            .getBackSecondPlayerAvailableMatches().get(
+                                    bet.getOdds());
+                    playedAmount = data.getMatchedBackBetsSecondPlayer().get(
+                            bet.getOdds());
+                }
+            } else {
+                if (bet.getPlayer().equals(PlayerEnum.PLAYER1)) {
+                    maxMarketAmount = data.getLayFirstPlayerAvailableMatches()
+                            .get(bet.getOdds());
+                    playedAmount = data.getMatchedLayBetsFirstPlayer().get(
+                            bet.getOdds());
+                } else {
+                    maxMarketAmount = data.getLaySecondPlayerAvailableMatches()
+                            .get(bet.getOdds());
+                    playedAmount = data.getMatchedLayBetsSecondPlayer().get(
+                            bet.getOdds());
+                }
             }
         }
         double maxAvAmount = 0.0;
@@ -182,7 +201,7 @@ public class BetManager {
 		}
 	}
 
-	private static boolean isBetSuccessful(Bet bet, PlayerEnum winner) {
+	public static boolean isBetSuccessful(Bet bet, PlayerEnum winner) {
 		if (winner == bet.getPlayer())
 		    if (bet.getType().equals(BetTypeEnum.B))
 		        return true;
@@ -195,7 +214,7 @@ public class BetManager {
                 return true;
 	}
 	
-	private static double getBetProfit(Bet bet, boolean betSuccessful) {
+	public static double getBetProfit(Bet bet, boolean betSuccessful) {
 		double profit;
 		if (betSuccessful) {
 			if (bet.getType().equals(BetTypeEnum.B))

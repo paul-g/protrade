@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.ic.tennistrader.ui.BetPlacingShell;
+import org.ic.tennistrader.ui.betting.BetPlacingShell;
 
 public class OddsButton {
 	
