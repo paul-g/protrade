@@ -32,7 +32,7 @@ public class MenuPanel {
 
 	    MenuItem appSettingsItem = new MenuItem(appMenu, SWT.PUSH);
 	    appSettingsItem.setText("&Settings");
-	    appSettingsItem.addSelectionListener(new SettingsListener());
+	    appSettingsItem.addSelectionListener(new TabListener("Settings"));
 
 	    MenuItem appExitItem = new MenuItem(appMenu, SWT.PUSH);
 	    appExitItem.setText("E&xit");
@@ -49,22 +49,13 @@ public class MenuPanel {
 
 	    MenuItem aboutHelpItem = new MenuItem(aboutMenu, SWT.PUSH);
 	    aboutHelpItem.setText("&Help");
-	    aboutHelpItem.addSelectionListener(new HelpListener());
+	    aboutHelpItem.addSelectionListener(new TabListener("Help"));
 	    
 	    MenuItem aboutCreatorsItem = new MenuItem(aboutMenu, SWT.PUSH);
 	    aboutCreatorsItem.setText("&Creators");
-	    aboutCreatorsItem.addSelectionListener(new CreatorsListener());
+	    aboutCreatorsItem.addSelectionListener(new TabListener("Creators"));
 	}
-	
-	private class SettingsListener implements SelectionListener {
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {}
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			mw.addNewTab("Settings");
-		}
-	}
-	
+
 	private class ExitListener implements  SelectionListener {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {}
@@ -74,21 +65,18 @@ public class MenuPanel {
 		}
 	}
 	
-	private class HelpListener implements SelectionListener {
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {}
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			mw.addNewTab("Help");
+	private class TabListener implements SelectionListener {
+		private String name;
+		
+		public TabListener (String name) {
+			this.name = name;
 		}
-	}
-	
-	private class CreatorsListener implements SelectionListener {
+		
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			mw.addNewTab("Creators");
+			mw.addNewTab(name);
 		}
 	}
 }
