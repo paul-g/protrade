@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,19 +16,12 @@ public class LowerToolbarTest extends DisplayTest {
 
 	@Before
 	public void setUp(){
+		super.setUp();
 		mw = new MainWindow(display);
 		bot = new SWTBot(mw.show());
 		ltb = new LowerToolBar(mw);
 	}
-
-	@After
-	public void putDown() {
-	    while (display.readAndDispatch()){
-            // handle remaining work
-        }
-		display.dispose();
-	}
-
+	
 	@Test
 	public void existenceCheck() {
 		// First check
