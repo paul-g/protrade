@@ -38,6 +38,10 @@ public class MainWindow {
 
     private NavigationPanel np;
 
+    /* ToolBars */
+    private UpperToolBar utb;
+    private LowerToolBar ltb;
+    
     private static Logger log = Logger.getLogger(MainWindow.class);
     
     private final int BAR_INCREMENT = 5;
@@ -62,8 +66,7 @@ public class MainWindow {
         shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-        @SuppressWarnings("unused")
-        UpperToolBar tp = new UpperToolBar(this);
+        utb = new UpperToolBar(this);
 
         makeLayout();
 
@@ -73,6 +76,7 @@ public class MainWindow {
         this.np = new NavigationPanel(sashFormLeft);
         notifyLoadEvent("Fetching betfair data");
 
+        
         this.dp = new DisplayPanel(sashFormRight, SWT.BORDER);
         
         notifyLoadEvent("Preparing display");
@@ -82,8 +86,7 @@ public class MainWindow {
         
         notifyLoadEvent("Configuring toolbars");
         
-        @SuppressWarnings("unused")
-        LowerToolBar bottomPanel = new LowerToolBar(this);
+        ltb = new LowerToolBar(this);
         
         try {
             Thread.sleep(500);
@@ -211,4 +214,12 @@ public class MainWindow {
    public void addMatchViewer() {
         dp.addMatchViewer();
     }
+   
+   public UpperToolBar getUpperToolBar() {
+	   return utb;
+   }
+   
+   public LowerToolBar getLowerToolBar() {
+	   return ltb;
+   }
 }
