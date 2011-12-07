@@ -1,9 +1,7 @@
 package org.ic.tennistrader.controller;
 
 import static org.junit.Assert.*;
-
 import java.util.Arrays;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -12,7 +10,6 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
-import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.junit.After;
@@ -54,14 +51,7 @@ public class BetControllerTest {
     public void testMatch() {
         assertEquals(match, betController.getMatch());
     }
-    
-    @Test
-    public void testRealOddsButton() {
-        betController.addBet(dataGrid
-                    .getP1BackButtons()[0], 10.0, 2.3);
-        // test at least one of BetManager.placeBet();
-    }
-    
+        
     @Test
     public void testBetTypes() {
         try {

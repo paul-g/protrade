@@ -2,8 +2,6 @@ package org.ic.tennistrader.ui.betting;
 
 import static org.junit.Assert.assertEquals;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
@@ -12,34 +10,23 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.ui.DisplayTest;
 import org.ic.tennistrader.ui.betting.BetDisplayInfo;
 import static org.ic.tennistrader.utils.Pair.pair;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Test;
 
-public class BetDisplayInfoTest {
-    private BetDisplayInfo betDisplayInfo;
-    private Display display;
-    private Shell comp;
-    Match match;
+public class BetDisplayInfoTest extends DisplayTest{
+    private BetDisplayInfo betDisplayInfo;    
+    private Match match;
     
     @Before
-    public void setUp() {        
-        display = new Display();
-        comp = new Shell(display);
+    public void setUp() {      
+    	super.setUp();        
         Player firstPlayer = new Player("Rafael", "Nadal");
         Player secondPlayer = new Player("Roger", "Federer");
         match = new HistoricalMatch(firstPlayer, secondPlayer);        
         betDisplayInfo = new BetDisplayInfo(comp, firstPlayer, secondPlayer);
-    }
-       
-    @After
-    public void teardown() {
-        while (display.readAndDispatch()){
-            // handle remaining work
-        }
-        display.dispose();
     }
     
     @Test

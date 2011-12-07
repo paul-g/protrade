@@ -1,6 +1,7 @@
 package org.ic.tennistrader.score;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
@@ -9,10 +10,8 @@ import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class PredictionGuiTest {
     
     private String filename;
@@ -24,6 +23,8 @@ public class PredictionGuiTest {
     public void setUp() {
         filename = "data/test/fracsoft-reader/tso-fed.csv";
         match = new HistoricalMatch(filename);
+        shell.setSize(0,0);
+        shell.setLayout(new FillLayout());
         new PredictionGui(shell, SWT.BORDER, match);
     }   
     

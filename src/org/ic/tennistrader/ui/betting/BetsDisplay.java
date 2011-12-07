@@ -146,4 +146,20 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
     public static void setComposite(Composite composite) {
         BetsDisplay.composite = composite;
     }
+    
+    public static List<Label> getActiveBets() {
+		return activeBets;
+	}
+    
+    public static void setActiveBets(List<Label> aBets) {
+		activeBets = aBets;
+	}
+    
+    public static HashMap<Bet, Label> getUnmatchedBetsLabels() {
+		return unmatchedBetsLabels;
+	}
+    
+    public static void setUnmatchedBetsLabels(HashMap<Bet, Label> map) {
+		unmatchedBetsLabels = map;
+	}
 }

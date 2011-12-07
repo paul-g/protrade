@@ -2,35 +2,22 @@ package org.ic.tennistrader.ui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UpperToolbarTest {
-
-	private Display display;
+public class UpperToolbarTest extends DisplayTest{
 	private MainWindow mw;
 	private SWTBot bot;
 	private UpperToolBar utb;
 
 	@Before
 	public void setUp(){
-		display = new Display();
+		super.setUp();
 		mw = new MainWindow(display);
 		bot = new SWTBot(mw.show());
 		utb = new UpperToolBar(mw);
-	}
-
-	@After
-	public void putDown() {
-	    while (display.readAndDispatch()){
-            // handle remaining work
-        }
-		display.dispose();
 	}
 
 	@Test
