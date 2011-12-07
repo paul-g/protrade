@@ -3,23 +3,20 @@ package org.ic.tennistrader.ui;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class LowerToolbarTest {
-
-	private Display display;
+public class LowerToolbarTest extends DisplayTest {
+	
 	private MainWindow mw;
 	private SWTBot bot;
 	private LowerToolBar ltb;
 
 	@Before
 	public void setUp(){
-		display = new Display();
 		mw = new MainWindow(display);
 		bot = new SWTBot(mw.show());
 		ltb = new LowerToolBar(mw);
