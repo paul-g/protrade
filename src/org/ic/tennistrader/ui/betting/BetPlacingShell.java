@@ -1,93 +1,95 @@
 package org.ic.tennistrader.ui.betting;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
-import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.BetManager;
 
-public class BetPlacingShell {	
+public class BetPlacingShell {
 	private Shell betShell;
 	private Text amountText;
 	private Text oddsText;
 	private Label errorLabel, profitLabel, liabilityLabel;
-	private static Logger log = Logger.getLogger(BetPlacingShell.class);
+	public Label getErrorLabel() {
+		return errorLabel;
+	}
+
 	private static final String AMOUNT_NUMBER_EXCEPTION = "Please ensure the amount is a valid number.";
 	private static final String ODDS_NUMBER_EXCEPTION = "Please ensure the odds are a valid number.";
 	private static final String INVALID_PRICE = "Please ensure the odds are a valid price value.";
 	private static final String PROFIT_TEXT = "Your possible profit: ";
 	private static final String LIABILITY_TEXT = "Your possible liability: ";
 	private static final double INITIAL_AMOUNT = 10;
-	private double initialOdds;	
+	private double initialOdds;
 	private Label firstPlayerWinnerSummary;
 	private Label secondPlayerWinnerSummary;
 	private String firstPlayerWinnerText;
 	private String secondPlayerWinnerText;
-	
-	public BetPlacingShell(final OddsButton oddsButton, final BetController betController) {
-		createBetShell(oddsButton);
-		
-		setGridLayout();        
+
+	public BetPlacingShell(Display display, Match match, PlayerEnum betPlayer,
+			BetTypeEnum betType, double initialOdds, String betDetails) {
+		createBetShell(display);
+
+		setGridLayout();
 		GridData infoGridData = getInfoGridData();
-		GridData gridData = getFirstGridData();        
-        GridData gridData2 = getSecondGridData();
-        
-        initialOdds = Double.parseDouble(oddsButton.getOdds().getText());
-        
-		createInfoLabel(oddsButton, betController, infoGridData);		        
+		GridData gridData = getFirstGridData();
+		GridData gridData2 = getSecondGridData();
+
+		this.initialOdds = initialOdds;
+
+		createInfoLabel(betType, betDetails, infoGridData);
 		createOddsFields(gridData, gridData2);
-        createAmountFields(gridData, gridData2);
-        addTextFieldsListeners(betController, oddsButton);
-        
-        createSubmitButton(oddsButton, betController);        
-        createCancelButton();
-		
-        createProfitAndLiabilityLabels(oddsButton, betController, infoGridData);
-        createWinnerProfitLabels(oddsButton, betController, infoGridData);
-        
-        createErrorLabel(infoGridData);
-        
-        //betShell.pack();
+		createAmountFields(gridData, gridData2);
+		addTextFieldsListeners(match, betType, betPlayer);
+
+		createSubmitButton(match, betPlayer, betType);
+		createCancelButton();
+
+		createProfitAndLiabilityLabels(betType, infoGridData);
+		createWinnerProfitLabels(match, betType, betPlayer, infoGridData);
+
+		createErrorLabel(infoGridData);
+
+		// betShell.pack();
 		betShell.open();
 	}
 
-
-	private void createWinnerProfitLabels(OddsButton oddsButton, BetController betController,
-			GridData infoGridData) {
+	private void createWinnerProfitLabels(Match match, BetTypeEnum betType,
+			PlayerEnum betPlayer, GridData infoGridData) {
 		firstPlayerWinnerSummary = new Label(betShell, SWT.NONE);
 		firstPlayerWinnerSummary.setLayoutData(infoGridData);
-		firstPlayerWinnerText = "If " + betController.getMatch().getPlayerOne()
+		firstPlayerWinnerText = "If " + match.getPlayerOne()
 				+ " wins, overall: ";
 
 		secondPlayerWinnerSummary = new Label(betShell, SWT.NONE);
 		secondPlayerWinnerSummary.setLayoutData(infoGridData);
-		secondPlayerWinnerText = "If "
-				+ betController.getMatch().getPlayerTwo() + " wins, overall: ";
+		secondPlayerWinnerText = "If " + match.getPlayerTwo()
+				+ " wins, overall: ";
 
-		updateOverallPossibleProfits(oddsButton, betController);
+		updateOverallPossibleProfits(match, betType, betPlayer);
 	}
 
-	private void updateOverallPossibleProfits(OddsButton oddsButton, BetController betController) {
-		Match match = betController.getMatch();
+	private void updateOverallPossibleProfits(Match match, BetTypeEnum betType,
+			PlayerEnum betPlayer) {
 		double firstPlayerWinnerProfit = BetManager
 				.getFirstPlayerWinnerProfit(match);
 		double secondPlayerWinnerProfit = BetManager
 				.getSecondPlayerWinnerProfit(match);
-		firstPlayerWinnerProfit += getPlayerWinnerProfit(oddsButton, betController, PlayerEnum.PLAYER1);
-		secondPlayerWinnerProfit += getPlayerWinnerProfit(oddsButton, betController, PlayerEnum.PLAYER2);
+		firstPlayerWinnerProfit += getPlayerWinnerProfit(betType, betPlayer,
+				PlayerEnum.PLAYER1);
+		secondPlayerWinnerProfit += getPlayerWinnerProfit(betType, betPlayer,
+				PlayerEnum.PLAYER2);
 
 		firstPlayerWinnerSummary.setText(firstPlayerWinnerText
 				+ BetsDisplay.DOUBLE_FORMAT.format(firstPlayerWinnerProfit));
@@ -95,32 +97,24 @@ public class BetPlacingShell {
 				+ BetsDisplay.DOUBLE_FORMAT.format(secondPlayerWinnerProfit));
 	}
 
-
-	private double getPlayerWinnerProfit(OddsButton oddsButton,
-			BetController betController, PlayerEnum winner) {
-		try {
-			if ((betController.getBetType(oddsButton).equals(BetTypeEnum.B) && betController
-					.getBetPlayer(oddsButton).equals(winner))
-					|| (betController.getBetType(oddsButton).equals(
-							BetTypeEnum.L) && !betController.getBetPlayer(
-							oddsButton).equals(winner)))
-				return getPossibleProfit(oddsButton, betController);
-			else
-				return (-1) * getPossibleLiability(oddsButton, betController);
-		} catch (OddsButtonNotFoundException e) {
-			return 0;
-		}
+	private double getPlayerWinnerProfit(BetTypeEnum betType,
+			PlayerEnum betPlayer, PlayerEnum winner) {
+		if ((betType.equals(BetTypeEnum.B) && betPlayer.equals(winner))
+				|| (betType.equals(BetTypeEnum.L) && !betPlayer.equals(winner)))
+			return getPossibleProfit(betType);
+		else
+			return (-1) * getPossibleLiability(betType);
 	}
 
-	private void addTextFieldsListeners(final BetController betController,
-			final OddsButton oddsButton) {
+	private void addTextFieldsListeners(final Match match,
+			final BetTypeEnum betType, final PlayerEnum betPlayer) {
 		amountText.addListener(SWT.CHANGED, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				updateProfitAndLiability(oddsButton, betController);
-				updateOverallPossibleProfits(oddsButton, betController);
+				updateProfitAndLiability(betType);
+				updateOverallPossibleProfits(match, betType, betPlayer);
 				try {
-					Double.parseDouble(amountText.getText());					
+					Double.parseDouble(amountText.getText());
 					errorLabel.setVisible(false);
 				} catch (NumberFormatException nfe) {
 					setErrorText(AMOUNT_NUMBER_EXCEPTION);
@@ -131,8 +125,8 @@ public class BetPlacingShell {
 		oddsText.addListener(SWT.CHANGED, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				updateProfitAndLiability(oddsButton, betController);
-				updateOverallPossibleProfits(oddsButton, betController);
+				updateProfitAndLiability(betType);
+				updateOverallPossibleProfits(match, betType, betPlayer);
 				try {
 					double odds = Double.parseDouble(oddsText.getText());
 					if (BetManager.isValidPrice(odds))
@@ -143,134 +137,120 @@ public class BetPlacingShell {
 					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
 				}
-			}			
+			}
 		});
 	}
 
+	private void createProfitAndLiabilityLabels(BetTypeEnum betType,
+			GridData infoGridData) {
+		profitLabel = new Label(betShell, SWT.NONE);
+		profitLabel.setLayoutData(infoGridData);
 
-	private void createProfitAndLiabilityLabels(OddsButton oddsButton, BetController betController, GridData infoGridData) {
-		profitLabel = new Label(betShell, SWT.NONE);    	
-    	profitLabel.setLayoutData(infoGridData);
-    	
-    	liabilityLabel = new Label(betShell, SWT.NONE);    	
-    	liabilityLabel.setLayoutData(infoGridData);		
-    	
-    	updateProfitAndLiability(oddsButton, betController);
+		liabilityLabel = new Label(betShell, SWT.NONE);
+		liabilityLabel.setLayoutData(infoGridData);
+
+		updateProfitAndLiability(betType);
 	}
 
-
-	private void updateProfitAndLiability(OddsButton oddsButton,
-			BetController betController) {
+	private void updateProfitAndLiability(BetTypeEnum betType) {
 		profitLabel.setText(PROFIT_TEXT
-				+ BetsDisplay.DOUBLE_FORMAT.format(getPossibleProfit(
-						oddsButton, betController)));
+				+ BetsDisplay.DOUBLE_FORMAT.format(getPossibleProfit(betType)));
 		liabilityLabel.setText(LIABILITY_TEXT
-				+ BetsDisplay.DOUBLE_FORMAT.format(getPossibleLiability(
-						oddsButton, betController)));
+				+ BetsDisplay.DOUBLE_FORMAT
+						.format(getPossibleLiability(betType)));
 	}
 
-
-	private double getPossibleLiability(OddsButton oddsButton,
-			BetController betController) {
+	private double getPossibleLiability(BetTypeEnum betType) {
 		Double amount, odds;
 		try {
 			amount = Double.parseDouble(amountText.getText());
 			odds = Double.parseDouble(oddsText.getText());
-			if (betController.getBetType(oddsButton).equals(BetTypeEnum.B))
+			if (betType.equals(BetTypeEnum.B))
 				return amount;
 			else
 				return (odds - 1) * amount;
-		} catch (Exception e) {			
+		} catch (Exception e) {
 		}
 		return 0.0;
 	}
 
-
-	private double getPossibleProfit(OddsButton oddsButton, BetController betController) {
+	private double getPossibleProfit(BetTypeEnum betType) {
 		Double amount, odds;
 		try {
 			amount = Double.parseDouble(amountText.getText());
 			odds = Double.parseDouble(oddsText.getText());
-			if (betController.getBetType(oddsButton).equals(BetTypeEnum.B))
+			if (betType.equals(BetTypeEnum.B))
 				return (odds - 1) * amount;
 			else
 				return amount;
-		} catch (Exception e) {			
+		} catch (Exception e) {
 		}
 		return 0.0;
 	}
-
 
 	private void createErrorLabel(GridData infoGridData) {
-    	errorLabel = new Label(betShell, SWT.NONE);
-    	errorLabel.setText(AMOUNT_NUMBER_EXCEPTION);
-    	errorLabel.setVisible(false);
-    	errorLabel.setLayoutData(infoGridData);
+		errorLabel = new Label(betShell, SWT.NONE);
+		errorLabel.setText(AMOUNT_NUMBER_EXCEPTION);
+		errorLabel.setVisible(false);
+		errorLabel.setLayoutData(infoGridData);
 	}
 
-	private void createInfoLabel(final OddsButton oddsButton,
-            final BetController betController, GridData infoGridData) {
-        try {
-            Label infoLabel = new Label(betShell, SWT.NONE);
-            infoLabel.setText(betController.getBettingDetails(oddsButton));
-            if (betController.getBetType(oddsButton).equals(BetTypeEnum.B)){
-            	infoLabel.setBackground(Colours.backColor);
-            } else {
-            	infoLabel.setBackground(Colours.layColor);
-            }
-            infoLabel.setLayoutData(infoGridData);
-        } catch (OddsButtonNotFoundException e) {
-            log.error(e.getMessage());
-        }
-    }
-	
+	private void createInfoLabel(BetTypeEnum betType, String betDetails,
+			GridData infoGridData) {
+		Label infoLabel = new Label(betShell, SWT.NONE);
+		infoLabel.setText(betDetails);
+		if (betType.equals(BetTypeEnum.B)) {
+			infoLabel.setBackground(Colours.backColor);
+		} else {
+			infoLabel.setBackground(Colours.layColor);
+		}
+		infoLabel.setLayoutData(infoGridData);
+	}
+
 	private void createCancelButton() {
 		Button cancelButton = new Button(betShell, SWT.NONE);
-        cancelButton.setText("Cancel");
-        cancelButton.addListener(SWT.MouseUp, new Listener(){
+		cancelButton.setText("Cancel");
+		cancelButton.addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
 				betShell.dispose();
-			}        	
-        });
+			}
+		});
 	}
 
-	private void createSubmitButton(final OddsButton oddsButton,
-			final BetController betController) {
+	private void createSubmitButton(final Match match,
+			final PlayerEnum betPlayer, final BetTypeEnum betType) {
 		final Button submitButton = new Button(betShell, SWT.NONE);
 		submitButton.setText("Place bet");
-		try {
-			if (betController.getBetType(oddsButton).equals(BetTypeEnum.B)) {
-				submitButton.setBackground(Colours.backColor);				
-			} else {
-				submitButton.setBackground(Colours.layColor);
-			}
-		} catch (OddsButtonNotFoundException e) {
+		if (betType.equals(BetTypeEnum.B)) {
+			submitButton.setBackground(Colours.backColor);
+		} else {
+			submitButton.setBackground(Colours.layColor);
 		}
 		submitButton.addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
 				Double amount, odds;
 				try {
-				amount = Double.parseDouble(amountText
-                   		.getText());
+					amount = Double.parseDouble(amountText.getText());
 				} catch (NumberFormatException nfe) {
 					setErrorText(AMOUNT_NUMBER_EXCEPTION);
 					return;
 				}
 				try {
-				odds =  Double.parseDouble(oddsText.getText());
+					odds = Double.parseDouble(oddsText.getText());
 				} catch (NumberFormatException nfe) {
 					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
 				}
 				if (BetManager.isValidPrice(odds)) {
-					betController.addBet(oddsButton, amount, odds);
+					BetManager
+							.placeBet(match, betPlayer, betType, odds, amount);
 					betShell.dispose();
 				} else
 					setErrorText(INVALID_PRICE);
 			}
-		});		
+		});
 	}
 
 	protected void setErrorText(String message) {
@@ -278,8 +258,8 @@ public class BetPlacingShell {
 		errorLabel.setVisible(true);
 	}
 
-	private void createBetShell(OddsButton oddsButton) {
-		this.betShell = new Shell(oddsButton.getComp().getDisplay());
+	private void createBetShell(Display display) {
+		this.betShell = new Shell(display);
 		betShell.setSize(350, 600);
 		betShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		betShell.setText("Bet placing");
@@ -287,54 +267,53 @@ public class BetPlacingShell {
 
 	private void createAmountFields(GridData gridData, GridData gridData2) {
 		Label amountLabel = new Label(betShell, SWT.NONE);
-        amountLabel.setText("Amount (£): ");
-        amountLabel.setLayoutData(gridData);
-        
-        amountText = new Text(betShell, SWT.NONE);
-        amountText.setText("" + INITIAL_AMOUNT);
-        amountText.setLayoutData(gridData2);        
+		amountLabel.setText("Amount (£): ");
+		amountLabel.setLayoutData(gridData);
+
+		amountText = new Text(betShell, SWT.NONE);
+		amountText.setText("" + INITIAL_AMOUNT);
+		amountText.setLayoutData(gridData2);
 	}
 
-	private void createOddsFields(GridData gridData,
-			GridData gridData2) {
+	private void createOddsFields(GridData gridData, GridData gridData2) {
 		Label oddsLabel = new Label(betShell, SWT.NONE);
 		oddsLabel.setText("Odds: ");
 		oddsLabel.setLayoutData(gridData);
 
-        oddsText = new Text(betShell, SWT.NONE);
-        oddsText.setText("" + initialOdds);
-        oddsText.setLayoutData(gridData2);        
+		oddsText = new Text(betShell, SWT.NONE);
+		oddsText.setText("" + initialOdds);
+		oddsText.setLayoutData(gridData2);
 	}
 
 	private GridData getInfoGridData() {
 		GridData gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData.horizontalSpan = 6;
+		gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
+		gridData.horizontalSpan = 6;
 		return gridData;
 	}
 
 	private GridData getSecondGridData() {
 		GridData gridData2 = new GridData(150, 20);
-        gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData2.horizontalSpan = 4;
+		gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
+		gridData2.horizontalSpan = 4;
 		return gridData2;
 	}
 
 	private GridData getFirstGridData() {
 		GridData gridData = new GridData(75, 20);
-        gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData.horizontalSpan = 2;
+		gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
+		gridData.horizontalSpan = 2;
 		return gridData;
 	}
 
 	private void setGridLayout() {
 		GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 6;
-        //gridLayout.makeColumnsEqualWidth = true;
-        betShell.setLayout(gridLayout);
+		gridLayout.numColumns = 6;
+		// gridLayout.makeColumnsEqualWidth = true;
+		betShell.setLayout(gridLayout);
 	}
-	
-	public void setLocation(int x, int y){
+
+	public void setLocation(int x, int y) {
 		betShell.setLocation(x, y);
 	}
 }

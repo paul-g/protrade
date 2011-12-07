@@ -146,35 +146,6 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		msg += ("") + "\n";
 		return msg;
 	}
-
-	/*
-	public static String[] getNames(String title) {
-		if (!MatchUtils.isMatch(title))
-			;
-		String[] str = title.split(" v ");
-		return str;
-	}
-
-	public static ArrayList<Pair<Double, Double>> setBack(
-			InflatedMarketPrices prices, int nr) {
-		if (prices.getRunners().size() >= 2) {
-			InflatedRunner r = prices.getRunners().get(nr - 1);
-			ArrayList<Pair<Double, Double>> result = setBackValues(r);
-			return result;
-		}
-		return null;
-	}
-
-	public static ArrayList<Pair<Double, Double>> setLay(
-			InflatedMarketPrices prices, int nr) {
-		if (prices.getRunners().size() >= 2) {
-			InflatedRunner r = prices.getRunners().get(nr - 1);
-			ArrayList<Pair<Double, Double>> result = setLayValues(r);
-			return result;
-		}
-		return null;
-	}
-	*/
 	
 	private static ArrayList<Pair<Double, Double>> setBackValues(
 			InflatedRunner r) {

@@ -139,13 +139,13 @@ public class BetfairConnectionHandler {
 	}
 
 	// filter events to get only the list of matches
-	public static void filterMatches(Tournament tournament) {
+	private static void filterMatches(Tournament tournament) {
 		List<RealMatch> matches = new ArrayList<RealMatch>();
 		matches = getMatches(matches, tournament.getEventBetfair());
 		tournament.setMatches(matches);
 	}
 	
-	public static List<RealMatch> getMatches(List<RealMatch> matches, EventBetfair eventBetfair) {
+	private static List<RealMatch> getMatches(List<RealMatch> matches, EventBetfair eventBetfair) {
 		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof EventBetfair) {
 				if (isMatch((EventBetfair)emb)) {

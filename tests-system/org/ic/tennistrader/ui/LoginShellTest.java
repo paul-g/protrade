@@ -1,6 +1,5 @@
 package org.ic.tennistrader.ui;
 
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -9,35 +8,24 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.ic.tennistrader.Main;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class LoginShellTest {
-    private Display display;
+public class LoginShellTest extends DisplayTest {    
     private LoginShell ls;
     private Shell shell;
     private SWTBot bot;
     private SWTBotButton loginButton;
 
     @Before
-    public void setUp() {
-        display = new Display();
+    public void setUp() {        
+    	super.setUp();
         ls = new LoginShell(display);
         shell = ls.show();
         bot = new SWTBot(shell);
         loginButton = bot.button("Login");
-
-    }
-
-    @After  
-    public void tearDown() {
-        while (display.readAndDispatch()){
-            // handle remaining work
-        }
-        display.dispose();
     }
 
     @Test
