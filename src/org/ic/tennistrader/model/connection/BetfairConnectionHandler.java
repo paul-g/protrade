@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.ic.tennistrader.demo.handler.ExchangeAPI;
-import org.ic.tennistrader.demo.handler.GlobalAPI;
-import org.ic.tennistrader.demo.util.APIContext;
 import org.ic.tennistrader.domain.EventMarketBetfair;
 import org.ic.tennistrader.domain.MarketBetfair;
 import org.ic.tennistrader.domain.EventBetfair;
@@ -17,12 +14,12 @@ import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.exceptions.LoginFailedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.GetAccountFundsResp;
-import org.ic.tennistrader.demo.handler.ExchangeAPI.Exchange;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.ViewProfileResp;
+import org.ic.tennistrader.model.connection.ExchangeAPI.Exchange;
 import org.ic.tennistrader.utils.MatchUtils;
 
 public class BetfairConnectionHandler {

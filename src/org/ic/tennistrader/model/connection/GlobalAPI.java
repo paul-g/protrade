@@ -1,6 +1,5 @@
-package org.ic.tennistrader.demo.handler;
+package org.ic.tennistrader.model.connection;
 
-import org.ic.tennistrader.demo.util.APIContext;
 import org.ic.tennistrader.exceptions.ViewProfileException;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.*;
@@ -57,7 +56,6 @@ public class GlobalAPI {
         
         // Send the request to the Betfair Service.
         LoginResp resp = getStub().login(msg).getResult();
-        context.getUsage().addCall("login");
         
         // Check the response code, and throw and exception if the call failed
         if (resp.getErrorCode() != LoginErrorEnum.OK)
@@ -81,7 +79,6 @@ public class GlobalAPI {
         
         // Send the request to the Betfair Service.
         GetEventTypesResp resp = getStub().getActiveEventTypes(msg).getResult();
-        context.getUsage().addCall("getActiveEventTypes");
         
         // Check the response code, and throw and exception if the call failed
         if (resp.getErrorCode() != GetEventsErrorEnum.OK)
@@ -110,7 +107,6 @@ public class GlobalAPI {
         
         // Send the request to the Betfair Service.
         GetEventsResp resp = getStub().getEvents(msg).getResult();
-        context.getUsage().addCall("getEvents");
         
         // Check the response code, and throw and exception if the call failed
         if (resp.getErrorCode() != GetEventsErrorEnum.OK)
@@ -136,7 +132,6 @@ public class GlobalAPI {
         
         // Send the request to the Betfair Service.
         LogoutResp resp = getStub().logout(msg).getResult();
-        context.getUsage().addCall("logout");
        
         // Check the response code, and throw and exception if the call failed
         if (resp.getErrorCode() != LogoutErrorEnum.OK)
@@ -159,7 +154,6 @@ public class GlobalAPI {
 	    ViewProfileResp resp;
 	    try {
             resp = getStub().viewProfile(profile).getResult();
-            context.getUsage().addCall("viewProfile");
 	    } catch (Exception e) {
             throw new ViewProfileException(e.getMessage());
         }

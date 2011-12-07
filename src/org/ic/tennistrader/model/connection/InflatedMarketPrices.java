@@ -1,4 +1,4 @@
-package org.ic.tennistrader.demo.util;
+package org.ic.tennistrader.model.connection;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 // The inflated version of the maket prices returned by the getMarketPricesCompressed API call
 public class InflatedMarketPrices {

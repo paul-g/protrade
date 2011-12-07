@@ -2,18 +2,15 @@ package org.ic.tennistrader.model.connection;
 
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
-import org.ic.tennistrader.demo.handler.ExchangeAPI;
-import org.ic.tennistrader.demo.handler.GlobalAPI;
-import org.ic.tennistrader.demo.handler.ExchangeAPI.Exchange;
-import org.ic.tennistrader.demo.util.InflatedMarketPrices;
-import org.ic.tennistrader.demo.util.InflatedMarketPrices.InflatedPrice;
-import org.ic.tennistrader.demo.util.InflatedMarketPrices.InflatedRunner;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
+import org.ic.tennistrader.model.connection.ExchangeAPI.Exchange;
+import org.ic.tennistrader.model.connection.InflatedMarketPrices.InflatedPrice;
+import org.ic.tennistrader.model.connection.InflatedMarketPrices.InflatedRunner;
 
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;

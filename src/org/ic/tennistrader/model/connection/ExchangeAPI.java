@@ -1,8 +1,5 @@
-package org.ic.tennistrader.demo.handler;
+package org.ic.tennistrader.model.connection;
 
-import org.ic.tennistrader.demo.util.APIContext;
-import org.ic.tennistrader.demo.util.InflatedCompleteMarketPrices;
-import org.ic.tennistrader.demo.util.InflatedMarketPrices;
 
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.*;
@@ -76,7 +73,6 @@ public class ExchangeAPI {
         
         // Send the request to the Betfair Exchange Service.
         GetAccountFundsResp resp = getStub(exch).getAccountFunds(msg).getResult();
-        context.getUsage().addCall("getAccountFunds");
         
         // Check the response code, and throw and exception if login failed
         if (resp.getErrorCode() != GetAccountFundsErrorEnum.OK)
@@ -105,7 +101,6 @@ public class ExchangeAPI {
         
         // Send the request to the Betfair Exchange Service.
         GetMarketResp resp = getStub(exch).getMarket(msg).getResult();
-        context.getUsage().addCall("getMarket");
         
         // Check the response code, and throw and exception if call failed
         if (resp.getErrorCode() != GetMarketErrorEnum.OK)
@@ -134,7 +129,6 @@ public class ExchangeAPI {
         
         // Send the request to the Betfair Exchange Service.
         GetMarketPricesCompressedResp resp = getStub(exch).getMarketPricesCompressed(msg).getResult();
-        context.getUsage().addCall("getMarketPricesCompressed");
 
         // Check the response code, and throw and exception if call failed
         if (resp.getErrorCode() != GetMarketPricesErrorEnum.OK)
@@ -148,6 +142,8 @@ public class ExchangeAPI {
         return new InflatedMarketPrices(resp.getMarketPrices());
 	}
 	
+	/*
+	// Not used for now, but may be in the future
 	public static InflatedCompleteMarketPrices getCompleteMarketPrices(Exchange exch, APIContext context, int marketId) throws Exception {
 		// create a request object
 		GetCompleteMarketPricesCompressedReq request = new GetCompleteMarketPricesCompressedReq();
@@ -162,7 +158,6 @@ public class ExchangeAPI {
 		
 		// Send the request to the Betfair Exchange Service.
 		GetCompleteMarketPricesCompressedResp resp = getStub(exch).getCompleteMarketPricesCompressed(msg).getResult();
-		context.getUsage().addCall("getCompleteMarketPricesCompressed");
 		
 		// Check the response code and throw an exception if the call failed 
 		if (resp.getErrorCode() != GetCompleteMarketPricesErrorEnum.OK) {
@@ -174,7 +169,10 @@ public class ExchangeAPI {
 		
 		return new InflatedCompleteMarketPrices(resp.getCompleteMarketPrices());
 	}
+	*/
 	
+	/*
+	 * All following classe not used for now, but will be in the future - real bet added
 	// Get all matched and unmatched bets on the market
 	public static MUBet[] getMUBets(Exchange exch, APIContext context, int marketId) throws Exception {
 		
@@ -198,7 +196,6 @@ public class ExchangeAPI {
 
         // Send the request to the Betfair Exchange Service.
         GetMUBetsResp resp = getStub(exch).getMUBets(msg).getResult();
-        context.getUsage().addCall("getMUBets");
         
         // Check the response code, and throw and exception if call failed
         if ((resp.getErrorCode() != GetMUBetsErrorEnum.OK) &&
@@ -216,7 +213,26 @@ public class ExchangeAPI {
         	return resp.getBets().getMUBet();
         }
 	}
+	*/
 	
+	/*
+	public static void getBetHistory(APIContext context, int marketId) {
+		// Create a request object
+		GetBetHistoryReq request = new GetBetHistoryReq();
+		request.setHeader(getHeader(context.getToken()));
+		
+		// Set the parameters
+		if (marketId > 0) {
+			request.setMarketId(marketId);
+		}
+		request.setBetTypesIncluded(BetStatusEnum.M);
+		request.setDetailed(false);
+		
+		
+	}
+	*/
+	
+	/*
 	// Place some bets on the market
 	public static PlaceBetsResult[] placeBets(Exchange exch, APIContext context, PlaceBets[] bets) throws Exception {
 		
@@ -235,7 +251,6 @@ public class ExchangeAPI {
 
         // Send the request to the Betfair Exchange Service.
         PlaceBetsResp resp = getStub(exch).placeBets(msg).getResult();
-        context.getUsage().addCall("placeBets");
         
         // Check the response code, and throw and exception if call failed
         if (resp.getErrorCode() != PlaceBetsErrorEnum.OK)
@@ -249,7 +264,9 @@ public class ExchangeAPI {
 
         return resp.getBetResults().getPlaceBetsResult();
 	}
+	*/
 	
+	/*	
 	// Update a bet on the market
 	public static UpdateBetsResult[] updateBets(Exchange exch, APIContext context, UpdateBets[] bets) throws Exception {
 		
@@ -268,7 +285,6 @@ public class ExchangeAPI {
 
         // Send the request to the Betfair Exchange Service.
         UpdateBetsResp resp = getStub(exch).updateBets(msg).getResult();
-        context.getUsage().addCall("updateBets");
         
         // Check the response code, and throw and exception if call failed
         if (resp.getErrorCode() != UpdateBetsErrorEnum.OK)
@@ -282,7 +298,9 @@ public class ExchangeAPI {
 
         return resp.getBetResults().getUpdateBetsResult();
 	}
+	*/
 	
+	/*
 	// Cancel a bet on the market
 	public static CancelBetsResult[] cancelBets(Exchange exch, APIContext context, CancelBets[] bets) throws Exception {
 		
@@ -301,7 +319,6 @@ public class ExchangeAPI {
 
         // Send the request to the Betfair Exchange Service.
         CancelBetsResp resp = getStub(exch).cancelBets(msg).getResult();
-        context.getUsage().addCall("cancelBets");
         
         // Check the response code, and throw and exception if call failed
         if (resp.getErrorCode() != CancelBetsErrorEnum.OK)
@@ -315,4 +332,5 @@ public class ExchangeAPI {
 
         return resp.getBetResults().getCancelBetsResult();
 	}
+	*/
 }
