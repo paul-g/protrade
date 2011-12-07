@@ -392,6 +392,17 @@ public class UpperToolBar {
 			return false;
 		}
 	}
+	
+	/** Getter for Login bar */
+	public ToolBar getLoginToolBar() {
+		return login;
+	}
+
+	/** Getter for Tool bar */
+	public ToolBar getToolBar() {
+		return toolbar;
+	}
+	
 
 	/** Listener for the left hand side buttons */
 	private class LeftDropDownListener implements Listener {
@@ -440,7 +451,5 @@ public class UpperToolBar {
 				menu.setVisible(true);
 			}
 		}
-
 	}
-
 }

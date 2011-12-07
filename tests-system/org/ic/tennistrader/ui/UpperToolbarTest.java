@@ -2,16 +2,9 @@ package org.ic.tennistrader.ui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +12,8 @@ public class UpperToolbarTest extends DisplayTest {
 	
 	private MainWindow mw;
 	private SWTBot bot;
+	private SWTBot logbot;
+	private SWTBot toolbot;
 	private UpperToolBar utb;
 
 	@Before
@@ -27,6 +22,9 @@ public class UpperToolbarTest extends DisplayTest {
 		mw = new MainWindow(display);
 		bot = new SWTBot(mw.show());
 		utb = mw.getUpperToolBar();
+		logbot = new SWTBot(utb.getLoginToolBar());
+		toolbot = new SWTBot(utb.getToolBar());
+
 	}
 
 	@Test
@@ -38,19 +36,19 @@ public class UpperToolbarTest extends DisplayTest {
 	@Test
 	public void toolbarWidgetMenuCheck() {
 		// New widget menu checks
-		SWTBotToolbarDropDownButton wmbutton = bot.toolbarDropDownButtonWithTooltip("Widget Menu");
+		SWTBotToolbarDropDownButton wmbutton = toolbot.toolbarDropDownButtonWithTooltip("Widget Menu");
 		assertNotNull(wmbutton);
-		wmbutton.click();
-		Matcher<MenuItem> match = withText("Match Navigator");
-		wmbutton.menuItem(match).click();
-		match = withText("Active Bets Display");
-		wmbutton.menuItem(match).click();
-		match = withText("Match Viewer");
-		wmbutton.menuItem(match).click();
-		match = withText("Player Statistics");
-		wmbutton.menuItem(match).click();
+//		wmbutton.click();
+//		Matcher<MenuItem> match = withText("Match Navigator");
+//		wmbutton.menuItem(match).click();
+//		match = withText("Active Bets Display");
+//		wmbutton.menuItem(match).click();
+//		match = withText("Match Viewer");
+//		wmbutton.menuItem(match).click();
+//		match = withText("Player Statistics");
+//		wmbutton.menuItem(match).click();
 	}
-/*	
+	
 	@Test
 	public void toolbarPlayMenuCheck() {
 		// Play menu checks
@@ -61,7 +59,7 @@ public class UpperToolbarTest extends DisplayTest {
 	@Test
 	public void toolbarProfileCheck() {
 		// Profile button checks
-		SWTBotToolbarDropDownButton profbutton = bot.toolbarDropDownButtonWithTooltip("Profile");
+		SWTBotToolbarDropDownButton profbutton = logbot.toolbarDropDownButtonWithTooltip("Profile");
 		assertEquals(utb.openProfileWindow(),true);
 		assertEquals(utb.openPreferencesWindow(),true);
 		assertEquals(utb.openProfileWindow(),false);
@@ -74,5 +72,5 @@ public class UpperToolbarTest extends DisplayTest {
 		// Balance button checks
 		SWTBotToolbarDropDownButton balance = bot.toolbarDropDownButtonWithTooltip("Balance");
 		assertNotNull(balance);
-	}*/
+	}
 }
