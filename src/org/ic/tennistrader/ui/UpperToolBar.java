@@ -70,9 +70,9 @@ public class UpperToolBar {
 
 		// Log out/profile menu
 		makeProfileMenu(mainWindow, shell);
-		
+
 	}
-	
+
 	/** Profile button menu constructor */
 	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
 		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
@@ -83,11 +83,15 @@ public class UpperToolBar {
 		// TODO: this is a slight hack
 		profileItem.setText(Main.USERNAME);
 		profileItem.setToolTipText("Profile");
-		
+
 		try {		
 			balanceItem.setText("£"
 					+ profileData.getUkAccountFunds().getBalance());
-
+		} catch(Exception e) {
+			log.error(e.getMessage());
+		}
+		
+		try {
 			final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
 			MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
 			ukBalance.setText("GBP");
@@ -114,7 +118,7 @@ public class UpperToolBar {
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						balanceItem.setText("$"
-							 + profileData.getAusAccountFunds().getBalance());
+								+ profileData.getAusAccountFunds().getBalance());
 					} catch (Exception e1) {
 						log.error(e1.getMessage());
 					}
@@ -141,52 +145,52 @@ public class UpperToolBar {
 					final LoginShell ls = new LoginShell(nd);
 					final MainWindow mw = new MainWindow(nd); 
 					mw.addLoadListener(new Listener() {
-					        @Override
-					        public void handleEvent(Event event) {
-					            if (event.text.equals("Done!")) {
-					                ls.finishProgressBar();
-					                ls.dispose();
-					            }
-					            else {
-					                ls.updateProgressBar(10);
-					                ls.setText(event.text);
-					            }
-					        }
+						@Override
+						public void handleEvent(Event event) {
+							if (event.text.equals("Done!")) {
+								ls.finishProgressBar();
+								ls.dispose();
+							}
+							else {
+								ls.updateProgressBar(10);
+								ls.setText(event.text);
+							}
+						}
 					});
 					ls.addLoginSuccessListener(new Listener() {
-				        @Override
-				        public void handleEvent(Event arg0) {
-				            mw.show();
-				            mw.run(nd);
-				        }
-				    });
+						@Override
+						public void handleEvent(Event arg0) {
+							mw.show();
+							mw.run(nd);
+						}
+					});
 					ls.run(nd);
 				}
 			});
 			MenuItem profileButton = new MenuItem(profileDropDown, SWT.PUSH);
 			profileButton.setText("Profile");
 			profileButton.addSelectionListener(new SelectionListener() {
-	            @Override
-	            public void widgetDefaultSelected(SelectionEvent e) {
-	            }
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
 
-	            @Override
-	            public void widgetSelected(SelectionEvent e) {
-	            	openProfileWindow();
-	            }
-	        });
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					openProfileWindow();
+				}
+			});
 			MenuItem preferencesButton = new MenuItem(profileDropDown, SWT.PUSH);
 			preferencesButton.setText("Preferences");
 			preferencesButton.addSelectionListener(new SelectionListener() {
-	            @Override
-	            public void widgetDefaultSelected(SelectionEvent e) {
-	            }
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
 
-	            @Override
-	            public void widgetSelected(SelectionEvent e) {
-	            	openPreferencesWindow();
-	            }
-	        });
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					openPreferencesWindow();
+				}
+			});
 			profileItem.addListener(SWT.Selection, new RightDropDownListener(
 					profileItem, profileDropDown));
 			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
@@ -232,18 +236,18 @@ public class UpperToolBar {
 				mainWindow.addPlayerStatistics();
 			}
 		});
-		
-        MenuItem matchViewer = new MenuItem(widgetDropDown, SWT.PUSH);
-        matchViewer.setText("Match Viewer");
-        matchViewer.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(Event arg0) {
-                mainWindow.addMatchViewer();
-            }
-        });
 
-        widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
-                widgetItem, widgetDropDown));
+		MenuItem matchViewer = new MenuItem(widgetDropDown, SWT.PUSH);
+		matchViewer.setText("Match Viewer");
+		matchViewer.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				mainWindow.addMatchViewer();
+			}
+		});
+
+		widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
+				widgetItem, widgetDropDown));
 		widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
 				widgetItem, widgetDropDown));
 		toolbar.pack();
@@ -266,33 +270,33 @@ public class UpperToolBar {
 				openMatchView("data/fracsoft/fracsoft1.csv");
 			}
 		});
-		
+
 		MenuItem usOpenFinalFull = new MenuItem(playDropDown, SWT.PUSH);
 		usOpenFinalFull.setText("US Open Final 2011(full)");
 		usOpenFinalFull.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(Event arg0) {
-                openMatchView("data/full/fulldata1.csv");
-            }
-        });
-		
+			@Override
+			public void handleEvent(Event arg0) {
+				openMatchView("data/full/fulldata1.csv");
+			}
+		});
+
 		MenuItem usOpenFinalFullShort = new MenuItem(playDropDown, SWT.PUSH);
 		usOpenFinalFullShort.setText("US Open Final 2011(full, but short)");
 		usOpenFinalFullShort.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(Event arg0) {
-                openMatchView("data/full/fulldataShort.csv");
-            }
-        });
-		
+			@Override
+			public void handleEvent(Event arg0) {
+				openMatchView("data/full/fulldataShort.csv");
+			}
+		});
+
 		MenuItem barclays = new MenuItem(playDropDown, SWT.PUSH);
 		barclays.setText("Barclays ATP World Tour Finals 2011 Tsonga v Federer - set 3");
 		barclays.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(Event arg0) {
-                openMatchView("data/recorded/tso-fed-set-3.csv");
-            }
-        });
+			@Override
+			public void handleEvent(Event arg0) {
+				openMatchView("data/recorded/tso-fed-set-3.csv");
+			}
+		});
 
 		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
 		playItem.setText("From File");
@@ -303,7 +307,7 @@ public class UpperToolBar {
 
 				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 				String[] filterNames = new String[] { "CSV Files",
-						"All Files (*)" };
+				"All Files (*)" };
 				String[] filterExtensions = new String[] { "*.csv", "*" };
 				String filterPath = "/";
 				String platform = SWT.getPlatform();
@@ -343,7 +347,7 @@ public class UpperToolBar {
 		}
 		return res;
 	}
-	
+
 	/** Open a new match view */
 	private void openMatchView(String filename) {
 		if (filename != null) {
@@ -351,44 +355,44 @@ public class UpperToolBar {
 			mainWindow.getDisplayPanel().addMatchView(match);
 		}
 	}
-	
+
 	/** Method invoking the Profile Window appearance */
 	public boolean openProfileWindow() {
-    	if (profileWindow == null || profileWindow.isDisposed()) {
-            profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
-            profileWindow.setLayout(new FillLayout());
-            profileWindow.setText("Profile");
-            profileWindow.setSize(200,200);
-            profileWindow.setLocation(1100,80);
-            Label profData = new Label(profileWindow,SWT.BORDER);
-            profData.setText(textProfile());
-            profileWindow.open();
-            return true;
-    	} else {
-    		profileWindow.forceActive();
-    		return false;
-    	}
+		if (profileWindow == null || profileWindow.isDisposed()) {
+			profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
+			profileWindow.setLayout(new FillLayout());
+			profileWindow.setText("Profile");
+			profileWindow.setSize(200,200);
+			profileWindow.setLocation(1100,80);
+			Label profData = new Label(profileWindow,SWT.BORDER);
+			profData.setText(textProfile());
+			profileWindow.open();
+			return true;
+		} else {
+			profileWindow.forceActive();
+			return false;
+		}
 	}
-	
+
 	/** Method for Preferences Window invocation */
 	public boolean openPreferencesWindow() {
 		if (preferencesWindow == null || preferencesWindow.isDisposed()) {
-            preferencesWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
-            preferencesWindow.setLayout(new FillLayout());
-            preferencesWindow.setText("Preferences");
-            preferencesWindow.setSize(200,200);
-            preferencesWindow.setLocation(1120,100);
-            ToolBar prefData = new ToolBar(preferencesWindow, SWT.VERTICAL);
-            new ToolItem(prefData, SWT.CHECK).setText("Remember Me");
-            new ToolItem(prefData, SWT.CHECK).setText("Display my name");
-            preferencesWindow.open();
-            return true;
-    	} else {
-    		preferencesWindow.forceActive();
-    		return false;
-    	}
+			preferencesWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
+			preferencesWindow.setLayout(new FillLayout());
+			preferencesWindow.setText("Preferences");
+			preferencesWindow.setSize(200,200);
+			preferencesWindow.setLocation(1120,100);
+			ToolBar prefData = new ToolBar(preferencesWindow, SWT.VERTICAL);
+			new ToolItem(prefData, SWT.CHECK).setText("Remember Me");
+			new ToolItem(prefData, SWT.CHECK).setText("Display my name");
+			preferencesWindow.open();
+			return true;
+		} else {
+			preferencesWindow.forceActive();
+			return false;
+		}
 	}
-	
+
 	/** Listener for the left hand side buttons */
 	private class LeftDropDownListener implements Listener {
 
@@ -409,7 +413,7 @@ public class UpperToolBar {
 				menu.setVisible(true);
 			}
 		}
-		
+
 	}
 
 	/** Listener for right hand side buttons */
@@ -432,7 +436,7 @@ public class UpperToolBar {
 				menu.setVisible(true);
 			}
 		}
-		
+
 	}
-	
+
 }
