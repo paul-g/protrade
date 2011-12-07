@@ -191,10 +191,10 @@ public class UpperToolBar {
 					openPreferencesWindow();
 				}
 			});
-			profileItem.addListener(SWT.Selection, new RightDropDownListener(
-					profileItem, profileDropDown));
 			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
-					balanceItem, balanceDropDown));
+					balanceItem, balanceDropDown,profileItem));
+			profileItem.addListener(SWT.Selection, new RightDropDownListener(
+					profileItem, profileDropDown,null));
 		} catch (Exception e) {
 		}
 	}
@@ -204,9 +204,9 @@ public class UpperToolBar {
 			final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 		widgetItem.setToolTipText("Widget Menu");
-		final Image img = new Image(shell.getDisplay(), "images/plus.png");
-		widgetItem.setImage(img);
+		widgetItem.setImage(new Image(shell.getDisplay(), "images/plus.png"));
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
+		widgetDropDown.setData("WIDGETMENU");
 		MenuItem matchNavigator = new MenuItem(widgetDropDown, SWT.PUSH);
 		matchNavigator.setText("Match Navigator");
 		matchNavigator.addListener(SWT.Selection, new Listener() {
@@ -421,16 +421,20 @@ public class UpperToolBar {
 
 		private ToolItem item;
 		private Menu menu;
+		private ToolItem prev;
 
-		public RightDropDownListener(ToolItem item, Menu menu) {
+		public RightDropDownListener(ToolItem item, Menu menu, ToolItem prev) {
 			this.item = item;
 			this.menu = menu;
+			this.prev = prev;
 		}
 
 		public void handleEvent(Event event) {
 			if (event.detail == SWT.ARROW) {
 				Rectangle bounds = item.getBounds();
-				Point point = login.toDisplay(bounds.x + bounds.width, bounds.y
+				int nx = 0;
+				if (prev != null) nx += prev.getBounds().width;
+				Point point = login.toDisplay(bounds.x + bounds.width - nx, bounds.y
 						+ bounds.height);
 				menu.setLocation(point);
 				menu.setVisible(true);
