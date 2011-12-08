@@ -137,12 +137,12 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         name.setText("radubal2");
         pass.setText("placintacumere");
 
-        System.out.println("Logging in to site");
+        log.info("Logging in to site");
 
         HtmlPage loggedPage = (HtmlPage) submitButton.click();
         loggedPage.initialize();
 
-        System.out.println("Successfully Logged in to site");
+        log.info("Successfully Logged in to site");
 
         HtmlTextInput player1 = (HtmlTextInput) loggedPage
                 .getElementByName("match_preview_search1");
@@ -162,14 +162,16 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
         HtmlElement btnContinue = (HtmlElement) intermPage
                 .getElementById("addinsight");
-        System.out.println("Successfully searched players");
+        
+        log.info("Successfully searched players");
+        
         HtmlPage page = null;
         if (btnContinue != null)
             page = (HtmlPage) btnContinue.click();
         else
             page = intermPage;
 
-        System.out.println("page: " + page);
+        log.info("page: " + page);
 
         // page.initialize();
 
@@ -186,20 +188,20 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     @Override
     protected void runBody() {
-        System.out.println(match.getPlayerOne().toString() + " v "
+        log.info(match.getPlayerOne().toString() + " v "
                 + match.getPlayerTwo().toString());
         retries++;
         if (retries > RETRY_LIMIT) {
+        	log.info("Retry limit reached - stopping thread");
             setStop();
         }
         else
             // try to get stats
             try {
-            	System.out.println("Started to fetch statistics");
             	try {
             		page = getStatistics();
             	} catch(Exception e){}
-                System.out.println("Fetched statistics");
+                log.info("Fetched statistics");
                 if (page != null) {
                 	System.out.println("Started parsing");
                     (new StatisticsParser(page, this.match)).parseAndSetStatistics();
@@ -210,8 +212,8 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
                     Thread.sleep(5000);
             } catch (Exception e) {
                 e.printStackTrace();
-                // log.error(e.getMessage());
-                // log.error(e.getStackTrace());
+                log.error(e.getMessage());
+                log.error(e.getStackTrace());
             }
     }
 

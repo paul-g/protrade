@@ -16,6 +16,7 @@ import org.ic.tennistrader.Main;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.EventMarketBetfair;
+import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
@@ -25,7 +26,7 @@ import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
 public class PredictionGui extends StandardWidgetContainer {
 
-    private static Logger log = Logger.getLogger(Main.class);
+    private static Logger log = Logger.getLogger(PredictionGui.class);
 
     private ScoreUpdateThread scoreUpdateThread;
 
@@ -38,14 +39,17 @@ public class PredictionGui extends StandardWidgetContainer {
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        Player playerOne = new Player("Jo-Wilfried", "Tsonga");
-        Player playerTwo = new Player("Roger", "Federer");
+        Player playerOne = new Player("Rafael", "Nadal");
+        Player playerTwo = new Player("Del Potro", "Juan Martin");
 
-        Match match = new RealMatch("","", new EventBetfair("Federer v Tsonga", new ArrayList<EventMarketBetfair>(), 1));
+        Match match = new RealMatch("","", new EventBetfair("Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
+        MOddsMarketData modds =new MOddsMarketData();
+        modds.setDelay(5);
+        match.addMarketData(modds);
         match.setPlayer1(playerOne);
         match.setPlayer2(playerTwo);
 
-        new PredictionGui(shell, SWT.BORDER, match);
+        new PredictionGui(shell, SWT.BORDER, match).start();
 
         shell.open();
 
@@ -59,6 +63,7 @@ public class PredictionGui extends StandardWidgetContainer {
     
     public PredictionGui(final Composite parent, int style, Match match) {
         super(parent, style);
+    	log.info("Started prediction GUI");
         this.match = match;
 
         RowLayout mainLayout = new RowLayout();
@@ -91,8 +96,9 @@ public class PredictionGui extends StandardWidgetContainer {
     }
     
     public void start(){
-        statisticsUpdateThread.start();
+        //statisticsUpdateThread.start();
         if (match.isInPlay()) {
+        	log.info("Live match: starting score update thread");
             // only start score fetching for live matches
             scoreUpdateThread.start();
         }
