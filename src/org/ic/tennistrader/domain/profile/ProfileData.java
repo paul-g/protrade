@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 
 public class ProfileData {
-    private AccountFunds ukAccountFounds;
+    private AccountFunds ukAccountFunds;
     private AccountFunds ausAccountFunds;
     private String title, firstName, surname, username;
     private String address1, address2, address3, townCity, countyState, postCode, country;
@@ -18,11 +18,11 @@ public class ProfileData {
     }
 
     public void setUkAccountFunds(AccountFunds ukAccountFunds) {
-        this.ukAccountFounds = ukAccountFunds;
+        this.ukAccountFunds = ukAccountFunds;
     }
 
     public AccountFunds getUkAccountFunds() {
-        return ukAccountFounds;
+        return ukAccountFunds;
     }
 
     public void setAusAccountFunds(AccountFunds ausAccountFunds) {
@@ -41,12 +41,8 @@ public class ProfileData {
         return title;
     }
     
-    public AccountFunds getUkAccountFounds() {
-        return ukAccountFounds;
-    }
-
     public void setUkAccountFounds(AccountFunds ukAccountFounds) {
-        this.ukAccountFounds = ukAccountFounds;
+        this.ukAccountFunds = ukAccountFounds;
     }
 
     public String getFirstName() {

@@ -50,6 +50,10 @@ public class BetfairDataUpdaterTest {
 	public void testStopCondition() {
 		betfairDataUpdaterThread.start();
 		assertTrue(betfairDataUpdaterThread.isAlive());
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+		}
 		betfairDataUpdaterThread.setStop();
 		betfairDataUpdaterThread.interrupt();
 		try {

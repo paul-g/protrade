@@ -14,8 +14,8 @@ import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.ui.BetsDisplay;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
+import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.utils.Pair;
 

@@ -1,7 +1,6 @@
 package org.ic.tennistrader.domain;
 
 import static org.junit.Assert.assertEquals;
-
 import org.ic.tennistrader.domain.match.SetScore;
 import org.junit.Ignore;
 

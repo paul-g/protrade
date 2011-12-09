@@ -25,6 +25,10 @@ public class MOddsMarketData {
 
     public MOddsMarketData() {
         this.delay = 0;
+        pl1Lay = new ArrayList<Pair<Double, Double>>();
+        pl1Back = new ArrayList<Pair<Double, Double>>();
+        pl2Lay = new ArrayList<Pair<Double, Double>>();
+        pl2Back = new ArrayList<Pair<Double, Double>>();
     }
 
     public String getPlayer1() {

@@ -24,26 +24,8 @@ public class BetController {
 		this.player1LayButtons = player1LayButtons;
 		this.player2BackButtons = player2BackButtons;
 		this.player2LayButtons = player2LayButtons;
-		this.match = match;
+		setMatch(match);
 	}
-		
-    public void addBet(OddsButton button, double amount, double odds) {
-        PlayerEnum player;
-        /*
-        Double maxAmount = button.getAmount();
-        if (amount > maxAmount) {
-            // do smth
-        } else {
-        */
-            try {
-                player = getBetPlayer(button);
-                BetTypeEnum betType = getBetType(button);
-                BetManager.placeBet(match, player, betType, odds, amount);
-            } catch (OddsButtonNotFoundException e) {
-                log.error(e.getMessage());
-            }
-        //}
-    }
 
 	public PlayerEnum getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {
 		PlayerEnum player;

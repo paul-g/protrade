@@ -1,10 +1,10 @@
 package org.ic.tennistrader.score;
 
-
 import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -30,7 +30,7 @@ Listener {
     	super(composite, SWT.NONE);
         this.match = match;
         this.display = composite.getDisplay();
-        this.setLayout(new GridLayout());     
+        this.setLayout(new FillLayout());     
         
         this.tree = new Tree(this, SWT.NONE);
         tree.setHeaderVisible(true);
@@ -50,11 +50,6 @@ Listener {
         tcolumn[2].setText(match.getPlayerTwo().getLastname());
         tcolumn[2].setWidth(140);
         tcolumn[2].setResizable(false);
-             
-        tree.setItemCount(0);
-        composite.pack();
-        
-
     }
 
     public Tree getTree() {
@@ -121,7 +116,9 @@ Listener {
                    for (int i=0;i<values.length;i++) {
                        makeTreeLine(item, values[i][1], values[i][0], values[i][2]);
                    }
-               }              
+               }
+               
+               
             }
         });
   

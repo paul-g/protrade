@@ -23,7 +23,6 @@ import org.swtchart.IBarSeries;
 import org.swtchart.IErrorBar;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
-import org.swtchart.LineStyle;
 import org.swtchart.Range;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;

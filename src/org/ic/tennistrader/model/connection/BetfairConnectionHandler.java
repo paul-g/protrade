@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.ic.tennistrader.demo.handler.ExchangeAPI;
-import org.ic.tennistrader.demo.handler.GlobalAPI;
-import org.ic.tennistrader.demo.util.APIContext;
 import org.ic.tennistrader.domain.EventMarketBetfair;
 import org.ic.tennistrader.domain.MarketBetfair;
 import org.ic.tennistrader.domain.EventBetfair;
@@ -17,12 +14,12 @@ import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.exceptions.LoginFailedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.GetAccountFundsResp;
-import org.ic.tennistrader.demo.handler.ExchangeAPI.Exchange;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.BFEvent;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.EventType;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.MarketSummary;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.ViewProfileResp;
+import org.ic.tennistrader.model.connection.ExchangeAPI.Exchange;
 import org.ic.tennistrader.utils.MatchUtils;
 
 public class BetfairConnectionHandler {
@@ -139,13 +136,13 @@ public class BetfairConnectionHandler {
 	}
 
 	// filter events to get only the list of matches
-	public static void filterMatches(Tournament tournament) {
+	private static void filterMatches(Tournament tournament) {
 		List<RealMatch> matches = new ArrayList<RealMatch>();
 		matches = getMatches(matches, tournament.getEventBetfair());
 		tournament.setMatches(matches);
 	}
 	
-	public static List<RealMatch> getMatches(List<RealMatch> matches, EventBetfair eventBetfair) {
+	private static List<RealMatch> getMatches(List<RealMatch> matches, EventBetfair eventBetfair) {
 		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof EventBetfair) {
 				if (isMatch((EventBetfair)emb)) {

@@ -19,9 +19,8 @@ public class ScoreParser extends SiteParser {
     	int[] playerOneGames = new int[6];
     	int[] playerTwoGames = new int[6];
     	int playerOnePoints = 0, playerTwoPoints = 0;
-    	int matchStart = scoreString.indexOf("Tsonga Jo-Wilfried");
-    	
-    	//int matchStart = scoreString.indexOf(match.getPlayerOne().getLastname() + " " + match.getPlayerOne().getFirstname());
+
+    	int matchStart = scoreString.indexOf(match.getPlayerOne().getLastname() + " " + match.getPlayerOne().getFirstname());
         
     	PlayerEnum server = PlayerEnum.PLAYER1;
         // display server

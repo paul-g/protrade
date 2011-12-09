@@ -44,12 +44,15 @@
 	<!-- COMPILE task -->
 	<target name="compile" depends="prepare">
 		<javac srcdir="${src.dir}" includeantruntime="false" destdir="${build.prod.dir}" classpathref="classpath" debug="true" debuglevel="vars,lines,source" />
-		<copy todir="${build.prod.dir}" file="log4j.properties" />
+		<copy todir="${build.prod.dir}" file="log4j/log4j.properties" />
 	</target>
 
 	<!-- RUN task - runs the main class -->
 	<target name="run" depends="compile">
-		<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath" />
+		<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath" >
+			<!-- <jvmarg value="-Djna.library.path=/home/linux/vlc/install/lib/"/> -->
+		</java>
+		
 	</target>
 
 	<!-- JAR and RUN tasks to create & run a jar, running the tests first -->

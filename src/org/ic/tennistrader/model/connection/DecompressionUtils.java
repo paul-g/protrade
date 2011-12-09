@@ -1,4 +1,4 @@
-package org.ic.tennistrader.demo.util;
+package org.ic.tennistrader.model.connection;
 
 import java.io.IOException;
 import java.io.StringReader;

@@ -99,6 +99,19 @@ public class LoginShell {
         Label blankLabel2 = new Label(loginShell, SWT.NONE);
 
         Button login = makeLoginButton(display);
+        
+        Button bypass = new Button(loginShell, SWT.PUSH);
+        bypass.addListener(SWT.Selection, new Listener(){
+
+			@Override
+			public void handleEvent(Event arg0) {
+				LoginShell.this.dispose();
+				MainWindow mw = new MainWindow(display);
+				mw.show();
+				mw.run(display);
+			}
+        
+        });
 
         // test account button
         makeTestAccount(display);

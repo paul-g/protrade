@@ -16,12 +16,12 @@ public class Bet {
     private double secondPlayerWinnerProfit;
 
     public Bet(Match m, PlayerEnum p, BetTypeEnum type, Pair<Double, Double> value){
-        this.match = m;
-        this.player = p;
-        this.type = type;
-        this.value = value;
-        this.profit = 0;
-        this.unmatchedValue = 0;
+        setMatch(m);
+        setPlayer(p);
+        setType(type);
+        setValue(value);
+        setProfit(0);
+        setUnmatchedValue(0);
     }
     
     public Match getMatch() {

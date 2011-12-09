@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.service.threads.MatchUpdaterThread;
@@ -22,6 +23,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
 public class ScoreUpdateThread extends MatchUpdaterThread {    
+	
+	private static Logger log = Logger.getLogger(ScoreUpdateThread.class);
 
     public ScoreUpdateThread(Match match) {
         this.match = match;
@@ -120,36 +123,20 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 
         String string2 = elem2.asText();
 
-        System.out.println("Extracted score");
+        log.info("Extracted score");
 
         return string2;
     }
     
   
-    
-    public void handleUpdate() {
-        try {
-            Score score = this.getScore();
-            System.out.println("Fetched score");    
-            if (score != null) {
-                System.out.println("Not null! Updating...");
-                System.out.println("Completed!!!!!!");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
- 
-
 	@Override
 	protected void runBody() {
 		try {
             String scoreString = extractScores();
-            new ScoreParser(scoreString, this.match).parseAndSetScores();
+            if (scoreString != null)
+            	new ScoreParser(scoreString, this.match).parseAndSetScores();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         try {
             Thread.sleep(5000);

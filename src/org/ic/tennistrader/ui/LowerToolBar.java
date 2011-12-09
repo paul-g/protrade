@@ -1,9 +1,7 @@
 package org.ic.tennistrader.ui;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -50,11 +48,12 @@ public class LowerToolBar{
     	name.setBounds(55,15,90,20);
 		ProgressBar usage = new ProgressBar(toolbar, SWT.SMOOTH);
     	usage.setBounds(150,11,150,22);
+    	usage.setSelection(100);
 		shell.open();
 		
 		/* Check threads */
-		//createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		//createUsageBarCheck(shell, usage, mainWindow);
+		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
+		createUsageBarCheck(shell, usage, mainWindow);
 	}
 
 	/** Method invoking the Internet check thread */
@@ -92,7 +91,7 @@ public class LowerToolBar{
 			public void run() {
 				while (!stop) {
 					try {
-						Thread.sleep(5000);
+						Thread.sleep(1000);
 					} catch (Exception e) {
 					}
 					if (!shell.isDisposed()) {
@@ -121,7 +120,7 @@ public class LowerToolBar{
 	public boolean isInternetReachable() {
 		try {
 			// URL to a source
-			URL url = new URL("http://www.google.com");
+			URL url = new URL("http://www.betfair.com");
 			// Open a connection
 			HttpURLConnection urlConnect = (HttpURLConnection) url
 					.openConnection();
@@ -129,12 +128,13 @@ public class LowerToolBar{
 			// throws and exception
 			@SuppressWarnings("unused")
 			Object objData = urlConnect.getContent();
-		} catch (UnknownHostException e) {
-			return false;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
 
+	public ToolBar getToolbar() {
+		return toolbar;
+	}
 }

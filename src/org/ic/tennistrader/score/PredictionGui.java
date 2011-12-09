@@ -2,6 +2,8 @@ package org.ic.tennistrader.score;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -10,10 +12,11 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.ic.tennistrader.Main;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.EventMarketBetfair;
+import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
@@ -22,8 +25,8 @@ import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
 public class PredictionGui extends StandardWidgetContainer {
-	
-	//private static Logger log = Logger.getLogger(Main.class);
+
+    private static Logger log = Logger.getLogger(PredictionGui.class);
 
     private ScoreUpdateThread scoreUpdateThread;
 
@@ -36,14 +39,17 @@ public class PredictionGui extends StandardWidgetContainer {
         Shell shell = new Shell(display, SWT.SHELL_TRIM);
         shell.setLayout(new FillLayout());
 
-        Player playerOne = new Player("Jo-Wilfried", "Tsonga");
-        Player playerTwo = new Player("Roger", "Federer");
+        Player playerOne = new Player("Rafael", "Nadal");
+        Player playerTwo = new Player("Del Potro", "Juan Martin");
 
-        Match match = new RealMatch("","", new EventBetfair("Federer v Tsonga", new ArrayList<EventMarketBetfair>(), 1));
+        Match match = new RealMatch("","", new EventBetfair("Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
+        MOddsMarketData modds =new MOddsMarketData();
+        modds.setDelay(5);
+        match.addMarketData(modds);
         match.setPlayer1(playerOne);
         match.setPlayer2(playerTwo);
 
-        new PredictionGui(shell, SWT.BORDER, match);
+        new PredictionGui(shell, SWT.BORDER, match).start();
 
         shell.open();
 
@@ -57,21 +63,18 @@ public class PredictionGui extends StandardWidgetContainer {
     
     public PredictionGui(final Composite parent, int style, Match match) {
         super(parent, style);
+     log.info("Started prediction GUI");
         this.match = match;
 
         RowLayout mainLayout = new RowLayout();
         mainLayout.type = SWT.HORIZONTAL;
-        mainLayout.pack = true;
-
+        //mainLayout.pack = true;
+        mainLayout.fill = true;
         this.setLayout(mainLayout);
         
-        RowLayout rl = new RowLayout();
-        rl.type = SWT.VERTICAL;
-        rl.pack = true;
-        this.setLayout(rl);
-        
         GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
+        gridLayout.numColumns = 2;
+        gridLayout.makeColumnsEqualWidth = true;
         Composite panels = new Composite(this, SWT.NONE);
         panels.setLayout(gridLayout);
         
@@ -81,12 +84,10 @@ public class PredictionGui extends StandardWidgetContainer {
         @SuppressWarnings("unused")
         ProbabilityPanel probabilityPanel = new ProbabilityPanel(panels, match);
         
-        ColumnLayout col = new ColumnLayout();
-        col.minNumColumns = 2;
-        this.setLayout(col);
+        addMarketDataGrid(panels, match);
+        
         StatisticsPanel st = new StatisticsPanel(this, match);
         
-        addMarketDataGrid(panels, match);
         this.statisticsUpdateThread = new StatisticsUpdateThread(match);
         this.statisticsUpdateThread.addListener(st);
 
@@ -95,19 +96,20 @@ public class PredictionGui extends StandardWidgetContainer {
     }
     
     public void start(){
-        statisticsUpdateThread.start();
+        //statisticsUpdateThread.start();
         if (match.isInPlay()) {
+         log.info("Live match: starting score update thread");
             // only start score fetching for live matches
             scoreUpdateThread.start();
         }
     }
     
     /**
-     * Adds the market data grid with back and lay values and amounts
-     * 
-     * @param comp
-     * @param ti
-     */
+* Adds the market data grid with back and lay values and amounts
+*
+* @param comp
+* @param ti
+*/
     private void addMarketDataGrid(Composite comp, Match match) {
         UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
                 SWT.NONE, match);

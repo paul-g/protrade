@@ -16,8 +16,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
 
+import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
@@ -33,6 +35,23 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	private SashForm chartSash;
 
 	private static Logger log = Logger.getLogger(DisplayPanel.class);
+	
+    public static void main(String args[]){
+
+    	Display display = new Display();
+        Shell shell = new Shell();
+        shell.setLayout(new FillLayout());
+    	DisplayPanel dp = new DisplayPanel(shell, SWT.NONE);
+    	Match match = new HistoricalMatch("data/test/fracsoft-reader/tso-fed.csv");
+    	dp.addMatchView(match);
+    	shell.open();
+    	display.sleep();
+    	while(!shell.isDisposed()){
+    		if (!display.readAndDispatch())
+    			display.sleep();
+    	}
+    	display.dispose();
+    }
 
 	public DisplayPanel(Composite parent, int style) {
 		super(parent, style);
@@ -48,7 +67,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 	private boolean firstTime = true;
 
-	public void addMatchView(Match match) {
+	private void addMatchView(Match match) {
 		//CTabItem[] items = folder.getItems();
 		String matchName = match.toString();
 
@@ -62,13 +81,12 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			control.setLayout(new FillLayout());
 
 			SashForm comp = new SashForm(control, SWT.VERTICAL);
-			
-
-	        if (firstTime) {
+			comp.setLayout(new FillLayout());
+	/*        if (firstTime) {
 				firstTime = false;
 				Image newImage = setColor(item, comp);
 				folder.setSelectionBackground(newImage);
-			}
+			}*/
 
 			addMatchData(comp, match);
 
@@ -76,12 +94,12 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
 			addChart(chartSash, match);
-			//addMatchViewer(chartSash);
+			addMatchViewer(chartSash);
 			try{
-				//chartSash.setWeights(new int[] { 70, 30 });
+				chartSash.setWeights(new int[] { 70, 30 });
 			} catch (Exception e){
 				e.printStackTrace();
-			}//
+			}
 
 			item.setControl(control);
 
