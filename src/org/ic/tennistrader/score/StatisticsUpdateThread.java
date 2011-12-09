@@ -42,7 +42,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
     private static final int RETRY_LIMIT = 5;
 
     private int retries;
-
+    
     private static Logger log = Logger.getLogger(StatisticsUpdateThread.class);
     
     public StatisticsUpdateThread(Match match) {

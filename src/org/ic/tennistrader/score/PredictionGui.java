@@ -63,7 +63,7 @@ public class PredictionGui extends StandardWidgetContainer {
     
     public PredictionGui(final Composite parent, int style, Match match) {
         super(parent, style);
-    	log.info("Started prediction GUI");
+     log.info("Started prediction GUI");
         this.match = match;
 
         RowLayout mainLayout = new RowLayout();
@@ -98,18 +98,18 @@ public class PredictionGui extends StandardWidgetContainer {
     public void start(){
         //statisticsUpdateThread.start();
         if (match.isInPlay()) {
-        	log.info("Live match: starting score update thread");
+         log.info("Live match: starting score update thread");
             // only start score fetching for live matches
             scoreUpdateThread.start();
         }
     }
     
     /**
-     * Adds the market data grid with back and lay values and amounts
-     * 
-     * @param comp
-     * @param ti
-     */
+* Adds the market data grid with back and lay values and amounts
+*
+* @param comp
+* @param ti
+*/
     private void addMarketDataGrid(Composite comp, Match match) {
         UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
                 SWT.NONE, match);

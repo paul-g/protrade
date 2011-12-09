@@ -233,6 +233,7 @@ public class Score {
             SetScore sc = new SetScore(playerOneGames[i], playerTwoGames[i]);
             scores.add(sc);
         }
+        currentSet = scores.get(maximumSetsPlayed-1);
     }
 
 	public PlayerEnum getWinner() throws MatchNotFinishedException {

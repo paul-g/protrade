@@ -47,7 +47,6 @@ public class ScoreParser extends SiteParser {
             scoreString = scoreString.substring(1, scoreString.length());
             
             // for 5 sets max
-            int pos = 0;
             for (int i = 0; i < 5; i++) {
             	playerOneGames[i] = Integer.parseInt(scoreString.substring(0, scoreString.indexOf("\t")));
                 scoreString = scoreString.substring(scoreString.indexOf("\t") + 1,
@@ -56,7 +55,7 @@ public class ScoreParser extends SiteParser {
                 if (scoreString.startsWith("\n") || 
                 	scoreString.startsWith("\t") || 
                 	scoreString.startsWith(" "))
-                	{ pos = i+1; i = 5; scoreString = scoreString.trim(); }
+                	{ i = 5; scoreString = scoreString.trim(); }
             }          
           
             // Points
@@ -90,7 +89,6 @@ public class ScoreParser extends SiteParser {
         scoreString = scoreString.substring(1, scoreString.length());
   
         // 5 sets
-        int pos = 0;
         for (int i = 0; i < 5; i++) {
             try{
             playerTwoGames[i]= Integer.parseInt(scoreString.substring(0, scoreString.indexOf("\t")));
@@ -100,7 +98,7 @@ public class ScoreParser extends SiteParser {
             if (scoreString.startsWith("\n") || 
                 scoreString.startsWith("\t") || 
                 scoreString.startsWith(" "))
-        		{ pos = i+1; i = 5; scoreString = scoreString.trim();}
+        		{ i = 5; scoreString = scoreString.trim();}
             }
             catch (Exception e){
                 scoreString = scoreString.substring(scoreString.indexOf("\t"), scoreString.length());

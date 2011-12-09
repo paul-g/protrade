@@ -2,7 +2,6 @@ package org.ic.tennistrader.score;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.swt.graphics.Image;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
