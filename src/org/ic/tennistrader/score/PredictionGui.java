@@ -2,8 +2,6 @@ package org.ic.tennistrader.score;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -13,7 +11,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
-import org.ic.tennistrader.Main;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.EventMarketBetfair;
@@ -25,8 +22,8 @@ import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
 public class PredictionGui extends StandardWidgetContainer {
-
-    private static Logger log = Logger.getLogger(Main.class);
+	
+	//private static Logger log = Logger.getLogger(Main.class);
 
     private ScoreUpdateThread scoreUpdateThread;
 

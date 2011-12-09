@@ -1,5 +1,7 @@
 package org.ic.tennistrader.score;
 
+import java.text.DecimalFormat;
+
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
@@ -9,6 +11,10 @@ public class PredictionCalculator {
 
 	private static double pwosA;
 	private static double pwosB;
+	private static double pwgOnAverageA;
+	private static double pwgOnAverageB;
+	private static double pwgA;
+	private static double pwgB;
 	
 	public static double[] calculate(Match match) {
 		double[] result = new double[8];
@@ -22,40 +28,64 @@ public class PredictionCalculator {
 
 		// Probability of player one/two to win on their serve in a game by
 		// ability
-		result[4] = calculatePWG(calculatePWOS(playerOneStats));
-		result[5] = calculatePWG(calculatePWOS(playerTwoStats));
+		pwgOnAverageA = calculatePWG(calculatePWOS(playerOneStats));
+		pwgOnAverageB = calculatePWG(calculatePWOS(playerTwoStats));
+		///System.out.println("AAAAA" + pwgA);
+		///System.out.println("BBBBB" + pwgB);
 
 		// Even indices correspond to player 1, odd ones to player 2;
 		result[0] = pwosA = calculatePWOS(playerOneStats);
 		result[1] = pwosB = calculatePWOS(playerTwoStats);
 		
-		int pointsOne = convertPoints(score.getPlayerOnePoints());
-		int pointsTwo = convertPoints(score.getPlayerTwoPoints());
+		int [] points = convertPoints(score.getPlayerOnePoints(), score.getPlayerTwoPoints());
+		int pointsOne = points[0];
+		int pointsTwo = points[1];
 		
 		if (server == PlayerEnum.PLAYER1) {
-			result[2] = calculateGamePercent(pointsOne,pointsTwo, result[0], 1);
-			result[3] = 1.0 - result[2];
-			result[4] = calculateSetPercent(pointsOne,pointsTwo, result[2], 
-					score.getPlayerOneSets(), score.getPlayerTwoSets(), 1);
+			result[2] = pwgA = calculateGamePercent(pointsOne,pointsTwo, result[0], 1);
+			result[3] = pwgB = 1.0 - result[2];
+			//System.out.println("GAME score 1: " + score.getCurrentSetScore().getPlayerOneGames());
+			//System.out.println("GAME score 2: " + score.getCurrentSetScore().getPlayerTwoGames());
+			//System.out.println("Points One: " + pointsOne);
+			//System.out.println("Points Two: " + pointsTwo);
+			//System.out.println(score.getPlayerTwoSets());
+			result[4] = calculateSetPercent(pointsOne, pointsTwo, 
+							score.getCurrentSetScore().getPlayerOneGames(), 
+							score.getCurrentSetScore().getPlayerTwoGames(), 
+							1, 1);
 			result[5] = 1.0 - result[4];
 			result[6] = calculateMatchPercent(result[4]);
 			result[7] = 1-result[6];
 		} else {
-            result[3] = calculateGamePercent(pointsOne,pointsTwo,  1 - result[1], 0);
-		    result[2] = 1.0 - result[3];
-		    result[5] = calculateSetPercent(pointsOne,pointsTwo, result[3], 
-					score.getPlayerOneSets(), score.getPlayerTwoSets(), 0);
+            result[3] = pwgB = calculateGamePercent(pointsOne,pointsTwo,  1 - result[1], 0);
+		    result[2] = pwgA = 1.0 - result[3];
+		    result[5] = calculateSetPercent(pointsOne, pointsTwo, 
+		    				score.getCurrentSetScore().getPlayerOneGames(), 
+		    				score.getCurrentSetScore().getPlayerTwoGames(),
+		    				0, 1);
 			result[4] = 1.0 - result[5];
 			result[7] = calculateMatchPercent(result[5]);
 			result[6] = 1-result[7];
 		}
-
+		
+		DecimalFormat df = new DecimalFormat("#.###");
+		for (int i =0; i<8; i++){
+			
+			result[i] = Double.parseDouble(df.format(result[i]));
+		}
+		
 		return result;
 	}
 
 	// convert from standard points (e.g. 15, 30 ... ) to short points (1,2..)
-	private static int convertPoints(int points) {
-		return (int)Math.floor(points/15.0);
+	private static int[] convertPoints(int pointsOne, int pointsTwo) {
+		if ( pointsOne >=  40 && pointsTwo >= 40)
+		{
+			int[] pts= {(int)Math.floor(pointsOne/15.0),(int)Math.floor(pointsTwo/15.0)};
+			return pts;
+		}
+		int[] pts= {(int)Math.ceil(pointsOne/15.0),(int)Math.ceil(pointsTwo/15.0)};
+		return pts;
 	}
 
 	// Probability of winning a point on service
@@ -110,16 +140,48 @@ public class PredictionCalculator {
 				(1-pwosB)*calculateTiebreakerGamePercent(a+1, b, 1 -(a+b)%2 );
 	}
 
-	private static double calculateSetPercent( int a, int b, double pwg, int c, int d, int s) {
-		if( (c == 6 && d >= 0  && d <= 4) ||  (c == 7 && d == 5) )
-			return s;
-		if( (d == 6 && c >= 0  && c <= 5) ||  (d == 7 && c == 5) )
-			return 1 - s;
-		if( c == 6 && d == 6 )
-			return calculateTiebreakerGamePercent(a, b, s);
-			
-		return pwg*calculateSetPercent(a, b, 1-pwg, c + 1, d, 1 - s) +
-				(1- pwg) * calculateSetPercent(a, b, 1-pwg, c, d + 1, 1 - s);
+	private static double calculateSetPercent(int a, int b, int c, int d, int s, int firstRun) {
+		if( (c == 6 && d >= 0  && d <= 4) ||  (c == 7 && d == 5) ){
+			if(firstRun == 1)
+				return s;
+			else
+				return firstRun - 5;
+		}
+		if( (d == 6 && c >= 0  && c <= 4) ||  (d == 7 && c == 5) ){
+			if(firstRun == 1)
+				return 1-s;
+			else 
+				return 1- (firstRun - 5);			
+		}
+		if( c == 6 && d == 6 ){
+			double tb = 0;
+			if(firstRun == 1)
+			{
+				firstRun = s+5;
+				tb = calculateTiebreakerGamePercent(a, b, s);
+			}else {
+				tb = calculateTiebreakerGamePercent(0, 0, s);
+			}
+			return tb;
+		}
+		if (firstRun == 1)
+			firstRun = s+5;
+		if(s == 1 ){
+			if(firstRun == 1)
+				return pwgA*calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun) +
+				(1- pwgA) * calculateSetPercent(a, b, c, d + 1, 1 - s, firstRun);
+			else
+				return pwgOnAverageA*calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun) +
+				(1- pwgOnAverageA) * calculateSetPercent(a, b, c, d + 1, 1 - s, firstRun);
+						
+		} else {
+			if(firstRun == 1)
+				return pwgB*calculateSetPercent(a, b , c, d + 1 , 1 - s, firstRun) +
+				(1- pwgB) * calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun);
+			else
+				return pwgOnAverageB*calculateSetPercent(a, b , c, d + 1 , 1 - s, firstRun) +
+				(1- pwgOnAverageB) * calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun);
+		}
 	}
 
 	private static double calculateMatchPercent(double set ) {

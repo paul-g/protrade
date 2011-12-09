@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.match.Match;
@@ -42,8 +41,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
     private static final int RETRY_LIMIT = 5;
 
     private int retries;
-
-    private static Logger log = Logger.getLogger(StatisticsUpdateThread.class);
     
     public StatisticsUpdateThread(Match match) {
         this.match = match;

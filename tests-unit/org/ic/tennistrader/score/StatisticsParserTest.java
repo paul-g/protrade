@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class StatisticsParserTest {
 
-	private static final String TEST_STRING = "";
+	//private static final String TEST_STRING = "";
 
 	@Test
 	public void parseAndSetStatistics() {
