@@ -55,6 +55,23 @@ public class MainWindow {
     public MainWindow(Display display) {
         this.display = display;
     }
+    
+    public static void main(String [] args){
+        Display display = new Display();
+        MainWindow mw = new MainWindow(display);
+        mw.show();
+        while (display.readAndDispatch()){
+            
+        }
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //mw.run(display);
+    }
 
     private void show(Display display) {
 
@@ -76,7 +93,6 @@ public class MainWindow {
         this.np = new NavigationPanel(sashFormLeft);
         notifyLoadEvent("Fetching betfair data");
 
-        
         this.dp = new DisplayPanel(sashFormRight, SWT.BORDER);
         
         notifyLoadEvent("Preparing display");
@@ -85,7 +101,7 @@ public class MainWindow {
         addActiveBetsDisplay(sashFormLeft);
         
         notifyLoadEvent("Configuring toolbars");
-        
+       
         ltb = new LowerToolBar(this);
         
         try {
@@ -95,6 +111,7 @@ public class MainWindow {
         }
         
         notifyLoadEvent("Done!");
+        shell.layout();
     }
 
     private void makeLayout() {

@@ -1,2 +1,2 @@
 all:
-	ant -logger org.apache.tools.ant.listener.AnsiColorLogger coverage
+	ant -logger org.apache.tools.ant.listener.AnsiColorLogger all

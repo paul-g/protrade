@@ -27,3 +27,13 @@ tennis_trade.pub
 ################
 test-coverage
 cobertura.ser
+
+# Latex #
+########
+*.toc
+*.aux
+
+# Other #
+#########
+*.dump
+*.html

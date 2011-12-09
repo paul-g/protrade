@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -44,7 +46,11 @@ public class DisplayPanelTest {
 
     @Test
     public void addMatchView() throws Exception {
-    	dp.handleMatchSelection(match);
+        assertEquals(0, dp.getFolder().getItemCount());
+        dp.handleMatchSelection(match);
+    	assertEquals(1, dp.getFolder().getItemCount());
     	SWTBotCTabItem item = bot.cTabItem(match.toString());
+    	assertEquals(item.getText(), match.toString());
+    	assertNotSame(item.getText(), match.toString() + "asd");
     }
 }

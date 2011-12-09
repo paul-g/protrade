@@ -14,13 +14,12 @@ public class ScoreTest extends ScoringTest {
         int expectedPoints[] = {15,30,40};
         for (int i=0;i<3;i++){
             score.addPlayerTwoPoint();
-            assertSetScoreIs(0,0);
-            assertGameScoreIs(0, expectedPoints[i]);
+            assertGameScoreIs(0,0);
+            assertPointsScoreIs(0, expectedPoints[i]);
         }
-        
         score.addPlayerTwoPoint();
-        assertSetScoreIs(0,1);
-        assertGameScoreIs(0,0);
+        assertGameScoreIs(0,1);
+        assertPointsScoreIs(0,0);
     }
     
     @Test
@@ -30,46 +29,46 @@ public class ScoreTest extends ScoringTest {
         int expectedPoints[] = {15,30,40};
         for (int i=0;i<max;i++){
             score.addPlayerTwoPoint();
-            assertSetScoreIs(0,0);
-            assertGameScoreIs(0, expectedPoints[i]);
+            assertGameScoreIs(0,0);
+            assertPointsScoreIs(0, expectedPoints[i]);
         }
         
         
         int expectedPoints2[] = {15,30,40};
         for (int i=0;i<max;i++){
             score.addPlayerOnePoint();
-            assertSetScoreIs(0,0);
-            assertGameScoreIs(expectedPoints2[i], 40);
+            assertGameScoreIs(0,0);
+            assertPointsScoreIs(expectedPoints2[i], 40);
         }
         
         score.addPlayerTwoPoint();
-        assertSetScoreIs(0,0);
-        
-        score.addPlayerOnePoint();
-        assertSetScoreIs(0,0);
-        
-        score.addPlayerOnePoint();
-        assertSetScoreIs(0,0);
-        
-        score.addPlayerOnePoint();
-        assertSetScoreIs(1,0);
-        
         assertGameScoreIs(0,0);
+        
+        score.addPlayerOnePoint();
+        assertGameScoreIs(0,0);
+        
+        score.addPlayerOnePoint();
+        assertGameScoreIs(0,0);
+        
+        score.addPlayerOnePoint();
+        assertGameScoreIs(1,0);
+        
+        assertPointsScoreIs(0,0);
     }
     
     @Test
     public void newSet(){
         int [] expected = {15,30,40, 0};
         for (int i=0;i<6;i++){
-            assertSetScoreIs(i, 0);
+            assertGameScoreIs(i, 0);
             for (int j=0;j<4;j++){
-                assertSetScoreIs(i, 0);
+                assertGameScoreIs(i, 0);
                 score.addPlayerOnePoint();
-                assertGameScoreIs(expected[j], 0);
+                assertPointsScoreIs(expected[j], 0);
             }
         }
 
-        assertSetScoreIs(0,0);
+        assertGameScoreIs(0,0);
         
         assertNull(score.getSetScore(0));
         assertNull(score.getSetScore(3));
@@ -82,11 +81,11 @@ public class ScoreTest extends ScoringTest {
        int [] expected = {15,30,40, 0};
        for (int k=0;k<2;k++) {
         for (int i=0;i<6;i++){
-            assertSetScoreIs(i, 0);
+            assertGameScoreIs(i, 0);
             for (int j=0;j<4;j++){
-                assertSetScoreIs(i, 0);
+                assertGameScoreIs(i, 0);
                 score.addPlayerOnePoint();
-                assertGameScoreIs(expected[j], 0);
+                assertPointsScoreIs(expected[j], 0);
             }
         }
         assertEquals(k+1, score.getPlayerOneSets());
@@ -101,11 +100,11 @@ public class ScoreTest extends ScoringTest {
        int [] expected = {15,30,40, 0};
        for (int k=0;k<3;k++) {
         for (int i=0;i<6;i++){
-            assertSetScoreIs(i, 0);
+            assertGameScoreIs(i, 0);
             for (int j=0;j<4;j++){
-                assertSetScoreIs(i, 0);
+                assertGameScoreIs(i, 0);
                 score.addPlayerOnePoint();
-                assertGameScoreIs(expected[j], 0);
+                assertPointsScoreIs(expected[j], 0);
             }
         }
         assertEquals(k+1, score.getPlayerOneSets());
@@ -117,16 +116,16 @@ public class ScoreTest extends ScoringTest {
        // since game is finished
        score.addPlayerOnePoint();
        assertEquals(0, score.getPlayerOnePoints());
-       assertGameScoreIs(0,0);
+       assertPointsScoreIs(0,0);
        assertSetScoreIs(score.getSetScore(3), 6, 0);
     }
     
-    private void assertGameScoreIs(int playerOnePoints, int playerTwoPoints){
+    private void assertPointsScoreIs(int playerOnePoints, int playerTwoPoints){
         assertEquals(playerOnePoints, score.getPlayerOnePoints());
         assertEquals(playerTwoPoints, score.getPlayerTwoPoints());
     }
     
-    private void assertSetScoreIs(int playerOneGames, int playerTwoGames){
+    private void assertGameScoreIs(int playerOneGames, int playerTwoGames){
         assertEquals(playerOneGames, score.getCurrentSetScore().getPlayerOneGames());
         assertEquals(playerTwoGames, score.getCurrentSetScore().getPlayerTwoGames());
     }

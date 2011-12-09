@@ -1,3 +1,7 @@
+FILE=report-three
+DUMP=$(FILE).dump
+TEX=$(FILE).tex
+COMPILE=pdflatex
+
 all:
-	pdflatex report-three.tex
-	pdflatex report-three.tex
+	$(COMPILE) $(TEX)

@@ -31,7 +31,7 @@ public class Main {
   
   public static void main(String[] args) {
     // read the config file
-    readConfigFile();
+    readAndDecryptConfigFile();
     
     // start up the app
     final Display display = new Display();
@@ -63,7 +63,7 @@ public class Main {
     ls.run(display);
   }
 
-  public static void readConfigFile(){
+  public static void readAndDecryptConfigFile(){
     String filename = "config.local";
     String line;
     Scanner scanner = null;
@@ -98,6 +98,18 @@ public class Main {
     } 
     
     log.info("username set to \'" + USERNAME + "\' password set");
+  }
+  
+  public static String getTestUsername(){
+      if (TEST_USERNAME.equals(""))
+          readAndDecryptConfigFile();
+      return TEST_USERNAME;
+  }
+  
+  public static String getTestPassword(){
+      if (TEST_PASSWORD.equals(""))
+          readAndDecryptConfigFile();
+      return TEST_PASSWORD;
   }
 
 }

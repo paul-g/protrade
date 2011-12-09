@@ -8,6 +8,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.ic.tennistrader.Main;
+import org.ic.tennistrader.authentication.Encrypt;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,21 +40,19 @@ public class LoginShellTest extends DisplayTest {
     @Test
     public void correctLoginSuccess() throws Exception {
         SWTBotText username = bot.text("username");
-        username.setText("corina409");
+        username.setText(Main.getTestUsername());
         SWTBotText password = bot.text("password");
-        password.setText("testpass1");
-
+        password.setText(Main.getTestPassword());
         loginButton.click();
         SWTBotLabel success = bot.label(LoginShell.SUCCESS);
         assertNotNull(success);
-
     }
 
     @Test
     public void testAccount() throws Exception {
 
         // load the username
-        Main.readConfigFile();
+        Main.readAndDecryptConfigFile();
 
         SWTBotButton testButton = bot.button("Test");
 

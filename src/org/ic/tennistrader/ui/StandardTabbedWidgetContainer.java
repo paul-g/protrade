@@ -22,6 +22,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public class StandardTabbedWidgetContainer {
     protected final CTabFolder folder;
+    public CTabFolder getFolder() {
+        return folder;
+    }
+
     protected Display display;
     protected CTabItem selected;
 

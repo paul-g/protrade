@@ -1,17 +1,21 @@
 package org.ic.tennistrader.ui;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.tennistrader.Main;
 
 public class MenuPanel {
 
 	private MainWindow mw;
 	private Shell shell;
 
+	private static Logger log = Logger.getLogger(MenuPanel.class);
+	
 	/** The constructor and setter of the menu of the application */
 	public MenuPanel (MainWindow mw) {
 		
@@ -61,6 +65,7 @@ public class MenuPanel {
 		public void widgetDefaultSelected(SelectionEvent e) {}
 		@Override
 		public void widgetSelected(SelectionEvent e) {
+		    log.info("Closing application");
 			shell.close();
 		}
 	}

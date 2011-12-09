@@ -11,12 +11,16 @@
 	<property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
 	<property name="lib.axis.dir" value="${lib.dir}/axis" />
 	<property name="lib.htmlunit" value="${lib.dir}/htmlunit" />
+	<property name="lib.pmd" value="${lib.dir}/pmd" />
 	<property name="instrumented.dir" value="build/instrumented-classes" />
 
-	<property name="reports.dir" value="${build.dir}/reports"/>
+	<property name="reports.dir" value="${build.dir}/reports" />
 	<property name="unit.test.report.dir" value="${reports.dir}/unit-tests" />
 	<property name="system.test.report.dir" value="${reports.dir}/system-tests" />
+	<property name="pmd.report.dir" value="${reports.dir}/pmd" />
 	<property name="coverage.report.dir" value="${reports.dir}/test-coverage" />
+	
+	<property name="pmdconfig.dir" value="pmd" />
 
 	<!-- Set the CLASSPATH -->
 	<path id="classpath">
@@ -27,6 +31,7 @@
 		<fileset dir="${lib.axis.dir}" includes="*.jar" />
 		<fileset dir="${lib.htmlunit}" includes="*.jar" />
 		<fileset dir="lib/swtbot/" includes="*.jar" />
+		<fileset dir="${lib.pmd}" includes="*.jar" />
 		<fileset dir="lib/cobertura">
 			<include name="cobertura.jar" />
 			<include name="lib/*.jar" />
@@ -49,10 +54,10 @@
 
 	<!-- RUN task - runs the main class -->
 	<target name="run" depends="compile">
-		<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath" >
+		<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath">
 			<!-- <jvmarg value="-Djna.library.path=/home/linux/vlc/install/lib/"/> -->
 		</java>
-		
+
 	</target>
 
 	<!-- JAR and RUN tasks to create & run a jar, running the tests first -->
@@ -134,16 +139,15 @@
 			<classpath location="${instrumented.dir}" />
 			<classpath refid="classpath" />
 			<formatter type="brief" usefile="false" />
-			<formatter type="xml"/>
+			<formatter type="xml" />
 			<batchtest fork="yes" todir="${unit.test.report.dir}">
 				<fileset dir="${unit.test.dir}" includes="**/*Test.java" />
 			</batchtest>
 		</junit>
 		<junitreport todir="${unit.test.report.dir}">
-			<fileset dir="${unit.test.report.dir}" includes="TEST-*.xml"/>
-			<report todir="${unit.test.report.dir}"/>
+			<fileset dir="${unit.test.report.dir}" includes="TEST-*.xml" />
+			<report todir="${unit.test.report.dir}" />
 		</junitreport>
-		<fail message="Unit tests failed. Check log and/or reports." if="test.failed" />
 	</target>
 
 	<!-- RUN system tests -->
@@ -153,7 +157,7 @@
 			<classpath location="${instrumented.dir}" />
 			<classpath refid="classpath" />
 			<formatter type="brief" usefile="false" />
-			<formatter type="xml"/>
+			<formatter type="xml" />
 			<batchtest fork="yes" todir="${system.test.report.dir}">
 				<fileset dir="${system.test.dir}" includes="**/*Test.java" />
 			</batchtest>
@@ -165,6 +169,32 @@
 		</junitreport>
 
 		<fail message="System tests failed. Check log and/or reports." if="test.failed" />
+	</target>
+
+	<!-- PMD task -->
+	<target name="pmd">
+		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="classpath" />
+        <mkdir dir="${pmd.report.dir}"/>
+		<pmd shortFilenames="true">
+			<ruleset>rulesets/favorites.xml</ruleset>
+			<ruleset>basic</ruleset>
+			<!-- <formatter type="html" toFile="pmd_report.html" linkPrefix="http://pmd.sourceforge.net/xref/"/>-->
+			<formatter type="xml" toFile="${pmd.report.dir}/pmd.xml" />
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${unit.test.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${system.test.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</pmd>
+		<xslt in="${pmd.report.dir}/pmd.xml" style="${pmdconfig.dir}/format.xslt" out="${pmd.report.dir}/pmd.html" />
+	</target>
+
+	<!-- ALL task -->
+	<target name="all" depends="coverage, pmd">
 	</target>
 
 </project>
