@@ -90,7 +90,7 @@ public class UpperToolBar {
 		} catch(Exception e) {
 			log.error(e.getMessage());
 		}
-		
+
 		try {
 			final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
 			MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
@@ -191,10 +191,10 @@ public class UpperToolBar {
 					openPreferencesWindow();
 				}
 			});
-			balanceItem.addListener(SWT.Selection, new RightDropDownListener(
-					balanceItem, balanceDropDown,profileItem));
-			profileItem.addListener(SWT.Selection, new RightDropDownListener(
-					profileItem, profileDropDown,null));
+			balanceItem.addListener(SWT.Selection, new DropDownListener(
+					balanceItem, balanceDropDown,profileItem,true));
+			profileItem.addListener(SWT.Selection, new DropDownListener(
+					profileItem, profileDropDown,null,true));
 		} catch (Exception e) {
 		}
 	}
@@ -246,10 +246,8 @@ public class UpperToolBar {
 			}
 		});
 
-		widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
-				widgetItem, widgetDropDown));
-		widgetItem.addListener(SWT.Selection, new LeftDropDownListener(
-				widgetItem, widgetDropDown));
+		widgetItem.addListener(SWT.Selection, new DropDownListener(
+				widgetItem, widgetDropDown,null,false));
 		toolbar.pack();
 	}
 
@@ -325,8 +323,7 @@ public class UpperToolBar {
 			}
 
 		});
-		playButtonItem.addListener(SWT.Selection, new LeftDropDownListener(
-				playButtonItem, playDropDown));
+		playButtonItem.addListener(SWT.Selection, new DropDownListener(playButtonItem, playDropDown, null, false));
 	}
 
 	/** Text representation of the profile */
@@ -392,7 +389,7 @@ public class UpperToolBar {
 			return false;
 		}
 	}
-	
+
 	/** Getter for Login bar */
 	public ToolBar getLoginToolBar() {
 		return login;
@@ -402,54 +399,34 @@ public class UpperToolBar {
 	public ToolBar getToolBar() {
 		return toolbar;
 	}
-	
 
-	/** Listener for the left hand side buttons */
-	private class LeftDropDownListener implements Listener {
-
-		private ToolItem item;
-		private Menu menu;
-
-		public LeftDropDownListener(ToolItem item, Menu menu) {
-			this.item = item;
-			this.menu = menu;
-		}
-
-		public void handleEvent(Event event) {
-			if (event.detail == SWT.ARROW) {
-				Rectangle bounds = item.getBounds();
-				Point point = toolbar.toDisplay(bounds.x, bounds.y
-						+ bounds.height);
-				menu.setLocation(point);
-				menu.setVisible(true);
-			}
-		}
-
-	}
-
-	/** Listener for right hand side buttons */
-	private class RightDropDownListener implements Listener {
+	/** Listener for tool buttons */
+	private class DropDownListener implements Listener {
 
 		private ToolItem item;
 		private Menu menu;
 		private ToolItem prev;
+		private boolean alignRight;
 
-		public RightDropDownListener(ToolItem item, Menu menu, ToolItem prev) {
+		public DropDownListener(ToolItem item, Menu menu, ToolItem prev, boolean alignRight) {
 			this.item = item;
 			this.menu = menu;
 			this.prev = prev;
+			this.alignRight = alignRight;
 		}
 
 		public void handleEvent(Event event) {
-			if (event.detail == SWT.ARROW) {
-				Rectangle bounds = item.getBounds();
+			Rectangle bounds = item.getBounds();
+			Point point = null;
+			if (alignRight) {
 				int nx = 0;
-				if (prev != null) nx += prev.getBounds().width;
-				Point point = login.toDisplay(bounds.x + bounds.width - nx, bounds.y
-						+ bounds.height);
-				menu.setLocation(point);
-				menu.setVisible(true);
+				if (prev != null) nx = prev.getBounds().width;
+				point = login.toDisplay(bounds.x + bounds.width - nx, bounds.y + bounds.height);
+			} else {
+				point = toolbar.toDisplay(bounds.x, bounds.y + bounds.height);
 			}
+			menu.setLocation(point);
+			menu.setVisible(true);
 		}
 	}
 }
