@@ -1,4 +1,4 @@
-package org.ic.tennistrader.score;
+package org.ic.tennistrader.ui.score;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
@@ -14,17 +14,16 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
-import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class ScorePanel extends StandardWidgetContainer implements
-        UpdatableWidget {
+public class TableScorePanel extends StandardWidgetContainer implements
+        ScorePanel {
     private Match match;
     private Table scoreTable;
     private PlayerEnum server;
     private TableColumn[] columns;
     private Display display;
 
-    public ScorePanel(Composite parent, Match match) {
+    public TableScorePanel(Composite parent, Match match) {
         super(parent, SWT.NONE);
         this.match = match;
         this.display = parent.getDisplay();
@@ -72,6 +71,9 @@ public class ScorePanel extends StandardWidgetContainer implements
         LiveDataFetcher.registerForMatchUpdate(this, match);
     }
 
+    /* (non-Javadoc)
+     * @see org.ic.tennistrader.score.ScorePanel#setScores()
+     */
     public void setScores() {
         Score score = match.getScore();
 
@@ -94,6 +96,9 @@ public class ScorePanel extends StandardWidgetContainer implements
         ti2.setText(c, score.getPlayerTwoPoints() + "");
     }
 
+    /* (non-Javadoc)
+     * @see org.ic.tennistrader.score.ScorePanel#setServer(org.ic.tennistrader.domain.match.PlayerEnum)
+     */
     public void setServer(PlayerEnum player) {
         if (player == PlayerEnum.PLAYER1)
             scoreTable.getItem(0).setText(0, "S");
@@ -103,10 +108,16 @@ public class ScorePanel extends StandardWidgetContainer implements
         server = player;
     }
 
+    /* (non-Javadoc)
+     * @see org.ic.tennistrader.score.ScorePanel#getServer()
+     */
     public PlayerEnum getServer() {
         return this.server;
     }
 
+    /* (non-Javadoc)
+     * @see org.ic.tennistrader.score.ScorePanel#handleUpdate(org.ic.tennistrader.domain.MOddsMarketData)
+     */
     @Override
     public void handleUpdate(MOddsMarketData newData) {
         display.asyncExec(new Runnable() {
@@ -117,6 +128,9 @@ public class ScorePanel extends StandardWidgetContainer implements
         });
     }
 
+    /* (non-Javadoc)
+     * @see org.ic.tennistrader.score.ScorePanel#setDisposeListener(org.eclipse.swt.events.DisposeListener)
+     */
     @Override
     public void setDisposeListener(DisposeListener listener) {
         this.addDisposeListener(listener);

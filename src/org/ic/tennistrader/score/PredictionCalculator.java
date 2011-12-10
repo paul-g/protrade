@@ -16,6 +16,22 @@ public class PredictionCalculator {
 	private static double pwgA;
 	private static double pwgB;
 	
+	public static double[] getP1Data(double result[]){
+	    double [] res = new double[4];
+        for (int i=0;i<res.length;i++){
+            res[i] = result[2*i];
+        }
+        return res;
+	}
+	
+public static double[] getP2Data(double result[]){
+    double [] res = new double[4];
+    for (int i=0;i<res.length;i++){
+        res[i] = result[2*i+1];
+    }
+    return res;
+    }
+	
 	public static double[] calculate(Match match) {
 		double[] result = new double[8];
 

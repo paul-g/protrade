@@ -46,6 +46,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
     	dp.addMatchView(match);
     	shell.open();
     	display.sleep();
+    	
     	while(!shell.isDisposed()){
     		if (!display.readAndDispatch())
     			display.sleep();

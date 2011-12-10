@@ -19,7 +19,7 @@
 	<property name="system.test.report.dir" value="${reports.dir}/system-tests" />
 	<property name="pmd.report.dir" value="${reports.dir}/pmd" />
 	<property name="coverage.report.dir" value="${reports.dir}/test-coverage" />
-	
+
 	<property name="pmdconfig.dir" value="pmd" />
 
 	<!-- Set the CLASSPATH -->
@@ -174,7 +174,7 @@
 	<!-- PMD task -->
 	<target name="pmd">
 		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="classpath" />
-        <mkdir dir="${pmd.report.dir}"/>
+		<mkdir dir="${pmd.report.dir}" />
 		<pmd shortFilenames="true">
 			<ruleset>rulesets/favorites.xml</ruleset>
 			<ruleset>basic</ruleset>

@@ -8,11 +8,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.tennistrader.Main;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.EventMarketBetfair;
@@ -22,6 +20,7 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
+import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
 public class PredictionGui extends StandardWidgetContainer {
@@ -49,7 +48,7 @@ public class PredictionGui extends StandardWidgetContainer {
         match.setPlayer1(playerOne);
         match.setPlayer2(playerTwo);
 
-        new PredictionGui(shell, SWT.BORDER, match).start();
+        new PredictionGui(shell, SWT.BORDER, match);//.start();
 
         shell.open();
 
@@ -66,37 +65,30 @@ public class PredictionGui extends StandardWidgetContainer {
      log.info("Started prediction GUI");
         this.match = match;
 
-        RowLayout mainLayout = new RowLayout();
-        mainLayout.type = SWT.HORIZONTAL;
-        //mainLayout.pack = true;
-        mainLayout.fill = true;
+        GridLayout mainLayout  = new GridLayout();
+        mainLayout.numColumns = 2;
         this.setLayout(mainLayout);
         
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-        gridLayout.makeColumnsEqualWidth = true;
-        Composite panels = new Composite(this, SWT.NONE);
-        panels.setLayout(gridLayout);
-        
         @SuppressWarnings("unused")
-        ScorePanel sc = new ScorePanel(panels, match);
+        WimbledonScorePanel sc = new WimbledonScorePanel(this, match);
 
-        @SuppressWarnings("unused")
-        ProbabilityPanel probabilityPanel = new ProbabilityPanel(panels, match);
-        
-        addMarketDataGrid(panels, match);
+        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1 , 2);
         
         StatisticsPanel st = new StatisticsPanel(this, match);
+        st.setLayoutData(gd);
+
+        addMarketDataGrid(this, match);
         
         this.statisticsUpdateThread = new StatisticsUpdateThread(match);
         this.statisticsUpdateThread.addListener(st);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match);
-
+        //Image im = new Image(this.getDisplay(), "images/scoreboard.png" );
+        //this.setBackgroundImage(im);
     }
     
     public void start(){
-        //statisticsUpdateThread.start();
+        statisticsUpdateThread.start();
         if (match.isInPlay()) {
          log.info("Live match: starting score update thread");
             // only start score fetching for live matches
@@ -113,11 +105,7 @@ public class PredictionGui extends StandardWidgetContainer {
     private void addMarketDataGrid(Composite comp, Match match) {
         UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
                 SWT.NONE, match);
-        GridData gridData = new GridData();
-        gridData.horizontalSpan = 2;
-        gridData.grabExcessHorizontalSpace=true;
-        gridData.horizontalAlignment = GridData.FILL;
-        grid.setLayoutData(gridData);
+        grid.setLayoutData( new GridData(GridData.FILL, GridData.FILL, true, true, 1 , 1));
         BetController betController = new BetController(Arrays.asList(grid
                 .getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
                 Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
