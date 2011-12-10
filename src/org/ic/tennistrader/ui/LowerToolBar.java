@@ -53,7 +53,7 @@ public class LowerToolBar{
 		
 		/* Check threads */
 		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		createUsageBarCheck(shell, usage, mainWindow);
+		createUsageBarCheck(shell, usage);
 	}
 
 	/** Method invoking the Internet check thread */
@@ -65,6 +65,7 @@ public class LowerToolBar{
 					try {
 						Thread.sleep(5000);
 					} catch (Exception e) {
+						log.error(e.getMessage());
 					}
 					if (!shell.isDisposed()) {
 						toolbar.getDisplay().asyncExec(new Runnable() {
@@ -86,13 +87,14 @@ public class LowerToolBar{
 
     
     /** Method invoking the memory usage check */
-    private void createUsageBarCheck (final Shell shell, final ProgressBar usage, final MainWindow mw) {
+    private void createUsageBarCheck (final Shell shell, final ProgressBar usage) {
     	new Thread(new Runnable() {
 			public void run() {
 				while (!stop) {
 					try {
 						Thread.sleep(1000);
 					} catch (Exception e) {
+						log.error(e.getMessage());
 					}
 					if (!shell.isDisposed()) {
 						toolbar.getDisplay().asyncExec(new Runnable() {

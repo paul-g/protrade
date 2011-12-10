@@ -196,6 +196,7 @@ public class UpperToolBar {
 			profileItem.addListener(SWT.Selection, new DropDownListener(
 					profileItem, profileDropDown,null,true));
 		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 	}
 
