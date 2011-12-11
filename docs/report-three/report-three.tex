@@ -59,9 +59,9 @@ As suggested in \cite{bk-testing} we have used the tests to guide our design, ba
 %\subsection{Preliminaries - Project Structure}
 
 \subsection{Unit Testing}
-Because of the ease of use, unit testing has been adopted early on in the development process and it has been of great use in identifying bugs and ensuring correctness of the Match API which manages match data such as score and statistics. 
+Because of the ease of use, unit testing has been adopted early on in the development process and it has been of great use in identifying bugs and ensuring correctness of the Match API (an important set of classes which manages data such as score and statistics). 
 
-Since tennis scoring rules are peculiar (for example points are counted 15, 30, 40, AD instead of just 1,2,3,4) and tests are particularly easy to write we adopted a TDD aproach. For example a simple initial test was written to check the correct outcome of adding four consecutive points to one of the players. This should lead to him winning the game and the points score being reset. Furthermore the other player's score should always be zero. The code for this is presented in \ref{list1}.
+Since tennis scoring rules are peculiar (for example points are counted 15, 30, 40, AD instead of just 1,2,3,4) and tests are particularly easy to write we adopted a TDD aproach. For example a simple initial test was written to verify the outcome of adding four consecutive points to one of the players: the player in cause should win the game which his game score, and resets the points score. Furthermore the oponnent's score should always be zero. The code for this is presented in \ref{list1}.
 
 \javalst{Initial failing test for score. The initialisation of the score object is handled in an abstract super class which also provides assertSetScoreIs() and assertGamesScoreIs().}{list1}
 \begin{lstlisting}
@@ -79,7 +79,7 @@ Since tennis scoring rules are peculiar (for example points are counted 15, 30, 
   }
 \end{lstlisting}
 
-Having first written the test and ensured it failed, we then proceeded to implementing the methods that would make it pass. 
+Having first written the test and ensured it failed, we then proceeded to designing and implementing a solution that would make it pass. 
 We adopted this approach for the whole Match API and for the Prediction API (used to predict the evolution of a match based on current score and player statistics).
 
 This approach helped us identify numerous bugs early on and guided us towards a better overal design of the APIs.
@@ -122,17 +122,32 @@ once an acceptance test has passed, if it fails again that means a regression (t
 SWTBot **
 
 \subsection{Regression Testing}
+As explained above(?), once a test has passed for the first time, it is moved to the regression suite.
 
+Keeping failing tests (for features which have not been implemented) separate from passing tests is key in quickly identifying when a regression has occured.
+
+Consequently we provide a task that automatically moves a test from the TDD suite to the regression suite.
+
+The normal flow is: 
+\begin{enumerate}
+\item write a failing test (ensure it fails)
+\item make the test pass
+\item check for regression;
+\item fix any regression
+\item move test from TDD suite to regression suite
+\item commit changes
+\item repeat
+\end{enumerate}
 
 \subsection{Integration Testing}
 
-Integration testing is used to check how our code works with the code from outside the team, which we cannot change (provided by various libraries). These tests ensure the code we built on top of external APIs works as expected and quickly identify any configuration issues.
+Given the dependency on a large number of external APIs, we have used integration testing to ensure that these behave as expected and quickly identify potential configurarion issues. 
 
-Since the project depends on a number of external service providers (in particular Betfair and SWTChart) integration tests are vital. This has been achieved by testing the abstractions we have built on top of these APIs and used by our poject:
+This has been done by writing tests that ensure the abstractions built on top of the libraries work as expected. To reduce coupling (and simplify the testing process), normally one interface and an implementation class expose the required functionality, encapsulating all other logic required for manipulating the library. As examples we discuss the testing approach for three of the most heavily used libraries: the Betfair API, SWT and SWTChart.
 
 \subsubsection{Betfair API}
 
-The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each with a Web Service Description Language (WSDL) file. Our application only uses the first 2 services, accessed through Axis-generated Java classes, archived in generated.jar library.
+The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL(Web Service Description Language) specification. Our application only uses the first 2 services, accessed through Axis-generated Java classes, archived in generated.jar library.
 
 Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the required functionality has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, integration tests for these classes ensure the connection to the Betfair API works properly.
 
@@ -204,7 +219,6 @@ We have used PMD to generate code sanity reports.
 Refactoring
 
 Used extract superclass, pull up (for tests), extract class
-
 
 \subsection{At which development stages did you use tests}
 
