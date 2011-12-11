@@ -125,7 +125,29 @@ SWTBot **
 
 
 \subsection{Integration Testing}
-Since the project depends a number of external service providers (in particular Betfair) integration tests are vital. This has been achieved by...
+
+Integration testing is used to check how our code works with the code from outside the team, which we cannot change (provided by various libraries). These tests ensure the code we built on top of external APIs works as expected and quickly identify any configuration issues.
+
+Since the project depends on a number of external service providers (in particular Betfair and SWTChart) integration tests are vital. This has been achieved by testing the abstractions we have built on top of these APIs and used by our poject:
+
+\subsubsection{Betfair API}
+
+The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each with a Web Service Description Language (WSDL) file. Our application only uses the first 2 services, accessed through Axis-generated Java classes, archived in generated.jar library.
+
+Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the required functionality has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, integration tests for these classes ensure the connection to the Betfair API works properly.
+
+\subsubsection{SWT (?)}
+
+How does SWT work?...
+
+Since our project is not very large, we have considred acceptance tests are good/strong enough to test integration with the SWT platform/library.
+
+\subsubsection{SWTChart}
+
+How does SWTChart work?..
+
+To ease our use of the SWTChart library and the ability/.. to add specific features required by our application, we have extended the Chart class of the SWTChart library. Hence, integration tests for this class ensure the library integrates smoothly into the entire application. 
+
 
 \subsection{Continuous Integration}
 
@@ -193,7 +215,24 @@ Used extract superclass, pull up (for tests), extract class
 \section{General Validation}
 General Validation: to decribe any other methods you may have used to validate your executable deliverable; the following list is only suggestive but should give you an idea of what things you could do:
 
-\subsection{Did you validate your user interface design?}
+\subsection{User interface design validation}
+
+The user interface of our application has been designed with a view towards obtaining a final product which achieves the following goals: it is visually eye-pleasing, it is simple to use, it minimizes the effort it takes for users to accomplish their work/wish/..
+To the purpose of validating our user interface design, feedback has been collected from a number of different persons with or without experience in using trading applications.
+
+\subsubsection{Feedback experienced users}
+
+Firstly, we have had constant feedback from our supervisor, who is familair with the game of tennis and tennis betting and who understands the needs of a professional trader. He has guided us through the process and has pointed out a number of possible UI improvements along the way (such as positioning different components, displaying different data on the graph), which we have accomplished.
+
+Secondly, we have had meetings with PhD students, who are themselves developing trading applications. They gave us valuable feedback regarding market information display and the best way to present it to a specialized user. Hence, our initial interface has been adapted to accommodate their suggestions (e.g. displaying some additional market statistics) - supported by our supervisor.
+
+Finally, to collect feedback from other points of view as well, our supervisor arranged for us to meet the head of research of Betfair. He has approved(?) of our application's general interface and pointed out a few possible issues (such as synchronizing all the playback data), which are now fixed(?).
+
+\subsubsection{Feedback unexperienced users}
+
+To test how easy it is for users to understand the information presented by our application and how ''natural'' to find the required functionalities, we have collected feedback from a few colleagues, without previous experience with tennis trading applications. (??? - what did they say?)
+
+Overall, the interface of our application has been validated by the users, with some improvement suggestions which we have considered and implemented.
 
 
 \subsection{Did you use lint or similar tools?}
