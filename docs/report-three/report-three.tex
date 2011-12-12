@@ -39,13 +39,13 @@
 \tableofcontents
 
 \section{Introduction}
-Tennis trading is a steadily growing market on the Betfair Exchange, with more than 70\% of bets being placed in-play. In order to maintain market liquidity, exchanges must attract customers for example, by supplying them with better tools. By providing more information and better visualization techniques such a tool can help the trader improve his understanding and predict the market evolution, which should (potentially) lead to an increased profit.
+Tennis trading is a steadily growing market on the Betfair Exchange, with more than 70\% of bets being placed in-play. In order to maintain market liquidity, exchanges must attract customers. One way to achieve this is to provide the users with better tools which, by providing more information and better visualization techniques, can help the trader improve his understanding and predict the market evolution, ultimately leading to an increase in his profit.
 
 In the case of tennis trading, the information required to understand and predict the evolution of the market associated with a particular match consists of the live score, player statistics, potentially a live video feed and - of course - the market data (evolution of betting odds). Ideally, this information is desired for both historical and live matches.
 
-At the moment, no application provides the entire information. A number of solutions exist which allow visualization of historical market data, but they generally lack the more specific, tennis related data. For example the Fracsoft Data Viewer (\cite{site-fracsoft}) does not correlate market data with match data (scores, player statistics). BetAngel (\cite{site-betangel}) provides some tennis related data and prediction, but relies on the user to input the current match score by pushing buttons. This not entirely suited for the high rate with which data is updated. Ideally all the information should be automatically provided to the user to increase update speed and enhance usability.
+At the moment, no application provides all this information. A number of solutions exist which allow visualization of historical market data, but they generally lack the more specific, tennis related data. For example the Fracsoft Data Viewer (\cite{site-fracsoft}) does not correlate market data with match data (scores, player statistics). BetAngel (\cite{site-betangel}) provides some tennis related data and prediction, but relies on the user to input the current match score by pushing buttons. This not entirely suited for the high rate at which data is updated. Ideally, all the information should be automatically provided to the user to increase update speed and enhance usability.
 
-\nmsp means to fill this gap, by providing all the information, betting and prediction functionalities for both historical and live matches, in an entirely automated fashion.
+\nmsp means to fill this gap by providing all the information along with betting and prediction functionalities for both historical and live matches, in an entirely automated fashion.
 
 Due to the high risk associated with some user actions (e.g. placing bets with real money) and in order to ensure reliability and stability, testing and other validation methods have been used exstensively. These are covered in detail in section \ref{sec-testing} below.
 
@@ -53,20 +53,21 @@ In addition, the challenging nature of the project brought teamwork and manageme
 
 \section{Testing}
 \label{sec-testing}
-Testing has been used throughout all stages of the project starting with iteration 3 and more extensively with the introduction of the Continuous Integration server in iteration 5.
+
+**We started to use testing as soon as the first cohesive draft of the Match API, containing all core features, was created (iteration 3). This allowed us to validate our design and do any major refactoring work around that stage. From the beginning of iteration 5, testing has been supplemented with continuous integration and measuring code coverage to create test case improvements for more extensive coverage and system integration on our current version and throughout our future iterations. After obtaining all necessary data for building the Prediction API, further tests were developed along the way, leading to a TDD approach for the latter part of the project.**
 
 As suggested in \cite{bk-testing} we have used the tests to guide our design, based on the principle that if a project is well designed it should be easy to write meaningful tests for it.
 
 \textbf{Unit testing} has been used to rapidly test small portions of code while \textbf{acceptance tests} have been used to test a system feature from front-end to back-end. \textbf {TDD tests} (tests written before features) are expected to fail when they are written and should pass once the feature has been completely implemented. Once it passes, a test is transferred to the regression suite. Naturally, a failing \textbf{regression test} indicates a break in previous functionality (regression).
 
-The general approach was to use TDD for the model packages, based on the fact that these should be easier to test (from a technical point of view), are crucial for the application and less likely to change.
+The general approach was to use TDD for the model packages, based on the fact that these should be easier to test, are crucial for the application and less likely to change.
 
-Because of the lack of familiarity with the UI libraries and the limitations and lack of documentation of the UI testing framework - which could have introduced a serious risk for the on time delivery of the project - we avoided a TDD approach for the UI classes, but resorted to writing post implementation functional and acceptance tests to cover a decent proportion (generally over 60-70\%) of the user interface functionality.
+Because of the lack of familiarity with the UI libraries and the limitations and lack of documentation of the UI testing framework - which could have threatened the ability to deliver the project on time - we avoided a TDD approach for the UI classes, but resorted to writing post implementation acceptance tests to cover a decent proportion (generally over 60-70\%) of the user interface functionality.
 
 \subsection{Unit Testing}
-Based on its ease of use, unit testing was adopted early on in the development process and it has been of great use in identifying bugs and ensuring correctness of the Match API (an important set of classes which manages data such as match score and statistics). 
+Unit testing was adopted early on in the development process and it has been of great use in identifying bugs and ensuring correctness of the Match API (an important set of classes which manages data such as match score and statistics). 
 
-One specific use case was to test the implementation of the scoring rules. Since, in tennis, these can be quite peculiar (for example points are counted 15, 30, 40, AD instead of just 1, 2, 3, 4) and tests are particularly easy to write, we adopted a TDD approach in this instance. A simple initial test was written to state the expected outcome of adding four consecutive points to one of the players: the player in cause should win the game, increasing his game score, and resets the points score. Furthermore the opponent's score should always be zero. The code for this is presented in \ref{list1}.
+One specific use case was to test the implementation of the scoring rules. Since, in tennis, these can be quite peculiar (for example points are counted 15, 30, 40, AD instead of just 1, 2, 3, 4) and tests are particularly easy to write, we adopted a TDD approach in this instance. A simple initial test was written to state the expected outcome of adding four consecutive points to one of the players: the player in cause should win the game, increasing his game score, and resetting the points score. Furthermore the opponent's score should always be zero. The code for this is presented in \ref{list1}.
 
 \javalst{Initial failing test for score. The initialisation of the score object is handled in an abstract super class which also provides assertSetScoreIs() and assertGamesScoreIs().}{list1}
 \begin{lstlisting}
@@ -90,7 +91,6 @@ We adopted this approach for the whole Match API and for the Prediction API (use
 This approach helped us identify numerous bugs early on and guided us towards a better overal design of the APIs.
 
 **e.g. a function for correctly setting a set score to a certain value was not initially provided, but since while writing the tests the need for such a function became obvious, it was included and tested**
-** separate tests that measure progress from tests that catch regression **
 
 \subsection{Acceptance Testing}
 We used acceptance tests to test a particular function of the system, starting from the front-end (e.g. finding and pushing a button on the UI) to the back-end (e.g. connecting to the Betfair API to authorize a login request).
@@ -99,7 +99,7 @@ For performance reasons these were ran separately from unit tests since the UI o
 
 A simple example is the test in \ref{list2} which checks the login functionality: the user should fill in their Betfair account and password and click on the login button. The login attempt is checked against the Betfair API and a label is updated to indicate success or failure. Obviously, an attempt to login with the specially created test account should result in a success message being displayed.
 
-\javalst{Initial failing test for the login window. The username and password for the test account are read and decrypted from a local config file by the Main class. Using the UI bot we then fill the data in on the login window and click the login button. Similar test have been written to ensure incorect login failure etc.}{list2}
+\javalst{Initial failing test for the login window. The username and password for the test account are read and decrypted from a local config file by the Main class. Using the UI bot we then fill the data in on the login window and click the login button. Similar tests have been written to verify other scenarios.}{list2}
 \begin{lstlisting}
     @Test
     public void correctLoginSuccess() throws Exception {
@@ -113,25 +113,25 @@ A simple example is the test in \ref{list2} which checks the login functionality
     }
 \end{lstlisting}
 
-We have adopted a similar approach for most features.
+We have adopted a similar approach in testing most of the classes connected to the user interface.
 
 However, due to limitations in the SWTBot API some features have proven impossible to test. For example we have not found a way to test the functions of a context menu (pop up) or a progress bar.
+Nevertheless these are important aspects which must be tested to ensure correct behaviour. For example, one of the most important tools for traders is the chart on which they can view the market's evolution. Since a context menu on the chart allows the user to choose between different types of analysis, it is currently impossible to completely test the correctness of this function.
 
-SWTBot **
+In such situations we have resorted to testing the actions executed by the specific listener associated with the context menu item, which at the very least ensures that if the event fires correctly, the display is updated as expected.
 
 \subsection{Regression Testing}
-**We have used reg testing to ensure no break in previous functionality occurs.**
-Once a test has passed for the first time, it is moved to the regression suite.
+We have used regression testing to ensure that no break in previous functionality occurs when introducing new code.
 
-Keeping failing tests (for features which have not been implemented) separate from passing tests is key in quickly identifying when a regression has occured.
+Keeping tests that measure progress separate from regression tests is key in quickly identifying when a regression has occured. Simply put, all tests appart from those in the progress suite should pass at all times. If this is not the case, a regression has occurred.
 
-Consequently we provide a task that automatically moves a test from the TDD suite to the regression suite and normal development flow is: 
+Consequently the normal development flow is: 
 \begin{enumerate}
 \item write a failing test (and ensure it fails)
 \item make the test pass
 \item check for regressions
 \item fix any regression
-\item move test from TDD suite to regression suite
+\item move test from progress suite to regression suite
 \item commit changes
 \item repeat
 \end{enumerate}
@@ -144,18 +144,18 @@ This has been done by writing tests that ensure the abstractions built on top of
 
 \subsubsection{Betfair API}
 
-The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL(Web Service Description Language) specification. Our application only uses the first 2 services, accessed through Axis-generated Java classes.
+The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL specification. The application only uses the first 2 services, accessing them through Java classes automatically generated with Apache Axis.
 
-Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the functionality required by the application has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, integration tests for these classes ensure the connection to the Betfair API works properly.
+Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the functionality required by the application has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, tests written for these classes ensure the connection to the Betfair API works as expected and constitute integration tests.
 
 \subsubsection{SWT}
 
-How does SWT work?... memory leak, platform specific
+SWT is a graphical widget toolkit with a platform dependent implementation. At the heart of its architecure is the ability to create native widgets. However this raises the issue of freeing allocated memory (which cannot be garbage collected by the JVM).
+Hence, it is important to test classes using this library(most of our UI classes) to ensure that the UI behaves similarly on different platforms and that there are no memory leaks.
 
-SWT is a graphical widget toolkit with a unique implementation for each platform. Memory leak,....
-Hence, it is very important to test it, but it is already done by acceptance tests.
+However, precisely matching UIs for different platforms and reliably identifying memory leaks have proven to be very difficult tasks, so we have postponed handling of these aspects to later stages.
 
-Since our project is not very large, we have considred acceptance tests are good/strong enough to test integration with the SWT platform/library.
+In all other respects, we have considered the acceptance tests as good enough to test integration with the SWT library.
 
 \subsubsection{SWTChart}
 
@@ -235,9 +235,6 @@ Refactoring
 
 Used extract superclass, pull up (for tests), extract class
 
-\subsection{At which development stages did you use tests? }
-
-We have started to use unit and regression tests as soon as the first cohesive draft of the Match API, containing all core features, was created (iteration 4). This allowed us to validate our design and do any major refactoring work around that stage. In the next iteration (5), testing has been supplemented with continuous integration and measuring code coverage to create test case improvements for more extensive coverage and system integration on our current version and throughout our future iterations. After obtaining all necessary data for buiding the Prediction API, further unit and regression tests have been developed along the way, leading to a TDD approach for the latter part of the project.
 
 \subsection{Portions of code base tested}
 
@@ -333,11 +330,6 @@ We are using Standard Widget Toolkit (SWT) to develop our graphical user interfa
 Our application requires a lot of data to be stored and presented to a user in a special way, one of the aims of the group is to have an efficient memory management, as this will lead to a better responsiveness of the application which is vital for traders.
 
 Our application does not consume a lot of CPU power as our computations are negligible except to a few data statistical/technical analysis of data which is vital for traders, but we haven’t observed a heavy CPU usage even with many concurrent markets/matches ope
-
-\subsection{Did you test the GUIs of your software?}
-
-
-We mentioned above that we are using the SWTBot API to test our widget and unfortunately because of its limitations we haven’t yet identified ways to test the functions of the specific components such as the context menu (pop u) or a progress bar. However we realise that this is very important to test before realising the application. One of the most important tools for traders is the chart where they can view the flow of a market and we must implement it very efficient and to make sure that the graphical part of it is working properly. We have implemented a context menu on the chart, where the user may select different types of analysis to be shown and as we can’t test the context menu we are not sure of the potential behaviour of the application in certain conditions.
 
 
 \section{Managerial Documentation}
