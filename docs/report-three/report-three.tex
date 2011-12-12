@@ -318,18 +318,17 @@ As this is done on a regular basis, we have agreed from the beginning to comment
 
 \subsection{Stress testing}
 
-At the moment, no stress testing tools are used. Our group left this as the last stage of our development process, as this may be more beneficial once we have all the features implemented.
-However we have conducted a `manual` stress testing.
+At the moment, no stress testing tools are used. This has been left as the last stage of our development process, as it may be more beneficial once we have all the features implemented. However we have conducted a `manual` stress testing.
 
-An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This is done by opening more than one tab, where each tab displays the match/market.
+An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This can be done by opening more than one tab, since each tab displays one match and its associated market information.
 
-We have observed that when we open a single match/market the physical memory consumed by the application is 1.5 GB and once we open more matches/markets this figure increases even more reaching 2GB when 3 tabs are opened. This enforced us to raise an issue with high importance and it is an on-going process where we try to identify any memory leaks, to analyse if we store any redundant/unused data and any other ways to reduce this figure. We understand that this is a major issue as an average computer has 3-4 GB of physical memory and we aim to solve the problem by the end of the project.
+We have observed that when we only view data for one match the physical memory consumed by the application is around 1.5 GB, while once we open more match view this figure increases up to 2GB (with 3 open tabs). We understand such behaviour is a major problem, as an average computer has 3-4 GB of physical memory, and we aim to solve the problem by the end of the project. Hence, this has become an important issue and an on-going process to identify and eliminate meory leaks has started.
 
-We are using Standard Widget Toolkit (SWT) to develop our graphical user interface and since the native OS widgets creatde by it cannot be garbage collected, a special attention is paid to creating and disposing the components, in order to avoid any memory leaks.
+Using the Standard Widget Toolkit (SWT) to develop the graphical user interface can be a source of memory leaks, since the native OS widgets created by it cannot be garbage collected. Therefore, special attention is paid to disposing any created components.
 
-Our application requires a lot of data to be stored and presented to a user in a special way, one of the aims of the group is to have an efficient memory management, as this will lead to a better responsiveness of the application which is vital for traders.
+Also, our application requires a lot of data to be stored and presented to the user in different ways. Hence, one of the aims is to have an efficient memory management, as this will avoid having duplicate data in memory.
 
-Our application does not consume a lot of CPU power as our computations are negligible except to a few data statistical/technical analysis of data which is vital for traders, but we haven’t observed a heavy CPU usage even with many concurrent markets/matches ope
+Our application does not consume a lot of CPU power as most our computations are negligible. The most computational intensive tasks are the statiscal data inference algorithms, but we haven’t observed a heavy CPU usage even with more match view open at the same time.
 
 \subsection{Did you test the GUIs of your software?}
 
