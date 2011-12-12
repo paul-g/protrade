@@ -342,11 +342,14 @@ Management Policy is a documented set of rules, constraints, standards and guide
 \subsubsection{Code Change Policy}
 
 In order to deliver a successful project, the team had to have a a strict set of policies when addressing code change. In our case, at first, the continuous integration server was used, to keep track of how many tests are covered and which parts need more development. With this it also provided a good analitical base for issue resolving, for example, in case a commit breaks the build, it is relatively easy to track it down.
-However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - git branching. The idea behind it is to have to different branches: Master (development) for development purposes and Release (latest stable) for a finished piece of work, thoroughly tested and agreed with every team member. Consequently, while DEV is open for commits from everyone inside the project group, Release version is only accessible to the team leader at the end of a milestone. This way team always has a stable version to fall back to at the end of every iteration.
+
+However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - git branching. The idea behind it is to have to different branches: Master (development) for development purposes and Release (latest stable) for a finished piece of work, thoroughly tested and agreed with every team member. Consequently, while Master branch is open for commits from everyone inside the project group, Release version is only accessible to the team leader at the end of a milestone. This way team always has a stable version to fall back to at the end of every iteration.
 
 \subsubsection{Validation Policy}
 
-Before implementing the branching system the team did not have a set of rules for commits, resulting in numerous build breaks for continuous integration server. Team agreed that this was not an efficient way of code quality control, thus, new rules for code commited were enforced. From now on, any change to the code in the Release was to be overviewed by two other team members, giving the group necessary level of code validation and quality control. As a result of this policy, team gained experience in code review and improved technical expertise by the information exchange through problem solving.
+Before implementing the branching system the team did not have a set of rules for commits, resulting in numerous build breaks for continuous integration server. Team agreed that this was not an efficient way of code quality control, thus, new rules for code commited were enforced. 
+
+From now on, any change to the code in the Release was to be overviewed by two other team members, giving the group necessary level of code validation and quality control. As a result of this policy, team gained experience in code review and improved technical expertise by the information exchange through problem solving.
 
 \subsection{Knowledge Transfer}
 
