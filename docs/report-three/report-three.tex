@@ -347,19 +347,19 @@ Throughout the project various collaboration tools were used that would help in 
 
 \subsubsection{Git}
 
-Use of git significantly improved the quality of work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use ``Commit Early, Commit Often'' paradigm, as many postponed commits tend to result in a large number of merge conflicts. As a consequence of an increase in the commit frequency, the monitoring capability of the project also raised, simplifying error tracking and resolving.
+Use of Git significantly improved the quality of the work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use ``Commit Early, Commit Often'' paradigm, as many postponed commits tend to result in a large number of merge conflicts. This increase in the commit frequency simplified error tracking and resolving.
 
 \subsubsection{Github repository}
 
-For the purpose of efficient collaboration, a private github repository was created, providing the team with a wide range of features. First of all, team used issues that could be tracked and assigned to specific group members. These tasks had comment threads linked to them, simplifying communication and giving an ability to have almost instant feedback on the solution. Moreover, use of issues dramatically increased working efficiency of the team, for example, whenever there was a new issue added to the back log, all teammates were notified, and once one of them has finished work on his or her piece, this member could then start thinking on another problem. As well as that, github repository provided the ability to split issues into different milestones, consequently providing better sense of direction for everyone in the group. As a result, it helped to enforce the agile development paradigm, making it possible to have distinct iterations, thus increasing the level of cooperation between team members.
+For the purpose of efficient collaboration, a private Github repository was created, providing the team with a wide range of features. First of all, the team used issues that could be tracked and assigned to specific group members. These had comment threads linked to them, simplifying communication and giving an ability to have almost instant feedback on the solution. Moreover, use of issues dramatically increased the team's efficiency, for example, whenever there was a new issue added to the back log, all teammates were notified, and once one of them had finished work on his or her piece, that member could then start thinking on another problem. Furthermore, the Github repository provided the ability to split issues into different milestones, consequently giving a better sense of direction to everyone in the group, which in turn increased the level of cooperation between team members.
 
 \subsubsection{Google Docs}
 
-Another set of collaboration tools that proved to be useful was google docs. This platform allowed the whole group to exchange information by creating files accessible to the whole group. The team primarily used it to make meetings agendas, keep logs of the work done via tables and set global objectives for particular iterations. The use of google docs also simplified report editing because of the instant feedback and constant monitoring of the different sections by other team members.
+Another set of collaboration tools that proved to be useful was Google Docs. This platform allowed the whole group to exchange information by creating shared documents. The team primarily used it to write meetings agendas, keep logs of the work done via spreadsheets and set global objectives for particular iterations. The use of google docs also simplified report editing by providing support for concurrent editing and instant feedback (via the ``comment'' feature).
 
 \subsubsection{Dropbox}
 
-In order to share more specific information and larger files, team members had dropbox accounts. This allowed to share data related to tennis, sports trading, Betfair API and particular software libraries, for example, GUI libraries for chart display.
+In order to manage access to larger files, Dropbox accounts were created which allowed team to share data related to tennis (e.g. match videos), sports trading, documentation for the Betfair API etc.
 
 \subsubsection{Email, Skype and IM}
 
@@ -367,31 +367,29 @@ To establish a concrete communication channel throughout the project group, it w
 
 \subsection{Management Policies}
 
-Management Policy is a documented set of rules, constraints, standards and guidelines that apply to the decision making and determination of action, for both present and future state, and for a specific area of interest or concern that relates directly to Software Development, based on a set of given inputs, conditions or state.
+Management Policy is a documented set of rules, constraints, standards and guidelines that apply to the decision making and determination of an action, for both present and future state, and for a specific area of interest or concern that relates directly to Software Development, based on a set of given inputs, conditions or state.
 
 \subsubsection{Code Change Policy}
 
-In order to deliver a successful project, the team had to have a a strict set of policies addressing code change. In our case, at first, the continuous integration server was used, to keep track of how many tests are covered and which parts need more development. On top of that it also provided a good analitical base for issue resolving, for example, in case a commit breaks the build, it is relatively easy to track it down.
+In order to deliver a successful project, the team had to have a strict set of policies addressing code change. In our case, at first, the continuous integration server was used to keep track of how many tests are covered and which parts need more development. On top of that it also provided a good analitical base for issue resolving, for example, in case a commit broke the build, it was relatively easy to track it down.
 
-However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - git branching. The idea behind it is to have to different branches: Master (dev) for development purposes and Release (release) for a latest stable version, thoroughly tested and agreed with every team member. Consequently, while Master branch is open for commits from everyone inside the project group, Release version is only accessible to the team leader. This way team always has a stable version to fall back to at the end of every iteration.
+However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - branching. The idea behind it is to have to different branches: master (dev) for development purposes and stable (release) for a latest stable version, thoroughly tested and agreed with every team member. Consequently, while master branch is open for commits from everyone inside the project group, stable version is only accessible to the team leader. This way team always has a stable version to fall back to at the end of every iteration.
 
 \subsubsection{Validation Policy}
 
-Before implementing the branching system the team did not have a set of rules for commits, resulting in numerous build breaks for continuous integration server. Team agreed that this was not an efficient way of code quality control, thus, new rules for code commited were enforced. 
+Before implementing the branching system the team did not have a set of rules for commits, resulting in numerous build breaks for continuous integration server. The team agreed that this was not an efficient way of code quality control, thus, new rules for code commited were enforced. 
 
 From now on, any change to the code in the Release was to be overviewed by two other team members, giving the group necessary level of code validation and quality control. As a result of this policy, team gained experience in code review and improved technical expertise by the information exchange through problem solving.
 
 \subsection{Knowledge Transfer}
 
-Knowledge transfer within the project group was managed by the several techniques, specific to agile software development paradigm. In this particular case, team made use of issues with comment threads to pass the obtained info on the solution. Furthermore, stand-up meetings were arranged to help individual members. During these meetings team mates could explain the nature of obstacles met, so that others could support them with background knowledge on the subject. Finally, documents passed through dropbox and google docs contained information on software packages used, to help group members obtain more explicit knowledge on the topic.
+Knowledge transfer within the project group was managed by the several techniques, specific to agile software development paradigm. In this particular case, the team made use of issues with comment threads to pass the obtained information on the solution. Furthermore, stand-up meetings were arranged to help individual members. During these meetings teammates would explain the nature of obstacles met, so that others could support them with background knowledge on the subject. Finally, documents passed through dropbox and google docs contained information on software packages used, to help group members obtain more explicit knowledge on the topic.
 
-All in all, efficient management of knowledge transfer within the team required a constant stream of feedback from other members upon the work produced. That significantly increased the volatility of tacit knowledge within the group, consequently helping to overcome most of the obstacles in development.
+All in all, efficient management of knowledge transfer within the team required a constant stream of feedback from other members upon the work produced. This significantly improved the transfer of tacit knowledge within the group, consequently helping to overcome most of the obstacles in development.
 
 \subsection{Materials}
 
-A table of the group meetings - including dates, format and which members attended
-A table of the hours spent per week on which tasks or activities by each member on the project
-The Log-Book
+Below are the tables of the group meetings including dates, format and which members attended, hours spent per week on which tasks or activities by each member on the project and the Log-book.
 
 \begin{thebibliography}{9}
 \bibitem{bk-testing}
