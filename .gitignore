@@ -37,3 +37,4 @@ cobertura.ser
 #########
 *.dump
 *.html
+*.pdf
