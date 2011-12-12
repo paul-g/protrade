@@ -1,7 +1,10 @@
 package org.ic.tennistrader.score;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -10,6 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.EventBetfair;
@@ -32,6 +36,8 @@ public class PredictionGui extends StandardWidgetContainer {
     private StatisticsUpdateThread statisticsUpdateThread;
     
     private Match match;
+
+    private StatisticsPanel st;
     
     public static void main(String args[]) {
         final Display display = new Display();
@@ -73,14 +79,13 @@ public class PredictionGui extends StandardWidgetContainer {
         WimbledonScorePanel sc = new WimbledonScorePanel(this, match);
 
         GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1 , 2);
-        
-        StatisticsPanel st = new StatisticsPanel(this, match);
+        st = new StatisticsPanel(this, match);
         st.setLayoutData(gd);
 
         addMarketDataGrid(this, match);
         
-        this.statisticsUpdateThread = new StatisticsUpdateThread(match);
-        this.statisticsUpdateThread.addListener(st);
+        //this.statisticsUpdateThread = new StatisticsUpdateThread(match);
+        //this.statisticsUpdateThread.addListener(st);
 
         this.scoreUpdateThread = new ScoreUpdateThread(match);
         //Image im = new Image(this.getDisplay(), "images/scoreboard.png" );
@@ -88,7 +93,10 @@ public class PredictionGui extends StandardWidgetContainer {
     }
     
     public void start(){
-        statisticsUpdateThread.start();
+        String statsString = getStatsString("data/test/tennisinsight-tso-fed.dat");
+        new StatisticsParser(statsString, match).parseAndSetStatistics();
+        st.handleEvent(new Event());
+        //statisticsUpdateThread.start();
         if (match.isInPlay()) {
          log.info("Live match: starting score update thread");
             // only start score fetching for live matches
@@ -121,4 +129,22 @@ public class PredictionGui extends StandardWidgetContainer {
     public String getTitle() {
         return "Prediction";
     }
+    
+    private static String getStatsString(String filename) {
+
+        Scanner scanner;
+        String test = "";
+
+        try {
+            scanner = new Scanner(new FileInputStream(filename));
+        
+            while (scanner.hasNext()){
+            test += scanner.nextLine() + "\n";
+            }
+        } catch (FileNotFoundException e) {
+            // log.error(e.getMessage());
+        }
+
+        return test;
+    }   
 }
