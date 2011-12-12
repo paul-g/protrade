@@ -26,8 +26,8 @@ import org.swtchart.ISeriesSet;
 import org.swtchart.Range;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
+import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.MOddsMarketData;
-import org.ic.tennistrader.domain.match.ChartData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.ui.StandardWidgetResizeListener;
 

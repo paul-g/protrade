@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.junit.Before;
 import org.junit.Test;

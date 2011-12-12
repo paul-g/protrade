@@ -144,25 +144,28 @@ This has been done by writing tests that ensure the abstractions built on top of
 
 \subsubsection{Betfair API}
 
-The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL(Web Service Description Language) specification. Our application only uses the first 2 services, accessed through Axis-generated Java classes, archived in generated.jar library.
+The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL(Web Service Description Language) specification. Our application only uses the first 2 services, accessed through Axis-generated Java classes.
 
-Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the required functionality has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, integration tests for these classes ensure the connection to the Betfair API works properly.
+Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the functionality required by the application has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, integration tests for these classes ensure the connection to the Betfair API works properly.
 
-\subsubsection{SWT (?)}
+\subsubsection{SWT}
 
-How does SWT work?...
+How does SWT work?... memory leak, platform specific
+
+SWT is a graphical widget toolkit with a unique implementation for each platform. Memory leak,....
+Hence, it is very important to test it, but it is already done by acceptance tests.
 
 Since our project is not very large, we have considred acceptance tests are good/strong enough to test integration with the SWT platform/library.
 
 \subsubsection{SWTChart}
 
-The SWTChart API provides a chart component with several basic functionalities (such as drawing line functions, bar charts etc). The chart can handle real-time updates (even for large data series), which is crucial to the purpose of our project and it integrates smoothly with the application's UI design and implementation, since it is based on SWT. 
+The SWTChart API provides a chart component with several basic functionalities (such as drawing line functions, bar charts etc). The chart can handle real-time updates (even for large data series), which is crucial to the purpose of our project and, since it is based on SWT, it integrates smoothly with the application's UI design and implementation. 
 
 Howver, additional functionalities were still required, so we have extended the Chart class, providing the implementation of the needed functions. This design encapsulates the use of the SWTChart API, so integration tests for this class ensure the library integrates smoothly into the entire application. 
 
 \subsection{Continuous Integration}
 
-Since the beginning of iteration 5 a continuous integration has been installed on a virtual machine provided by the Computing Support Group, which emulats a dual core, 1GB, 64bit machine.
+Since the beginning of iteration 5 a continuous integration has been installed on a virtual machine provided by the Computing Support Group, which emulates a dual core, 1GB, 64bit machine.
 We have decided to use Hudson, which comes with a plugin for running UI tests. These are different than normal tests since they require a display and cannot run on a headless server, unless some in memory display mechanism is provided. There are two alternatives: xvfb and hudson's plugin. Since we initially assumed xvfb would be harder to setup
 Hudson provides easy integration with git.
 The CI server is set to poll the repository and, when changes are detected, checks out a fresh copy and runs our normal build script.
@@ -220,7 +223,7 @@ Used extract superclass, pull up (for tests), extract class
 
 \subsection{At which development stages did you use tests? }
 
-We have started using unit and regression tests as soon as the first cohesive draft of the Match API, containing all core features, was created (iteration 4). This allowed us to validate our design and do any major refactoring work around that stage. In the next iteration (5), testing has been supplemented with continuous integration and measuring code coverage to create test case improvements for more extensive coverage and system integration on our current version and throughout our future iterations. After obtaining all necessary data for buiding the Prediction API, further unit and regression tests have been developed as it was being developed, leading to a TDD approach for the latter part of the project.
+We have started to use unit and regression tests as soon as the first cohesive draft of the Match API, containing all core features, was created (iteration 4). This allowed us to validate our design and do any major refactoring work around that stage. In the next iteration (5), testing has been supplemented with continuous integration and measuring code coverage to create test case improvements for more extensive coverage and system integration on our current version and throughout our future iterations. After obtaining all necessary data for buiding the Prediction API, further unit and regression tests have been developed along the way, leading to a TDD approach for the latter part of the project.
 
 \subsection{Portions of code base tested}
 
@@ -229,13 +232,14 @@ All core components of the proTrade application have clear distinctions between 
 \begin{itemize}
 \renewcommand{\labelitemi}{$\bullet$}
 \item Authentication: Encrypt/decrypt functions for storing and accessing the login credentials are unit tested, while the interface (LoginShell) is acceptance tested (as detailed in section 2.2).
-\item Controller: The bet controller, built upon relevant back/lay buttons and their associated functionality of placing bets, is tested functionaly in 'BetControllerTest' for correct bet types and player recognition
-\item Domain/Match: Local functionality of populating/retrieving the chart widget with market data is unit tested in 'ChartDataTest'
-\item Model: The internal state representation relating to player data and matched/unmatched bets corresponding to the market/user are unit tested, while the exchange connection that updates the internal state is validated via functional tests.     
+\item Controller: The bet controller, built upon relevant back/lay buttons and their associated bet placing functionality, is tested for correct bet types and player recognition.
+\item Domain: Local functionality of populating/retrieving the chart widget with market data is unit tested in 'ChartDataTest'. Specific tests for other domain classes have not been designed, since these are plain java objects, with no logic implementation. However, their functions are tested when these objects are used in other unit-tests.
+\item Domain/match: Special unit-tests have been designed to check how the score of a match is updated and handled.
+\item Model and Model/connection: The implementation and logic of virtual betting (including the internal state representation of the market and matched/unmatched bets) are unit tested, while the global and exchange connections to Betfair API (that normally update the internal state) are validated via integration tests.     
 \item Score: Front end 'PredictionGui' controller is functionally tested, whereas specific unit tests are written for back-end components such as statistics fetching and parsing or the 'PredictionCalculator' model. 
-\item Service: Since this package models the back end receiver for various incoming data, state updating is unit tested and integration with BetFair API services is checked
-\item UI: Acceptance and integration testing of all front-end GUI interfaces
-\item UI-Betting/Updatable: Integration testing on dynamical GUI elements driven by user input or data updates
+\item Service: Since this package models the back end receiver for various incoming data, state updating is unit tested.
+\item UI and UI/Betting: Acceptance and testing of all front-end GUI interfaces.
+\item UI/Updatable: Acceptance and integration testing on dynamical GUI elements driven by user input or data updates.
 \end{itemize}
 
 \begin{figure}[ht]
@@ -253,7 +257,11 @@ All core components of the proTrade application have clear distinctions between 
 
 Apart from validating design, testing has revealed hidden bugs in various components of the system. 
 
-Unit tests have invalidated a first encoding of the scoring system for the prediction calculator, when translating between traditional tennis point scores and an incremental representation. Furthermore, they have revealed some overlooked considerations in recursive state passing when computing a set prediction based on a Markov chain model, which led to wrong set winning probability estimates. 
+Unit tests have invalidated a first encoding of the scoring system for the prediction calculator, when translating between traditional tennis point scores and an incremental representation.
+
+Also, they have identified a missing condition when registering events whose market data should constantly updated by connecting to the Betfair API, which resulted in some events being introduced twice.
+
+Furthermore, they have revealed some overlooked considerations in recursive state passing when computing a set prediction based on a Markov chain model, which led to wrong set winning probability estimates. 
 
 \section{General Validation}
 General Validation: to decribe any other methods you may have used to validate your executable deliverable; the following list is only suggestive but should give you an idea of what things you could do:
@@ -290,21 +298,23 @@ We also used a review mechanism in which, normally, code has been inspected by a
 During the implementation process we often employed pair programming but also other lightweight code review mechanisms[3], particularly over-the shoulder and tool-assisted code review (e.g. based on PMD suggestions).
 The decision to adopt lightweight code review mechanisms was based on evidence presented in [4], which suggests that this type of review can be as effective as a more formal one, but easier to implement.
 
-This helped improve the overall quality of the software and identify bugs early on in the development process....
-The whole source code is accessible to every member of the group and where appropriate and necessary, the code is reviewed by other members who don’t work on that specific widget or feature. Where a a bug is found or refactoring is needed, usually an issue is raised on GitHub with the suggestion to solve that specific problem.
+This helped improve the overall quality of the software and minimize the number of bugs early on in the development process.
+The whole source code is accessible to every member of the group and where appropriate and necessary, the code is reviewed by other members who don’t work on that specific widget or feature. 
+
+Where a bug is found or refactoring is needed, usually an issue is raised on GitHub with the suggestion to solve that specific problem.
 
 As this is done on a regular basis, we have agreed from the beginning to comment the code as much as possible and to use coding standars
 
 \subsection{Stress testing?}
 
 At the moment, no stress testing tools are used. Our group left this as the last stage of our development process, as this may be more beneficial once we have all the features implemented.
-However we have done a `manual` stress testing.
+However we have conducted a `manual` stress testing.
 
 An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This is done by opening more than one tab, where each tab displays the match/market.
 
-We have observed that when we open a single match/market the physical memory consumed by the application is 1.5 GB and once we open more matches/markets this figure increases even more reaching 2GB when 3 tabs are opened. This enforced us to raise an issue with high importance and it is an on-going process where we try to identify any memory leaks, to analyse if we store any redundant/unused data and any other ways to reduce this figure. We understand that this major issue as an average computer has 3-4 GB of physical memory and we hope to solve the problem by the end of the project.
+We have observed that when we open a single match/market the physical memory consumed by the application is 1.5 GB and once we open more matches/markets this figure increases even more reaching 2GB when 3 tabs are opened. This enforced us to raise an issue with high importance and it is an on-going process where we try to identify any memory leaks, to analyse if we store any redundant/unused data and any other ways to reduce this figure. We understand that this is a major issue as an average computer has 3-4 GB of physical memory and we aim to solve the problem by the end of the project.
 
-We are using Standard Widget Toolkit (SWT)  to develop our graphical user interface and the native OS widgets cannot be garbage collected,a special attention is paid to creating and disposing the components as the improper coding of the components may lead to memory leaks.
+We are using Standard Widget Toolkit (SWT) to develop our graphical user interface and since the native OS widgets creatde by it cannot be garbage collected, a special attention is paid to creating and disposing the components, in order to avoid any memory leaks.
 
 Our application requires a lot of data to be stored and presented to a user in a special way, one of the aims of the group is to have an efficient memory management, as this will lead to a better responsiveness of the application which is vital for traders.
 
@@ -325,7 +335,7 @@ This section provides a formal account of group management and activities.
 
 Throughout the project various collaboration tools were used that would help in cooperation for successful product delivery.
 
-Use of git significantly improved the quality of work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use ``Commit Early, Commit Often'' paradigm, as many postponed commits tended to result in a large number of merge conflicts. As a consequence of an increase in the commit frequency, the monitoring capability of the project also raised, simplifying error tracking and resolving.
+Use of git significantly improved the quality of work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use ``Commit Early, Commit Often'' paradigm, as many postponed commits tend to result in a large number of merge conflicts. As a consequence of an increase in the commit frequency, the monitoring capability of the project also raised, simplifying error tracking and resolving.
 
 Furthermore, a private github repository was created, providing the team with a set of features that supported further collaboration. First of all, team used issues that could be tracked and assigned to specific group members. These tasks had comment threads linked to them, simplifying communication and giving an ability to have almost instant feedback on the solution. Moreover, use of issues dramatically increased working efficiency of the team, for example, whenever there was a new issue added to the back log, all teammates were notified, and once one of them has finished work on his or her piece, this member could then start thinking on another problem. As well as that, github repository provided the ability to split issues into different milestones, consequently providing better sense of direction for everyone in the group. As a result, it helped to enforce the agile development paradigm, making it possible to have distinct iterations, thus increasing the level of cooperation between team members.
 
@@ -395,6 +405,10 @@ The Log-Book
 \bibitem{site-betangel}
   Site of BetAngel
   \url{http://www.betangel.com}
+  
+\bibitem{wiki-swt}
+  SWT - Wikipedia
+  \url{http://en.wikipedia.org/wiki/Standard_Widget_Toolkit}
 
 \end{thebibliography}
 
