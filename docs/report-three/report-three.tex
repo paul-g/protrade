@@ -38,6 +38,7 @@
 
 \tableofcontents
 
+
 \section{Introduction}
 Tennis trading is a steadily growing market on the Betfair Exchange, with more than 70\% of bets being placed in-play. In order to maintain market liquidity, exchanges must attract customers for example, by supplying them with better tools. By providing more information and better visualization techniques such a tool can help the trader improve his understanding and predict the market evolution, which should (potentially) lead to an increased profit.
 
@@ -50,6 +51,7 @@ At the moment, no application provides the entire information. A number of solut
 Due to the high risk associated with some user actions (e.g. placing bets with real money) and in order to ensure reliability and stability, testing and other validation methods have been used exstensively. These are covered in detail in section \ref{sec-testing} below.
 
 In addition, the challenging nature of the project brought teamwork and management at the heart of a development process that aimed to deliver core functionalities and extensions on time. The aspects of group management are discussed in section \ref{sec-group}.
+
 
 \section{Testing}
 \label{sec-testing}
@@ -277,6 +279,7 @@ Also, they have identified a missing condition when registering events whose mar
 
 Furthermore, they have revealed some overlooked considerations in recursive state passing when computing a set prediction based on a Markov chain model, which led to wrong set winning probability estimates. 
 
+
 \section{General Validation}
 General Validation: to decribe any other methods you may have used to validate your executable deliverable; the following list is only suggestive but should give you an idea of what things you could do:
 
@@ -336,7 +339,6 @@ Our application does not consume a lot of CPU power as our computations are negl
 
 \subsection{Did you test the GUIs of your software?}
 
-
 We mentioned above that we are using the SWTBot API to test our widget and unfortunately because of its limitations we haven’t yet identified ways to test the functions of the specific components such as the context menu (pop u) or a progress bar. However we realise that this is very important to test before realising the application. One of the most important tools for traders is the chart where they can view the flow of a market and we must implement it very efficient and to make sure that the graphical part of it is working properly. We have implemented a context menu on the chart, where the user may select different types of analysis to be shown and as we can’t test the context menu we are not sure of the potential behaviour of the application in certain conditions.
 
 
@@ -367,7 +369,7 @@ In order to share more specific information and larger files, team members had d
 
 \subsubsection{Email, Skype and IM}
 
-To establish a concrete communication channel throughout the project group, it was essential to have a good media that everyone would have an access to. First of all, emails provided good updates for the whole team and simplified the process of making proposals and raising issues that needed consideration of all team members. Skype and IM services, in turn, made it easier for several group members to work on specific issues and provided an excellent media for knowledge exchange.
+To establish a concrete communication channel throughout the project group, it was essential to have a good medium that everyone would have an access to. Therefore, the group's choice has fallen on electronic mail and messaging services. Emails provided good updates for the whole team and simplified the process of making proposals and raising issues that needed consideration of all team members. Skype and IM services, in turn, made it easier for several group members to work on specific issues and provided an excellent medium for knowledge exchange.
 
 \subsection{Management Policies}
 
@@ -375,9 +377,9 @@ Management Policy is a documented set of rules, constraints, standards and guide
 
 \subsubsection{Code Change Policy}
 
-In order to deliver a successful project, the team had to have a a strict set of policies when addressing code change. In our case, at first, the continuous integration server was used, to keep track of how many tests are covered and which parts need more development. With this it also provided a good analitical base for issue resolving, for example, in case a commit breaks the build, it is relatively easy to track it down.
+In order to deliver a successful project, the team had to have a a strict set of policies addressing code change. In our case, at first, the continuous integration server was used, to keep track of how many tests are covered and which parts need more development. On top of that it also provided a good analitical base for issue resolving, for example, in case a commit breaks the build, it is relatively easy to track it down.
 
-However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - git branching. The idea behind it is to have to different branches: Master (development) for development purposes and Release (latest stable) for a finished piece of work, thoroughly tested and agreed with every team member. Consequently, while Master branch is open for commits from everyone inside the project group, Release version is only accessible to the team leader at the end of a milestone. This way team always has a stable version to fall back to at the end of every iteration.
+However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - git branching. The idea behind it is to have to different branches: Master (dev) for development purposes and Release (release) for a latest stable version, thoroughly tested and agreed with every team member. Consequently, while Master branch is open for commits from everyone inside the project group, Release version is only accessible to the team leader. This way team always has a stable version to fall back to at the end of every iteration.
 
 \subsubsection{Validation Policy}
 
@@ -387,7 +389,9 @@ From now on, any change to the code in the Release was to be overviewed by two o
 
 \subsection{Knowledge Transfer}
 
-Management of knowledge transfer within the project group required 
+Knowledge transfer within the project group was managed by the several techniques, specific to agile software development paradigm. In this particular case, team made use of issues with comment threads to pass the obtained info on the solution. Furthermore, stand-up meetings were arranged to help individual members, where they could explain the nature of obstacles met, so that others could support him or her with their background knowledge. Finally, documents passed through dropbox and google docs contained information on software packages used, to help team mates obtain explicit knowledge on the topic.
+
+All in all, efficient management of knowledge transfer within the project group required several conditions to be fulfilled. The most important one of them was constant stream of feedback from other team members upon the work produced, that would enhance the volatility of ``tacit'' knowledge within the group.
 
 \subsection{Materials}
 
