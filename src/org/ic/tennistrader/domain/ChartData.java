@@ -1,10 +1,9 @@
-package org.ic.tennistrader.domain.match;
+package org.ic.tennistrader.domain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.ic.tennistrader.domain.MOddsMarketData;
 
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
