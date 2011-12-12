@@ -40,13 +40,13 @@
 
 
 \section{Introduction}
-Tennis trading is a steadily growing market on the Betfair Exchange, with more than 70\% of bets being placed in-play. In order to maintain market liquidity, exchanges must attract customers for example, by supplying them with better tools. By providing more information and better visualization techniques such a tool can help the trader improve his understanding and predict the market evolution, which should (potentially) lead to an increased profit.
+Tennis trading is a steadily growing market on the Betfair Exchange, with more than 70\% of bets being placed in-play. In order to maintain market liquidity, exchanges must attract customers. One way to achieve this is to provide the users with better tools which, by providing more information and better visualization techniques, can help the trader improve his understanding and predict the market evolution, ultimately leading to an increase in his profit.
 
 In the case of tennis trading, the information required to understand and predict the evolution of the market associated with a particular match consists of the live score, player statistics, potentially a live video feed and - of course - the market data (evolution of betting odds). Ideally, this information is desired for both historical and live matches.
 
-At the moment, no application provides the entire information. A number of solutions exist which allow visualization of historical market data, but they generally lack the more specific, tennis related data. For example the Fracsoft Data Viewer (\cite{site-fracsoft}) does not correlate market data with match data (scores, player statistics). BetAngel (\cite{site-betangel}) provides some tennis related data and prediction, but relies on the user to input the current match score by pushing buttons. This not entirely suited for the high rate with which data is updated. Ideally all the information should be automatically provided to the user to increase update speed and enhance usability.
+At the moment, no application provides all this information. A number of solutions exist which allow visualization of historical market data, but they generally lack the more specific, tennis related data. For example the Fracsoft Data Viewer (\cite{site-fracsoft}) does not correlate market data with match data (scores, player statistics). BetAngel (\cite{site-betangel}) provides some tennis related data and prediction, but relies on the user to input the current match score by pushing buttons. This not entirely suited for the high rate at which data is updated. Ideally, all the information should be automatically provided to the user to increase update speed and enhance usability.
 
-\nmsp means to fill this gap, by providing all the information, betting and prediction functionalities for both historical and live matches, in an entirely automated fashion.
+\nmsp means to fill this gap by providing all the information along with betting and prediction functionalities for both historical and live matches, in an entirely automated fashion.
 
 Due to the high risk associated with some user actions (e.g. placing bets with real money) and in order to ensure reliability and stability, testing and other validation methods have been used exstensively. These are covered in detail in section \ref{sec-testing} below.
 
@@ -55,20 +55,21 @@ In addition, the challenging nature of the project brought teamwork and manageme
 
 \section{Testing}
 \label{sec-testing}
-Testing has been used throughout all stages of the project starting with iteration 3 and more extensively with the introduction of the Continuous Integration server in iteration 5.
+
+**We started to use testing as soon as the first cohesive draft of the Match API, containing all core features, was created (iteration 3). This allowed us to validate our design and do any major refactoring work around that stage. From the beginning of iteration 5, testing has been supplemented with continuous integration and measuring code coverage to create test case improvements for more extensive coverage and system integration on our current version and throughout our future iterations. After obtaining all necessary data for building the Prediction API, further tests were developed along the way, leading to a TDD approach for the latter part of the project.**
 
 As suggested in \cite{bk-testing} we have used the tests to guide our design, based on the principle that if a project is well designed it should be easy to write meaningful tests for it.
 
 \textbf{Unit testing} has been used to rapidly test small portions of code while \textbf{acceptance tests} have been used to test a system feature from front-end to back-end. \textbf {TDD tests} (tests written before features) are expected to fail when they are written and should pass once the feature has been completely implemented. Once it passes, a test is transferred to the regression suite. Naturally, a failing \textbf{regression test} indicates a break in previous functionality (regression).
 
-The general approach was to use TDD for the model packages, based on the fact that these should be easier to test (from a technical point of view), are crucial for the application and less likely to change.
+The general approach was to use TDD for the model packages, based on the fact that these should be easier to test, are crucial for the application and less likely to change.
 
-Because of the lack of familiarity with the UI libraries and the limitations and lack of documentation of the UI testing framework - which could have introduced a serious risk for the on time delivery of the project - we avoided a TDD approach for the UI classes, but resorted to writing post implementation functional and acceptance tests to cover a decent proportion (generally over 60-70\%) of the user interface functionality.
+Because of the lack of familiarity with the UI libraries and the limitations and lack of documentation of the UI testing framework - which could have threatened the ability to deliver the project on time - we avoided a TDD approach for the UI classes, but resorted to writing post implementation acceptance tests to cover a decent proportion (generally over 60-70\%) of the user interface functionality.
 
 \subsection{Unit Testing}
-Based on its ease of use, unit testing was adopted early on in the development process and it has been of great use in identifying bugs and ensuring correctness of the Match API (an important set of classes which manages data such as match score and statistics). 
+Unit testing was adopted early on in the development process and it has been of great use in identifying bugs and ensuring correctness of the Match API (an important set of classes which manages data such as match score and statistics). 
 
-One specific use case was to test the implementation of the scoring rules. Since, in tennis, these can be quite peculiar (for example points are counted 15, 30, 40, AD instead of just 1, 2, 3, 4) and tests are particularly easy to write, we adopted a TDD approach in this instance. A simple initial test was written to state the expected outcome of adding four consecutive points to one of the players: the player in cause should win the game, increasing his game score, and resets the points score. Furthermore the opponent's score should always be zero. The code for this is presented in \ref{list1}.
+One specific use case was to test the implementation of the scoring rules. Since, in tennis, these can be quite peculiar (for example points are counted 15, 30, 40, AD instead of just 1, 2, 3, 4) and tests are particularly easy to write, we adopted a TDD approach in this instance. A simple initial test was written to state the expected outcome of adding four consecutive points to one of the players: the player in cause should win the game, increasing his game score, and resetting the points score. Furthermore the opponent's score should always be zero. The code for this is presented in \ref{list1}.
 
 \javalst{Initial failing test for score. The initialisation of the score object is handled in an abstract super class which also provides assertSetScoreIs() and assertGamesScoreIs().}{list1}
 \begin{lstlisting}
@@ -92,7 +93,6 @@ We adopted this approach for the whole Match API and for the Prediction API (use
 This approach helped us identify numerous bugs early on and guided us towards a better overal design of the APIs.
 
 **e.g. a function for correctly setting a set score to a certain value was not initially provided, but since while writing the tests the need for such a function became obvious, it was included and tested**
-** separate tests that measure progress from tests that catch regression **
 
 \subsection{Acceptance Testing}
 We used acceptance tests to test a particular function of the system, starting from the front-end (e.g. finding and pushing a button on the UI) to the back-end (e.g. connecting to the Betfair API to authorize a login request).
@@ -101,7 +101,7 @@ For performance reasons these were ran separately from unit tests since the UI o
 
 A simple example is the test in \ref{list2} which checks the login functionality: the user should fill in their Betfair account and password and click on the login button. The login attempt is checked against the Betfair API and a label is updated to indicate success or failure. Obviously, an attempt to login with the specially created test account should result in a success message being displayed.
 
-\javalst{Initial failing test for the login window. The username and password for the test account are read and decrypted from a local config file by the Main class. Using the UI bot we then fill the data in on the login window and click the login button. Similar test have been written to ensure incorect login failure etc.}{list2}
+\javalst{Initial failing test for the login window. The username and password for the test account are read and decrypted from a local config file by the Main class. Using the UI bot we then fill the data in on the login window and click the login button. Similar tests have been written to verify other scenarios.}{list2}
 \begin{lstlisting}
     @Test
     public void correctLoginSuccess() throws Exception {
@@ -115,25 +115,25 @@ A simple example is the test in \ref{list2} which checks the login functionality
     }
 \end{lstlisting}
 
-We have adopted a similar approach for most features.
+We have adopted a similar approach in testing most of the classes connected to the user interface.
 
 However, due to limitations in the SWTBot API some features have proven impossible to test. For example we have not found a way to test the functions of a context menu (pop up) or a progress bar.
+Nevertheless these are important aspects which must be tested to ensure correct behaviour. For example, one of the most important tools for traders is the chart on which they can view the market's evolution. Since a context menu on the chart allows the user to choose between different types of analysis, it is currently impossible to completely test the correctness of this function.
 
-SWTBot **
+In such situations we have resorted to testing the actions executed by the specific listener associated with the context menu item, which at the very least ensures that if the event fires correctly, the display is updated as expected.
 
 \subsection{Regression Testing}
-**We have used reg testing to ensure no break in previous functionality occurs.**
-Once a test has passed for the first time, it is moved to the regression suite.
+We have used regression testing to ensure that no break in previous functionality occurs when introducing new code.
 
-Keeping failing tests (for features which have not been implemented) separate from passing tests is key in quickly identifying when a regression has occured.
+Keeping tests that measure progress separate from regression tests is key in quickly identifying when a regression has occured. Simply put, all tests appart from those in the progress suite should pass at all times. If this is not the case, a regression has occurred.
 
-Consequently we provide a task that automatically moves a test from the TDD suite to the regression suite and normal development flow is: 
+Consequently the normal development flow is: 
 \begin{enumerate}
 \item write a failing test (and ensure it fails)
 \item make the test pass
 \item check for regressions
 \item fix any regression
-\item move test from TDD suite to regression suite
+\item move test from progress suite to regression suite
 \item commit changes
 \item repeat
 \end{enumerate}
@@ -146,44 +146,44 @@ This has been done by writing tests that ensure the abstractions built on top of
 
 \subsubsection{Betfair API}
 
-The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL(Web Service Description Language) specification. Our application only uses the first 2 services, accessed through Axis-generated Java classes.
+The Betfair API is organised in three services: global, UK Exchange and AUS Exchange, each defined through a WSDL specification. The application only uses the first 2 services, accessing them through Java classes automatically generated with Apache Axis.
 
-Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the functionality required by the application has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, integration tests for these classes ensure the connection to the Betfair API works properly.
+Any connection to Betfair and use of the API is handled by classes in the src.model.connection package. Moreover, to ensure both services (Global and UK Exchange) only have one point of access, all the functionality required by the application has been encapsulated in two classes - BetfairExchangeHandler and BetfairConnectionHandler. Hence, tests written for these classes ensure the connection to the Betfair API works as expected and constitute integration tests.
 
 \subsubsection{SWT}
 
-How does SWT work?... memory leak, platform specific
+SWT is a graphical widget toolkit with a platform dependent implementation. At the heart of its architecure is the ability to create native widgets. However this raises the issue of freeing allocated memory (which cannot be garbage collected by the JVM).
+Hence, it is important to test classes using this library(most of our UI classes) to ensure that the UI behaves similarly on different platforms and that there are no memory leaks.
 
-SWT is a graphical widget toolkit with a unique implementation for each platform. Memory leak,....
-Hence, it is very important to test it, but it is already done by acceptance tests.
+However, precisely matching UIs for different platforms and reliably identifying memory leaks have proven to be very difficult tasks, so we have postponed handling of these aspects to later stages.
 
-Since our project is not very large, we have considred acceptance tests are good/strong enough to test integration with the SWT platform/library.
+In all other respects, we have considered the acceptance tests as good enough to test integration with the SWT library.
 
 \subsubsection{SWTChart}
 
 The SWTChart API provides a chart component with several basic functionalities (such as drawing line functions, bar charts etc). The chart can handle real-time updates (even for large data series), which is crucial to the purpose of our project and, since it is based on SWT, it integrates smoothly with the application's UI design and implementation. 
 
-Howver, additional functionalities were still required, so we have extended the Chart class, providing the implementation of the needed functions. This design encapsulates the use of the SWTChart API, so integration tests for this class ensure the library integrates smoothly into the entire application. 
+Howver, the addition of new functionalities required us to extend the Chart class. This design encapsulates the use of the SWTChart API, so integration tests for this class ensure the library integrates well with the rest of the application. 
 
 \subsection{Continuous Integration}
 
-Starting with iteration five, the continuous integration server was became key element in monitoring project evolution in order to understand and adapt to development trends.
+Starting with iteration five, the continuous integration server became a key element in monitoring project evolution with a view towards understanding and adapting to development trends.
 
 \subsubsection{Configuration}
 A continuous integration server has been installed on a virtual machine provided by the Computing Support Group, which emulates a dual core, 1GB memory, 64bit machine, running Ubuntu 11 (these details are important due to the platform dependent nature of the SWT library).
 
-We have used Hudson since - unlike other CI solutions - it comes with a plugin for running UI tests on a headless server. This was an important requirement since, in order to run correctly, all acceptance tests must connect to a display instance (an X11 server in this case). Another alternative would have been to use xvfb (X virtual frame buffer) which buffers display data in memory and works for any application.
+We have used Hudson since - unlike other CI solutions - it comes with a plugin for running UI tests on a headless server. This was an important requirement since, in order to run correctly, all acceptance tests must connect to a display instance. (Another alternative would have been to use xvfb -X virtual frame buffer - which buffers display data in memory and works for any application).
 
 Additionally, Hudson presented a few other advantages such as smaller installation size, good out-of-the-box support for git repositories and an easily configurable build management process.
 
 The CI server is set to poll the repository and, when changes are detected, checks out a fresh copy and runs the normal build script. As an extension, since the VM is not accessible from outside the local site, a step to move reports and artefacts to a publicly accessible location (group directory / home directory) has been added in order to simplify the process of checking the build status.
 
-The build process generates reports for unit tests, system tests, code sanity (PMD - discussed below) and test coverage as well as historical build trends (e.g. duration).
+The build process generates reports for unit tests, system tests, code quality (discussed in section \ref{sec-quality}) and test coverage as well as historical build trends (e.g. duration).
 
 \subsubsection{Reporting}
-The reports generated by the CI server were important in understanding the historical evolution of the project. For example, the duration statistics (\cite{pic-buildtime}) allowed members to easily check and enforce the ten minute build rule[].
+The reports generated by the CI server were important in understanding the historical evolution of the project. For example, the duration statistics (\cite{pic-buildtime}) allowed members to easily understand if the ``ten minute build'' rule applies.
 
-Monitoring build ``colour'', revealed the need for a more established code review system. For example, the points where the build is red (45 - 49, 53 - 55, 63 - 66) coincide with periods slightly before supervisor meetings or other presentations and reveal that developpers tend to break the build in such crucial moments, most likely, as a result of their desire to contribute last minute additions. Fortunately, the team was able to fix these issues in time but decided nevertheless that such situations must be avoided. As a result, the code has now been forked into two branches: master (for development) and stable (for the latest stable release). Only code that has been reviewed by at least two members can be moved to the stable branch. Although this does not agree perfectly with the ``Single code base'' paradigm in [] we believe it is a more reliable approach, which still allows the team to demonstrate bleeding-edge features, with the option of easily reverting to a more stable version should this be required.
+Monitoring build ``colour'' revealed the need for a more established code review system. For example, the points where the build is red (45 - 49, 53 - 55, 63 - 66) coincide with periods slightly before supervisor meetings or other presentations and reveal that developpers tend to break the build in such crucial moments, most likely, as a result of their desire to contribute last minute additions. Fortunately, the team was able to fix these issues in time but decided nevertheless that such situations must be avoided. As a result, the code has now been forked into two branches: master (for development) and stable (for the latest stable release). Only code that has been reviewed by at least two members can be moved to the stable branch. Although this does not agree perfectly with the ``Single code base'' paradigm in [] we believe it is a reliable approach which still allows the team to demonstrate bleeding-edge features, with the option of easily reverting to a more stable version should this be required.
 
 \begin{figure}[ht]
 \centering
@@ -194,11 +194,11 @@ Monitoring build ``colour'', revealed the need for a more established code revie
 
 \subsection{Measuring Test Coverage}
 
-Since we did not adopt a TDD approach from the very beginning, it was important to obtain an overview of the parts of the code that need to be tested. Starting with iteration 5 we have used Cobertura,  an open source tool which provides neat test coverage reports for Java programs.
+Since we did not adopt a TDD approach from the very beginning, it was important to obtain an overview of the parts of the code that required testing. Starting with iteration 5 we have used Cobertura,  an open source tool which provides neat test coverage reports for Java programs.
 
 To facilitate report generation, a single ant task has been set up to compile the code with the debug info (vital for Cobertura to indicate line numbers and measure coverage), run all the tests (unit, acceptance, integration) and generate human readable reports which provide an indication of the current test coverage as well as branch coverage and complexity measures.
 
-This data enabled us to identify lines which were not touched by tests. This is usually fixed by writting another test to cover the specific path, but it can also be the case that the functionality is actually never required, in which case it is completely removed. Again this illustrates how tests have been used to ensure a neat design/code etc. 
+The coverage reports enabled us to identify lines which were not touched by tests. This was usually fixed by writting another test to cover the specific path, but it could also have been the case that the functionality was actually never required, in which case it was completely removed. Again this illustrates how tests have been used to ensure we are running a healthy codebase.
 
 Branch coverage indicates when tests do not cover particular cases and has proven useful with regards to particularly tricky conditionals.
 
@@ -218,29 +218,26 @@ Cobertura also generates cyclomatic complexity values for each class/package, me
 \caption{Branch coverage indicates specific condition coverage.}
 \end{figure}
 
-\subsection{Code Sanity Measures}
+\subsection{Code Quality Measures}
 
-We have used PMD to generate code sanity reports.
+We have used PMD to generate code quality reports. Additionally we have researched and are looking forward to using FindBugs - a tool which identifies bugs (such as NPEs and potential out of bounds accesses) for Java code.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[bb=0 0 1680 1050, scale = 0.2]{pmd.png}
-\caption{Branch coverage indicates specific condition coverage.}
+\caption{PMD reports indicate potential quality issues. The tool can be configured to signal a host of potential issues (such as ...).}
 \end{figure}
 
 \subsection{Logging}
-
+**
 We have used logging to aid the development process (especially debugging).
-
+**
 \subsection{Test Guided Design}
+**
 Refactoring
 
 Used extract superclass, pull up (for tests), extract class
-
-\subsection{At which development stages did you use tests? }
-
-We have started to use unit and regression tests as soon as the first cohesive draft of the Match API, containing all core features, was created (iteration 4). This allowed us to validate our design and do any major refactoring work around that stage. In the next iteration (5), testing has been supplemented with continuous integration and measuring code coverage to create test case improvements for more extensive coverage and system integration on our current version and throughout our future iterations. After obtaining all necessary data for buiding the Prediction API, further unit and regression tests have been developed along the way, leading to a TDD approach for the latter part of the project.
-
+**
 \subsection{Portions of code base tested}
 
 All core components of the proTrade application have clear distinctions between back/front ends, local/enternal data, and internal state/state handler-updater. The modular design is in direct relation with testing methodologies chosen, with unit tests validating the former ends and functional/acceptance tests testing the latter. On top, integration tests are used to reproduce and analyse behaviour of specific GUI or data fetching/updating libraries that are used in conjunction with local features. A functional overview of the applications's code base and features together with their tests is given below:
@@ -288,7 +285,7 @@ General Validation: to decribe any other methods you may have used to validate y
 The user interface of our application has been designed with a view towards obtaining a final product which achieves the following goals: it is visually eye-pleasing, it is simple to use, it minimizes the effort it takes for users to accomplish their work/wish/..
 To the purpose of validating our user interface design, feedback has been collected from a number of different persons with or without experience in using trading applications.
 
-\subsubsection{Feedback experienced users}
+\subsubsection{Feedback from Experienced Users}
 
 Firstly, we have had constant feedback from our supervisor, who is familair with the game of tennis and tennis betting and who understands the needs of a professional trader. He has guided us through the process and has pointed out a number of possible UI improvements along the way (such as positioning different components, displaying different data on the graph), which we have accomplished.
 
@@ -296,18 +293,14 @@ Secondly, we have had meetings with PhD students, who are themselves developing 
 
 Finally, to collect feedback from other points of view as well, our supervisor arranged for us to meet the head of research of Betfair. He has approved(?) of our application's general interface and pointed out a few possible issues (such as synchronizing all the playback data), which are now fixed(?).
 
-\subsubsection{Feedback unexperienced users}
+\subsubsection{Feedback from Unexperienced users}
 
 To test how easy it is for users to understand the information presented by our application and how ''natural'' to find the required functionalities, we have collected feedback from a few colleagues, without previous experience with tennis trading applications. (??? - what did they say?)
 
 Overall, the interface of our application has been validated by the users, with some improvement suggestions which we have considered and implemented.
 
 
-\subsection{Did you use lint or similar tools?}
-
-We used PMD and Cobertura report to check code ``sanity''.
-
-\subsection{Did you conduct a manual code inspection (not by the person who wrote the code)?}
+\subsection{Code Review}
 
 We also used a review mechanism in which, normally, code has been inspected by at least two team members.
 
@@ -322,7 +315,7 @@ Where a bug is found or refactoring is needed, usually an issue is raised on Git
 
 As this is done on a regular basis, we have agreed from the beginning to comment the code as much as possible and to use coding standars
 
-\subsection{Stress testing?}
+\subsection{Stress testing}
 
 At the moment, no stress testing tools are used. Our group left this as the last stage of our development process, as this may be more beneficial once we have all the features implemented.
 However we have conducted a `manual` stress testing.
