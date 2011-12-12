@@ -228,17 +228,6 @@ We have started using unit and regression tests as soon as the first cohesive dr
 
 All core components of the proTrade application have clear distinctions between back/front ends, local/enternal data, and internal state/state handler-updater. The modular design is in direct relation with testing methodologies chosen, with unit tests validating the former ends and functional/acceptance tests testing the latter. On top, integration tests are used to reproduce and analyse behaviour of specific GUI or data fetching/updating libraries that are used in conjunction with local features. A functional overview of the applications's code base and features together with their tests is given below:
 
-\begin{figure}[ht]
-\begin{center}$
-\begin{array}{ccc}
-\includegraphics[bb=0 0 499 700, scale = 0.25]{project.png} &
-\includegraphics[bb=0 0 499 700, scale = 0.25]{tests-unit.png} &
-\includegraphics[bb=0 0 499 700, scale = 0.25]{tests-system.png} 
-\end{array}$
-\end{center}
-\caption{Left - Project hierarchy with included packages. Center - Unit tests for local functionality/model based classes/packages. Right - System tests for controller/UI oriented classes/packages}
-\end{figure}
-
 \begin{itemize}
 \renewcommand{\labelitemi}{$\bullet$}
 \item Authentication: Encrypt/decrypt functions for storing and accessing the login credentials are unit tested, while the interface (LoginShell) is acceptance tested (as detailed in section 2.2).
@@ -250,6 +239,17 @@ All core components of the proTrade application have clear distinctions between 
 \item UI: Acceptance and integration testing of all front-end GUI interfaces
 \item UI-Betting/Updatable: Integration testing on dynamical GUI elements driven by user input or data updates
 \end{itemize}
+
+\begin{figure}[ht]
+\begin{center}$
+\begin{array}{ccc}
+\includegraphics[bb=0 0 499 700, scale = 0.25]{project.png} &
+\includegraphics[bb=0 0 499 700, scale = 0.25]{tests-unit.png} &
+\includegraphics[bb=0 0 499 700, scale = 0.25]{tests-system.png} 
+\end{array}$
+\end{center}
+\caption{Left - Project hierarchy with included packages. Center - Unit tests for local functionality/model based classes/packages. Right - System tests for controller/UI oriented classes/packages}
+\end{figure}
 
 \subsection{Bugs/problems revealed by testing}
 
