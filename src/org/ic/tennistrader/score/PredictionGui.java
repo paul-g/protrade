@@ -48,7 +48,7 @@ public class PredictionGui extends StandardWidgetContainer {
         match.setPlayer1(playerOne);
         match.setPlayer2(playerTwo);
 
-        new PredictionGui(shell, SWT.BORDER, match);//.start();
+        new PredictionGui(shell, SWT.BORDER, match).start();
 
         shell.open();
 

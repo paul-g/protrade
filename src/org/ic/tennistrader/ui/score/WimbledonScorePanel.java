@@ -58,10 +58,9 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
     private static final String PRED_SIZER = makeSizer(0);
     private static final String SIZER = makeSizer(0);
     
-    private static final int DEFAULT_NAME_SIZE = 50;
-    private static final int DEFAULT_EXTRA_SPACE = 10; 
+    private static final int DEFAULT_NAME_SIZE = 30;
+    private static final int DEFAULT_EXTRA_SPACE = 3; 
     private int nameSize = DEFAULT_NAME_SIZE;
-    
     
     public WimbledonScorePanel(Composite parent, Match match) {
         super(parent, SWT.NONE);
@@ -94,6 +93,7 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         
         Label l = new Label(this, SWT.NONE);
         l.setText("vs");
+        l.setFont(new Font(display, "Times", 10, SWT.NONE));
         l.setLayoutData(gd);
         l.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
         
@@ -127,18 +127,18 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         Map<Integer, Label> map = new HashMap<Integer, Label>();
         
         for (int i=0;i<4;i++)
-           map.put(SETS[i], makeScoreLabelWithText(this, "  0  "));
+           map.put(SETS[i], makeScoreLabelWithText(this, " 0 "));
         
         map.put(NAME, makeScoreLabelWithText(this, match.getPlayer(player) + makeSizer(nameSize - match.getPlayer(player).toString().length())));
         map.put(PRED_MATCH,  makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(display, "Times", 12, SWT.NONE), display.getSystemColor(SWT.COLOR_GREEN)));
         
-        map.put(SET, makeScoreLabelWithText(this, "  0  "+ SIZER));
+        map.put(SET, makeScoreLabelWithText(this, " 0 "+ SIZER));
         map.put(PRED_SET,  makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(display, "Times", 12, SWT.NONE), display.getSystemColor(SWT.COLOR_GREEN)));
         
-        map.put(GAME, makeScoreLabelWithText(this, "  0  " + SIZER));
+        map.put(GAME, makeScoreLabelWithText(this, " 0 " + SIZER));
         map.put(PRED_GAME,  makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(display, "Times", 12, SWT.NONE), display.getSystemColor(SWT.COLOR_GREEN)));
         
-        map.put(POINT, makeScoreLabelWithText(this, "  0  "+ SIZER));
+        map.put(POINT, makeScoreLabelWithText(this, " 0 "+ SIZER));
         map.put(PRED_POINT,  makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(display, "Times", 12, SWT.NONE), display.getSystemColor(SWT.COLOR_GREEN)));
         
         labelMap.put(player, map);
@@ -176,6 +176,7 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         Label label = new Label(this, SWT.NONE);
         label.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
         label.setText(string);
+        label.setFont(new Font(display, "Times", 10, SWT.NONE));
         return label;
     }
 
