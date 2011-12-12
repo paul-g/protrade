@@ -159,9 +159,10 @@ Since our project is not very large, we have considred acceptance tests are good
 
 \subsubsection{SWTChart}
 
-The SWTChart API provides a chart component with several basic functionalities (such as drawing line functions, bar charts etc). The chart can handle real-time updates (even for large data series), which is crucial to the purpose of our project and it integrates smoothly with the application's UI design and implementation, since it is based on SWT. 
+How does SWTChart work?..
 
-Howver, additional functionalities were still required, so we have extended the Chart class, providing the implementation of the needed functions. This design encapsulates the use of the SWTChart API, so integration tests for this class ensure the library integrates smoothly into the entire application. 
+To ease our use of the SWTChart library and the ability/.. to add specific features required by our application, we have extended the Chart class of the SWTChart library. Hence, integration tests for this class ensure the library integrates smoothly into the entire application. 
+
 
 \subsection{Continuous Integration}
 
@@ -254,7 +255,7 @@ All core components of the proTrade application have clear distinctions between 
 
 Apart from validating design, testing has revealed hidden bugs in various components of the system. 
 
-Unit tests have invalidated a first encoding of the scoring system for the prediction calculator, when translating between traditional tennis point scores and an incremental representation. Furthermore, they have revealed some overlooked considerations in recursive state passing when computing a set prediction based on a Markov chain model, which led to wrong set winning probability estimates. 
+Unit tests have invalidated a first encoding of the scoring system for the prediction calculator, when translating between traditional tennis point scores and an incremental representation. Furthermore, it revealed some overlooked considerations in recursive state passing when computing a set prediction based on a Markov chain model, which led to wrong set winning probability estimates. 
 
 \section{General Validation}
 General Validation: to decribe any other methods you may have used to validate your executable deliverable; the following list is only suggestive but should give you an idea of what things you could do:
@@ -287,35 +288,14 @@ We used PMD and Cobertura report to check code ``sanity''.
 
 We also used a review mechanism in which, normally, code has been inspected by at least two team members.
 
+\subsection{Did you exert your software to stress testing?}
 
-During the implementation process we often employed pair programming but also other lightweight code review mechanisms[3], particularly over-the shoulder and tool-assisted code review (e.g. based on PMD suggestions).
-The decision to adopt lightweight code review mechanisms was based on evidence presented in [4], which suggests that this type of review can be as effective as a more formal one, but easier to implement.
-
-This helped improve the overall quality of the software and identify bugs early on in the development process....
-The whole source code is accessible to every member of the group and where appropriate and necessary, the code is reviewed by other members who don’t work on that specific widget or feature. Where a a bug is found or refactoring is needed, usually an issue is raised on GitHub with the suggestion to solve that specific problem.
-
-As this is done on a regular basis, we have agreed from the beginning to comment the code as much as possible and to use coding standars
-
-\subsection{Stress testing?}
-
-At the moment, no stress testing tools are used. Our group left this as the last stage of our development process, as this may be more beneficial once we have all the features implemented.
-However we have done a `manual` stress testing.
-
-An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This is done by opening more than one tab, where each tab displays the match/market.
-
-We have observed that when we open a single match/market the physical memory consumed by the application is 1.5 GB and once we open more matches/markets this figure increases even more reaching 2GB when 3 tabs are opened. This enforced us to raise an issue with high importance and it is an on-going process where we try to identify any memory leaks, to analyse if we store any redundant/unused data and any other ways to reduce this figure. We understand that this major issue as an average computer has 3-4 GB of physical memory and we hope to solve the problem by the end of the project.
-
-We are using Standard Widget Toolkit (SWT)  to develop our graphical user interface and the native OS widgets cannot be garbage collected,a special attention is paid to creating and disposing the components as the improper coding of the components may lead to memory leaks.
-
-Our application requires a lot of data to be stored and presented to a user in a special way, one of the aims of the group is to have an efficient memory management, as this will lead to a better responsiveness of the application which is vital for traders.
-
-Our application does not consume a lot of CPU power as our computations are negligible except to a few data statistical/technical analysis of data which is vital for traders, but we haven’t observed a heavy CPU usage even with many concurrent markets/matches ope
+No - should do.
 
 \subsection{Did you test the GUIs of your software?}
+Yes, as explained above we have test the UI through our acceptance tests. Also visual inspection by team members was used to ensure no layouts are messed up.
 
-
-We mentioned above that we are using the SWTBot API to test our widget and unfortunately because of its limitations we haven’t yet identified ways to test the functions of the specific components such as the context menu (pop u) or a progress bar. However we realise that this is very important to test before realising the application. One of the most important tools for traders is the chart where they can view the flow of a market and we must implement it very efficient and to make sure that the graphical part of it is working properly. We have implemented a context menu on the chart, where the user may select different types of analysis to be shown and as we can’t test the context menu we are not sure of the potential behaviour of the application in certain conditions.
-
+yeees
 
 \section{Managerial Documentation}
 
@@ -325,38 +305,33 @@ This section provides a formal account of group management and activities.
 
 Throughout the project various collaboration tools were used that would help in cooperation for successful product delivery.
 
-Use of git significantly improved the quality of work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use ``Commit Early, Commit Often'' paradigm, as many postponed commits tended to result in a large number of merge conflicts. As a consequence of an increase in the commit frequency, the monitoring capability of the project also raised, simplifying error tracking and resolving.
+Use of git significantly improved the quality of work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use “Commit Early, Commit Often” paradigm, as many postponed commits tended to result in a large number of merge conflicts. As a consequence of an increase in the commit frequency, the monitoring capability of the project also raised, simplifying error tracking and resolving.
 
 Furthermore, a private github repository was created, providing the team with a set of features that supported further collaboration. First of all, team used issues that could be tracked and assigned to specific group members. These tasks had comment threads linked to them, simplifying communication and giving an ability to have almost instant feedback on the solution. Moreover, use of issues dramatically increased working efficiency of the team, for example, whenever there was a new issue added to the back log, all teammates were notified, and once one of them has finished work on his or her piece, this member could then start thinking on another problem. As well as that, github repository provided the ability to split issues into different milestones, consequently providing better sense of direction for everyone in the group. As a result, it helped to enforce the agile development paradigm, making it possible to have distinct iterations, thus increasing the level of cooperation between team members.
 
 Another set of collaboration tools that proved to be useful was google docs. This platform allowed the whole group to exchange information by creating files accessible to the whole group. The team primarily used it to make meetings agendas, keep logs of the work done via tables and set global objectives for particular iterations. The use of google docs also simplified report editing because of the instant feedback and constant monitoring of the different sections by other team members.
 
-In order to share more specific information and larger files, team members had dropbox accounts. This allowed to share data related to tennis, sports trading, Betfair API and particular software libraries, for example, GUI libraries for chart display.
+In order to share more specific information and larger files, team members had dropbox accounts. This allowed to share data related to tennis, sports trading, Betfair API and particular software libraries, for example GUI libraries for chart display.
 
 To establish a concrete communication channel throughout the project group, it was essential to have a good media that everyone would have an access to. First of all, emails provided good updates for the whole team and simplified the process of making proposals and raising issues that needed consideration of all team members. Skype and IM services, in turn, made it easier for several group members to work on specific issues and provided an excellent media for knowledge exchange.
 
 \subsection{Management Policies}
 
-Management Policy is a documented set of rules, constraints, standards and guidelines that apply to the decision making and determination of action, for both present and future state, and for a specific area of interest or concern that relates directly to Software Development, based on a set of given inputs, conditions or state.
+Agile Project Management
 
 \subsubsection{Code Change Policy}
 
-In order to deliver a successful project, the team had to have a a strict set of policies when addressing code change. In our case, at first, the continuous integration server was used, to keep track of how many tests are covered and which parts need more development. With this it also provided a good analitical base for issue resolving, for example, in case a commit breaks the build, it is relatively easy to track it down.
-However, in the last 10 builds our project group experienced 5 breaks, thus, the team decided to change to a more stable code quality control system - git branching. The idea behind it is to have to different branches: Master (development) for development purposes and Release (latest stable) for a finished piece of work, thoroughly tested and agreed with every team member. Consequently, while DEV is open for commits from everyone inside the project group, Release version is only accessible to the team leader at the end of a milestone. This way team always has a stable version to fall back to at the end of every iteration.
-
 \subsubsection{Validation Policy}
-
-Before implementing the branching system the team did not have a set of rules for commits, resulting in numerous build breaks for continuous integration server. Team agreed that this was not an efficient way of code quality control, thus, new rules for code commited were enforced. From now on, any change to the code in the Release was to be overviewed by two other team members, giving the group necessary level of code validation and quality control. As a result of this policy, team gained experience in code review and improved technical expertise by the information exchange through problem solving.
 
 \subsection{Knowledge Transfer}
 
 
-
-\subsection{Materials}
-
 A table of the group meetings - including dates, format and which members attended
 A table of the hours spent per week on which tasks or activities by each member on the project
 The Log-Book
+
+
+Evaluation Criteria for Report Three: the same as for Reports One and Two.
 
 \begin{thebibliography}{9}
 \bibitem{bk-testing}
