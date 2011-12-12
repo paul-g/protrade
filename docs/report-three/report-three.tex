@@ -273,24 +273,24 @@ Furthermore, they have revealed some overlooked considerations in recursive stat
 
 \section{General Validation}
 
-General Validation: to decribe any other methods you may have used to validate your executable deliverable; the following list is only suggestive but should give you an idea of what things you could do:
+Validation is a quality assurance process of establishing evidence that provides a high degree of assurance that a product, service, or system accomplishes its intended requirements.
 
 \subsection{User interface design validation}
 
-The user interface of our application has been designed with a view towards obtaining a final product which achieves the following goals: it is visually eye-pleasing, it is simple to use, it minimizes the effort it takes for users to accomplish their work/wish/..
+The user interface of our application has been designed with a view towards obtaining a final product which achieves the following goals: being visually eye-pleasing and simple to use, and at the same time minimizing the effort it takes for users to accomplish their goals.
 To the purpose of validating our user interface design, feedback has been collected from a number of different persons with or without experience in using trading applications.
 
 \subsubsection{Feedback from Experienced Users}
 
-Firstly, we have had constant feedback from our supervisor, who is familair with the game of tennis and tennis betting and who understands the needs of a professional trader. He has guided us through the process and has pointed out a number of possible UI improvements along the way (such as positioning different components, displaying different data on the graph), which we have accomplished.
+Firstly, we have had constant feedback from our supervisor, who is familiar with the game of tennis and the world of tennis betting and who understands the needs of a professional trader. He has guided us through the process and has pointed out a number of possible UI improvements along the way (such as positioning different components, displaying different data on the graph), which we have accomplished.
 
 Secondly, we have had meetings with PhD students, who are themselves developing trading applications. They gave us valuable feedback regarding market information display and the best way to present it to a specialized user. Hence, our initial interface has been adapted to accommodate their suggestions (e.g. displaying some additional market statistics) - supported by our supervisor.
 
-Finally, to collect feedback from other points of view as well, our supervisor arranged for us to meet the head of research of Betfair. He has approved(?) of our application's general interface and pointed out a few possible issues (such as synchronizing all the playback data), which are now fixed(?).
+Finally, to collect feedback from other points of view as well, our supervisor arranged for us to meet the head of research of Betfair. He has approved of our application's general interface and pointed out a few possible issues (such as synchronizing all the playback data), which are now fixed.
 
 \subsubsection{Feedback from Unexperienced users}
 
-To test how easy it is for users to understand the information presented by our application and how ''natural'' to find the required functionalities, we have collected feedback from a few colleagues, without previous experience with tennis trading applications. (??? - what did they say?)
+To test how easy it is for users to understand the information presented by our application and how ``natural'' to find the required functionalities, we have collected feedback from a few colleagues, without previous experience with tennis trading applications. The feedback received was quite positive - most parts of the interface were intuitive and easy to understand.
 
 Overall, the interface of our application has been validated by the users, with some improvement suggestions which we have considered and implemented.
 
@@ -299,31 +299,29 @@ Overall, the interface of our application has been validated by the users, with 
 
 We also used a review mechanism in which, normally, code has been inspected by at least two team members.
 
-
-During the implementation process we often employed pair programming but also other lightweight code review mechanisms[3], particularly over-the shoulder and tool-assisted code review (e.g. based on PMD suggestions).
+During the implementation process we often employed pair programming but also other lightweight code review mechanisms[3], particularly over-the-shoulder and tool-assisted code review (e.g. based on PMD suggestions).
 The decision to adopt lightweight code review mechanisms was based on evidence presented in [4], which suggests that this type of review can be as effective as a more formal one, but easier to implement.
 
 This helped improve the overall quality of the software and minimize the number of bugs early on in the development process.
 The whole source code is accessible to every member of the group and where appropriate and necessary, the code is reviewed by other members who don’t work on that specific widget or feature. 
 
-Where a bug is found or refactoring is needed, usually an issue is raised on GitHub with the suggestion to solve that specific problem.
+Wherever a bug is found or refactoring is needed, an issue is raised on GitHub with the suggestion to solve that specific problem.
 
-As this is done on a regular basis, we have agreed from the beginning to comment the code as much as possible and to use coding standars
+As this is done on a regular basis, we have agreed from the beginning to comment the code as much as possible and to use coding standards.
 
 \subsection{Stress testing}
 
-At the moment, no stress testing tools are used. Our group left this as the last stage of our development process, as this may be more beneficial once we have all the features implemented.
-However we have conducted a `manual` stress testing.
+At the moment, no stress testing tools are used. This has been left as the last stage of our development process, as it may be more beneficial once we have all the features implemented. However we have conducted a `manual` stress testing.
 
-An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This is done by opening more than one tab, where each tab displays the match/market.
+An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This can be done by opening more than one tab, since each tab displays one match and its associated market information.
 
-We have observed that when we open a single match/market the physical memory consumed by the application is 1.5 GB and once we open more matches/markets this figure increases even more reaching 2GB when 3 tabs are opened. This enforced us to raise an issue with high importance and it is an on-going process where we try to identify any memory leaks, to analyse if we store any redundant/unused data and any other ways to reduce this figure. We understand that this is a major issue as an average computer has 3-4 GB of physical memory and we aim to solve the problem by the end of the project.
+We have observed that when we only view data for one match the physical memory consumed by the application is around 1.5 GB, while once we open more match view this figure increases up to 2GB (with 3 open tabs). We understand such behaviour is a major problem, as an average computer has 3-4 GB of physical memory, and we aim to solve the problem by the end of the project. Hence, this has become an important issue and an on-going process to identify and eliminate meory leaks has started.
 
-We are using Standard Widget Toolkit (SWT) to develop our graphical user interface and since the native OS widgets creatde by it cannot be garbage collected, a special attention is paid to creating and disposing the components, in order to avoid any memory leaks.
+Using the Standard Widget Toolkit (SWT) to develop the graphical user interface can be a source of memory leaks, since the native OS widgets created by it cannot be garbage collected. Therefore, special attention is paid to disposing any created components.
 
-Our application requires a lot of data to be stored and presented to a user in a special way, one of the aims of the group is to have an efficient memory management, as this will lead to a better responsiveness of the application which is vital for traders.
+Also, our application requires a lot of data to be stored and presented to the user in different ways. Hence, one of the aims is to have an efficient memory management, as this will avoid having duplicate data in memory.
 
-Our application does not consume a lot of CPU power as our computations are negligible except to a few data statistical/technical analysis of data which is vital for traders, but we haven’t observed a heavy CPU usage even with many concurrent markets/matches ope
+Our application does not consume a lot of CPU power as most our computations are negligible. The most computational intensive tasks are the statiscal data inference algorithms, but we haven’t observed a heavy CPU usage even with more match view open at the same time.
 
 \clearpage
 
@@ -444,6 +442,10 @@ The Log-Book
 \bibitem{site-pmd}
   Site of PMD
   \url{http://pmd.sourceforge.net/}
+
+\bibitem{wiki-valid}
+  Validation - Wikipedia
+  \url{http://en.wikipedia.org/wiki/Verification_and_Validation}
 
 \end{thebibliography}
 
