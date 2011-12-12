@@ -126,7 +126,7 @@ SWTBot **
 
 \subsection{Integration Testing}
 
-Integration testing is used to check how our code works with the code from outside the team, which we cannot change (provided by various libraries). These tests ensure the code we built on top of external APIs works as expected and quickly identify any configuration issues.
+Integration testing is used to check how our code works with the code from outside the team, which we cannot change (provided by various libraries). These tests mainly ensure the code we built on top of external APIs works as expected, but thay are also useful in quickly identifying any configuration issues.
 
 Since the project depends on a number of external service providers (in particular Betfair and SWTChart) integration tests are vital. This has been achieved by testing the abstractions we have built on top of these APIs and used by our poject:
 
@@ -144,10 +144,9 @@ Since our project is not very large, we have considred acceptance tests are good
 
 \subsubsection{SWTChart}
 
-How does SWTChart work?..
+The SWTChart API provides a chart component with several basic functionalities (such as drawing line functions, bar charts etc). The chart can handle real-time updates (even for large data series), which is crucial to the purpose of our project and it integrates smoothly with the application's UI design and implementation, since it is based on SWT. 
 
-To ease our use of the SWTChart library and the ability/.. to add specific features required by our application, we have extended the Chart class of the SWTChart library. Hence, integration tests for this class ensure the library integrates smoothly into the entire application. 
-
+Howver, additional functionalities were still required, so we have extended the Chart class, providing the implementation of the needed functions. This design encapsulates the use of the SWTChart API, so integration tests for this class ensure the library integrates smoothly into the entire application. 
 
 \subsection{Continuous Integration}
 
@@ -243,14 +242,34 @@ We used PMD and Cobertura report to check code ``sanity''.
 
 We also used a review mechanism in which, normally, code has been inspected by at least two team members.
 
-\subsection{Did you exert your software to stress testing?}
 
-No - should do.
+During the implementation process we often employed pair programming but also other lightweight code review mechanisms[3], particularly over-the shoulder and tool-assisted code review (e.g. based on PMD suggestions).
+The decision to adopt lightweight code review mechanisms was based on evidence presented in [4], which suggests that this type of review can be as effective as a more formal one, but easier to implement.
+
+This helped improve the overall quality of the software and identify bugs early on in the development process....
+The whole source code is accessible to every member of the group and where appropriate and necessary, the code is reviewed by other members who don’t work on that specific widget or feature. Where a a bug is found or refactoring is needed, usually an issue is raised on GitHub with the suggestion to solve that specific problem.
+
+As this is done on a regular basis, we have agreed from the beginning to comment the code as much as possible and to use coding standars
+
+\subsection{Stress testing?}
+
+At the moment, no stress testing tools are used. Our group left this as the last stage of our development process, as this may be more beneficial once we have all the features implemented.
+However we have done a `manual` stress testing.
+
+An abnormal condition or a stressing condition for our application is when a user tries to view and trade several matches/markets at the same time. This is done by opening more than one tab, where each tab displays the match/market.
+
+We have observed that when we open a single match/market the physical memory consumed by the application is 1.5 GB and once we open more matches/markets this figure increases even more reaching 2GB when 3 tabs are opened. This enforced us to raise an issue with high importance and it is an on-going process where we try to identify any memory leaks, to analyse if we store any redundant/unused data and any other ways to reduce this figure. We understand that this major issue as an average computer has 3-4 GB of physical memory and we hope to solve the problem by the end of the project.
+
+We are using Standard Widget Toolkit (SWT)  to develop our graphical user interface and the native OS widgets cannot be garbage collected,a special attention is paid to creating and disposing the components as the improper coding of the components may lead to memory leaks.
+
+Our application requires a lot of data to be stored and presented to a user in a special way, one of the aims of the group is to have an efficient memory management, as this will lead to a better responsiveness of the application which is vital for traders.
+
+Our application does not consume a lot of CPU power as our computations are negligible except to a few data statistical/technical analysis of data which is vital for traders, but we haven’t observed a heavy CPU usage even with many concurrent markets/matches ope
 
 \subsection{Did you test the GUIs of your software?}
 Yes, as explained above we have test the UI through our acceptance tests. Also visual inspection by team members was used to ensure no layouts are messed up.
 
-yeees
+We mentioned above that we are using the SWTBot API to test our widget and unfortunately because of its limitations we haven’t yet identified ways to test the functions of the specific components such as the context menu (pop u) or a progress bar. However we realise that this is very important to test before realising the application. One of the most important tools for traders is the chart where they can view the flow of a market and we must implement it very efficient and to make sure that the graphical part of it is working properly. We have implemented a context menu on the chart, where the user may select different types of analysis to be shown and as we can’t test the context menu we are not sure of the potential behaviour of the application in certain conditions.
 
 \section{Managerial Documentation}
 
@@ -267,7 +286,25 @@ A table of the hours spent per week on which tasks or activities by each member 
 The Log-Book
 
 
-Evaluation Criteria for Report Three: the same as for Reports One and Two.
+Throughout the project various collaboration tools were used that would help in cooperation for successful product delivery.
+
+Use of git significantly improved the quality of work produced by the team, as it provided not only a shared code base with version control, but also a good picture of the current state of the project. Moreover, it encouraged team members to use “Commit Early, Commit Often” paradigm, as many postponed commits tended to result in a large number of merge conflicts. As a consequence of an increase in the commit frequency, the monitoring capability of the project also raised, simplifying error tracking and resolving.
+
+Furthermore, a private github repository was created, providing the team with a set of features that supported further collaboration. First of all, issues that could be tracked and assigned to specific group members. These tasks had comment threads linked to them, simplifying communication and giving an ability to have almost instant feedback on the solution. Moreover, use of issues dramatically increased working efficiency of the team, for example, whenever there was a new issue added to the back log, all teammates were notified, and once one of them has finished work on his or her piece, this member could then start thinking on another problem. As well as that, github repository provided the ability to split issues into different milestones, consequently providing better sense of direction for everyone in the group. As a result, it helped to enforce the agile development paradigm, making it possible to have distinct iterations, thus increasing the level of cooperation between team members.
+
+Another set of collaboration tools that proved to be useful was google docs. This platform allowed the whole group to exchange information and keep logs of the meetings by creating files accessible to the whole group.
+
+
+
+Throughout the project the main collaboration tool used by the team was git. The private github repository was created in order to ensure constant availability of the code base for all team members. As a result, after the initial setup was finalised, the group was able to work on individual parts of the project, which significantly simplified the task of monitoring progress made and previous history of the project. Moreover, git repository features helped ensure efficient collaboration on different levels.
+
+First of all, being a distributed version control system, git enabled the possibility for all group members to have their own version to work on, with consequent merging of the changes with the current code base. This also improved mobility, meaning that the team was not bound to the lab machines and be free to work in the preferred environment.
+
+Secondly, the use of git issues has significantly increased the level of feedback received and improved the capability of other team members to monitor the progress made. For example, whenever there is a new issue added to the back log, the whole group is notified, in essence, meaning that once a particular member has finished working on an assigned feature, he or she is able to start thinking on a new problem. Moreover, the fact that git issues have comment threads linked to them dramatically increased the level of consultation within the team, leading to better delivery of solutions.
+
+Finally, the repository assigned to the project has a capability of splitting the issues into different milestones, which supported the agile development paradigm that the group has chosen by having distinct iterations and sets of particular tasks that are to be done during those. This feature has also given us the ability to track any unresolved problems from previous iterations, essentially simplifying the task of prioritising the direction that the group has to work in further.
+
+All in all, the use of git and github repository has not only given us the ability to collaborate with each other, but also improved the level of communication and provided us with a detailed picture of the project and a good vision of the velocity, it is going with.
 
 \begin{thebibliography}{9}
 \bibitem{bk-testing}
