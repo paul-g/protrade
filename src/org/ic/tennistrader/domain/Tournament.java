@@ -11,13 +11,13 @@ public class Tournament {
 	
 	public Tournament(String name, EventBetfair eb) {
 		this.name = name;
-		this.setEventBetfair(eb);
+		this.eventBetfair = eb;
 	}
 	
 	public Tournament (String name, List<RealMatch> matches, EventBetfair eb) {
 		this.name = name;
 		this.matches = matches;
-		this.setEventBetfair(eb);
+		this.eventBetfair = eb;
 	}
 
 	public void addMatch(RealMatch newMatch) {

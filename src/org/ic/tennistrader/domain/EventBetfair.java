@@ -18,12 +18,15 @@ public class EventBetfair extends EventMarketBetfair{
 	}
 	
 	public boolean equals(Object object){
-		if (object == null)
+		if (object == null) {
             return false;
-        if (object == this)
+		}
+        if (object == this) {
             return true;
-        if (object.getClass() != getClass())
+        }
+        if (object.getClass() != getClass()) {
             return false;
+        }
         EventBetfair eb = (EventBetfair)object;
         return eb.getBetfairId() == this.betfairId;		
 	}

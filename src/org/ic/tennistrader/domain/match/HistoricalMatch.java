@@ -23,7 +23,6 @@ public class HistoricalMatch extends Match {
     public HistoricalMatch(String filename) {
         this.score = new Score();
         this.marketDatas = new ArrayList<MOddsMarketData>();
-
         Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
         setNames(player1, p.first());
         setNames(player2, p.second());
@@ -53,7 +52,7 @@ public class HistoricalMatch extends Match {
     }
 
     // needs to be in a different class!!!
-    public String getMatchName() {
+    public final String getMatchName() {
         Scanner scanner;
         try {
             scanner = new Scanner(new FileInputStream(filename));

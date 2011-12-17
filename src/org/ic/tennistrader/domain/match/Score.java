@@ -5,236 +5,219 @@ import java.util.List;
 
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 
+import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;
+
 public class Score {
 
-    public static final int AD = 50;
+	public static final int AD = 50;
 
-    private int playerOnePoints;
-    private int playerTwoPoints;
+	private int playerOnePoints;
+	private int playerTwoPoints;
 
-    private List<SetScore> scores = new ArrayList<SetScore>();
-    private SetScore currentSet;
-    
-    private int maximumSetsPlayed = 3;
-    
-    private PlayerEnum server;
+	private final List<SetScore> scores = new ArrayList<SetScore>();
+	private SetScore currentSet;
 
-    public PlayerEnum getServer() {
-        return server;
-    }
+	private int maximumSetsPlayed = 3;
 
-    public void setServer(PlayerEnum server) {
-        this.server = server;
-    }
+	private PlayerEnum server;
 
-    public Score() {
-        init();
-    }
-    
-    public Score(int maximumSetsPlayed) {
-        init();
-        this.maximumSetsPlayed = maximumSetsPlayed;
-    }
+	public PlayerEnum getServer() {
+		return server;
+	}
 
-    private void init() {
-        playerOnePoints = 0;
-        playerTwoPoints = 0;
-        currentSet = new SetScore();
-        scores.add(currentSet);
-    }
+	public void setServer(PlayerEnum server) {
+		this.server = server;
+	}
 
-    private void addPlayerPoint(PlayerEnum player) {
-        if (isFinished()) 
-            return;
-        
-        int playerPoints = (player.equals(PlayerEnum.PLAYER1) ? playerOnePoints
-                : playerTwoPoints);
-        
-        if (currentSet.isTiebreak())
-            gameWon(player);
+	public Score() {
+		init();
+	}
 
-        switch (playerPoints) {
-            case 0:
-            case 15:
-                playerPoints += 15;
-                break;
-            case 30:
-                playerPoints += 10;
-                break;
-            case 40:
-                if (opponentScore(player) < 40) {
-                    gameWon(player);
-                    return;
-                } else {
-                    if (opponentScore(player) == AD)
-                        playerOnePoints = playerTwoPoints = 40;
-                    else
-                        playerPoints = AD;
-                }
-                ;
-                break;
-            case 50:
-                gameWon(player);
-                return;
-        }
+	public Score(int maximumSetsPlayed) {
+		init();
+		this.maximumSetsPlayed = maximumSetsPlayed;
+	}
 
-        switch (player) {
-            case PLAYER1:
-                playerOnePoints = playerPoints;
-                break;
-            case PLAYER2:
-                playerTwoPoints = playerPoints;
-                break;
-        }
+	private void init() {
+		playerOnePoints = 0;
+		playerTwoPoints = 0;
+		currentSet = new SetScore();
+		scores.add(currentSet);
+	}
 
-    }
+	private void addPlayerPoint(PlayerEnum player) {
+		if (isFinished())
+			return;
 
-    public void addPlayerOnePoint() {
-        addPlayerPoint(PlayerEnum.PLAYER1);
-    }
+		int playerPoints = (player.equals(PlayerEnum.PLAYER1) ? playerOnePoints
+				: playerTwoPoints);
 
-    public void addPlayerTwoPoint() {
-        addPlayerPoint(PlayerEnum.PLAYER2);
-    }
+		if (currentSet.isTiebreak())
+			gameWon(player);
 
-    private void gameWon(PlayerEnum player) {
+		switch (playerPoints) {
+		case 0:
+		case 15:
+			playerPoints += 15;
+			break;
+		case 30:
+			playerPoints += 10;
+			break;
+		case 40:
+			if (opponentScore(player) < 40) {
+				gameWon(player);
+				return;
+			} else {
+				if (opponentScore(player) == AD)
+					playerOnePoints = playerTwoPoints = 40;
+				else
+					playerPoints = AD;
+			}
+			;
+			break;
+		case 50:
+			gameWon(player);
+			return;
+		}
 
-        switch (player) {
-            case PLAYER1:
-                currentSet.addPlayerOneGame();
-                break;
-            case PLAYER2:
-                currentSet.addPlayerTwoGame();
-                break;
-            default:
-                break;
-        }
+		switch (player) {
 
-        playerOnePoints = 0;
-        playerTwoPoints = 0;
+		case PLAYER1:
+			playerOnePoints = playerPoints;
+			break;
+		case PLAYER2:
+			playerTwoPoints = playerPoints;
+			break;
+		}
 
-        if (currentSet.isFinished()) {
-            SetScore newSet = new SetScore();
-            scores.add(newSet);
-            currentSet = newSet;
-        }
+	}
 
-    }
+	public void addPlayerOnePoint() {
+		addPlayerPoint(PlayerEnum.PLAYER1);
+	}
 
-    private Integer opponentScore(PlayerEnum player) {
-        switch (player) {
-            case PLAYER1:
-                return playerTwoPoints;
-            case PLAYER2:
-                return playerOnePoints;
-            default:
-                return 0;
-        }
-    }
+	public void addPlayerTwoPoint() {
+		addPlayerPoint(PlayerEnum.PLAYER2);
+	}
 
-    public SetScore getCurrentSetScore() {
-        return currentSet;
-    }
+	private void gameWon(PlayerEnum player) {
+		if (player.isPlayerOne()) {
+			currentSet.addPlayerOneGame();
+		} else {
+			currentSet.addPlayerTwoGame();
+		}
 
-    public int getPlayerPoints(PlayerEnum player){
-        
-        switch (player){
-            case PLAYER1: return playerOnePoints;
-            case PLAYER2: return playerTwoPoints;
-        }
-        
-        return -1;
-    }
-    
-    public int getPlayerOnePoints() {
-        return playerOnePoints;
-    }
+		playerOnePoints = 0;
+		playerTwoPoints = 0;
 
-    public int getPlayerTwoPoints() {
-        return playerTwoPoints;
-    }
+		if (currentSet.isFinished()) {
+			SetScore newSet = new SetScore();
+			scores.add(newSet);
+			currentSet = newSet;
+		}
 
-    public SetScore getSetScore(int setNumber) {
-        // bug found -> was >1 instead of >=1
-        // bug found -> was < scores.size() instead of <= scores.size()
-        if (setNumber <= scores.size() && setNumber >= 1)
-            return scores.get(setNumber - 1);
-        else
-            return null;
-    }
+	}
 
-    public boolean isFinished() {
-        int win = maximumSetsPlayed / 2 + 1;
-        if ( getPlayerOneSets() >= win ) 
-            return true;
-        if ( getPlayerTwoSets() >= win ) 
-            return true;
-        return false;
-    }
+	private Integer opponentScore(PlayerEnum player) {
+		return casePlayer(player, playerTwoPoints, playerOnePoints);
+	}
 
-    public int getPlayerOneSets() {
-        return getPlayerSets(PlayerEnum.PLAYER1);
-    }
+	public SetScore getCurrentSetScore() {
+		return currentSet;
+	}
 
-    public int getPlayerTwoSets() {
-        return getPlayerSets(PlayerEnum.PLAYER2);
-    }
+	public int getPlayerPoints(PlayerEnum player) {
+		return casePlayer(player, playerOnePoints, playerTwoPoints);
+	}
 
-    public int getPlayerSets(PlayerEnum player) {
+	public int getPlayerOnePoints() {
+		return playerOnePoints;
+	}
 
-        int setsWon = 0;
+	public int getPlayerTwoPoints() {
+		return playerTwoPoints;
+	}
 
-        for (SetScore s : scores)
-            if (s.getWinner() == player)
-                setsWon++;
+	public SetScore getSetScore(int setNumber) {
+		if (setNumber <= scores.size() && setNumber >= 1)
+			return scores.get(setNumber - 1);
+		else
+			return null;
+	}
 
-        return setsWon;
-    }
-    
-    public int[] getPlayerOneScore(){
-        return getPlayerScores(PlayerEnum.PLAYER1);
-    }
-    
-    public int[] getPlayerTwoScore(){
-        return getPlayerScores(PlayerEnum.PLAYER2);
-    }
-    
-    public int[] getPlayerScores(PlayerEnum player){
-        
-        int playerScores [] = new int[maximumSetsPlayed];
-        for (int i=0;i<playerScores.length;i++)
-            playerScores[i] = 0;
-        
-        int i = 0;
-        
-        for (SetScore s : scores ){
-            playerScores[i] = (player == PlayerEnum.PLAYER1? s.getPlayerOneGames() : s.getPlayerTwoGames());
-            i++;
-        }
-        
-        return playerScores;
-    }
-    
-    public int getMaximumSetsPlayed(){
-        return maximumSetsPlayed;
-    }
+	public boolean isFinished() {
+		int win = maximumSetsPlayed / 2 + 1;
+		if (getPlayerOneSets() >= win)
+			return true;
+		if (getPlayerTwoSets() >= win)
+			return true;
+		return false;
+	}
 
-    public void setPlayerOnePoints(int playerOnePoints) {
-        this.playerOnePoints = playerOnePoints;
-    }
+	public int getPlayerOneSets() {
+		return getPlayerSets(PlayerEnum.PLAYER1);
+	}
 
-    public void setPlayerTwoPoints(int playerTwoPoints) {
-        this.playerTwoPoints = playerTwoPoints;
-    }
-    
-    public void setSets(int[] playerOneGames, int[] playerTwoGames){
-        scores.clear();
-        for (int i=0;i<maximumSetsPlayed;i++){
-            SetScore sc = new SetScore(playerOneGames[i], playerTwoGames[i]);
-            scores.add(sc);
-        }
-        currentSet = scores.get(maximumSetsPlayed-1);
-    }
+	public int getPlayerTwoSets() {
+		return getPlayerSets(PlayerEnum.PLAYER2);
+	}
+
+	public int getPlayerSets(PlayerEnum player) {
+
+		int setsWon = 0;
+
+		for (SetScore s : scores)
+			if (s.getWinner() == player)
+				setsWon++;
+
+		return setsWon;
+	}
+
+	public int[] getPlayerOneScore() {
+		return getPlayerScores(PlayerEnum.PLAYER1);
+	}
+
+	public int[] getPlayerTwoScore() {
+		return getPlayerScores(PlayerEnum.PLAYER2);
+	}
+
+	public int[] getPlayerScores(PlayerEnum player) {
+
+		int playerScores[] = new int[maximumSetsPlayed];
+		for (int i = 0; i < playerScores.length; i++)
+			playerScores[i] = 0;
+
+		int i = 0;
+
+		for (SetScore s : scores) {
+			playerScores[i] = (player == PlayerEnum.PLAYER1 ? s
+					.getPlayerOneGames() : s.getPlayerTwoGames());
+			i++;
+		}
+
+		return playerScores;
+	}
+
+	public int getMaximumSetsPlayed() {
+		return maximumSetsPlayed;
+	}
+
+	public void setPlayerOnePoints(int playerOnePoints) {
+		this.playerOnePoints = playerOnePoints;
+	}
+
+	public void setPlayerTwoPoints(int playerTwoPoints) {
+		this.playerTwoPoints = playerTwoPoints;
+	}
+
+	public void setSets(int[] playerOneGames, int[] playerTwoGames) {
+		scores.clear();
+		for (int i = 0; i < maximumSetsPlayed; i++) {
+			SetScore sc = new SetScore(playerOneGames[i], playerTwoGames[i]);
+			scores.add(sc);
+		}
+		currentSet = scores.get(maximumSetsPlayed - 1);
+	}
 
 	public PlayerEnum getWinner() throws MatchNotFinishedException {
 		if (!this.isFinished())
@@ -244,5 +227,5 @@ public class Score {
 		else
 			return PlayerEnum.PLAYER2;
 	}
-    
+
 }

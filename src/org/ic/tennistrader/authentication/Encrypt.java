@@ -12,7 +12,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-public class Encrypt {
+public final class Encrypt {
   
   private static char[] KEY = "na1sd3asd11ai789ugh;angadflgawer./sdf".toCharArray();
   
@@ -20,6 +20,8 @@ public class Encrypt {
       (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
       (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
   };
+  
+  private Encrypt(){};
   
   public static void main(String args[]) throws GeneralSecurityException, IOException {
     if (args.length != 1 ){

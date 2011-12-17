@@ -3,7 +3,6 @@ package org.ic.tennistrader.controller;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
@@ -11,10 +10,10 @@ import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 
 public class BetController {
-	private List<OddsButton> player1BackButtons;
-	private List<OddsButton> player1LayButtons;
-	private List<OddsButton> player2BackButtons;
-	private List<OddsButton> player2LayButtons;
+	private final List<OddsButton> player1BackButtons;
+	private final List<OddsButton> player1LayButtons;
+	private final List<OddsButton> player2BackButtons;
+	private final List<OddsButton> player2LayButtons;
 	private Match match;
 	private static Logger log = Logger.getLogger(BetController.class);
 	
@@ -24,7 +23,7 @@ public class BetController {
 		this.player1LayButtons = player1LayButtons;
 		this.player2BackButtons = player2BackButtons;
 		this.player2LayButtons = player2LayButtons;
-		setMatch(match);
+		this.match = match;
 	}
 
 	public PlayerEnum getBetPlayer(OddsButton button) throws OddsButtonNotFoundException {

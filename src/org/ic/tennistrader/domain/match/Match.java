@@ -1,11 +1,14 @@
 package org.ic.tennistrader.domain.match;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
 import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
+
+import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;
 
 public abstract class Match {    
     
@@ -56,11 +59,7 @@ public abstract class Match {
     }
 
     public Player getPlayer(PlayerEnum player){
-        switch (player){
-            case PLAYER1: return player1;
-            case PLAYER2: return player2;
-        }
-        return null;
+    	return casePlayer(player, player1, player2);
     }
 
     public Player getPlayerOne() {

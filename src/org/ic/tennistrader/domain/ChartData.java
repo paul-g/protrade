@@ -93,14 +93,17 @@ public class ChartData {
 			ArrayList<Pair<Double, Double>> back,
 			ArrayList<Pair<Double, Double>> lay) {
 		int i = this.getDataSize();
-		if (back != null && lay != null && back.size() > 0 && lay.size() > 0) {
+		if (back != null && lay != null && !back.isEmpty()  && !lay.isEmpty() ) {
 			overround.add(100* (1/back.get(0).first() + 1/lay.get(0).first()));
 		} else {
-			if (i > 0) // keep previous value if it exists
+			if (i > 0) {
+				// keep previous value if it exists
 				overround.add(i,overround.get(i-1));
-			else
+			}
+			else {
 				// put zero if no previous value
 				overround.add(i,0.0);
+			}
 		}		
 		return overround;
 	}
@@ -111,16 +114,19 @@ public class ChartData {
 		double plus;
 		double minus;
 		// if data has been read from Betfair
-		if (back != null && lay != null && back.size() > 0 && lay.size() > 0) {
+		if (back != null && lay != null && !back.isEmpty() && !lay.isEmpty()) {
 			minus = back.get(back.size()-1).first();
 			plus = lay.get(lay.size()-1).first();
 			array.add( pair(plus,minus));
 		} else {
-			if (i > 0) // keep previous value if it exists
+			if (i > 0){ 
+				// keep previous value if it exists
 				array.add(i,array.get(i-1));
-			else
+			}
+			else {
 				// put zero if no previous value
 				array.add(i, pair(0.0,0.0));
+			}
 		}
 		return array;
 	}
@@ -132,8 +138,9 @@ public class ChartData {
 		if (pl1ySeries2 != null) {
 			double sum = 0;
 			if (i < 10) {
-				for (int a = i; a >= 0; a--)
+				for (int a = i; a >= 0; a--) { 
 					sum += pl1ySeries2.get(a);
+				}
 				maPl12.add(i, sum / (i + 1));
 			} else {
 				sum = maPl12.get(i - 1) * 10 - pl1ySeries2.get(i - 10)
@@ -247,7 +254,4 @@ public class ChartData {
 	public void setPl2Volume(ArrayList<Double> pl2Volume) {
 		this.pl2Volume = pl2Volume;
 	}
-
-	
-	
 }

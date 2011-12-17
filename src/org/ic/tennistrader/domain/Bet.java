@@ -5,7 +5,7 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.utils.Pair;
 
-public class Bet {
+public final class Bet {
     private Pair<Double, Double> value;
     private double unmatchedValue;
     private Match match;
