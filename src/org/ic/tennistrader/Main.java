@@ -41,7 +41,7 @@ public class Main {
     mw.addLoadListener(new Listener() {
         @Override
         public void handleEvent(Event event) {
-            if (event.text.equals("Done!")) {
+            if ("Done!".equals(event.text)) {
                 ls.finishProgressBar();
                 ls.dispose();
             }
@@ -78,9 +78,9 @@ public class Main {
         
         log.info("split " + name + " " + value);
         
-        if (name.equals("username"))
+        if ("username".equals(name))
           TEST_USERNAME = value;
-        else if (name.equals("password")) {
+        else if ("password".equals(name)) {
           TEST_PASSWORD = Encrypt.decrypt(value);
         }
       }

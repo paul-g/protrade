@@ -20,7 +20,9 @@
 	<property name="pmd.report.dir" value="${reports.dir}/pmd" />
 	<property name="coverage.report.dir" value="${reports.dir}/test-coverage" />
 
-	<property name="pmdconfig.dir" value="pmd" />
+	<property name="config.dir" value="config" />
+	<property name="config.pmd.dir" value="${config.dir}/pmd" />
+	<property name="config.log4j.dir" value="${config.dir}/log4j" />
 
 	<!-- Set the CLASSPATH -->
 	<path id="classpath">
@@ -49,7 +51,7 @@
 	<!-- COMPILE task -->
 	<target name="compile" depends="prepare">
 		<javac srcdir="${src.dir}" includeantruntime="false" destdir="${build.prod.dir}" classpathref="classpath" debug="true" debuglevel="vars,lines,source" />
-		<copy todir="${build.prod.dir}" file="log4j/log4j.properties" />
+		<copy todir="${build.prod.dir}" file="${config.log4j.dir}/log4j.properties" />
 	</target>
 
 	<!-- RUN task - runs the main class -->
@@ -176,8 +178,8 @@
 		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="classpath" />
 		<mkdir dir="${pmd.report.dir}" />
 		<pmd shortFilenames="true">
-			<ruleset>rulesets/favorites.xml</ruleset>
-			<ruleset>basic</ruleset>
+			<!-- <ruleset>rulesets/favorites.xml</ruleset> -->
+			<ruleset>basic,design,braces,junit</ruleset>
 			<!-- <formatter type="html" toFile="pmd_report.html" linkPrefix="http://pmd.sourceforge.net/xref/"/>-->
 			<formatter type="xml" toFile="${pmd.report.dir}/pmd.xml" />
 			<fileset dir="${src.dir}">
@@ -190,7 +192,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</pmd>
-		<xslt in="${pmd.report.dir}/pmd.xml" style="${pmdconfig.dir}/format.xslt" out="${pmd.report.dir}/pmd.html" />
+		<xslt in="${pmd.report.dir}/pmd.xml" style="${config.pmd.dir}/format.xslt" out="${pmd.report.dir}/pmd.html" />
 	</target>
 
 	<!-- ALL task -->
