@@ -127,7 +127,7 @@ public class LoginShell {
             public void handleEvent(Event event) {
                 String user = username.getText();
                 if (checkLogin(user, password.getText())) {
-                    Main.USERNAME = user;
+                    Main.username = user;
                     updateResult(SUCCESS);
                     handleLoginSuccess();
                 } else
@@ -208,11 +208,11 @@ public class LoginShell {
         testAccount.setText("Test");
         testAccount.addListener(SWT.Selection, new Listener() {
             public void handleEvent(Event arg0) {
-                String username = Main.TEST_USERNAME;
-                String password = Main.TEST_PASSWORD;
+                String username = Main.testUsername;
+                String password = Main.testPassword;
                 log.info("username " + username);
-                Main.USERNAME = Main.TEST_USERNAME;
-                Main.PASSWORD = Main.TEST_PASSWORD;
+                Main.username = Main.testUsername;
+                Main.password = Main.testPassword;
                 if (checkLogin(username, password)) {
                     updateResult(SUCCESS);
                     handleLoginSuccess();

@@ -34,7 +34,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 	private SashForm chartSash;
 
-	private static Logger log = Logger.getLogger(DisplayPanel.class);
+	private static final Logger log = Logger.getLogger(DisplayPanel.class);
 	
     public static void main(String args[]){
 

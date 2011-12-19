@@ -97,13 +97,17 @@ public abstract class Match {
     }
     
     public String getScoreAsString(PlayerEnum player) {
-        int [] scores = score.getPlayerScores(player);
+        final int [] scores = score.getPlayerScores(player);
         
-        String scoresString = "";
-        for (int i=0;i<scores.length;i++)
-            scoresString += scores[i] + ",";
-        scoresString += score.getPlayerPoints(player);
-        return scoresString;
+        StringBuffer scoresString = new StringBuffer();
+        
+        for (int i=0;i<scores.length;i++) {
+            scoresString.append(scores[i] + ",");
+        }
+        
+        scoresString.append( score.getPlayerPoints(player) );
+        
+        return scoresString.toString();
     }
     
     public void setPlayer1(Player player){

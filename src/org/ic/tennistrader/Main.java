@@ -17,24 +17,35 @@ public final class Main {
 
 	public static final String TITLE = "Tennis Trader";
 
-	private static Logger log = Logger.getLogger(Main.class);
+	private static final Logger log = Logger.getLogger(Main.class);
 
-	public static String USERNAME = "";
-	public static String PASSWORD = "";
+	public static String username = "";
+	public static String password = "";
 
-	public static String TEST_USERNAME = "";
-	public static String TEST_PASSWORD = "";
+	public static String testUsername = "";
+	public static String testPassword = "";
 	
 	private Main(){}
 
 	public static void main(String[] args) {
+	
 		// read the config file
 		readAndDecryptConfigFile();
 
 		// start up the app
 		final Display display = new Display();
-		final LoginShell ls = new LoginShell(display);
 		final MainWindow mw = new MainWindow(display);
+		
+		
+		if (args.length == 1){
+			if ("-test".equals(args[0])) {
+				//bypass login
+				mw.show();
+				mw.run(display);
+			}
+		}
+
+		final LoginShell ls = new LoginShell(display);
 
 		mw.addLoadListener(new Listener() {
 			@Override
@@ -76,9 +87,9 @@ public final class Main {
 				log.info("split " + name + " " + value);
 
 				if ("username".equals(name)) {
-					TEST_USERNAME = value;
+					testUsername = value;
 				} else if ("password".equals(name)) {
-					TEST_PASSWORD = Encrypt.decrypt(value);
+					testPassword = Encrypt.decrypt(value);
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -94,21 +105,21 @@ public final class Main {
 			}
 		}
 
-		log.info("username set to \'" + USERNAME + "\' password set");
+		log.info("username set to \'" + username + "\' password set");
 	}
 
 	public static String getTestUsername() {
-		if ("".equals(TEST_USERNAME)) {
+		if ("".equals(testUsername)) {
 			readAndDecryptConfigFile();
 		}
-		return TEST_USERNAME;
+		return testUsername;
 	}
 
 	public static String getTestPassword() {
-		if ("".equals(TEST_PASSWORD)) {
+		if ("".equals(testPassword)) {
 			readAndDecryptConfigFile();
 		}
-		return TEST_PASSWORD;
+		return testPassword;
 	}
 
 }

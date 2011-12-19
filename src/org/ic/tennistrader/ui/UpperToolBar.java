@@ -81,7 +81,7 @@ public class UpperToolBar {
 
 		final ToolItem profileItem = new ToolItem(login, SWT.DROP_DOWN);
 		// TODO: this is a slight hack
-		profileItem.setText(Main.USERNAME);
+		profileItem.setText(Main.username);
 		profileItem.setToolTipText("Profile");
 
 		try {		
@@ -333,7 +333,7 @@ public class UpperToolBar {
 		try {
 			AccountFunds af = profileData.getUkAccountFunds();
 			res =
-				"Username : " + Main.USERNAME +
+				"Username : " + Main.username +
 				"\nBetfair points : " + af.getBetfairPoints() +
 				"\nCurrent balance : " + af.getBalance() +
 				"\nAvailable balance : " + af.getAvailable() +
