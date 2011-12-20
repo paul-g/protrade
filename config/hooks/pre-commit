@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "Launching build before commit!"
+
+rm -rf tmp
+mkdir tmp
+
+make git-all
+
+RET=$?
+
+if [ "$RET" -eq "0" ]
+then 
+	echo "Commit succesfull!"
+	exit 0
+else 
+	echo "Commit failed due to build errors!"
+	exit 1
+fi
