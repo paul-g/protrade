@@ -23,6 +23,8 @@
 	<property name="config.dir" value="config" />
 	<property name="config.pmd.dir" value="${config.dir}/pmd" />
 	<property name="config.log4j.dir" value="${config.dir}/log4j" />
+	
+	<property name="build.agent" value="git"/>
 
 	<!-- Set the CLASSPATH -->
 	<path id="classpath">
@@ -152,7 +154,7 @@
 		</junitreport>
 	</target>
 
-	<!-- RUN system tests -->
+	<!-- Run system tests -->
 	<target name="system-tests" depends="compile,compile-tests">
 		<mkdir dir="${system.test.report.dir}" />
 		<junit printsummary="yes" errorProperty="test.failed" failureProperty="test.failed">
@@ -169,8 +171,6 @@
 			<fileset dir="${system.test.report.dir}" includes="TEST-*.xml" />
 			<report todir="${system.test.report.dir}" />
 		</junitreport>
-
-		<fail message="System tests failed. Check log and/or reports." if="test.failed" />
 	</target>
 
 	<!-- PMD task -->
@@ -196,7 +196,51 @@
 	</target>
 
 	<!-- ALL task -->
-	<target name="all" depends="coverage, pmd">
-	</target>
+	<target name="all" depends="coverage, pmd"/>
+	
+	<!-- Git tasks -->
+	<target name="git" depends="git-unit-tests, git-system-tests"/>
+		
+	<!-- Run system tests from git -->
+	<target name="git-system-tests" depends="compile,compile-tests">
+		<mkdir dir="${system.test.report.dir}" />
+		<junit printsummary="yes" errorProperty="test.failed" failureProperty="test.failed" haltonfailure="true">
+			<classpath location="${instrumented.dir}" />
+			<classpath refid="classpath" />
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${system.test.report.dir}">
+				<fileset dir="${system.test.dir}" includes="**/*Test.java" />
+			</batchtest>
+		</junit>
 
+		<junitreport todir="${system.test.report.dir}">
+			<fileset dir="${system.test.report.dir}" includes="TEST-*.xml" />
+			<report todir="${system.test.report.dir}" />
+		</junitreport>
+
+		<fail message="System tests failed. Check log and/or reports." if="test.failed"/>
+	</target>
+	
+		
+	<!-- Run unit tests from git -->
+	<target name="git-unit-tests" depends="compile,compile-tests">
+		<mkdir dir="${unit.test.report.dir}" />
+		<junit printsummary="yes" errorProperty="test.failed" failureProperty="test.failed" haltonfailure="true">
+			<classpath location="${instrumented.dir}" />
+			<classpath refid="classpath" />
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${unit.test.report.dir}">
+				<fileset dir="${unit.test.dir}" includes="**/*Test.java" />
+			</batchtest>
+		</junit>
+		<junitreport todir="${unit.test.report.dir}">
+			<fileset dir="${unit.test.report.dir}" includes="TEST-*.xml" />
+			<report todir="${unit.test.report.dir}" />
+		</junitreport>
+		
+		<fail message="Unit tests failed. Check log and/or reports." if="test.failed"/>
+	</target>
+	
 </project>
