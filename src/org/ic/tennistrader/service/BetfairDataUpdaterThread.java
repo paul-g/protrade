@@ -31,7 +31,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
         EventBetfair eventBetfair = match.getEventBetfair();
         matches.put(eventBetfair, match);
         // events.add(eventBetfair);
-        synchronizedEvents.addEvent(eventBetfair);
+        // synchronizedEvents.addEvent(eventBetfair);
     }
 
     @Override
