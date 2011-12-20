@@ -199,7 +199,7 @@
 	<target name="all" depends="coverage, pmd"/>
 	
 	<!-- Git tasks -->
-	<target name="git" depends="git-unit-tests, git-system-tests"/>
+	<target name="git-all" depends="clean, git-unit-tests, git-system-tests"/>
 		
 	<!-- Run system tests from git -->
 	<target name="git-system-tests" depends="compile,compile-tests">
@@ -219,7 +219,7 @@
 			<report todir="${system.test.report.dir}" />
 		</junitreport>
 
-		<fail message="System tests failed. Check log and/or reports." if="test.failed"/>
+		<fail if="test.failed"/>
 	</target>
 	
 		
@@ -240,7 +240,7 @@
 			<report todir="${unit.test.report.dir}" />
 		</junitreport>
 		
-		<fail message="Unit tests failed. Check log and/or reports." if="test.failed"/>
+		<fail if="test.failed"/>
 	</target>
 	
 </project>
