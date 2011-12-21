@@ -1,0 +1,378 @@
+\documentclass[10pt]{report}
+\usepackage{a4}
+%\usepackage{fullpage}
+%\usepackage{fancyhdr}
+\setlength{\parskip}{0.3cm}
+\setlength{\parindent}{0cm}
+
+% This is the preamble section where you can include extra packages etc.
+
+\begin{document}
+
+\title{Report One: Inception}
+
+\author{Corina Ciobanu \and Iskander Orazbekov \and Mir Sahin \and Paul Grigoras \and Radu Baltean-Lugojan}
+
+
+\date{\today}         % inserts today's date
+
+\maketitle            % generates the title from the data above
+
+\begin{abstract}
+This report presents results from the inception phase of the project - "A Professional Tennis Trading Environment" - documenting key features and extensions, technology requirements and development methodolgy as well as explaining tennis trading fundamentals.
+\end{abstract}
+
+\tableofcontents
+
+\renewcommand{\chaptername}{}
+
+\chapter{Introduction}
+
+\section{Tennis}
+Tennis is a popular sport played between two players (singles) or between pairs (doubles).
+The aim is to win enough points to win a game, enough games to win a set and enough sets to win a match. Matches are usually played as best of three sets, but best of five sets are also played in high profile men’s tournaments (Grand Slams).
+The complex scoring rules lead to a significant number of points being played in evenly matched games.
+
+An average tennis match lasts between one and two hours and the average number of points played is about 150. However, late stage matches of a Grand Slam tournament often last as much as 4-5 hours and many more points are played.
+
+\section{Tennis Betting and Tennis Trading}
+On-line sport betting is wagering of money on a sport event with the intention of winning additional money.
+
+Tennis betting is largely popular since tournaments are played all around the year with huge markets being created around every single match, which represents a major opportunity for profit.
+It is possible to place bets both before or during a match (in-play betting). The unpredictable flow of a tennis match makes in-play betting very exciting as every single point played leads to a change in odds, especially during the crucial moments of a match where big changes in odds can be observed. The volatility of odds observed during a tennis match is very similar to the stock markets, but over a much shorter period of time.
+
+It is possible to place a back or a lay bet:
+\begin{itemize}
+\item \emph{Back betting} - betting for a certain outcome (placing a back on player X - betting that player X will win)
+\item \emph{Lay betting} - betting against a certain outcome (placing a lay on player X - betting that player X will lose)
+\end{itemize}
+
+Tennis is an ideal trading sport in which professional betters can speculate the large fluctuation of the betting odds during the matches to obtain profit, regardless of the match outcome. This is known as {\bf tennis trading}.
+
+
+\section{Betfair Exchange}
+A betting exchange is an entity where customers come together for betting on odds sought by themselves or offered by other punters, therefore eliminating the traditional bookmakers. Usually the odds offered on a betting exchange are better than those offered by bookmakers. A further advantage of the betting exchange is the ability to allow bets to be made in running matches, a feature which has many restrictions on a traditional bookmaker. As the odds on a tennis match are fluctuating throughout the match, this enables tennis traders to revise or improve their positions. 
+
+Claiming to have over 3 million customers and a turnover in excess of 50 million pounds per week, Betfair is the world’s largest Internet betting exchange. 
+
+Through the \emph{Betfair Developer Program}, Betfair provides a free access API which allows querying of all markets (including tennis) for events, scores, betting odds and a large number of statistics.
+
+\section{A Professional Tennis Trading Environment}
+At the moment, there is no single good professional tennis trading application to contain all the required data and statistics, traders often resorting to starting a few different applications for managing bets, displaying market data, game statistics and so on.
+
+Hence, it is the goal of this project to provide {\bf Tennis Trader} - a professional tennis trading environment - a stand-alone application to fetch all relevant data and merge it into one neatly organized interface with the aim of greatly improving the experience of in-play betters.
+The large set of features which will be included by Tennis Trader are listed and discussed in the following section.
+
+\chapter{Tennis Trader}
+
+\section{Key Features}
+The following is a list of the most important requirements and features the final application should meet:
+
+\begin{itemize}
+\item \emph{General and Navigation Features}
+	\begin{itemize}
+		\item Login and logout with Betfair username and password
+		\item Display tournaments and matches, including filtering and sorting options (e.g. show all matches or only live matches, sort by volume and so on)
+	\end{itemize}
+\item \emph{Market data}
+	\begin{itemize}
+		\item Display Back and Lay values
+		\item Indicate matched and withdrawn bets and display a recent 		history
+		\item Graphical historical display of Backs and Lays (for current game) and other relevant data (time of game start, possibility to invert axis etc.)
+\end{itemize}
+
+\item \emph{Tennis statistics}
+\begin{itemize}
+\item Display match score (non-predicted)
+\item Display players’ recent history stats and head-to-head statistics
+\item Display current match statistics (for in-play bets)
+\item Display each players recent games stats
+\end{itemize}
+
+\end{itemize}
+
+\section{Extensions}
+
+\begin{itemize}
+\item Additional features which provide more information and the possibility to place bets:
+\begin{itemize}
+\item Estimate match score based on odds (high-risk)
+\item Virtual Bet placing
+\item Real Bet placing
+\item Predict chance of a player winning next points/game/set
+ \end{itemize}
+\item \emph{Future possible extensions} - the system should be designed with a view towards extending it with the following features: 
+\begin{itemize}
+\item graphical display of market odds evolution from historic head-to-head matches
+\item predicting odds evolution in time
+\item social features (e.g. chat with other users)
+\item display recent players related news
+\end{itemize}
+\end{itemize}
+
+\chapter{Development Methodology}
+In order to deliver a fully functional project by the agreed deadline the team has decided on using a number of practices and tools to help in the development process.
+\section{Development Style}
+To make sure we are as much as possible aligned with the interests and preferences of our customer, an \emph{agile development} methodology will be used, more precisely \emph{test-driven development} with one week iterations. We also intend to experiment with \emph{pair programming} at least for the more critical back-end parts of the system (Betfair interaction, score prediction).
+
+During each iteration frequent \emph{Scrum meetings} will help keep the team informed on the progress and difficulties faced by each member, giving an up to date overview of the state of the project.  
+
+At the end of each iteration a meeting will be held. This is designed to review the newly added features and the overall status of the project, but also to discuss issues that have exceeded their allocated time slot along with possible solutions (e.g. reassigning). Furthermore, issues will be updated as the goals for the next iteration are set.
+
+Also a stable release version will be cut out from the main branch at this point. This ensures a fully working version can always be delivered to the customer - albeit not with the most recent features. 
+
+\section{Testing}
+Our test-driven approach commands we write tests even before we start writing the code. We believe this will be a useful approach for future iterations, as the project starts to grow and requirements become more challenging, but we anticipate that given that a large part of the code will be responsible with the UI, this might be rather hard to achieve.
+
+We aim to have very high \emph{(90\% plus) test coverage} for all logic classes (e.g. classes responsible for fetching and parsing data from Betfair or facilitating the score prediction functionalities) and medium-high \emph{(60\%+) test coverage for GUI classes}, including \emph{functional testing} for the latter.
+
+The resulting unit and functional tests will be run after each commit on a \emph{continuous integration server}, so that any build break is detected and fixed as soon as possible.
+
+\section{Version Control and Progress Tracking}
+For version control system, we use \emph{Git} in a centralised fashion and have a \emph{private Github repository} allocated for the project. This provides good mobility for team members - as git is a distributed version control system, it can be used even without an existing Internet connection which is required only for synchronizing with the central repository.
+
+For the initial iteration, there is only one development branch (master), but in the future switching to a per feature or per developer branch work mode is considered. A release branch will be cut out each week starting with the second iteration.
+
+Additionally, by making use of Github features (Github Issues) enables us to follow an \emph{issue driven development} style: we are able to track issues and set \emph{project milestones}. For example issues can be grouped into a milestone and linked to from git commit messages. Although statistics such as issue difficulty or time spent on issues are not provided, the system was rapidly adopted by the team due to its ease of use (as opposed to Jira for example) and the ability to present the most significant information.
+
+\section{IT Requirements}
+In order to fulfill the project requirements, access to certain technologies is required.
+The project will be built on Java, using the following software:
+\begin{itemize}
+\item \emph{Java Standard Widget Toolkit} - our main UI library, which also serves as the base for our other design tools (SWTChart).
+\item \emph{Betfair API} - API needed to communicate with the Betfair server in order to retrieve match and market data, handle user authentication and profile and so on.
+\item \emph{Apache axis2} - allows rapid transformation of WSDL specifications into plain Java classes.
+\item \emph{Ranorex/SWTBot/Selenium/HP QuickTest Pro/FitNesse} - GUI testing automation tools that will allow us to have a functional testing base for the project. We are still researching into the most appropriate tool for this task.
+\item \emph{EMMA} - free code coverage and reporting in Java.
+\item \emph{Eclipse IDE} - development environment used for the project.
+\item \emph{Eclipse Visual Editor} - GUI builder interface that allows observable editing of the user interface.
+\end{itemize}
+
+\section{Project Management}
+In order to successfully deliver the project, we need to be constantly aware of the current project status. To this purpose regular group and supervisor meetings are held - two group meetings and one with the supervisor every week.
+
+\emph{Group meetings} mainly consist of reviewing the progress of each team member and assigning issues for the next iteration, but they also include code reviews, fixing any large issues and making decisions which involve the entire team.
+
+\emph{Supervisor meetings} are needed to obtain feedback from our “client” regarding the current project design and implementation and to discuss any possible changes or extensions to the initially established requirements.
+
+Frequent \emph{Scrum meetings} are also held to ensure team members keep in touch and up-to-date throughout the iteration.
+
+\subsection{Progress Measures}
+Several progress indicators are taken into account to measure the project's progress and velocity. These are split into two categories: \emph{primary} which are highly relevant, providing accurate information and \emph{secondary} which only provide limited information.
+
+\emph{Primary Indicators}: 
+\begin{itemize}
+\item \emph{number of features accomplished} together with an associated number of points, based on its complexity, difficulty and the feedback received form our supervisor;
+\item \emph{number of issues solved} (in total and individually) multiplied by the difficulty of the issues. This gives us an indication of how much the team or an individual can accomplish in one iteration (\emph{velocity}) and provides a way for ensuring all team members contribute equally to the project over time. Additionally, this should form a good basis for assigning issues to members in future iterations;
+\item \emph{milestone completion rate} - measures how much of a specific milestone is completed by the specified deadline and by how much does total completion exceed the deadline.
+\end{itemize}
+
+\emph{Secondary indicators}
+
+These can easily indicate when something is wrong, but hardly say if anything is right. For example we expect to see an average of one-two commits per day minimum from all team members. If the number is actually much smaller, something must have been wrong. If the number is better, this does not give us much information - we do not know what the commits actually achieved but just that the member was active.
+
+\begin{itemize}
+\item \emph{Git commit statistics} - number of commits and number of changes (additions + deletions)
+\item \emph{Test coverage} - percentage of code covered by unit tests
+\item Other metrics for code complexity (e.g. reports provided by a tool such as PMD)
+\end{itemize}
+
+The project's progress and velocity will be measured by the primary indicators.
+If this is not as much as expected, the secondary indicators could help to identify the cause(s).
+
+\subsection{Team Roles}
+	All members are involved in the development of the project and have the responsibility of completing issues assigned to them. However, since unexpected problems may arise, those who are ahead of their task should help teammates fallen behind.
+
+Additionally, management, research and organisation roles have been split among the team members, which provides everyone with specific roles:
+\begin{itemize}
+\item Corina - project and meetings management, monitoring code coverage statistics
+\item Paul - repository management, research into UI APIs
+\item Shahin - research into tennis betting world
+\item Iskander - overall UI design, research into UI technology
+\item Radu - research into match modelling
+\end{itemize}
+
+\chapter{Draft Schedule}
+\section{Milestone Schedule}
+As we take an agile approach to our project, we have split the main planned features (both required and extended) on a timescale of 8 weeks ( Oct 18th - Dec 10th ), completing a milestone and one iterations at the end of each week. The first 5 milestones are concerned with achieving all the required features, whilst the latter three aim at implementing the extensions.
+
+After developing a simple functional application within the first two weeks (allowing selection of matches based on various criteria, score display, login and logout) we further aim to extend the information presented to the user using various tennis websites and feed information to allow statistical processing. This step will require research into APIs, fetching data, and UI representation. Between weeks two and five we will focus on organising statistical tennis data and providing a useful graph representation of the bet market data obtained through the Betfair API.
+
+Finally, the last three milestones (weeks five to seven) will aim to provide  bet placing functionality and match/market prediction tools based on statistical modelling.
+
+{\bf Table 1} (page 13) summarizes the expected number of iterations and features to be implemented by each Milestone.
+
+\section{Analysis of Technical Features}
+Most of the required features of our application have similar technical requiremnts such as graphical displays and Betfair API connectivity. 
+
+{\bf Table 2} (page 13) contains the list of features and the necessary technical components for their implementation.
+
+Every widget contained by our application requires its specific UI design. We are using the SWT library for general UI design and specific APIs to display graphs and charts. The main window is separated in display and navigation panel as well as a a menu and toolbar(all SWT containers).
+
+Many of our features require using the Betfair API to fetch market data from Betfair. To accomplish this, a number of auto-generated Java classes - based on the WSDL Betfair specifications - have been used. Also, to ensure the connection to Betfair remains open, at least one request every 20 minutes is performed.
+
+Whilst the navigation panel allows retrieval of the match of interest (filtered and sorted by tournament) the display panel will be updated with information relating to that match. As mentioned above, we fetch Betfair market data, as well as live scores and statistics, displaying them in tables and SWT Browser widgets. We plot historic odds of the match using a SWT Chart, for easy market comparison.
+
+The score data is retrieved from ‘www.livexscores.com/tennis’ using a Java library built for unit testing web applications (HtmlUnit). The website's Javascript and Ajax is handled via HtmlUnit using a browser emulator (web client), and the relevant score data is then fetched regularly and parsed by our  application. The live score data (containing points score and serving player) is updated on the above site from official ATP feeds that link directly to match umpires. The data we get can be further used together with server point percentage to probabilistically estimate match outcomes.
+
+\pagebreak
+
+{\bf This page is intentionally left blank.}
+
+\pagebreak
+
+\chapter{Detailed Schedule for First Iteration}
+
+\section{Plan for First Iteration}
+The first iteration is scheduled from 18th October to 25th October. The dates have been set such that an iteration is always completed the day before our supervisor meeting. This way we should always be able to provide a very up to date state of our system and incorporate any potential feedback (enhancements, feature requests) as soon as possible.
+
+The most important goal for this iteration is to create a prototype for our application. Other goals include setting up the entire “infrastructure” for the project (e.g build system, continuous integration, version control), gaining familiarity with the APIs used throughout the project and agreeing on coding practices (e.g. formatting, class naming, documentation standards).
+
+\section{Plan Summary}
+\begin{tabular} {l|l}
+{\bf Days} & {\bf Tasks} \\
+\hline
+Wed & Planning Meeting \\
+Wed - Sat & Code mashup \\
+Sat - Mon & Code refactoring and additional functionalities \\
+Tue & Final code cleanups and testing, closing of milestone,\\
+ &  code lockdown for Wednesday \\
+\end{tabular}
+
+\section{First Iteration task assignment}
+
+\begin{tabular}{c|l|c|c|c}
+
+{\bf No} & {\bf Issue} & {\bf Assigned To} & {\bf Status} & {\bf Difficulty} \\
+\hline
+1 & Login front-end & Paul & Closed & 1 \\
+2 & Login with Betfair account &  Corina & Closed & 3 \\
+3 & Basic Graph Display& Sahin& Closed& 3 \\
+4 & Game score display&  Radu& Closed& 3 \\
+5 & Navigation Panel& Iskander& Closed& 3 \\
+6 & Navigation Panel Quick Search& Paul& Closed& 2 \\
+7 & Navigation Panel Tree& Paul& Closed& 1 \\
+8 & Display Panel Tab Folder& Paul& Closed& 1 \\
+9 & Populate Navigation Tree with data from Betfair API& Paul& Closed& 1 \\
+10 & Integrate game score within each match tab& Paul& Closed& 1 \\
+11 & Filter events from Betfair to get tennis matches only& Corina& Closed& 3 \\
+12 & Integrate graph display within each match tab& Sahin& Closed& 1 \\
+13 & Add Toolbar and Application Menu& Iskander& Closed& 2 \\
+\end{tabular}
+
+
+\section{Potential Risks}
+We have classified potential risks into three main categories:
+\begin{itemize}
+\item Technology risks
+	\begin{itemize}
+		\item initially selected APIs do not provide adequate functionality
+		\item critical APIs (e.g. Betfair) are hard to use
+		\item other selected APIs (e.g. SWTChart) are hard to integrate
+	\end{itemize}
+
+	\item Team risks
+		\begin{itemize}
+		\item different work ethics among team members
+		\item different coding practices among team members
+	\end{itemize}
+
+	\item Other risks
+		\begin{itemize}
+		\item hard to predict team member's availability - (e.g possible interviews for Industrial Placement, coursework deadlines)
+	\end{itemize}
+
+\end{itemize}
+
+\section{Progress Measures}
+
+Below we present an analysis of the first iteration under the criteria outlined above for measuring progress: 
+
+\begin{itemize}
+\item \emph{Feature completion}:
+
+\begin{tabular} {l|c|c|c}
+{\bf Feature} & {\bf Difficulty} & {\bf Status}  & {\bf Client Feedback} \\
+\hline
+Login/logout using Betfair account & 4 & Completed & Very Good\\
+Navgiation panel with live match data & 6 & Completed & Very Good \\
+and quick search & & \\
+ATP world tour statistics & 2 & Completed & Good\\
+\end{tabular}
+
+\pagebreak
+
+\item \emph{Issues}:
+
+\begin{tabular} {l|c|c|c}
+{\bf Member} & {\bf No Issues} & {\bf Total difficulty} \\
+\hline
+Corina & 2 & 6 \\
+Iskander & 2 & 5 \\
+Paul & 6 & 6 \\
+Radu & 1 & 3 \\
+Sahin & 2 & 4 \\
+\end{tabular}
+
+{\bf Total Team Velocity} = 24 story points per iteration.
+
+\item \emph{Milestone One 100\% completed and deadline met}.
+
+{\bf Hence, primary indicators show a  good situation}.
+
+\item \emph{Github statistics}
+
+\begin{tabular} {c|c|c}
+{\bf Member} & {\bf Commits} & {\bf Changes} \\
+\hline
+Corina & 12 & 1234 \\
+Iskander & 8 & 857 \\
+Paul & 14 & 1337 \\
+Radu & 7 & 732\\
+Sahin & 8 & 643\\
+\end{tabular}
+
+This shows a good activity from all members, indicating that the repository has been set up correctly and the instructions for downloading, installing the project and synchronizing with the repository were clear enough to allow members to commit early and often.
+
+\item \emph{Test coverage (N/A)}
+
+Currently no tests have been written. This decision was made given the “experimental” nature of the first milestone and that none of the developers were familiar with the APIs they were working it. It was the intent of this milestone to measure team velocity, giving an indication of how much can be accomplished in one week. 
+Factoring in an expected increasing familiarity with the API, but also the writing of tests (which will take additional time) we expect the velocity to remain similar or reduce slightly.
+
+\item \emph{Other metrics for code complexity (N/A)}
+
+Again these were not checked since the code is in a state of flux, with a large number of “ad-hoc” refactorings.
+\end{itemize}
+
+\chapter{Conclusions}
+In light of the above progress measures, we believe enough has been accomplished in the first iteration to favor an optimistic view, that the project will be delivered "on time and on budget".
+
+However, this is subject to the team addressing the test coverage and keeping code complexity indicators under control - a healthy code base should allow much faster development.
+
+Most importantly, our prototype has been designed and has earned good reviews, also providing invaluable feedback, which can be incorporated into the next release.
+
+\begin{thebibliography}{9}
+
+\bibitem{agilesam}
+  Jonathan Rasmusson,
+  \emph{The Agile Samurai},
+	Pragmatic Bookshelf,
+	October 2010.
+
+\bibitem{}
+	Jeff Langr and Tim Ottinger,
+	\emph{Agile in a Flash},
+	Pragmatic Bookshelf, 
+	January 2011.
+
+\bibitem{}
+	Robert Chatley's course on Software Engineering Methods
+	\emph{http://www.doc.ic.ac.uk/~rbc/302/}, Imperial College London
+
+\bibitem{}
+	Article on Software Development Risks,
+	\emph{http://fox.wikis.com/wc.dll?Wiki~SoftwareDevelopmentRiskFactors}
+
+\end{thebibliography}
+
+\end{document}
