@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+@Ignore
 public class LoginShellTest extends DisplayTest {    
     private LoginShell ls;
     private Shell shell;
@@ -37,7 +38,6 @@ public class LoginShellTest extends DisplayTest {
 
     }
 
-    @Ignore
     @Test
     public void correctLoginSuccess() throws Exception {
         SWTBotText username = bot.text("username");

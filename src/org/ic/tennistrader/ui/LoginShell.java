@@ -11,11 +11,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -32,8 +30,6 @@ public class LoginShell {
 	List<Listener> loginSucces = new ArrayList<Listener>();
 
 	private Shell loginShell;
-
-	private Label result;
 
 	private static Logger log = Logger.getLogger(LoginShell.class);
 
@@ -56,10 +52,6 @@ public class LoginShell {
 
 		final Image loginImg = new Image(loginShell.getDisplay(),
 				"images/login/login.png");
-		final Image cancel = new Image(loginShell.getDisplay(),
-				"images/login/cancel.png");
-		final Image accept = new Image(loginShell.getDisplay(),
-				"images/login/accept.png");
 
 		loginShell.setBackgroundImage(loginImg);
 
@@ -105,14 +97,8 @@ public class LoginShell {
 		password.setBounds(180, 210, 300, 30);
 
 		Button login = makeLoginButton(display);
-		login.setImage(accept);
-		login.pack();
-		login.setLocation(300, 250);
 
 		Button cancelButton = makeCancelButton(display);
-		cancelButton.setImage(cancel);
-		cancelButton.pack();
-		cancelButton.setLocation(400, 250);
 		cancelButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				loginShell.dispose();
@@ -148,58 +134,41 @@ public class LoginShell {
 
 	private Button makeCancelButton(Display display) {
 
+		final Image cancelImg = new Image(loginShell.getDisplay(),
+				"images/login/cancel.png");
 		Button cancel = new Button(loginShell, SWT.PUSH);
 		cancel.setText("Cancel");
-
-		Color init = new org.eclipse.swt.graphics.Color(display, 3, 3, 3);
-		Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
-
-		cancel.setForeground(init);
-
-		final Timeline rolloverTimeline = new Timeline(cancel);
-		rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
-		rolloverTimeline.setDuration(100);
-
-		cancel.addMouseTrackListener(new MouseTrackListener() {
-
-			@Override
-			public void mouseEnter(MouseEvent arg0) {
-				rolloverTimeline.play();
-
-			}
-
-			@Override
-			public void mouseExit(MouseEvent arg0) {
-				rolloverTimeline.playReverse();
-
-			}
-
-			@Override
-			public void mouseHover(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-		});
+		cancel.setImage(cancelImg);
+		cancel.pack();
+		cancel.setLocation(400, 250);
+		addHighlightListener(display, cancel);
 		return cancel;
 
 	}
-
+	
 	private Button makeLoginButton(final Display display) {
 		Button login = new Button(loginShell, SWT.PUSH);
-		GridData buttonData = new GridData();
+		final Image accept = new Image(loginShell.getDisplay(),
+				"images/login/accept.png");
+		login.setImage(accept);
 		login.setText("Login");
-		login.setLayoutData(buttonData);
+		login.pack();
+		login.setLocation(300, 250);
+		addHighlightListener(display, login);
+		return login;
+	}
 
+	private void addHighlightListener(Display display, Button button) {
 		Color init = new org.eclipse.swt.graphics.Color(display, 3, 3, 3);
 		Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
 
-		login.setForeground(init);
+		button.setForeground(init);
 
-		final Timeline rolloverTimeline = new Timeline(login);
+		final Timeline rolloverTimeline = new Timeline(button);
 		rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
 		rolloverTimeline.setDuration(100);
 
-		login.addMouseTrackListener(new MouseTrackListener() {
+		button.addMouseTrackListener(new MouseTrackListener() {
 
 			@Override
 			public void mouseEnter(MouseEvent arg0) {
@@ -215,11 +184,8 @@ public class LoginShell {
 
 			@Override
 			public void mouseHover(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
-		return login;
 	}
 
 	public void run(final Display display) {
