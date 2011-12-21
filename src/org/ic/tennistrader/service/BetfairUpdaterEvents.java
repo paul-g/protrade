@@ -2,7 +2,8 @@ package org.ic.tennistrader.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.ic.tennistrader.domain.EventBetfair;
+
+import org.ic.tennistrader.domain.markets.EventBetfair;
 
 public class BetfairUpdaterEvents {
 	private List<EventBetfair> events;

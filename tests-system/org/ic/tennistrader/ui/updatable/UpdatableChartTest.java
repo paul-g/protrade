@@ -3,7 +3,7 @@ package org.ic.tennistrader.ui.updatable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.LiveDataFetcher;

@@ -1,7 +1,7 @@
 package org.ic.tennistrader.ui.updatable;
 
 import org.eclipse.swt.events.DisposeListener;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 
 public interface UpdatableWidget {
 	/*

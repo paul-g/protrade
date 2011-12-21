@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;

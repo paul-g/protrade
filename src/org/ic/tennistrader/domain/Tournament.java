@@ -2,6 +2,7 @@ package org.ic.tennistrader.domain;
 
 import java.util.List;
 
+import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.match.RealMatch;
 
 public class Tournament {

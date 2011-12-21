@@ -2,7 +2,7 @@ package org.ic.tennistrader.service;
 
 import static org.junit.Assert.*;
 
-import org.ic.tennistrader.domain.EventBetfair;
+import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.junit.Before;
 import org.junit.Test;

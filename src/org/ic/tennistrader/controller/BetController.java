@@ -1,8 +1,6 @@
 package org.ic.tennistrader.controller;
 
 import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
@@ -15,7 +13,7 @@ public class BetController {
 	private final List<OddsButton> player2BackButtons;
 	private final List<OddsButton> player2LayButtons;
 	private Match match;
-	private static Logger log = Logger.getLogger(BetController.class);
+	//private static Logger log = Logger.getLogger(BetController.class);
 	
 	public BetController(List<OddsButton> player1Backbuttons, List<OddsButton> player1LayButtons, 
 			List<OddsButton> player2BackButtons, List<OddsButton> player2LayButtons, Match match) {

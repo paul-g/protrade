@@ -1,4 +1,4 @@
-package org.ic.tennistrader.domain;
+package org.ic.tennistrader.domain.match;
 
 import static org.junit.Assert.assertEquals;
 import org.ic.tennistrader.domain.match.SetScore;

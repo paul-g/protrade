@@ -2,7 +2,7 @@ package org.ic.tennistrader.model;
 
 import java.util.ArrayList;
 import org.ic.tennistrader.domain.Bet;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.PlayerEnum;

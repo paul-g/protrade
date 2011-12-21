@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 
 import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;

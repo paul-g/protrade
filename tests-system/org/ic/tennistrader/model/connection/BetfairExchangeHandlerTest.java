@@ -3,8 +3,8 @@ package org.ic.tennistrader.model.connection;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import java.util.List;
-import org.ic.tennistrader.domain.MOddsMarketData;
 import org.ic.tennistrader.domain.Tournament;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.junit.Test;
 
