@@ -8,8 +8,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.ic.tennistrader.Main;
-import org.ic.tennistrader.authentication.Encrypt;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -37,6 +37,7 @@ public class LoginShellTest extends DisplayTest {
 
     }
 
+    @Ignore
     @Test
     public void correctLoginSuccess() throws Exception {
         SWTBotText username = bot.text("username");

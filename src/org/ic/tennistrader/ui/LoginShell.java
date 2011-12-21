@@ -9,9 +9,9 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -29,251 +29,266 @@ import org.pushingpixels.trident.Timeline;
 
 public class LoginShell {
 
-    List<Listener> loginSucces = new ArrayList<Listener>();
+	List<Listener> loginSucces = new ArrayList<Listener>();
 
-    private Shell loginShell;
+	private Shell loginShell;
 
-    private Label result;
+	private Label result;
 
-    private static Logger log = Logger.getLogger(LoginShell.class);
+	private static Logger log = Logger.getLogger(LoginShell.class);
 
-    private static final String TITLE = "Tennis Trader Login";
+	private static final String TITLE = "Tennis Trader Login";
 
-    public static final String SUCCESS = "Login successful! Please wait...";
+	public static final String SUCCESS = "Login successful! Please wait...";
 
-    public static final String FAIL = "Login failed! Please try again...";
+	public static final String FAIL = "Login failed! Please try again...";
 
-    private ProgressBar bar;
+	private ProgressBar bar;
 
-    public Shell show() {
-        return loginShell;
-    }
+	public Shell show() {
+		return loginShell;
+	}
 
-    public LoginShell(final Display display) {
-        this.loginShell = new Shell(display, SWT.MAX/* SWT.NO_TRIM|SWT.ON_TOP */);// SWT.TRANSPARENCY_ALPHA);
-        loginShell.setSize(400, 160);
-        loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+	public LoginShell(final Display display) {
+		this.loginShell = new Shell(display, SWT.NO_TRIM);// SWT.TRANSPARENCY_ALPHA);
+		loginShell.setSize(600, 350);
+		loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-        final Image logoUp = new Image(loginShell.getDisplay(),
-                "images/sports_tennis.jpg");
-        loginShell.setBackgroundImage(logoUp);
+		final Image loginImg = new Image(loginShell.getDisplay(),
+				"images/login/login.png");
+		final Image cancel = new Image(loginShell.getDisplay(),
+				"images/login/cancel.png");
+		final Image accept = new Image(loginShell.getDisplay(),
+				"images/login/accept.png");
 
-        Rectangle rect = loginShell.getClientArea();
+		loginShell.setBackgroundImage(loginImg);
 
-        loginShell.setText(TITLE);
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 5;
-        gridLayout.marginTop = 0;
+		// Region region = new Region();
+		// region.add(circle(67, 67, 67));
+		// define the shape of the shell using setRegion
+		// loginShell.setRegion(region);
 
-        loginShell.setLayout(gridLayout);
+		Listener l = new Listener() {
+			Point origin;
 
-        GridData gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData.horizontalSpan = 1;
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.MouseDown:
+					origin = new Point(e.x, e.y);
+					break;
+				case SWT.MouseUp:
+					origin = null;
+					break;
+				case SWT.MouseMove:
+					if (origin != null) {
+						Point p = display.map(loginShell, null, e.x, e.y);
+						loginShell.setLocation(p.x - origin.x, p.y - origin.y);
+					}
+					break;
+				}
+			}
+		};
+		loginShell.addListener(SWT.MouseDown, l);
+		loginShell.addListener(SWT.MouseUp, l);
+		loginShell.addListener(SWT.MouseMove, l);
 
-        GridData gridData2 = new GridData(150, 16);
-        gridData2.horizontalAlignment = GridData.FILL_HORIZONTAL;
-        gridData2.horizontalSpan = 4;
+		Rectangle rect = loginShell.getClientArea();
 
-        Label loginLabel = new Label(loginShell, SWT.NONE);
-        loginLabel.setText("Username: ");
-        loginLabel.setLayoutData(gridData);
+		loginShell.setText(TITLE);
 
-        final Text username = new Text(loginShell, SWT.NONE);
-        username.setLayoutData(gridData2);
-        username.setText("username");
+		final Text username = new Text(loginShell, SWT.NONE);
+		username.setText("username");
+		username.setBounds(180, 165, 300, 30);
 
-        Label passLabel = new Label(loginShell, SWT.NONE);
-        passLabel.setLayoutData(gridData);
-        passLabel.setText("Password: ");
+		final Text password = new Text(loginShell, SWT.PASSWORD);
+		password.setText("password");
+		password.setBounds(180, 210, 300, 30);
 
-        final Text password = new Text(loginShell, SWT.PASSWORD);
-        password.setLayoutData(gridData2);
-        password.setText("password");
+		Button login = makeLoginButton(display);
+		login.setImage(accept);
+		login.pack();
+		login.setLocation(300, 250);
 
-        // just for alignment
-        @SuppressWarnings("unused")
-        Label blankLabel = new Label(loginShell, SWT.NONE);
+		Button cancelButton = makeCancelButton(display);
+		cancelButton.setImage(cancel);
+		cancelButton.pack();
+		cancelButton.setLocation(400, 250);
+		cancelButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				loginShell.dispose();
+			}
+		});
 
-        @SuppressWarnings("unused")
-        Label blankLabel2 = new Label(loginShell, SWT.NONE);
+		login.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				String user = username.getText();
+				if (checkLogin(user, password.getText())) {
+					Main.username = user;
+					updateResult(SUCCESS);
+					handleLoginSuccess();
+				} else
+					updateResult(FAIL);
+			}
+		});
 
-        Button login = makeLoginButton(display);
-        
-        Button bypass = new Button(loginShell, SWT.PUSH);
-        bypass.addListener(SWT.Selection, new Listener(){
+		// Center the login screen
+		Monitor primary = display.getPrimaryMonitor();
+		Rectangle bounds = primary.getBounds();
+
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+		loginShell.setLocation(x, y);
+
+		this.bar = new ProgressBar(loginShell, SWT.SMOOTH);
+		this.bar.setBounds(50, 305, 500, 20);
+		bar.setToolTipText("Test");
+		bar.setVisible(false);
+		loginShell.open();
+	}
+
+	private Button makeCancelButton(Display display) {
+
+		Button cancel = new Button(loginShell, SWT.PUSH);
+		cancel.setText("Cancel");
+
+		Color init = new org.eclipse.swt.graphics.Color(display, 3, 3, 3);
+		Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
+
+		cancel.setForeground(init);
+
+		final Timeline rolloverTimeline = new Timeline(cancel);
+		rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
+		rolloverTimeline.setDuration(100);
+
+		cancel.addMouseTrackListener(new MouseTrackListener() {
 
 			@Override
-			public void handleEvent(Event arg0) {
-				LoginShell.this.dispose();
-				MainWindow mw = new MainWindow(display);
-				mw.show();
-				mw.run(display);
+			public void mouseEnter(MouseEvent arg0) {
+				rolloverTimeline.play();
+
 			}
-        
-        });
 
-        // test account button
-        makeTestAccount(display);
+			@Override
+			public void mouseExit(MouseEvent arg0) {
+				rolloverTimeline.playReverse();
 
-        GridData resultData = new GridData();
-        resultData.horizontalSpan = 5;
-        this.result = new Label(loginShell, SWT.NONE);
-        result.setLayoutData(resultData);
-        result.setText(FAIL.length() > SUCCESS.length() ? FAIL : SUCCESS);
-        result.setVisible(false);
+			}
 
-        login.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                String user = username.getText();
-                if (checkLogin(user, password.getText())) {
-                    Main.username = user;
-                    updateResult(SUCCESS);
-                    handleLoginSuccess();
-                } else
-                    updateResult(FAIL);
-            }
-        });
+			@Override
+			public void mouseHover(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 
-        // Center the login screen
-        Monitor primary = display.getPrimaryMonitor();
-        Rectangle bounds = primary.getBounds();
+			}
+		});
+		return cancel;
 
-        int x = bounds.x + (bounds.width - rect.width) / 2;
-        int y = bounds.y + (bounds.height - rect.height) / 2;
-        loginShell.setLocation(x, y);
+	}
 
-        this.bar = new ProgressBar(loginShell, SWT.SMOOTH);
+	private Button makeLoginButton(final Display display) {
+		Button login = new Button(loginShell, SWT.PUSH);
+		GridData buttonData = new GridData();
+		login.setText("Login");
+		login.setLayoutData(buttonData);
 
-        GridData barData = new GridData();
-        barData.grabExcessHorizontalSpace = true;
-        barData.horizontalSpan = 5;
-        barData.horizontalAlignment = SWT.FILL;
-        bar.setLayoutData(barData);
-        bar.setVisible(false);
-        loginShell.open();
+		Color init = new org.eclipse.swt.graphics.Color(display, 3, 3, 3);
+		Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
 
-    }
+		login.setForeground(init);
 
-    private Button makeLoginButton(final Display display) {
-        Button login = new Button(loginShell, SWT.PUSH);
-        GridData buttonData = new GridData();
-        login.setText("Login");
-        login.setLayoutData(buttonData);
+		final Timeline rolloverTimeline = new Timeline(login);
+		rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
+		rolloverTimeline.setDuration(100);
 
-        Color init = new org.eclipse.swt.graphics.Color(display, 3, 3, 3); 
-        Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
-        
-        login.setForeground(init);
+		login.addMouseTrackListener(new MouseTrackListener() {
 
-        final Timeline rolloverTimeline = new Timeline(login);
-        rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
-        rolloverTimeline.setDuration(100);
-        
-      
-        login.addMouseTrackListener(new MouseTrackListener() {
+			@Override
+			public void mouseEnter(MouseEvent arg0) {
+				rolloverTimeline.play();
 
-            @Override
-            public void mouseEnter(MouseEvent arg0) {
-                rolloverTimeline.play();
+			}
 
-            }
+			@Override
+			public void mouseExit(MouseEvent arg0) {
+				rolloverTimeline.playReverse();
 
-            @Override
-            public void mouseExit(MouseEvent arg0) {
-                rolloverTimeline.playReverse();
+			}
 
-            }
+			@Override
+			public void mouseHover(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 
-            @Override
-            public void mouseHover(MouseEvent arg0) {
-                // TODO Auto-generated method stub
+			}
+		});
+		return login;
+	}
 
-            }
-        });
-        return login;
-    }
+	public void run(final Display display) {
+		while (!loginShell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
 
-    public void run(final Display display) {
-        while (!loginShell.isDisposed()) {
-            if (!display.readAndDispatch())
-                display.sleep();
-        }
+		display.dispose();
+	}
 
-        display.dispose();
-    }
+	private static boolean checkLogin(String username, String password) {
+		// Perform the login
+		try {
+			BetfairConnectionHandler.login(username, password);
+		} catch (LoginFailedException e) {
+			log.info(e.getMessage());
+			return false;
+		}
 
-    private void makeTestAccount(final Display display) {
-        Button testAccount = new Button(loginShell, SWT.NONE);
-        testAccount.setText("Test");
-        testAccount.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event arg0) {
-                String username = Main.testUsername;
-                String password = Main.testPassword;
-                log.info("username " + username);
-                Main.username = Main.testUsername;
-                Main.password = Main.testPassword;
-                if (checkLogin(username, password)) {
-                    updateResult(SUCCESS);
-                    handleLoginSuccess();
-                } else
-                    updateResult(FAIL);
-            }
-        });
-    }
+		log.info("Login succeeded with token - "
+				+ BetfairConnectionHandler.getApiContext().getToken());
 
-    private static boolean checkLogin(String username, String password) {
-        // Perform the login
-        try {
-            BetfairConnectionHandler.login(username, password);
-        } catch (LoginFailedException e) {
-            log.info(e.getMessage());
-            return false;
-        }
+		return true;
+	}
 
-        log.info("Login succeeded with token - "
-                + BetfairConnectionHandler.getApiContext().getToken());
+	private void updateResult(String message) {
+		this.loginShell.update();
+	}
 
-        return true;
-    }
+	public void dispose() {
+		loginShell.dispose();
+	}
 
-    private void updateResult(String message) {
-        result.setText(message);
-        result.setVisible(true);
-        result.update();
-        this.loginShell.update();
-        if (message.equals(SUCCESS))
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
+	public void addLoginSuccessListener(Listener listener) {
+		loginSucces.add(listener);
+	}
 
-    }
+	public void handleLoginSuccess() {
+		for (Listener l : loginSucces)
+			l.handleEvent(new Event());
+	}
 
-    public void dispose() {
-        loginShell.dispose();
-    }
+	public void setText(String text) {
+		//TODO: update text on progress bar
+	}
 
-    public void addLoginSuccessListener(Listener listener) {
-        loginSucces.add(listener);
-    }
+	public void updateProgressBar(int amount) {
+		if (!bar.getVisible())
+			bar.setVisible(true);
+		bar.setSelection(bar.getSelection() + amount);
+	}
 
-    public void handleLoginSuccess() {
-        for (Listener l : loginSucces)
-            l.handleEvent(new Event());
-    }
+	public void finishProgressBar() {
+		bar.setSelection(bar.getMaximum());
+	}
 
-    public void setText(String text) {
-        result.setText(text + "...");
-    }
+	static int[] circle(int r, int offsetX, int offsetY) {
+		int[] polygon = new int[8 * r + 4];
+		// x^2 + y^2 = r^2
+		for (int i = 0; i < 2 * r + 1; i++) {
+			int x = i - r;
+			int y = (int) Math.sqrt(r * r - x * x);
+			polygon[2 * i] = offsetX + x;
+			polygon[2 * i + 1] = offsetY + y;
+			polygon[8 * r - 2 * i - 2] = offsetX + x;
+			polygon[8 * r - 2 * i - 1] = offsetY - y;
+		}
+		return polygon;
+	}
 
-    public void updateProgressBar(int amount) {
-        if (!bar.getVisible())
-            bar.setVisible(true);
-        bar.setSelection(bar.getSelection() + amount);
-    }
-
-    public void finishProgressBar() {
-        bar.setSelection(bar.getMaximum());
-    }
 }
