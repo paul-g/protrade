@@ -84,7 +84,6 @@ public class SetScore {
     }
 
     public boolean isFinished() {
-        // found bug - (>= 6)
         return (playerOneGames == 7 || playerTwoGames == 7)
                 || (Math.abs(playerOneGames - playerTwoGames) >= 2 && (playerOneGames >= 6 || playerTwoGames >= 6));
     }

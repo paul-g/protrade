@@ -1,8 +1,9 @@
 package org.ic.tennistrader.domain.match;
 
 import java.util.ArrayList;
-import org.ic.tennistrader.domain.EventBetfair;
-import org.ic.tennistrader.domain.MOddsMarketData;
+
+import org.ic.tennistrader.domain.markets.EventBetfair;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 
@@ -25,7 +26,7 @@ public class RealMatch extends Match{
 		    this.player2.setLastname(names[1]);
 		    //System.out.println(player1 + "  --- " + player2 + " --- " + names[0]);
 	    }
-		this.setEventBetfair(eb);
+	    this.eventBetfair = eb;
 		setMarketDatas(new ArrayList<MOddsMarketData>());
 	}
 	
@@ -87,4 +88,14 @@ public class RealMatch extends Match{
     public boolean isFromFile() {
         return false;
     }
+    
+    /*
+    public int getMatchOddsMarketId() throws MarketNotFoundException{
+    	for (EventMarketBetfair emb : this.eventBetfair.getChildren()) {
+    		if (emb instanceof MarketBetfair && emb.getName().equals("name"))
+    			return emb.getBetfairId();
+    	}
+    	throw new MarketNotFoundException();
+    }
+    */
 }

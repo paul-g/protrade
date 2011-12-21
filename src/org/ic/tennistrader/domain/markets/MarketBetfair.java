@@ -1,4 +1,5 @@
-package org.ic.tennistrader.domain;
+package org.ic.tennistrader.domain.markets;
+
 
 public class MarketBetfair extends EventMarketBetfair {
 	//private String player1, player2;

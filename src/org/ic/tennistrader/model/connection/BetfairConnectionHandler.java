@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.ic.tennistrader.domain.EventMarketBetfair;
-import org.ic.tennistrader.domain.MarketBetfair;
-import org.ic.tennistrader.domain.EventBetfair;
 import org.ic.tennistrader.domain.Tournament;
+import org.ic.tennistrader.domain.markets.EventBetfair;
+import org.ic.tennistrader.domain.markets.EventMarketBetfair;
+import org.ic.tennistrader.domain.markets.MarketBetfair;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;

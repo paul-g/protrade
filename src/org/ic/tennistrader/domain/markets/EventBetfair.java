@@ -1,6 +1,7 @@
-package org.ic.tennistrader.domain;
+package org.ic.tennistrader.domain.markets;
 
 import java.util.List;
+
 
 public class EventBetfair extends EventMarketBetfair{
 	

@@ -1,4 +1,4 @@
-package org.ic.tennistrader.domain;
+package org.ic.tennistrader.domain.markets;
 
 import java.util.ArrayList;
 import java.util.Date;

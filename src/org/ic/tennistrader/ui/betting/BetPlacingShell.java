@@ -21,10 +21,6 @@ public class BetPlacingShell {
 	private Text amountText;
 	private Text oddsText;
 	private Label errorLabel, profitLabel, liabilityLabel;
-	public Label getErrorLabel() {
-		return errorLabel;
-	}
-
 	private static final String AMOUNT_NUMBER_EXCEPTION = "Please ensure the amount is a valid number.";
 	private static final String ODDS_NUMBER_EXCEPTION = "Please ensure the odds are a valid number.";
 	private static final String INVALID_PRICE = "Please ensure the odds are a valid price value.";
@@ -315,5 +311,9 @@ public class BetPlacingShell {
 
 	public void setLocation(int x, int y) {
 		betShell.setLocation(x, y);
+	}
+	
+	public Label getErrorLabel() {
+		return errorLabel;
 	}
 }

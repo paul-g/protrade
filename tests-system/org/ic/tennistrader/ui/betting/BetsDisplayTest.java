@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Label;
 import static org.ic.tennistrader.utils.Pair.pair;
 import static org.junit.Assert.*;
 import org.ic.tennistrader.domain.Bet;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;

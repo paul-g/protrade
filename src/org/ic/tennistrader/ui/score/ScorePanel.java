@@ -1,7 +1,7 @@
 package org.ic.tennistrader.ui.score;
 
 import org.eclipse.swt.events.DisposeListener;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 

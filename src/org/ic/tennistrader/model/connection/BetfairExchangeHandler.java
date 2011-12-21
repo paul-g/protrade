@@ -2,8 +2,10 @@ package org.ic.tennistrader.model.connection;
 
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
-import org.ic.tennistrader.domain.EventBetfair;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.EventBetfair;
+import org.ic.tennistrader.domain.markets.EventMarketBetfair;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MarketBetfair;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
@@ -20,43 +22,46 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 
 	// returns the match odds market data info
 	public static MOddsMarketData getMarketOdds(EventBetfair m) {
+		int marketId = -1;
+		for (EventMarketBetfair emb : m.getChildren()) {
+			if (emb instanceof MarketBetfair
+					&& emb.getName().equals("Match Odds"))
+				marketId = emb.getBetfairId();
+		}
 		MOddsMarketData modds = new MOddsMarketData();
 		try {
-			GetEventsResp resp = GlobalAPI.getEvents(apiContext, m
-					.getBetfairId());
-			// add the list of possible events - not needed since we only want
-			// markets
-			// add the list of possible markets
-			MarketSummary[] markets = resp.getMarketItems().getMarketSummary();
-			if (markets == null) {
-				markets = new MarketSummary[] {};
-			}
-			MarketSummary marketOdds = null;
-			for (MarketSummary ms : markets) {
-				// tournaments.add(new Match(ms.getMarketName(), "snd player",
-				// ms.getMarketId()));
-				if (ms.getMarketName().equals("Match Odds")) {
-					// System.out.println("YES");
-					marketOdds = ms;
+			if (marketId == -1) {
+				GetEventsResp resp = GlobalAPI.getEvents(apiContext, m
+						.getBetfairId());
+				// add the list of possible markets
+				MarketSummary[] markets = resp.getMarketItems()
+						.getMarketSummary();
+				if (markets == null) {
+					markets = new MarketSummary[] {};
+				}
+				for (MarketSummary ms : markets) {
+					if (ms.getMarketName().equals("Match Odds")) {
+						// marketOdds = ms;
+						marketId = ms.getMarketId();
+					}
 				}
 			}
 			// create the string to display the Match Odds
-			if (marketOdds != null) {
-				Exchange selectedExchange = marketOdds.getExchangeId() == 1 ? Exchange.UK
-						: Exchange.AUS;
+			if (marketId != -1) {
+				Exchange selectedExchange = Exchange.UK;
+				// marketOdds.getExchangeId() == 1 ? Exchange.UK : Exchange.AUS;
 				Market selectedMarket = ExchangeAPI.getMarket(selectedExchange,
-						apiContext, marketOdds.getMarketId());
+						apiContext, marketId);
 				InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(
 						selectedExchange, apiContext, selectedMarket
 								.getMarketId());
-				// Display.showMarket(selectedExchange, selectedMarket, prices);
 				modds.setExchange(selectedExchange.toString());
 				modds.setDate(selectedMarket.getMarketTime().getTime());
 				modds.setMatchStatus(selectedMarket.getMarketStatus()
 						.toString());
 				modds.setLocation(selectedMarket.getCountryISO3());
 				modds.setDelay(prices.getInPlayDelay());
-				
+
 				int i = 0;
 				for (InflatedRunner r : prices.getRunners()) {
 					Runner marketRunner = null;
@@ -68,14 +73,16 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 					}
 					if (i == 0) {
 						modds.setPl1LastMatchedPrice(r.getLastPriceMatched());
-						modds.setPlayer1TotalAmountMatched(r.getTotalAmountMatched());
+						modds.setPlayer1TotalAmountMatched(r
+								.getTotalAmountMatched());
 						modds.setPlayer1(marketRunner.getName());
 						modds.setPl1Back(setBackValues(r));
 						modds.setPl1Lay(setLayValues(r));
 						modds.setPlayer1SelectiondId(r.getSelectionId());
 					} else {
 						modds.setPl2LastMatchedPrice(r.getLastPriceMatched());
-						modds.setPlayer2TotalAmountMatched(r.getTotalAmountMatched());
+						modds.setPlayer2TotalAmountMatched(r
+								.getTotalAmountMatched());
 						modds.setPlayer2(marketRunner.getName());
 						modds.setPl2Back(setBackValues(r));
 						modds.setPl2Lay(setLayValues(r));
@@ -143,7 +150,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		msg += ("") + "\n";
 		return msg;
 	}
-	
+
 	private static ArrayList<Pair<Double, Double>> setBackValues(
 			InflatedRunner r) {
 		ArrayList<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();

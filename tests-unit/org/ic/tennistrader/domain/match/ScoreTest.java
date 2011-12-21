@@ -1,4 +1,4 @@
-package org.ic.tennistrader.domain;
+package org.ic.tennistrader.domain.match;
 
 import org.ic.tennistrader.domain.match.Score;
 import org.junit.Test;

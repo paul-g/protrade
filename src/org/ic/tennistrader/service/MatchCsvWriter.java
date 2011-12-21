@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
-import org.ic.tennistrader.domain.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 
