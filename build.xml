@@ -1,3 +1,4 @@
+
 <project name="tennis-trader">
 	<property name="build.dir" value="build" />
 	<property name="build.prod.dir" value="${build.dir}/prod" />
@@ -23,8 +24,8 @@
 	<property name="config.dir" value="config" />
 	<property name="config.pmd.dir" value="${config.dir}/pmd" />
 	<property name="config.log4j.dir" value="${config.dir}/log4j" />
-	
-	<property name="build.agent" value="git"/>
+
+	<property name="build.agent" value="git" />
 
 	<!-- Set the CLASSPATH -->
 	<path id="classpath">
@@ -54,6 +55,20 @@
 	<target name="compile" depends="prepare">
 		<javac srcdir="${src.dir}" includeantruntime="false" destdir="${build.prod.dir}" classpathref="classpath" debug="true" debuglevel="vars,lines,source" />
 		<copy todir="${build.prod.dir}" file="${config.log4j.dir}/log4j.properties" />
+	</target>
+
+	<!-- RUN-test task - runs the main class -->
+	<target name="run-test" depends="compile">
+		<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath">
+			<arg value="-test" />
+		</java>
+	</target>
+
+	<!-- RUN-test task - runs the main class -->
+	<target name="run-testb" depends="compile">
+		<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath">
+			<arg value="-testb" />
+		</java>
 	</target>
 
 	<!-- RUN task - runs the main class -->
@@ -196,11 +211,11 @@
 	</target>
 
 	<!-- ALL task -->
-	<target name="all" depends="coverage, pmd"/>
-	
+	<target name="all" depends="coverage, pmd" />
+
 	<!-- Git tasks -->
-	<target name="git-all" depends="clean, git-unit-tests, git-system-tests"/>
-		
+	<target name="git-all" depends="clean, git-unit-tests, git-system-tests" />
+
 	<!-- Run system tests from git -->
 	<target name="git-system-tests" depends="compile,compile-tests">
 		<mkdir dir="${system.test.report.dir}" />
@@ -219,10 +234,10 @@
 			<report todir="${system.test.report.dir}" />
 		</junitreport>
 
-		<fail if="test.failed"/>
+		<fail if="test.failed" />
 	</target>
-	
-		
+
+
 	<!-- Run unit tests from git -->
 	<target name="git-unit-tests" depends="compile,compile-tests">
 		<mkdir dir="${unit.test.report.dir}" />
@@ -239,8 +254,8 @@
 			<fileset dir="${unit.test.report.dir}" includes="TEST-*.xml" />
 			<report todir="${unit.test.report.dir}" />
 		</junitreport>
-		
-		<fail if="test.failed"/>
+
+		<fail if="test.failed" />
 	</target>
-	
+
 </project>

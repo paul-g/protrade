@@ -21,8 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import org.ic.tennistrader.Main;
-import org.ic.tennistrader.exceptions.LoginFailedException;
-import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
+import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.pushingpixels.trident.Timeline;
 
 public class LoginShell {
@@ -31,7 +30,7 @@ public class LoginShell {
 
 	private Shell loginShell;
 
-	private static Logger log = Logger.getLogger(LoginShell.class);
+	public static Logger log = Logger.getLogger(LoginShell.class);
 
 	private static final String TITLE = "Tennis Trader Login";
 
@@ -108,7 +107,7 @@ public class LoginShell {
 		login.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				String user = username.getText();
-				if (checkLogin(user, password.getText())) {
+				if (BetfairAuthenticator.checkLogin(user, password.getText())) {
 					Main.username = user;
 					updateResult(SUCCESS);
 					handleLoginSuccess();
@@ -195,21 +194,6 @@ public class LoginShell {
 		}
 
 		display.dispose();
-	}
-
-	private static boolean checkLogin(String username, String password) {
-		// Perform the login
-		try {
-			BetfairConnectionHandler.login(username, password);
-		} catch (LoginFailedException e) {
-			log.info(e.getMessage());
-			return false;
-		}
-
-		log.info("Login succeeded with token - "
-				+ BetfairConnectionHandler.getApiContext().getToken());
-
-		return true;
 	}
 
 	private void updateResult(String message) {

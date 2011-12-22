@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import org.ic.tennistrader.ui.LoginShell;
 import org.ic.tennistrader.ui.MainWindow;
+import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.ic.tennistrader.authentication.Encrypt;
 
 public final class Main {
@@ -24,51 +25,60 @@ public final class Main {
 
 	public static String testUsername = "";
 	public static String testPassword = "";
-	
-	private Main(){}
+
+	private Main() {
+	}
 
 	public static void main(String[] args) {
-	
+
 		// read the config file
 		readAndDecryptConfigFile();
 
 		// start up the app
 		final Display display = new Display();
 		final MainWindow mw = new MainWindow(display);
-		
-		
-		if (args.length == 1){
+
+		if (args.length == 1) {
 			if ("-test".equals(args[0])) {
-				//bypass login
-				mw.show();
-				mw.run(display);
-			}
-		}
-
-		final LoginShell ls = new LoginShell(display);
-
-		mw.addLoadListener(new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				if ("Done!".equals(event.text)) {
-					ls.finishProgressBar();
-					ls.dispose();
+				startMainWindow(display, mw);
+			} else if ("-testb".equals(args[0])) {
+				String username = Main.testUsername;
+				String password = Main.testPassword;
+				log.info("username " + username);
+				Main.username = Main.testUsername;
+				Main.password = Main.testPassword;
+				if (BetfairAuthenticator.checkLogin(username, password)) {
+					startMainWindow(display, mw);
 				} else {
-					ls.updateProgressBar(10);
-					ls.setText(event.text);
+					// login failed
 				}
 			}
-		});
+		} else {
 
-		ls.addLoginSuccessListener(new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				mw.show();
-				mw.run(display);
-			}
-		});
+			final LoginShell ls = new LoginShell(display);
 
-		ls.run(display);
+			mw.addLoadListener(new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					if ("Done!".equals(event.text)) {
+						ls.finishProgressBar();
+						ls.dispose();
+					} else {
+						ls.updateProgressBar(10);
+						ls.setText(event.text);
+					}
+				}
+			});
+
+			ls.addLoginSuccessListener(new Listener() {
+				@Override
+				public void handleEvent(Event arg0) {
+					startMainWindow(display, mw);
+				}
+			});
+
+			ls.run(display);
+		}
 	}
 
 	public static void readAndDecryptConfigFile() {
@@ -120,6 +130,12 @@ public final class Main {
 			readAndDecryptConfigFile();
 		}
 		return testPassword;
+	}
+
+	private static void startMainWindow(final Display display,
+			final MainWindow mw) {
+		mw.show();
+		mw.run(display);
 	}
 
 }
