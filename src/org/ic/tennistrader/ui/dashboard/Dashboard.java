@@ -2,6 +2,7 @@ package org.ic.tennistrader.ui.dashboard;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -62,11 +63,17 @@ public class Dashboard extends Composite{
 	
 	public void handleResize(WidgetContainer wc, int dx, int dy){
 		Point loc = widgetMap.get(wc);
-		Rectangle rect = wc.getClientArea();
-		System.out.println("Total Dragged x: " + dx + " y: " + dy);
-		System.out.println("rect x: " + rect.x + " " + rect.y + " " + rect.width + " " + rect.height);
-
-		wc.setBounds(loc.x, loc.y, rect.width + dx, rect.height + dy);
+		int width = wc.getWidth();
+		int height = wc.getHeight();
+		wc.setBounds(loc.x, loc.y,  width + dx, height + dy);
+		wc.setHeight(height + dy);
+		wc.setWidth(width + dx);
+		wc.moveAbove(null);
+		/*Set<WidgetContainer> s = widgetMap.keySet();
+		for (WidgetContainer wcc : widgetMap.keySet()) {
+			if (wcc != wc)
+				wc.moveAbove(wcc);
+		}*/
 	}
 
 	public static void main(String[] args) {

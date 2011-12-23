@@ -51,13 +51,6 @@ class WidgetContainer extends Composite {
 
 		addMouseTrackListener(new MenuListener(cornerMenu));
 
-		addMouseMoveListener(new MouseMoveListener() {
-			@Override
-			public void mouseMove(MouseEvent e) {
-				System.out.println(e.x + " " + e.y);
-			}
-		});
-
 		wCursor = display.getSystemCursor(SWT.CURSOR_SIZEW);
 		sCursor = display.getSystemCursor(SWT.CURSOR_SIZES);
 		eCursor = display.getSystemCursor(SWT.CURSOR_SIZEE);
@@ -83,11 +76,6 @@ class WidgetContainer extends Composite {
 					break;
 				case SWT.MouseUp:
 					if (origin != null) {
-						System.out.println("Dragged: " + (x - origin.x) + " "
-								+ (y - origin.y));
-						System.out.println("Total Dragged x: " + totalX
-								+ " y: " + totalY);
-
 							if (isEast(origin.x, origin.y)){
 								//WidgetContainer.this.parent.handleResize(WidgetContainer.this, totalX, totalY);
 						}
@@ -101,12 +89,11 @@ class WidgetContainer extends Composite {
 					if (origin != null) {
 						int dx = (x - origin.x);
 						int dy = (y - origin.y);
-						System.out.println("Dragged: " + dx + " " + dy );
 						totalX += dx;
 						totalY += dy;
 						origin.x = x;
 						origin.y = y;
-						WidgetContainer.this.parent.handleResize(WidgetContainer.this, -5, dy);
+						WidgetContainer.this.parent.handleResize(WidgetContainer.this, dx, dy);
 					}
 					break;
 				}
@@ -153,9 +140,24 @@ class WidgetContainer extends Composite {
 
 		@Override
 		public void mouseEnter(MouseEvent arg0) {
-			System.out.println("Entered ");
 			// cornerMenu.setVisible(true);
 		}
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	private Cursor getCursorForLocation(int x, int y) {
