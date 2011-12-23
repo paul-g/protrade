@@ -1,7 +1,6 @@
 package org.ic.tennistrader.ui.updatable;
 
 import java.util.ArrayList;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
@@ -21,7 +20,6 @@ import org.ic.tennistrader.utils.Pair;
 
 public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         UpdatableWidget {
-
     private BetController betController;
     private OddsButton[] p1BackButtons = new OddsButton[3];
     private OddsButton[] p1LayButtons = new OddsButton[3];
@@ -29,24 +27,18 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
     private OddsButton[] p2LayButtons = new OddsButton[3];
     private OddsButton[] p1MarketInfoButtons = new OddsButton[6];
     private OddsButton[] p2MarketInfoButtons = new OddsButton[6];
-    private int width = 2 * p1BackButtons.length + p1MarketInfoButtons.length + 1; 
-    
+    private int width = 2 * p1BackButtons.length + p1MarketInfoButtons.length + 1;     
     // min,max,weight
     double p1Values[] = {1000000.0, 0, 0};
-    double p2Values[] = {1000000.0, 0, 0};
-    
-    private Color normalColor;
+    double p2Values[] = {1000000.0, 0, 0};    
+    //private Color oddsButtonColor;
     private Font oddsFont;
     private Font titleFont;
 
-    private Match match;
-
     public UpdatableMarketDataGrid(Composite parent, int style, Match match) {
         super(parent, style);
-        this.match = match;
         this.setLayout(new GridLayout(width, true));
 
-        initColors();
         initFonts();
 
         // required for alignment
@@ -65,12 +57,12 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
 
         createLabel("Back", Colours.backColor, headerData, SWT.RIGHT);
         createLabel("Lay", Colours.layColor, headerData, SWT.NONE);
-        createLabel("LPM", normalColor, headerDataSmall, SWT.NONE);
-        createLabel("Matched", normalColor, headerDataSmall, SWT.NONE);
-        createLabel("Mkt%", normalColor, headerDataSmall, SWT.NONE);
-        createLabel("Low", normalColor, headerDataSmall, SWT.NONE);
-        createLabel("Wght", normalColor, headerDataSmall, SWT.NONE);
-        createLabel("High", normalColor, headerDataSmall, SWT.NONE);
+        createLabel("LPM", Colours.oddsButtonColor, headerDataSmall, SWT.NONE);
+        createLabel("Matched", Colours.oddsButtonColor, headerDataSmall, SWT.NONE);
+        createLabel("Mkt%", Colours.oddsButtonColor, headerDataSmall, SWT.NONE);
+        createLabel("Low", Colours.oddsButtonColor, headerDataSmall, SWT.NONE);
+        createLabel("Wght", Colours.oddsButtonColor, headerDataSmall, SWT.NONE);
+        createLabel("High", Colours.oddsButtonColor, headerDataSmall, SWT.NONE);
 
         initLayout(match.getPlayerOne().getLastname(), p1BackButtons,
                 p1LayButtons, p1MarketInfoButtons, true);
@@ -95,7 +87,7 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         player.setText(playerName);
 
         for (int i = 0; i < 2; i++) {
-            pBackButtons[i] = new OddsButton(this, normalColor, oddsFont, this);
+            pBackButtons[i] = new OddsButton(this, Colours.oddsButtonColor, oddsFont, this);
             /*
              * Composite comp = pBackButtons[i].getComp(); Image
              * backBackgroundImage =
@@ -115,10 +107,10 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         pLayButtons[0] = new OddsButton(this, Colours.layColor, oddsFont, this);
 
         for (int i = 1; i < 3; i++)
-            pLayButtons[i] = new OddsButton(this, normalColor, oddsFont, this);
+            pLayButtons[i] = new OddsButton(this, Colours.oddsButtonColor, oddsFont, this);
         
         for (int i=0;i<p1MarketInfoButtons.length;i++) {
-        	pMarketInfo[i] = new OddsButton(this, normalColor, oddsFont, this);
+        	pMarketInfo[i] = new OddsButton(this, Colours.oddsButtonColor, oddsFont, this);
         	pMarketInfo[i].setOdds("             ");
         	pMarketInfo[i].setCurrency("");
         }
@@ -199,16 +191,6 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
                 }
             }
         });
-    }
-
-    private void initColors() {
-        // The application's current background colour is 238, 238, 224
-        Colours.layColor = new org.eclipse.swt.graphics.Color(this.getDisplay(),
-                238, 210, 238);
-        Colours.backColor = new org.eclipse.swt.graphics.Color(this.getDisplay(),
-                198, 226, 255);
-        this.normalColor = new org.eclipse.swt.graphics.Color(
-                this.getDisplay(), 240, 240, 240);
     }
 
     public OddsButton[] getP1BackButtons() {
