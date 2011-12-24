@@ -45,9 +45,9 @@ public class LowerToolBar{
 		Label name = new Label(toolbar, SWT.NULL);
     	name.setText("Memory Usage");
     	name.setAlignment(SWT.LEFT);
-    	name.setBounds(55,15,90,20);
+    	name.setBounds(55,13,110,20);
 		ProgressBar usage = new ProgressBar(toolbar, SWT.SMOOTH);
-    	usage.setBounds(150,11,150,22);
+    	usage.setBounds(170,11,150,22);
     	usage.setSelection(100);
 		shell.open();
 		

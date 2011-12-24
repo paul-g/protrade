@@ -6,6 +6,7 @@ import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.EventMarketBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.markets.MarketBetfair;
+import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Market;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.Runner;
 import org.ic.tennistrader.generated.global.BFGlobalServiceStub.GetEventsResp;
@@ -19,19 +20,21 @@ import static org.ic.tennistrader.utils.Pair.pair;
 
 public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);
+	private static final String MATCH_ODDS_MARKET_NAME = "Match Odds";
+	private static final String SET_BETTING_MARKET_NAME = "Set Betting";
 
 	// returns the match odds market data info
-	public static MOddsMarketData getMarketOdds(EventBetfair m) {
+	public static MOddsMarketData getMarketOdds(EventBetfair eventBetfair) {
 		int marketId = -1;
-		for (EventMarketBetfair emb : m.getChildren()) {
+		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof MarketBetfair
-					&& emb.getName().equals("Match Odds"))
+					&& emb.getName().equals(MATCH_ODDS_MARKET_NAME))
 				marketId = emb.getBetfairId();
 		}
 		MOddsMarketData modds = new MOddsMarketData();
 		try {
 			if (marketId == -1) {
-				GetEventsResp resp = GlobalAPI.getEvents(apiContext, m
+				GetEventsResp resp = GlobalAPI.getEvents(apiContext, eventBetfair
 						.getBetfairId());
 				// add the list of possible markets
 				MarketSummary[] markets = resp.getMarketItems()
@@ -40,7 +43,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 					markets = new MarketSummary[] {};
 				}
 				for (MarketSummary ms : markets) {
-					if (ms.getMarketName().equals("Match Odds")) {
+					if (ms.getMarketName().equals(MATCH_ODDS_MARKET_NAME)) {
 						// marketOdds = ms;
 						marketId = ms.getMarketId();
 					}
@@ -48,14 +51,13 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 			}
 			// create the string to display the Match Odds
 			if (marketId != -1) {
-				Exchange selectedExchange = Exchange.UK;
 				// marketOdds.getExchangeId() == 1 ? Exchange.UK : Exchange.AUS;
-				Market selectedMarket = ExchangeAPI.getMarket(selectedExchange,
+				Market selectedMarket = ExchangeAPI.getMarket(Exchange.UK,
 						apiContext, marketId);
 				InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(
-						selectedExchange, apiContext, selectedMarket
+						Exchange.UK, apiContext, selectedMarket
 								.getMarketId());
-				modds.setExchange(selectedExchange.toString());
+				modds.setExchange(Exchange.UK.toString());
 				modds.setDate(selectedMarket.getMarketTime().getTime());
 				modds.setMatchStatus(selectedMarket.getMarketStatus()
 						.toString());
@@ -96,7 +98,51 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 					+ e.getMessage());
 		}
 		return modds;
-		// return msg;
+	}
+	
+	public static SetBettingMarketData getSetBettingMarketData(EventBetfair eventBetfair) {
+		SetBettingMarketData setBettingData;
+		int marketId = -1;
+		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
+			if (emb instanceof MarketBetfair
+					&& emb.getName().equals(SET_BETTING_MARKET_NAME))
+				marketId = emb.getBetfairId();
+		}
+		setBettingData = new SetBettingMarketData();
+		try {
+			if (marketId == -1) {
+				GetEventsResp resp = GlobalAPI.getEvents(apiContext, eventBetfair
+						.getBetfairId());
+				// add the list of possible markets
+				MarketSummary[] markets = resp.getMarketItems()
+						.getMarketSummary();
+				if (markets == null) {
+					markets = new MarketSummary[] {};
+				}
+				for (MarketSummary ms : markets) {
+					if (ms.getMarketName().equals(SET_BETTING_MARKET_NAME)) {
+						// marketOdds = ms;
+						marketId = ms.getMarketId();
+					}
+				}
+			}
+			// create the string to display the Match Odds
+			if (marketId != -1) {
+				// TODO fetch values from betfair and set them correctly (using inflated runner)
+				/*
+				Market selectedMarket = ExchangeAPI.getMarket(Exchange.UK,
+						apiContext, marketId);
+				InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(
+						Exchange.UK, apiContext, selectedMarket
+								.getMarketId());
+				*/
+				setBettingData = new SetBettingMarketData();
+			}
+		} catch (Exception e) {
+			log.info("Error fetching market info for the match - "
+					+ e.getMessage());
+		}
+		return setBettingData;
 	}
 
 	// Returns the string containing the given market info
