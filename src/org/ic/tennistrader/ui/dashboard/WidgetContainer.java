@@ -2,11 +2,9 @@ package org.ic.tennistrader.ui.dashboard;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -34,8 +32,10 @@ class WidgetContainer extends Composite {
 
 	// private Button
 	private CornerMenu cornerMenu;
-	
+
 	private Dashboard parent;
+
+	private Control child;
 
 	public WidgetContainer(final Dashboard parent, int style, int width,
 			int height) {
@@ -62,43 +62,7 @@ class WidgetContainer extends Composite {
 		swCursor = display.getSystemCursor(SWT.CURSOR_SIZESW);
 		seCursor = display.getSystemCursor(SWT.CURSOR_SIZESE);
 
-		Listener l = new Listener() {
-			Point origin;
-			int totalX;
-			int totalY;
-
-			public void handleEvent(Event e) {
-				int x = e.x;
-				int y = e.y;
-				switch (e.type) {
-				case SWT.MouseDown:
-					origin = new Point(x, y);
-					break;
-				case SWT.MouseUp:
-					if (origin != null) {
-							if (isEast(origin.x, origin.y)){
-								//WidgetContainer.this.parent.handleResize(WidgetContainer.this, totalX, totalY);
-						}
-					}
-					origin = null;
-					totalX = 0;
-					totalY = 0;
-					break;
-				case SWT.MouseMove:
-					setCursor(getCursorForLocation(x, y));
-					if (origin != null) {
-						int dx = (x - origin.x);
-						int dy = (y - origin.y);
-						totalX += dx;
-						totalY += dy;
-						origin.x = x;
-						origin.y = y;
-						WidgetContainer.this.parent.handleResize(WidgetContainer.this, dx, dy);
-					}
-					break;
-				}
-			}
-		};
+		Listener l = new ResizeListener(this);
 
 		addListener(SWT.MouseDown, l);
 		addListener(SWT.MouseUp, l);
@@ -108,8 +72,14 @@ class WidgetContainer extends Composite {
 	// pre: component was already drawn
 	public void setWidget(Control composite) {
 		composite.setParent(this);
-		composite.setBounds(BORDER_WIDTH, BORDER_WIDTH, width - 2
-				* BORDER_WIDTH, height - 2 * BORDER_WIDTH);
+		child = composite;
+		fitChild();
+	}
+
+	private void fitChild() {
+		if (child != null)
+			child.setBounds(BORDER_WIDTH, BORDER_WIDTH, width - 2
+					* BORDER_WIDTH, height - 2 * BORDER_WIDTH);
 	}
 
 	class CornerMenu extends Composite {
@@ -143,7 +113,50 @@ class WidgetContainer extends Composite {
 			// cornerMenu.setVisible(true);
 		}
 	}
-	
+
+	class ResizeListener implements Listener {
+
+		Point origin;
+		Location initialLocation;
+
+		private WidgetContainer wc;
+
+		public ResizeListener(WidgetContainer wc) {
+			this.wc = wc;
+		}
+
+		public void handleEvent(Event e) {
+			int x = e.x;
+			int y = e.y;
+			switch (e.type) {
+			case SWT.MouseDown:
+				origin = wc.getDisplay().map(wc, null, x, y);
+				initialLocation = getLocation(x, y);
+				break;
+			case SWT.MouseUp:
+				if (origin != null) {
+					if (isEast(origin.x, origin.y)) {
+						// WidgetContainer.this.parent.handleResize(WidgetContainer.this,
+						// totalX, totalY);
+					}
+				}
+				origin = null;
+				break;
+			case SWT.MouseMove:
+				setCursor(getCursorForLocation(x, y));
+				if (origin != null) {
+					Point eP = wc.getDisplay().map(wc, null, e.x, e.y);
+					int dx = (eP.x - origin.x);
+					int dy = (eP.y - origin.y);
+					origin = eP;
+					wc.parent.handleResize(wc, dx, dy, initialLocation);
+				}
+				break;
+			}
+		}
+
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -235,7 +248,10 @@ class WidgetContainer extends Composite {
 		return Location.CENTER;
 	}
 
-	private enum Location {
-		N, S, W, E, NE, NW, SE, SW, CENTER;
+	@Override
+	public void setBounds(int x, int y, int width, int height) {
+		super.setBounds(x, y, width, height);
+		fitChild();
 	}
+
 }
