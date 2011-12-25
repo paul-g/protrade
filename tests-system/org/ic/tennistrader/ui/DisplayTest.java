@@ -9,12 +9,12 @@ import org.junit.Ignore;
 @Ignore
 public abstract class DisplayTest {
 	protected Display display;
-	protected Shell comp;
+	protected Shell shell;
 	
 	@Before
 	public void setUp() {
 		display = new Display();
-		comp = new Shell(display);
+		shell = new Shell(display);
 	}
 	
 	@After  
