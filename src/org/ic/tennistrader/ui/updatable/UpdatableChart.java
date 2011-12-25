@@ -8,12 +8,14 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
 import org.swtchart.IErrorBar.ErrorBarType;
@@ -28,8 +30,9 @@ import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.ui.StandardWidgetResizeListener;
+import org.ic.tennistrader.service.LiveDataFetcher;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
 	private IBarSeries endOfSets;
@@ -57,6 +60,35 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private OverroundChart oChart;
 	private int k = 0;
 
+	public static void main(String args[]) {
+		Display display = new Display();
+		Shell shell = new Shell(display, SWT.SHELL_TRIM);
+		SashForm s = new SashForm(shell, SWT.VERTICAL);
+		shell.setLayout(new FillLayout());
+		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
+		Composite slideComp = new Composite(s, SWT.NONE);
+		slideComp.setLayout(new FillLayout());
+		slideComp.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		Slider slider = new Slider(slideComp, SWT.HORIZONTAL);
+		slider.setMaximum(1);
+		slider.setValues(0, 0, 1, 0, 0, 0);
+		// new Charts(c,SWT.BORDER,match,slider);
+		final UpdatableChart chart = new UpdatableChart(s, SWT.BORDER, match,
+				slider);
+		LiveDataFetcher.registerForMatchUpdate(chart, match);
+		s.setWeights(new int[] { 5, 65, 30 });
+		shell.setMaximized(true);
+		shell.open();
+
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+
+		display.dispose();
+
+	}
+
 	public UpdatableChart(Composite parent, int style, Match match,
 			Slider slider) {
 		super(parent, style);
@@ -79,7 +111,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		this.getAxisSet().getYAxis(0).setRange(new Range(1, 2));
 		// this.getAxisSet().adjustRange();
 		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		this.addListener(SWT.Resize, new StandardWidgetResizeListener(this));
 		IAxisTick xTick = this.getAxisSet().getXAxis(0).getTick();
 		xTick.setVisible(false);
 		this.getAxisSet().getYAxis(1).getTick().setVisible(false);
@@ -88,7 +119,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		// this.getPlotArea().getBounds().x);
 		// System.out.println("main chart y : " +
 		// this.getPlotArea().getBounds().y);
-
 	}
 
 	private void addListeners() {
@@ -132,10 +162,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		IAxisSet axisSet = this.getAxisSet();
 		axisSet.createYAxis();
 
-		endOfSets = (IBarSeries) seriesSet.createSeries(SeriesType.BAR,
-				"end of sets");
-		endOfSets.setBarPadding(100);
-		endOfSets.setYAxisId(1);
+		//endOfSets = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, "end of sets");
+		//endOfSets.setBarPadding(100);
+		//endOfSets.setYAxisId(1);
 		axisSet.getYAxis(1).setRange(new Range(0, 1));
 		// build first series
 		firstSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
@@ -143,7 +172,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		Color color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		firstSeries.setLineColor(color);
 		firstSeries.setSymbolSize(4);
-		firstSeries.enableStep(true);
+		//firstSeries.enableStep(true);
+		firstSeries.setAntialias(SWT.ON);
+		firstSeries.enableArea(true);
 		firstSeries.setSymbolType(PlotSymbolType.NONE);
 		pl1Spread = firstSeries.getYErrorBar();
 		pl1Spread.setType(ErrorBarType.BOTH);
@@ -249,32 +280,28 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 						* k;
 				nr++;
 				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl1().get(b),
-						pow)
-						* k;
+						pow) * k;
 				nr++;
 				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl2().get(b),
-						pow)
-						* k;
+						pow) * k;
 				nr++;
 				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1Lay().get(b)
 						.first(), pow) - Math.pow(chartData.getPl1YSeries()
 						.get(b), pow))
 						* k;
 				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1YSeries().get(
-						b), pow) - Math.pow(chartData.getPl1Lay().get(b)
-						.second(), pow))
-						* k;
+				dataArray.get(nr)[a] = (Math.pow(
+						chartData.getPl1YSeries().get(b), pow) - Math.pow(
+						chartData.getPl1Lay().get(b).second(), pow)) * k;
 				nr++;
 				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2Lay().get(b)
 						.first(), pow) - Math.pow(chartData.getPl2YSeries()
 						.get(b), pow))
 						* k;
 				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2YSeries().get(
-						b), pow) - Math.pow(chartData.getPl2Lay().get(b)
-						.second(), pow))
-						* k;
+				dataArray.get(nr)[a] = (Math.pow(
+						chartData.getPl2YSeries().get(b), pow) - Math.pow(
+						chartData.getPl2Lay().get(b).second(), pow)) * k;
 				nr++;
 				dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
 				nr++;
@@ -284,12 +311,12 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				nr++;
 				dataArray.get(nr)[a] = chartData.getPl2Volume().get(b);
 				nr++;
-				dataArray.get(nr)[a] = chartData.endOfSets.get(b);
+				//dataArray.get(nr)[a] = chartData.endOfSets.get(b);
 
 			}
 
-			endOfSets.setXDateSeries(showXSeries);
-			endOfSets.setYSeries(dataArray.get(12));
+			//endOfSets.setXDateSeries(showXSeries);
+			//endOfSets.setYSeries(dataArray.get(12));
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(dataArray.get(0));
 			secondSeries.setXDateSeries(showXSeries);
@@ -317,8 +344,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		if (decimalOdds)
 			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
 		else
-			this.getAxisSet().getYAxis(0).getTitle().setText(
-					yAxisFractionalTitle);
+			this.getAxisSet().getYAxis(0).getTitle()
+					.setText(yAxisFractionalTitle);
 
 		showSeries(slider.getSelection(), true);
 		updateDisplay();
@@ -355,7 +382,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				@Override
 				public void run() {
 					if (!chart.isDisposed())
-						//chart.allignment();
+						// chart.allignment();
 						chart.redraw();
 					if (!oChart.isDisposed())
 						oChart.redraw();
@@ -427,7 +454,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 					oChart.setBackOverround(false);
 					oChart.setLayOverround(false);
 					oChart.visibility(pl1Selected, pl2Selected);
-				//	allignment();
+					// allignment();
 				}
 			}
 		});
@@ -445,11 +472,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		// oChart.getPlotArea().getBounds().y);
 		// int diff =
 		// this.setBounds(arg0)
-		this.setBounds(oChart.getPlotArea().getBounds().x
-				- (this.getPlotArea().getBounds().x - this.getBounds().x), this
-				.getBounds().y, oChart.getPlotArea().getBounds().width
-				+ this.getPlotArea().getBounds().x - this.getBounds().x, this
-				.getBounds().height);
+		this.setBounds(
+				oChart.getPlotArea().getBounds().x
+						- (this.getPlotArea().getBounds().x - this.getBounds().x),
+				this.getBounds().y,
+				oChart.getPlotArea().getBounds().width
+						+ this.getPlotArea().getBounds().x - this.getBounds().x,
+				this.getBounds().height);
 		this.getPlotArea().setBounds(oChart.getPlotArea().getBounds().x,
 				this.getPlotArea().getBounds().y,
 				oChart.getPlotArea().getBounds().width,
