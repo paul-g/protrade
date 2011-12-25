@@ -230,7 +230,7 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 	}
 	
 	private void showSeries(int i, boolean dragged) {
-		int size = i  < sampleSize ? i : sampleSize;
+		int size = i + 1  < sampleSize ? i + 1 : sampleSize;
 		int seriesNr = 4;
 		Date showXSeries[] = new Date[size];
 		ArrayList<double[]> dataArray = new ArrayList<double[]>();
