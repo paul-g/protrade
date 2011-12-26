@@ -218,6 +218,7 @@ public class LoginShell {
 
 	public void setText(String text) {
 		//TODO: update text on progress bar
+		
 	}
 
 	public void updateProgressBar(int amount) {
@@ -252,12 +253,12 @@ public class LoginShell {
 		}
 		
 		@Override
-		public void mouseDoubleClick(MouseEvent e) {
-			text.setText("");
+		public void mouseDoubleClick(MouseEvent e) { 
 		}
 
 		@Override
 		public void mouseDown(MouseEvent e) {
+			text.setText("");
 		}
 
 		@Override
