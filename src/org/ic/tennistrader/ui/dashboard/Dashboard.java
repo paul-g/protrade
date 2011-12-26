@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -45,20 +47,48 @@ public class Dashboard extends Composite {
 				placeWidget(wc, j * defaultWidgetWidth,
 						i * defaultWidgetHeight, defaultWidgetWidth,
 						defaultWidgetHeight);
-				wc.setWidget(new Button(this, SWT.PUSH));
+				wc.setWidget(new WidgetPlacehodler(this, SWT.NONE, wc));
 			}
 		}
+		
+		/*addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.keyCode == SWT.ALT){ 
+					setCursor(getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
+				}
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.ALT){ 
+					setCursor(getDisplay().getSystemCursor(SWT.CURSOR_SIZEALL));
+				}
+					
+				System.out.println( (e.keyCode == SWT.ALT));
+			}
+		});*/
 	}
 
 	private void placeWidget(WidgetContainer simpleWidget, int x, int y,
 			int width, int height) {
-		widgetMap.put(simpleWidget, new Point(x, y));
+		updateWidgetPosition(simpleWidget, x, y);
 		simpleWidget.setBounds(x, y, width, height);
+	}
+	
+	public void move(WidgetContainer wc, int dx, int dy){
+		Point loc = getLocation(wc);
+		int newX = loc.x + dx;
+		int newY = loc.y + dy;
+		wc.setLocation(newX, newY);
+		updateWidgetPosition(wc, newX, newY);
+		wc.moveAbove(null);
 	}
 
 	public void handleResize(WidgetContainer wc, int dx, int dy,
 			Location dragLocation) {
-		Point loc = widgetMap.get(wc);
+		Point loc = getLocation(wc);
 		int oldWidth = wc.getWidth();
 		int oldHeight = wc.getHeight();
 
@@ -115,10 +145,19 @@ public class Dashboard extends Composite {
 		}
 
 		wc.setBounds(newX, newY, newWidth, newHeight);
-		widgetMap.put(wc, new Point(newX, newY));
+		updateWidgetPosition(wc, newX, newY);
 		wc.setHeight(newHeight);
 		wc.setWidth(newWidth);
 		wc.moveAbove(null);
+	}
+
+	private void updateWidgetPosition(WidgetContainer wc, int newX, int newY) {
+		widgetMap.put(wc, new Point(newX, newY));
+	}
+
+	private Point getLocation(WidgetContainer wc) {
+		Point loc = widgetMap.get(wc);
+		return loc;
 	}
 
 	public static void main(String[] args) {
