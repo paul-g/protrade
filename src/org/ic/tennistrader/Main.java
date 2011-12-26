@@ -36,7 +36,6 @@ public final class Main {
 		// start up the app
 		final Display display = new Display();
 		final MainWindow mw = new MainWindow(display);
-		Colours.setColors(display);
 
 		if (args.length == 1) {
 			if ("-test".equals(args[0])) {

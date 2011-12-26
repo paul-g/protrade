@@ -195,10 +195,14 @@ public class BetPlacingShell {
 			GridData infoGridData) {
 		Label infoLabel = new Label(betShell, SWT.NONE);
 		infoLabel.setText(betDetails);
+        
+		Display display = betShell.getDisplay();
+        
 		if (betType.equals(BetTypeEnum.B)) {
-			infoLabel.setBackground(Colours.backColor);
+
+			infoLabel.setBackground(Colours.getBackColor(display));
 		} else {
-			infoLabel.setBackground(Colours.layColor);
+			infoLabel.setBackground(Colours.getLayColor(display));
 		}
 		infoLabel.setLayoutData(infoGridData);
 	}
@@ -218,10 +222,11 @@ public class BetPlacingShell {
 			final PlayerEnum betPlayer, final BetTypeEnum betType) {
 		final Button submitButton = new Button(betShell, SWT.NONE);
 		submitButton.setText("Place bet");
+		Display display = betShell.getDisplay();
 		if (betType.equals(BetTypeEnum.B)) {
-			submitButton.setBackground(Colours.backColor);
+			submitButton.setBackground(Colours.getBackColor(display));
 		} else {
-			submitButton.setBackground(Colours.layColor);
+			submitButton.setBackground(Colours.getLayColor(display));
 		}
 		submitButton.addListener(SWT.MouseUp, new Listener() {
 			@Override

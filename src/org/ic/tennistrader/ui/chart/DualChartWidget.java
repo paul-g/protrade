@@ -15,7 +15,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
-public class DualChartWidget implements UpdatableWidget{
+public class DualChartWidget extends Composite implements UpdatableWidget{
 	
 	private final UpdatableChart largeChart;
 	private final OverroundChart smallChart;
@@ -40,9 +40,11 @@ public class DualChartWidget implements UpdatableWidget{
 	}
 
 	public DualChartWidget(Composite parent, Match match){
+		super(parent, SWT.NONE);
 		chartData = new ChartData();
+		setLayout(new FillLayout());
 		
-		SashForm form = new SashForm(parent, SWT.VERTICAL);
+		SashForm form = new SashForm(this, SWT.VERTICAL);
 		
 		Slider slider = new Slider(form, SWT.HORIZONTAL);
 		slider.setMaximum(1);
