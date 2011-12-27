@@ -8,7 +8,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -41,6 +45,9 @@ public class LoginShell {
 
 	private ProgressBar bar;
 
+	/* Bar Text */
+	private TextUpdater textUpdater;
+
 	public Shell show() {
 		return loginShell;
 	}
@@ -49,6 +56,7 @@ public class LoginShell {
 		this.loginShell = new Shell(display, SWT.NO_TRIM);// SWT.TRANSPARENCY_ALPHA);
 		loginShell.setSize(600, 350);
 		loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+
 
 		final Image loginImg = new Image(loginShell.getDisplay(),
 				"images/login/login.png");
@@ -89,11 +97,13 @@ public class LoginShell {
 		loginShell.setText(TITLE);
 
 		final Text username = new Text(loginShell, SWT.NONE);
+		username.setToolTipText("Please input your Betfair account login here");
 		username.setText("username");
 		username.setBounds(180, 165, 300, 30);
 		username.addMouseListener(new HoverListener(username));
 
 		final Text password = new Text(loginShell, SWT.PASSWORD);
+		password.setToolTipText("Please input your Betfair account password here");
 		password.setText("password");
 		password.setBounds(180, 210, 300, 30);
 		password.addMouseListener(new HoverListener(password));
@@ -131,6 +141,8 @@ public class LoginShell {
 		this.bar.setBounds(50, 305, 500, 20);
 		bar.setToolTipText("Test");
 		bar.setVisible(false);
+		textUpdater = new TextUpdater("",bar);
+		bar.addPaintListener(textUpdater);
 		loginShell.open();
 	}
 
@@ -147,7 +159,7 @@ public class LoginShell {
 		return cancel;
 
 	}
-	
+
 	private Button makeLoginButton(final Display display) {
 		Button login = new Button(loginShell, SWT.PUSH);
 		final Image accept = new Image(loginShell.getDisplay(),
@@ -217,8 +229,7 @@ public class LoginShell {
 	}
 
 	public void setText(String text) {
-		//TODO: update text on progress bar
-		
+		textUpdater.setText(text);
 	}
 
 	public void updateProgressBar(int amount) {
@@ -247,11 +258,11 @@ public class LoginShell {
 
 	private class HoverListener implements MouseListener {
 		private Text text;
-		
+
 		public HoverListener ( Text text ) {
 			this.text = text;
 		}
-		
+
 		@Override
 		public void mouseDoubleClick(MouseEvent e) { 
 		}
@@ -264,7 +275,31 @@ public class LoginShell {
 		@Override
 		public void mouseUp(MouseEvent e) {
 		}
-				
+
 	}
-	
+
+	private class TextUpdater implements PaintListener {
+		private String text;
+		private ProgressBar pb;
+
+		public TextUpdater(String text,ProgressBar pb) {
+			this.text = text;
+			this.pb = pb;
+		}
+
+		public void setText (String text) {
+			this.text = text;
+		}
+
+		@Override
+		public void paintControl(PaintEvent e) {
+			Point point = pb.getSize();
+			FontMetrics fontMetrics = e.gc.getFontMetrics();
+			int width = fontMetrics.getAverageCharWidth() * text.length();
+			int height = fontMetrics.getHeight();
+			e.gc.setForeground(loginShell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+			e.gc.drawString(text, (point.x-width)/2 , (point.y-height)/2, true);
+		}
+	}
+
 }
