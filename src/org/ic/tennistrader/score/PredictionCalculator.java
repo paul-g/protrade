@@ -24,16 +24,16 @@ public class PredictionCalculator {
         return res;
 	}
 	
-public static double[] getP2Data(double result[]){
-    double [] res = new double[4];
-    for (int i=0;i<res.length;i++){
-        res[i] = result[2*i+1];
-    }
-    return res;
+	public static double[] getP2Data(double result[]){
+		double [] res = new double[4];
+		for (int i=0;i<res.length;i++){
+			res[i] = result[2*i+1];
+		}
+		return res;
     }
 	
 	public static double[] calculate(Match match) {
-		double[] result = new double[8];
+		double[] result = new double[10];
 
 		Statistics playerOneStats = match.getPlayerOne().getStatistics();
 		Statistics playerTwoStats = match.getPlayerTwo().getStatistics();
@@ -64,24 +64,28 @@ public static double[] getP2Data(double result[]){
 			//System.out.println("GAME score 2: " + score.getCurrentSetScore().getPlayerTwoGames());
 			//System.out.println("Points One: " + pointsOne);
 			//System.out.println("Points Two: " + pointsTwo);
-			//System.out.println(score.getPlayerTwoSets());
-			result[4] = calculateSetPercent(pointsOne, pointsTwo, 
-							score.getCurrentSetScore().getPlayerOneGames(), 
-							score.getCurrentSetScore().getPlayerTwoGames(), 
-							1, 1);
+			//System.out.println(score.getPlayerTwoSets());			
+			result[4] = calculateCurrentSetPercent(pointsOne, pointsTwo, 
+					score.getCurrentSetScore().getPlayerOneGames(), 
+					score.getCurrentSetScore().getPlayerTwoGames(), 1);
 			result[5] = 1.0 - result[4];
-			result[6] = calculateMatchPercent(result[4]);
+			result[6] = calculateWinMatch(result[4], score.getPlayerOneSets(), score.getPlayerTwoSets(),
+					1, score.getMaximumSetsPlayed() );
 			result[7] = 1-result[6];
+			result[8] = 1/result[6];
+			result[9] = 1/result[7];
 		} else {
             result[3] = pwgB = calculateGamePercent(pointsOne,pointsTwo,  1 - result[1], 0);
 		    result[2] = pwgA = 1.0 - result[3];
-		    result[5] = calculateSetPercent(pointsOne, pointsTwo, 
-		    				score.getCurrentSetScore().getPlayerOneGames(), 
-		    				score.getCurrentSetScore().getPlayerTwoGames(),
-		    				0, 1);
+		    result[5] = calculateCurrentSetPercent(pointsOne, pointsTwo, 
+					score.getCurrentSetScore().getPlayerOneGames(), 
+					score.getCurrentSetScore().getPlayerTwoGames(), 0);
 			result[4] = 1.0 - result[5];
-			result[7] = calculateMatchPercent(result[5]);
+			result[7] = calculateWinMatch(result[5], score.getPlayerOneSets(), score.getPlayerTwoSets(),
+					0, score.getMaximumSetsPlayed() );
 			result[6] = 1-result[7];
+			result[8] = 1/result[6];
+			result[9] = 1/result[7];
 		}
 		
 		DecimalFormat df = new DecimalFormat("#.###");
@@ -126,7 +130,8 @@ public static double[] getP2Data(double result[]){
 	}
 
 	private static double calculateGamePercent(int a, int b, double pwg, int c) {
-		// pwg = (server == PlayerEnum.PLAYER1)? playerOnePWG : playerTwoPWG;
+		if (a>4 || b>4)
+			return -1; // not normally reachable code
 		if (a == 4 && b <= 2)
 			return c;
 		if (b == 4 && a <= 2)
@@ -199,8 +204,62 @@ public static double[] getP2Data(double result[]){
 				(1- pwgOnAverageB) * calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun);
 		}
 	}
-
-	private static double calculateMatchPercent(double set ) {
-		return po(set,2)*(3 - 2*set);
+	
+	private static double calculateCurrentSetPercent(int a, int b, int c, int d, int s) {
+		double winSetGameWon,winSetGameLost, winGame;
+		if (s == 1){
+			winSetGameWon = calculateSetPercent(a, b, c + 1, d, s, 1);
+			winSetGameLost = calculateSetPercent(a, b, c, d + 1, s, 1);
+			winGame = pwgA;
+		}
+		else {
+			winSetGameWon = calculateSetPercent(a, b, c, d + 1, s, 1);
+			winSetGameLost = calculateSetPercent(a, b, c + 1, d, s, 1);
+			winGame = pwgB;
+		}
+		return winGame*winSetGameWon + (1 - winGame)*winSetGameLost;
 	}
+	
+	// always computes the match percent of first player
+	private static double calculateMatchPercent(double winSet, int setScoreOne, int setScoreTwo, int maxSets ) {
+		if (setScoreOne >= Math.floor(maxSets/2.0) + 1)
+			return 1;
+		int j=2, s=2;
+		if (maxSets == 5){
+			j = 4;
+			s = 3;
+		}
+		return (fact(j-setScoreOne-setScoreTwo)/fact(s-1-setScoreOne)*fact(s-1-setScoreTwo))*
+			Math.pow(winSet,s-setScoreOne)*Math.pow(1-winSet, s-setScoreTwo-1);
+		
+	}
+	
+	private static double calculateWinMatch( double winCurSet, int setScoreOne, int setScoreTwo, int s, int maxSets)
+	{
+		double winSet = calculateSetPercent(0, 0, 0, 0, s, 1);
+		double winMatchSetWon,winMatchSetLost;
+		if (s == 1){
+			winMatchSetWon = calculateMatchPercent(winSet, setScoreOne+1, setScoreTwo, maxSets );
+			winMatchSetLost = calculateMatchPercent(winSet, setScoreOne, setScoreTwo+1, maxSets );
+		}
+		else 
+		{
+			winMatchSetWon = calculateMatchPercent(winSet, setScoreTwo+1, setScoreOne, maxSets );
+			winMatchSetLost = calculateMatchPercent(winSet, setScoreTwo, setScoreOne+1, maxSets );
+		}
+		return winCurSet*winMatchSetWon + (1-winCurSet)*winMatchSetLost;
+	}
+	
+	private static double fact(int n)
+	{
+		int result = 1;
+		if (n == 0 )
+			return 1;
+		for(int i=1; i<=n; i++)
+		{
+			result *= i;
+		}
+		return result;
+	}
+	
 }

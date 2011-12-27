@@ -183,7 +183,6 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
 
     public void setScores() {
         Score score = match.getScore();
-        int playerOneScores[] = score.getPlayerOneScore();
         
         setPlayerScore(score , PlayerEnum.PLAYER1);
         setPlayerScore(score , PlayerEnum.PLAYER2);
@@ -198,7 +197,8 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
 
     private void setPlayerScore(Score score, PlayerEnum player) {
         Map<Integer, Label> labels = labelMap.get(player);
-        //labels.get(SET).setText(playerOneScores[]);
+        labels.get(SET).setText(score.getPlayerSets(player) + "");
+        labels.get(GAME).setText(score.getPlayerScores(player)[score.getPlayerScores(player).length-1] + "");
         labels.get(POINT).setText(score.getPlayerPoints(player) + "");
     }
     
