@@ -122,15 +122,72 @@ Explain why, give examples.
 
 \chapter{Technical Description}
 
-This chapter introduces the main technologies used in building the product, gives a high lelve overview of the application's design and describes some of the main technical challenges and how they were overcome.
+This chapter introduces the main technologies used in building the {\nmsp} application and provides a high level overview of the application's design, describing some of the main technical challenges and how they were overcome.
 
 \section{Technologies}
-In order to deliver the responsive and rich application described in section ***, we have used a number of technologies/frameworks etc.:
+To facilitate the development of a responsive and feature rich application such as {\nm}, a number of technologies, frameworks and libraries were used throughout the development stage.
+This section provides a brief overview of the technologies used while a more in-depth analysis of the choice of technology is presented in section \ref{sec-choice}.
+
+\subsection{Languages}
+
 \begin{description}
-\item[SWT] Brief description
-\item[SWTChart] Brief description 
-\item[BetfairAPI] Brief description
-\item[And so on] and so on
+\item[Java] This is a widely used multi-purpose programming language, with good support for concurrency. It is platform-independent and provides a choice between native and emulated graphical toolkits.
+
+\item[XML] Usually the langauge of choice for managing the configuration of Java projects, XML is ``typed'' (via schemas) and exstensbile. It is generally used in conjuncture with build automation tools such as Ant.
+
+\item[Bash] Bash scripts are useful for automating simple, repetitive tasks such as builds, pre-commit hooks etc.
+
+\end{description}
+
+\subsection{UI Libraries} 
+
+\begin{description}
+
+\item[SWT] 
+SWT is a graphical widget toolkit with a platform dependent implementation. At the heart of its architecure is the ability to create native widgets. However this raises the issue of freeing allocated memory (which cannot be garbage col- lected by the JVM).
+
+``The Standard Widget Toolkit is a graphical widget toolkit for use with the Java platform. It was originally developed by IBM and is now maintained by the Eclipse Foundation in tandem with the Eclipse IDE. It is an alternative to the AWT and Swing Java GUI toolkits provided by Sun Microsystems as part of the Java Platform, Standard Edition.
+
+To display GUI elements, the SWT implementation accesses the native GUI libraries of the operating system using JNI (Java Native Interface) in a manner that is similar to those programs written using operating system-specific APIs. Programs that call SWT are portable, but the implementation of the toolkit, despite part of it being written in Java, is unique for each platform.''
+
+\item[JFace]
+
+\item[SWTChart] The SWTChart API provides a chart component with several basic function-
+alities (such as drawing line functions, bar charts etc). The chart can handle
+real-time updates (even for large data series), which is crucial to the purpose
+of our project and, since it is based on SWT, it integrates smoothly with the
+application’s UI design and implementation.
+
+\end{description}
+
+
+\subsection{Build Automation Tools}
+
+\begin{description}
+\item[Apache Ant] is a Java tool used for application builds. It provides out of the box tasks varying from simple file and folder manipulation to compilation and can be extended with more complex tasks such as testing and reporting for applications. These are usually provided by the API developper (e.g. JUnit or Cobertura) simplifying the process of integrating various technologies.
+
+\initlisting{Xml}{An example Ant task for generating PMD reports}
+\begin{lstlisting}
+<target name="pmd">
+	<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="classpath" />
+	<mkdir dir="${pmd.report.dir}" />
+	<pmd shortFilenames="true">
+		<ruleset>basic,design,braces,junit</ruleset>
+        <formatter type="xml" toFile="${pmd.report.dir}/pmd.xml" />
+		<fileset dir="${src.dir}">
+			<include name="**/*.java" />
+		</fileset>
+		<fileset dir="${unit.test.dir}">
+			<include name="**/*.java" />
+		</fileset>
+		<fileset dir="${system.test.dir}">
+			<include name="**/*.java" />
+		</fileset>
+	</pmd>
+	<xslt in="${pmd.report.dir}/pmd.xml" style="${config.pmd.dir}/format.xslt" out="${pmd.report.dir}/pmd.html" />
+	</target>
+\end{lstlisting}
+\item[make] 
 \end{description}
 
 Our choice of technologies is explained in more detail in section ***.
@@ -149,6 +206,7 @@ e.g. We delivered an application which does this and that (possible a screenshot
 This chapter discusses how important aspects of Software Engieering were tackled.
 
 \section{Choice of Technology}
+\label{sec-choice}
 What technology was used and why? What other technology was considered but not used and why?
 
 (Here we look at the technology options - e.g. SWT vs Swing - and explain our choices.)
