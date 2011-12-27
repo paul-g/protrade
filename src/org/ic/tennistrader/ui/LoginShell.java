@@ -180,7 +180,7 @@ public class LoginShell {
 		accept = new Image(display,"images/login/shield_accepted.png");
 		deny = new Image(display,"images/login/shield_denied.png");
 		Label result = new Label(this.loginShell,SWT.NONE);
-		result.setBounds(500, 165, 75, 75);
+		result.setBounds(500, 162, 75, 75);
 		result.setImage(accept);
 		result.setVisible(false);
 		return result;
