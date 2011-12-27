@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -90,10 +91,12 @@ public class LoginShell {
 		final Text username = new Text(loginShell, SWT.NONE);
 		username.setText("username");
 		username.setBounds(180, 165, 300, 30);
+		username.addMouseListener(new HoverListener(username));
 
 		final Text password = new Text(loginShell, SWT.PASSWORD);
 		password.setText("password");
 		password.setBounds(180, 210, 300, 30);
+		password.addMouseListener(new HoverListener(password));
 
 		Button login = makeLoginButton(display);
 
@@ -215,6 +218,7 @@ public class LoginShell {
 
 	public void setText(String text) {
 		//TODO: update text on progress bar
+		
 	}
 
 	public void updateProgressBar(int amount) {
@@ -241,4 +245,26 @@ public class LoginShell {
 		return polygon;
 	}
 
+	private class HoverListener implements MouseListener {
+		private Text text;
+		
+		public HoverListener ( Text text ) {
+			this.text = text;
+		}
+		
+		@Override
+		public void mouseDoubleClick(MouseEvent e) { 
+		}
+
+		@Override
+		public void mouseDown(MouseEvent e) {
+			text.setText("");
+		}
+
+		@Override
+		public void mouseUp(MouseEvent e) {
+		}
+				
+	}
+	
 }

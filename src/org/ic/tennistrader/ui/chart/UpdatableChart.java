@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui.updatable;
+package org.ic.tennistrader.ui.chart;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,20 +16,22 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.swtchart.Chart;
+import org.swtchart.IAxis;
 import org.swtchart.IErrorBar.ErrorBarType;
 import org.swtchart.IAxisSet;
-import org.swtchart.IAxisTick;
 import org.swtchart.IBarSeries;
 import org.swtchart.IErrorBar;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeriesSet;
+import org.swtchart.ITitle;
+import org.swtchart.LineStyle;
 import org.swtchart.Range;
 import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.ui.StandardWidgetResizeListener;
+import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
 	private IBarSeries endOfSets;
@@ -45,8 +47,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private String xAxisTitle = "Time";
 	private String yAxisDecimalTitle = "Decimal Odds";
 	private String yAxisFractionalTitle = "Implied Odds (%)";
-	private boolean pl1Selected;
-	private boolean pl2Selected;
+	boolean pl1Selected;
+	boolean pl2Selected;
 	private boolean maPl2Selected;
 	private boolean maPl1Selected;
 	private boolean spPl1Selected;
@@ -54,41 +56,50 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ChartData chartData;
 	private Match match;
 	private Slider slider;
-	private OverroundChart oChart;
 	private int k = 0;
 
 	public UpdatableChart(Composite parent, int style, Match match,
-			Slider slider) {
+			Slider slider, ChartData chartData) {
 		super(parent, style);
-		oChart = new OverroundChart(parent, style, match);
-		makeOChartMenu(parent);
-		chartData = new ChartData();
-		createSlider(slider);
 		this.match = match;
+		this.slider = slider;
+		this.chartData = chartData;
+		initSlider();
+
+		setBackgroundMode(SWT.INHERIT_DEFAULT);
+
 		setSeriesStyles();
 		decimalOdds = true;
 		pl1Selected = true;
-		this.getAxisSet().getXAxis(0).getTitle().setText(xAxisTitle);
-		this.getAxisSet().getXAxis(0).getTitle().setVisible(false);
-		this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
-		this.getTitle().setText(match.getName());
+
+		IAxis xAxis = getAxisSet().getXAxis(0);
+		configureAxis(xAxis, xAxisTitle, LineStyle.NONE, false);
+
+		IAxis yAxis = getAxisSet().getYAxis(0);
+		configureAxis(yAxis, yAxisDecimalTitle, LineStyle.NONE, false);
+
+		getTitle().setVisible(false);
 		makeMenus(parent);
-		this.getLegend().setPosition(SWT.TOP);
+
+		getLegend().setPosition(SWT.TOP);
 		// addListeners();
 
-		this.getAxisSet().getYAxis(0).setRange(new Range(1, 2));
+		yAxis.setRange(new Range(1, 2));
 		// this.getAxisSet().adjustRange();
-		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		this.addListener(SWT.Resize, new StandardWidgetResizeListener(this));
-		IAxisTick xTick = this.getAxisSet().getXAxis(0).getTick();
-		xTick.setVisible(false);
-		this.getAxisSet().getYAxis(1).getTick().setVisible(false);
-		this.getAxisSet().getYAxis(1).getTitle().setVisible(false);
-		// System.out.println("main chart x: " +
-		// this.getPlotArea().getBounds().x);
-		// System.out.println("main chart y : " +
-		// this.getPlotArea().getBounds().y);
 
+		xAxis.getTick().setVisible(false);
+
+		IAxis yAxis2 = getAxisSet().getYAxis(1);
+		configureAxis(yAxis2, null, LineStyle.NONE, false);
+		yAxis2.getTick().setVisible(false);
+	}
+
+	private void configureAxis(IAxis axis, String title, LineStyle lineStyle,
+			boolean visible) {
+		axis.getGrid().setStyle(lineStyle);
+		ITitle t = axis.getTitle();
+		t.setText(title);
+		t.setVisible(false);
 	}
 
 	private void addListeners() {
@@ -112,11 +123,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 	}
 
-	private void createSlider(Slider slider) {
-		this.slider = slider;
+	private void initSlider() {
 		slider.setMaximum(1);
 		slider.setSelection(0);
-
 		slider.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				Slider slider = (Slider) event.widget;
@@ -132,10 +141,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		IAxisSet axisSet = this.getAxisSet();
 		axisSet.createYAxis();
 
-		endOfSets = (IBarSeries) seriesSet.createSeries(SeriesType.BAR,
-				"end of sets");
-		endOfSets.setBarPadding(100);
-		endOfSets.setYAxisId(1);
+		// endOfSets = (IBarSeries) seriesSet.createSeries(SeriesType.BAR,
+		// "end of sets");
+		// endOfSets.setBarPadding(100);
+		// endOfSets.setYAxisId(1);
 		axisSet.getYAxis(1).setRange(new Range(0, 1));
 		// build first series
 		firstSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
@@ -143,7 +152,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		Color color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		firstSeries.setLineColor(color);
 		firstSeries.setSymbolSize(4);
-		firstSeries.enableStep(true);
+		// firstSeries.enableStep(true);
+		firstSeries.setAntialias(SWT.ON);
+		firstSeries.enableArea(true);
 		firstSeries.setSymbolType(PlotSymbolType.NONE);
 		pl1Spread = firstSeries.getYErrorBar();
 		pl1Spread.setType(ErrorBarType.BOTH);
@@ -184,16 +195,16 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	/**
 	 * Populates the chart with the given market data
 	 */
-	public void fillData(MOddsMarketData data) {
+	private void updateData(MOddsMarketData data) {
 		// add new market data to the data structures
-		int i = chartData.getDataSize();
-		chartData.updateData(data);
+		int dataSize = chartData.getDataSize() - 1;
 
-		// update size of the slider and selection based on what user was
+		// update size of the slider and selection based on what the user was
 		// previously viewing
-		updateSlider(i);
+		updateSlider(dataSize);
+
 		// set serieses values
-		showSeries(i, false);
+		showSeries(dataSize, false);
 		if (!this.isDisposed()) {
 			this.getAxisSet().getXAxis(0).adjustRange();
 			this.getAxisSet().getYAxis(0).adjustRange();
@@ -214,13 +225,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			slider.setMaximum(i + 1);
 			slider.setMinimum(i);
 			slider.setSelection(i);
-
 		}
-
 	}
 
-	public void showSeries(int i, boolean dragged) {
-		int size = (i + 1) < sampleSize ? (i + 1) : sampleSize;
+	private void showSeries(int i, boolean dragged) {
+		int size = (i ) < sampleSize ? (i ) : sampleSize;
 		Date showXSeries[] = new Date[size];
 		ArrayList<double[]> dataArray = new ArrayList<double[]>();
 		for (int k = 0; k < seriesNr; k++) {
@@ -249,47 +258,42 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 						* k;
 				nr++;
 				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl1().get(b),
-						pow)
-						* k;
+						pow) * k;
 				nr++;
 				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl2().get(b),
-						pow)
-						* k;
+						pow) * k;
 				nr++;
 				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1Lay().get(b)
 						.first(), pow) - Math.pow(chartData.getPl1YSeries()
 						.get(b), pow))
 						* k;
 				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1YSeries().get(
-						b), pow) - Math.pow(chartData.getPl1Lay().get(b)
-						.second(), pow))
-						* k;
+				dataArray.get(nr)[a] = (Math.pow(
+						chartData.getPl1YSeries().get(b), pow) - Math.pow(
+						chartData.getPl1Lay().get(b).second(), pow)) * k;
 				nr++;
 				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2Lay().get(b)
 						.first(), pow) - Math.pow(chartData.getPl2YSeries()
 						.get(b), pow))
 						* k;
 				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2YSeries().get(
-						b), pow) - Math.pow(chartData.getPl2Lay().get(b)
-						.second(), pow))
-						* k;
+				dataArray.get(nr)[a] = (Math.pow(
+						chartData.getPl2YSeries().get(b), pow) - Math.pow(
+						chartData.getPl2Lay().get(b).second(), pow)) * k;
 				nr++;
-				dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
-				nr++;
-				dataArray.get(nr)[a] = chartData.getLayOverround().get(b);
-				nr++;
-				dataArray.get(nr)[a] = chartData.getPl1Volume().get(b);
-				nr++;
-				dataArray.get(nr)[a] = chartData.getPl2Volume().get(b);
-				nr++;
-				dataArray.get(nr)[a] = chartData.endOfSets.get(b);
+				/*
+				 * dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
+				 * nr++; dataArray.get(nr)[a] =
+				 * chartData.getLayOverround().get(b); nr++;
+				 * dataArray.get(nr)[a] = chartData.getPl1Volume().get(b); nr++;
+				 * dataArray.get(nr)[a] = chartData.getPl2Volume().get(b); nr++;
+				 */
+				// dataArray.get(nr)[a] = chartData.endOfSets.get(b);
 
 			}
 
-			endOfSets.setXDateSeries(showXSeries);
-			endOfSets.setYSeries(dataArray.get(12));
+			// endOfSets.setXDateSeries(showXSeries);
+			// endOfSets.setYSeries(dataArray.get(12));
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(dataArray.get(0));
 			secondSeries.setXDateSeries(showXSeries);
@@ -302,11 +306,13 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			pl1Spread.setMinusErrors(dataArray.get(5));
 			pl2Spread.setPlusErrors(dataArray.get(6));
 			pl2Spread.setMinusErrors(dataArray.get(7));
-			oChart.setBackOverround(showXSeries, dataArray.get(8));
-			oChart.setLayOverround(showXSeries, dataArray.get(9));
-			oChart.setPl1Volume(showXSeries, dataArray.get(10));
-			oChart.setPl2Volume(showXSeries, dataArray.get(11));
-			oChart.adjust();
+			/*
+			 * oChart.setBackOverround(showXSeries, dataArray.get(8));
+			 * oChart.setLayOverround(showXSeries, dataArray.get(9));
+			 * oChart.setPl1Volume(showXSeries, dataArray.get(10));
+			 * oChart.setPl2Volume(showXSeries, dataArray.get(11));
+			 * oChart.adjust();
+			 */
 			updateDisplay();
 		}
 	}
@@ -317,53 +323,38 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		if (decimalOdds)
 			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
 		else
-			this.getAxisSet().getYAxis(0).getTitle().setText(
-					yAxisFractionalTitle);
+			this.getAxisSet().getYAxis(0).getTitle()
+					.setText(yAxisFractionalTitle);
 
 		showSeries(slider.getSelection(), true);
 		updateDisplay();
 	}
 
-	/**
-	 * updates the chart with the new given market data
-	 */
+	@Override
 	public void handleUpdate(final MOddsMarketData newData) {
-		// final Composite comp = this.getParent();
-		final UpdatableChart chart = this;
-		if (chart != null) {
-			chart.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					fillData(newData);
-					if (!chart.isDisposed()) {
-						chart.redraw();
-						chart.getParent().update();
-					}
-					// if (!comp.isDisposed())
-					// comp.update();
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				updateData(newData);
+				if (!isDisposed()) {
+					redraw();
+					getParent().update();
 				}
-			});
-		}
+			}
+		});
 	}
 
 	private void updateDisplay() {
-		final Composite comp = this.getParent();
-		final UpdatableChart chart = this;
-		final OverroundChart oChart = this.oChart;
-		if (comp != null) {
-			comp.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					if (!chart.isDisposed())
-						//chart.allignment();
-						chart.redraw();
-					if (!oChart.isDisposed())
-						oChart.redraw();
-					if (!comp.isDisposed())
-						comp.update();
-				}
-			});
-		}
+		final Composite parent = getParent();
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if (!isDisposed())
+					redraw();
+				if (parent != null && !parent.isDisposed())
+					parent.update();
+			}
+		});
 	}
 
 	private void updateSlide() {
@@ -379,82 +370,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				}
 			});
 		}
-	}
-
-	private void makeOChartMenu(Composite parent) {
-		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
-		oChart.setMenu(menu);
-		oChart.getPlotArea().setMenu(menu);
-		final MenuItem overroundBack = new MenuItem(menu, SWT.CHECK);
-		overroundBack.setText("Overround Back");
-		overroundBack.setSelection(true);
-		final MenuItem overroundLay = new MenuItem(menu, SWT.CHECK);
-		overroundLay.setText("Overround Lay");
-		overroundLay.setSelection(false);
-		final MenuItem volume = new MenuItem(menu, SWT.CHECK);
-		volume.setText("Volume");
-		overroundBack.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event arg0) {
-				if (!overroundBack.getSelection()
-						&& !overroundLay.getSelection()) {
-					overroundBack.setSelection(true);
-				} else {
-					volume.setSelection(false);
-				}
-				oChart.setBackOverround(overroundBack.getSelection());
-				oChart.visibility(pl1Selected, pl2Selected);
-			}
-		});
-		overroundLay.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event arg0) {
-				if (!overroundLay.getSelection()
-						&& !overroundBack.getSelection()) {
-					overroundLay.setSelection(true);
-				} else {
-					volume.setSelection(false);
-				}
-				oChart.setLayOverround(overroundLay.getSelection());
-				oChart.visibility(pl1Selected, pl2Selected);
-			}
-		});
-		volume.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event arg0) {
-				if (!volume.getSelection()) {
-					volume.setSelection(true);
-				} else {
-					overroundBack.setSelection(false);
-					overroundLay.setSelection(false);
-					oChart.setBackOverround(false);
-					oChart.setLayOverround(false);
-					oChart.visibility(pl1Selected, pl2Selected);
-				//	allignment();
-				}
-			}
-		});
-	}
-
-	private void allignment() {
-		// System.out.println("called");
-		// System.out.println("main chart x: " +
-		// this.getPlotArea().getBounds().x);
-		// System.out.println("main chart y : " +
-		// this.getPlotArea().getBounds().y);
-		// System.out.println("ochart chart x: " +
-		// oChart.getPlotArea().getBounds().x);
-		// System.out.println("ochart chart y : " +
-		// oChart.getPlotArea().getBounds().y);
-		// int diff =
-		// this.setBounds(arg0)
-		this.setBounds(oChart.getPlotArea().getBounds().x
-				- (this.getPlotArea().getBounds().x - this.getBounds().x), this
-				.getBounds().y, oChart.getPlotArea().getBounds().width
-				+ this.getPlotArea().getBounds().x - this.getBounds().x, this
-				.getBounds().height);
-		this.getPlotArea().setBounds(oChart.getPlotArea().getBounds().x,
-				this.getPlotArea().getBounds().y,
-				oChart.getPlotArea().getBounds().width,
-				this.getPlotArea().getBounds().height);
-
 	}
 
 	private void makeMenus(Composite parent) {
@@ -503,11 +418,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				}
 				pl1Selected = !pl1Selected;
 				firstSeries.setVisible(pl1Selected);
-				oChart.visibility(pl1Selected, pl2Selected);
+				// oChart.visibility(pl1Selected, pl2Selected);
 				updateDisplay();
-
 			}
-
 		});
 
 		player2.addListener(SWT.Selection, new Listener() {
@@ -519,7 +432,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				}
 				pl2Selected = !pl2Selected;
 				secondSeries.setVisible(pl2Selected);
-				oChart.visibility(pl1Selected, pl2Selected);
+				// oChart.visibility(pl1Selected, pl2Selected);
 				updateDisplay();
 			}
 		});
@@ -571,15 +484,14 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		player1.setSelection(true);
 
 		// set the menu
-		this.setMenu(menu);
-		this.getPlotArea().setMenu(menu);
+		setMenu(menu);
+		getPlotArea().setMenu(menu);
 	}
 
 	@Override
 	public void setDisposeListener(DisposeListener listener) {
-		this.addDisposeListener(listener);
+		addDisposeListener(listener);
 	}
-
 	/*
 	 * private class ZoomListener implements
 	 * MouseWheelListener,org.eclipse.swt.events.MouseWheelListener{ private

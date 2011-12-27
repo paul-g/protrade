@@ -24,7 +24,9 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.ui.updatable.UpdatableChart;
+import org.ic.tennistrader.ui.chart.DualChartWidget;
+import org.ic.tennistrader.ui.chart.UpdatableChart;
+
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 import uk.co.caprica.vlcj.player.embedded.videosurface.linux.LinuxVideoSurfaceAdapter;
@@ -106,7 +108,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			folder.setSelection(item);
 
-			comp.setWeights(new int[] { 5, 40, 50, 5 });
+			comp.setWeights(new int[] { 5, 40, 50 });
 
 		} else
 			// just bring the required tab under focus
@@ -155,25 +157,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	 * @param ti
 	 */
 	private void addChart(Composite comp, Match match) {
-		// Select values on chart
-		SashForm form = new SashForm(comp, SWT.VERTICAL);
-		//Composite c = new Composite(comp, SWT.NONE);
-//		c.setLayout(new FillLayout());
-//		GridLayout gridLayout = new GridLayout();
-//		gridLayout.numColumns = 1;
-//		c.setLayout(gridLayout);
-		// c.setLayout(new GridLayout());
-		Composite slideComp = new Composite(comp.getParent(), SWT.NONE);
-		slideComp.setLayout(new FillLayout());
-		slideComp.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		Slider slider = new Slider(slideComp, SWT.HORIZONTAL);
-		slider.setMaximum(1);
-		slider.setValues(0, 0, 1, 0, 0, 0);
-		// new Charts(c,SWT.BORDER,match,slider);
-		final UpdatableChart chart = new UpdatableChart(form, SWT.BORDER, match,
-				slider);
-		form.setWeights(new int[]{65,35});
-		LiveDataFetcher.registerForMatchUpdate(chart, match);
+		DualChartWidget dcw = new DualChartWidget(comp, match);
 		comp.update();
 	}
 

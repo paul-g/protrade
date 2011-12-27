@@ -24,7 +24,7 @@ public class BetsDisplayTest extends DisplayTest{
 	@Before
 	public void setUp() {
 		super.setUp();
-		betsDisplay = new BetsDisplay(comp, SWT.None);
+		betsDisplay = new BetsDisplay(shell, SWT.None);
 		BetsDisplay.setActiveBets(new ArrayList<Label>());
 		BetsDisplay.setUnmatchedBetsLabels(new HashMap<Bet, Label>());
 	}

@@ -1,0 +1,75 @@
+package org.ic.tennistrader.ui.chart;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Slider;
+import org.ic.tennistrader.domain.ChartData;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
+import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.ui.updatable.UpdatableWidget;
+
+public class DualChartWidget extends Composite implements UpdatableWidget{
+	
+	private final UpdatableChart largeChart;
+	private final OverroundChart smallChart;
+	private final ChartData chartData;
+	
+	public static void main(String args[]) {
+		Display display = new Display();
+		Shell shell = new Shell(display, SWT.SHELL_TRIM);
+		shell.setLayout(new FillLayout());
+		
+		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
+		DualChartWidget dcw = new DualChartWidget(shell,  match);
+		
+		shell.setMaximized(true);
+		shell.open();
+
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+	}
+
+	public DualChartWidget(Composite parent, Match match){
+		super(parent, SWT.NONE);
+		chartData = new ChartData();
+		setLayout(new FillLayout());
+		
+		SashForm form = new SashForm(this, SWT.VERTICAL);
+		
+		Slider slider = new Slider(form, SWT.HORIZONTAL);
+		slider.setMaximum(1);
+		slider.setValues(0, 0, 1, 0, 0, 0);
+		
+		largeChart = new UpdatableChart(form, SWT.BORDER, match,
+				slider, chartData);
+		
+		smallChart = new OverroundChart(form, SWT.NONE, match, largeChart, chartData, slider);
+		
+		form.setWeights(new int[]{5,70,25});
+		
+		LiveDataFetcher.registerForMatchUpdate(this, match);
+	}
+
+	@Override
+	public void handleUpdate(final MOddsMarketData newData) {
+		chartData.updateData(newData);
+		largeChart.handleUpdate(newData);
+		smallChart.handleUpdate(newData);
+	}
+
+	@Override
+	public void setDisposeListener(DisposeListener listener) {
+		largeChart.setDisposeListener(listener);
+		smallChart.setDisposeListener(listener);
+	}
+}

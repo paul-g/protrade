@@ -26,7 +26,7 @@ public class BetDisplayInfoTest extends DisplayTest{
         Player firstPlayer = new Player("Rafael", "Nadal");
         Player secondPlayer = new Player("Roger", "Federer");
         match = new HistoricalMatch(firstPlayer, secondPlayer);        
-        betDisplayInfo = new BetDisplayInfo(comp, firstPlayer, secondPlayer);
+        betDisplayInfo = new BetDisplayInfo(shell, firstPlayer, secondPlayer);
     }
     
     @Test
@@ -38,7 +38,7 @@ public class BetDisplayInfoTest extends DisplayTest{
     public void oneBet() {
         Bet bet = new Bet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, pair(2.5,
                 10.0));
-        Label betLabel = new Label(comp, SWT.None);
+        Label betLabel = new Label(shell, SWT.None);
         betDisplayInfo.addBet(bet, betLabel);
         assertEquals(1, betDisplayInfo.getBets().keySet().size());
         double firstWinnerProfit = BetManager.getBetProfit(bet, BetManager
