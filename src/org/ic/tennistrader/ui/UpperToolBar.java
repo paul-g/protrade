@@ -25,6 +25,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
+import org.ic.tennistrader.ui.login.LoginShell;
 
 public class UpperToolBar {
 	private ToolBar toolbar;

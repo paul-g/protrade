@@ -14,6 +14,7 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCTabItem;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.ui.login.LoginShell;
 
 public class DisplayPanelTest {
 	
