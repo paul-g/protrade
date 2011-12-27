@@ -25,9 +25,7 @@ public class BetfairAuthenticator {
 
 	public static void checkLogin(final String username,final String password, final LoginListener loginListener) {
 		// Perform the login
-		
 		Thread t = new Thread(new Runnable(){
-
 			@Override
 			public void run() {
 				try {
@@ -40,9 +38,7 @@ public class BetfairAuthenticator {
 					loginListener.handleLogin(LoginResponse.FAIL);
 				}
 			}
-			
 		});
-		
 		t.start();
 	}
 

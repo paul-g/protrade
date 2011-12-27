@@ -127,6 +127,7 @@ public class LoginShell implements LoginListener {
 		
 		login.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
+				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
 				BetfairAuthenticator.checkLogin(username.getText(), password.getText(), LoginShell.this);
 			}
 		});
@@ -353,6 +354,8 @@ public class LoginShell implements LoginListener {
 					setSuccessLabel(false);
 					updateResult(FAIL);
 				}
+				
+				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
 			}
 		});
 		
