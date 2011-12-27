@@ -12,13 +12,13 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -47,6 +47,11 @@ public class LoginShell {
 
 	/* Bar Text */
 	private TextUpdater textUpdater;
+	
+	/* Success/Fail Label */
+	private Label resultLabel;
+	private Image accept;
+	private Image deny;
 
 	public Shell show() {
 		return loginShell;
@@ -116,18 +121,23 @@ public class LoginShell {
 				loginShell.dispose();
 			}
 		});
-
+		
 		login.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				String user = username.getText();
 				if (BetfairAuthenticator.checkLogin(user, password.getText())) {
 					Main.username = user;
+					setSuccessLabel(true);
 					updateResult(SUCCESS);
 					handleLoginSuccess();
-				} else
+				} else {
+					setSuccessLabel(false);
 					updateResult(FAIL);
+				}
 			}
 		});
+		
+		resultLabel = makeResultLabel(display);
 
 		// Center the login screen
 		Monitor primary = display.getPrimaryMonitor();
@@ -137,17 +147,11 @@ public class LoginShell {
 		int y = bounds.y + (bounds.height - rect.height) / 2;
 		loginShell.setLocation(x, y);
 
-		this.bar = new ProgressBar(loginShell, SWT.SMOOTH);
-		this.bar.setBounds(50, 305, 500, 20);
-		bar.setToolTipText("Test");
-		bar.setVisible(false);
-		textUpdater = new TextUpdater("",bar);
-		bar.addPaintListener(textUpdater);
+		makeProgressBar();
 		loginShell.open();
 	}
 
 	private Button makeCancelButton(Display display) {
-
 		final Image cancelImg = new Image(loginShell.getDisplay(),
 				"images/login/cancel.png");
 		Button cancel = new Button(loginShell, SWT.PUSH);
@@ -170,6 +174,25 @@ public class LoginShell {
 		login.setLocation(300, 250);
 		addHighlightListener(display, login);
 		return login;
+	}
+	
+	private Label makeResultLabel(Display display) {
+		accept = new Image(display,"images/login/shield_accepted.png");
+		deny = new Image(display,"images/login/shield_denied.png");
+		Label result = new Label(this.loginShell,SWT.NONE);
+		result.setBounds(500, 162, 75, 75);
+		result.setImage(accept);
+		result.setVisible(false);
+		return result;
+	}
+	
+	private void makeProgressBar() {
+		bar = new ProgressBar(loginShell, SWT.SMOOTH);
+		bar.setBounds(50, 305, 500, 20);
+		bar.setToolTipText("Test");
+		bar.setVisible(false);
+		textUpdater = new TextUpdater("",bar);
+		bar.addPaintListener(textUpdater);
 	}
 
 	private void addHighlightListener(Display display, Button button) {
@@ -215,6 +238,14 @@ public class LoginShell {
 		this.loginShell.update();
 	}
 
+	private void setSuccessLabel(boolean success) {
+		if (success)
+			resultLabel.setImage(accept);
+		else
+			resultLabel.setImage(deny);
+		resultLabel.setVisible(true);
+	}
+	
 	public void dispose() {
 		loginShell.dispose();
 	}
@@ -280,11 +311,11 @@ public class LoginShell {
 
 	private class TextUpdater implements PaintListener {
 		private String text;
-		private ProgressBar pb;
+		private Point point;
 
 		public TextUpdater(String text,ProgressBar pb) {
 			this.text = text;
-			this.pb = pb;
+			point = pb.getSize();
 		}
 
 		public void setText (String text) {
@@ -293,7 +324,6 @@ public class LoginShell {
 
 		@Override
 		public void paintControl(PaintEvent e) {
-			Point point = pb.getSize();
 			FontMetrics fontMetrics = e.gc.getFontMetrics();
 			int width = fontMetrics.getAverageCharWidth() * text.length();
 			int height = fontMetrics.getHeight();
