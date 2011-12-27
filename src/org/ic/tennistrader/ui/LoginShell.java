@@ -52,6 +52,7 @@ public class LoginShell {
 	private Label resultLabel;
 	private Image accept;
 	private Image deny;
+	private boolean visible = false;
 
 	public Shell show() {
 		return loginShell;
@@ -227,6 +228,7 @@ public class LoginShell {
 
 	public void run(final Display display) {
 		while (!loginShell.isDisposed()) {
+			resultLabel.setVisible(visible);
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
@@ -243,7 +245,19 @@ public class LoginShell {
 			resultLabel.setImage(accept);
 		else
 			resultLabel.setImage(deny);
+		visible = true;
 		resultLabel.setVisible(true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				visible = false;
+			}
+		}).start();
 	}
 	
 	public void dispose() {
