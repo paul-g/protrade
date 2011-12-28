@@ -1,6 +1,9 @@
 package org.ic.tennistrader.ui.dashboard;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -67,6 +70,15 @@ public class WidgetContainer extends Composite {
 		
 		addListener(SWT.MouseUp, moveListener);
 		addListener(SWT.MouseDown, moveListener);
+		
+		addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent me){
+				dashboard.setMaximizedControl(WidgetContainer.this);
+			}
+			
+		});
 	}
 
 	// pre: component was already drawn

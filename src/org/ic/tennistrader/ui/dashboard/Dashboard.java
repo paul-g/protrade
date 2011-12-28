@@ -5,12 +5,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -47,7 +45,7 @@ public class Dashboard extends Composite {
 				placeWidget(wc, j * defaultWidgetWidth,
 						i * defaultWidgetHeight, defaultWidgetWidth,
 						defaultWidgetHeight);
-				wc.setWidget(new WidgetPlacehodler(this, SWT.NONE, wc));
+				wc.setWidget(new WidgetPlaceholder(this, SWT.NONE, wc));
 			}
 		}
 		
@@ -103,9 +101,6 @@ public class Dashboard extends Composite {
 		int newX = oldX;
 		int newY = oldY;
 
-		System.out.println(dragLocation);
-		System.out.println(dx + " " + dy);
-
 		switch (dragLocation) {
 		case SE:
 			newHeight = oldHeight + dy;
@@ -160,6 +155,15 @@ public class Dashboard extends Composite {
 		return loc;
 	}
 
+	public void setMaximizedControl(WidgetContainer wc) {
+		Rectangle rect = getClientArea();
+		wc.setBounds(rect);
+		updateWidgetPosition(wc, rect.x, rect.y);
+		wc.setHeight(rect.height);
+		wc.setWidth(rect.width);
+		wc.moveAbove(null);
+	}
+	
 	public static void main(String[] args) {
 
 		final Display display = new Display();
