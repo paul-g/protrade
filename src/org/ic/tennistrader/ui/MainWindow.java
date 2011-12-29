@@ -21,8 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
+import org.ic.tennistrader.ui.main.StandardWindow;
 
-public class MainWindow {
+public class MainWindow extends StandardWindow {
 
     private Shell shell;
     
@@ -53,6 +54,7 @@ public class MainWindow {
     }
     
     public MainWindow(Display display) {
+    	super(display);
         this.display = display;
     }
     
