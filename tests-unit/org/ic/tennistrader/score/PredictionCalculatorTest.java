@@ -1,5 +1,10 @@
 package org.ic.tennistrader.score;
 
+import static org.junit.Assert.assertEquals;
+
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
@@ -9,9 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import java.lang.reflect.*;
-import java.text.DecimalFormat;
 
 public class PredictionCalculatorTest {
 

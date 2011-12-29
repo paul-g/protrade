@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
-import org.ic.tennistrader.domain.markets.SetBettingMarketData;
-import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 import org.ic.tennistrader.service.threads.MatchUpdaterThread;
-
-import org.apache.log4j.Logger;
 
 public class BetfairDataUpdaterThread extends MatchUpdaterThread {
     // private List<EventBetfair> events;

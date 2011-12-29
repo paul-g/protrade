@@ -6,12 +6,13 @@ import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
+import org.ic.tennistrader.ui.main.StandardWindow;
 import org.junit.Before;
 import org.junit.Test;
 
 public class LowerToolbarTest extends DisplayTest {
 	
-	private MainWindow mw;
+	private StandardWindow mw;
 	private SWTBot bot;
 	private SWTBot toolbot;
 	private LowerToolBar ltb;
@@ -19,7 +20,7 @@ public class LowerToolbarTest extends DisplayTest {
 	@Before
 	public void setUp(){
 		super.setUp();
-		mw = new MainWindow(display);
+		mw = new StandardWindow(display);
 		bot = new SWTBot(mw.show());
 		ltb = mw.getLowerToolBar();
 		toolbot = new SWTBot(ltb.getToolbar());

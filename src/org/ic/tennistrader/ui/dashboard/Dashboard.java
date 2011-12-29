@@ -1,16 +1,18 @@
 package org.ic.tennistrader.ui.dashboard;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 public class Dashboard extends Composite {
@@ -19,56 +21,58 @@ public class Dashboard extends Composite {
 	private final static int DEFAULT_ROW_COUNT = 2;
 	private final static int DEFAULT_WIDGETS_PER_ROW = DEFAULT_WIDGET_COUNT
 			/ DEFAULT_ROW_COUNT;
-	private int defaultWidgetWidth;
-	private int defaultWidgetHeight;
-
 	final static int SIZE = 6;
 
 	private static final Logger log = Logger.getLogger(Dashboard.class);
-
-	private Map<WidgetContainer, Point> widgetMap = new HashMap<WidgetContainer, Point>();
+ 
+	private DashboardConfiguration data;
 
 	public Dashboard(Shell shell) {
 		super(shell, SWT.NONE);
+		init(shell);
+		addDefaultWidgets();
+	}
+	
+	public Dashboard(Shell shell, String filename) {
+		super(shell, SWT.NONE);
+		init(shell);
+		loadDashboardConfiguration(filename);
+	}
+
+	private void init(Shell shell) {
 		Rectangle r = shell.getClientArea();
-		defaultWidgetHeight = r.height / DEFAULT_ROW_COUNT;
-		defaultWidgetWidth = r.width / DEFAULT_WIDGETS_PER_ROW;
+		data = new DashboardConfiguration(new HashMap<WidgetContainer, Point>(), this);
+		data.setDefaultWidgetHeight(r.height / DEFAULT_ROW_COUNT);
+		data.setDefaultWidgetWidth(r.width / DEFAULT_WIDGETS_PER_ROW);
 
 		log.info("Initializing dashboard with default widget count "
 				+ DEFAULT_WIDGET_COUNT + " default height: "
-				+ defaultWidgetHeight + " default width: " + defaultWidgetWidth);
+				+ data.getDefaultWidgetHeight() + " default width: " + data.getDefaultWidgetWidth());
 
+		addListener(SWT.Resize, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				System.out.println("Resize");
+			}
+		});
+
+	}
+
+	private void addDefaultWidgets() {
 		for (int i = 0; i < DEFAULT_ROW_COUNT; i++) {
 			for (int j = 0; j < DEFAULT_WIDGETS_PER_ROW; j++) {
 				WidgetContainer wc = new WidgetContainer(this, SWT.BORDER,
-						defaultWidgetWidth, defaultWidgetHeight);
-				placeWidget(wc, j * defaultWidgetWidth,
-						i * defaultWidgetHeight, defaultWidgetWidth,
-						defaultWidgetHeight);
+						data.getDefaultWidgetWidth(), data.getDefaultWidgetHeight());
+				placeWidget(wc, j * data.getDefaultWidgetWidth(),
+						i * data.getDefaultWidgetHeight(), data.getDefaultWidgetWidth(),
+						data.getDefaultWidgetHeight());
 				wc.setWidget(new WidgetPlaceholder(this, SWT.NONE, wc));
 			}
 		}
-		
-		/*addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (e.keyCode == SWT.ALT){ 
-					setCursor(getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
-				}
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.ALT){ 
-					setCursor(getDisplay().getSystemCursor(SWT.CURSOR_SIZEALL));
-				}
-					
-				System.out.println( (e.keyCode == SWT.ALT));
-			}
-		});*/
 	}
 
+	
 	private void placeWidget(WidgetContainer simpleWidget, int x, int y,
 			int width, int height) {
 		updateWidgetPosition(simpleWidget, x, y);
@@ -147,20 +151,18 @@ public class Dashboard extends Composite {
 	}
 
 	private void updateWidgetPosition(WidgetContainer wc, int newX, int newY) {
-		widgetMap.put(wc, new Point(newX, newY));
+		data.updateLocation(wc, new Point(newX, newY));
 	}
 
 	private Point getLocation(WidgetContainer wc) {
-		Point loc = widgetMap.get(wc);
+		Point loc = data.getLocation(wc);
 		return loc;
 	}
 
 	public void setMaximizedControl(WidgetContainer wc) {
 		Rectangle rect = getClientArea();
+//		updateWidgetPosition(wc, rect.x, rect.y);
 		wc.setBounds(rect);
-		updateWidgetPosition(wc, rect.x, rect.y);
-		wc.setHeight(rect.height);
-		wc.setWidth(rect.width);
 		wc.moveAbove(null);
 	}
 	
@@ -173,7 +175,8 @@ public class Dashboard extends Composite {
 
 		shell.setLayout(new FillLayout());
 		shell.setSize(shellDimension, shellDimension);
-		Dashboard d = new Dashboard(shell);
+		
+		new Dashboard(shell);
 
 		shell.open();
 
@@ -181,6 +184,30 @@ public class Dashboard extends Composite {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-
+	}
+	
+	public void save(){
+		log.info("Saving Dashboard");
+		data.save("dashboard.dat");
+	}
+	
+	private void loadDashboardConfiguration(String filename){
+		try {
+			data.load(filename);
+			layoutWidgets();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void layoutWidgets(){
+		log.info("Updating layout");
+		Set<WidgetContainer> widgets = data.getWidgetMap().keySet();
+		for (WidgetContainer wc : widgets){
+			Point p = data.getWidgetMap().get(wc);
+			Rectangle r = new Rectangle(p.x, p.y, wc.getWidth(), wc.getHeight());
+			wc.setBounds(r);
+		}
 	}
 }

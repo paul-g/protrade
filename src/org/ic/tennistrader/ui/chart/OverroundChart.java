@@ -22,7 +22,6 @@ import org.swtchart.Chart;
 import org.swtchart.IAxis;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
-import org.swtchart.Range;
 import org.swtchart.ISeries.SeriesType;
 import org.swtchart.ISeriesSet;
 

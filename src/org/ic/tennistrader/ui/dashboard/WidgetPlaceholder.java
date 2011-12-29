@@ -10,12 +10,11 @@ import org.eclipse.swt.widgets.Listener;
 class WidgetPlaceholder extends Composite {
 
 	private final Button b;
-	private final WidgetContainer widgetContainer;
+	
 
 	WidgetPlaceholder(Composite parent, int style,
 			WidgetContainer widgetContainer) {
 		super(parent, style);
-		this.widgetContainer = widgetContainer;
 		setLayout(new FillLayout());
 		b = new Button(this, SWT.PUSH);
 		final WidgetContainer wc = widgetContainer;

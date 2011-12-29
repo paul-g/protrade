@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
@@ -13,7 +14,6 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.model.BetManager;
-import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 import org.ic.tennistrader.service.threads.MatchRecorderThread;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;

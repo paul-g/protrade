@@ -27,7 +27,8 @@ public class DualChartWidget extends Composite implements UpdatableWidget{
 		shell.setLayout(new FillLayout());
 		
 		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-		DualChartWidget dcw = new DualChartWidget(shell,  match);
+		
+		new DualChartWidget(shell,  match);
 		
 		shell.setMaximized(true);
 		shell.open();

@@ -1,10 +1,7 @@
 package org.ic.tennistrader.ui;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -14,12 +11,13 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCTabItem;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.ui.login.LoginShell;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DisplayPanelTest {
 	
     private Display display;
-    private LoginShell ls;
     private Shell shell;
     private SWTBot bot;
     private DisplayPanel dp;

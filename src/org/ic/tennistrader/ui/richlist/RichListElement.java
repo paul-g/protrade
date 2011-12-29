@@ -35,10 +35,6 @@ public class RichListElement extends Composite {
 	private static final int IMAGE_WIDTH = 150;
 	private static final int IMAGE_HEIGHT = 150;
 
-	private RichListView parentList;
-
-	private Control control;
-
 	public RichListElement(RichListView parent, int style, String description,
 			String name) {
 		super(parent, style);
@@ -72,7 +68,6 @@ public class RichListElement extends Composite {
 
 	private void init(RichListView parentList, int style, String description,
 			String name, Image image) {
-		this.parentList = parentList;
 		this.description = description;
 		this.name = name;
 		setImage(image);
@@ -82,7 +77,6 @@ public class RichListElement extends Composite {
 	}
 
 	private void setElementControl(Control control) {
-		this.control = control;
 		control.setParent(this);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
 	}
