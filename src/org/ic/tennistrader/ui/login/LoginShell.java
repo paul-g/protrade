@@ -63,7 +63,7 @@ public class LoginShell implements LoginListener {
 	public LoginShell(final Display display) {
 		this.loginShell = new Shell(display, SWT.NO_TRIM);// SWT.TRANSPARENCY_ALPHA);
 		loginShell.setSize(600, 350);
-		loginShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		loginShell.setBackgroundMode(SWT.INHERIT_FORCE);
 
 
 		final Image loginImg = new Image(loginShell.getDisplay(),
