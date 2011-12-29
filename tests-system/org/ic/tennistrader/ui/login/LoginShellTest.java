@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.login;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -8,6 +8,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.ic.tennistrader.Main;
+import org.ic.tennistrader.ui.DisplayTest;
+import org.ic.tennistrader.ui.login.LoginShell;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

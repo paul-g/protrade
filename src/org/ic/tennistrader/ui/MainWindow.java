@@ -83,15 +83,19 @@ public class MainWindow {
         shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
+        log.info("Starting upper toolbar");
         utb = new UpperToolBar(this);
-
+        log.info("Upper toolbar started");
+        
         makeLayout();
 
         @SuppressWarnings("unused")
         MenuPanel mp = new MenuPanel(this);
 
+        log.info("Starting navigation panel");
         this.np = new NavigationPanel(sashFormLeft);
         notifyLoadEvent("Fetching betfair data");
+        log.info("Started navigation panel");
 
         this.dp = new DisplayPanel(sashFormRight, SWT.BORDER);
         

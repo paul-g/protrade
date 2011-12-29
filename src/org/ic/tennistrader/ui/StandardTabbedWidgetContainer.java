@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.tennistrader.ui.main.StandardWindow;
 
 public class StandardTabbedWidgetContainer {
     protected final CTabFolder folder;
@@ -111,7 +112,7 @@ public class StandardTabbedWidgetContainer {
 
         folder.addMouseListener(new MouseListener() {
             public void mouseDoubleClick(MouseEvent e) {
-                MainWindow.toggleMaximizeMatchDisplay();
+                StandardWindow.toggleMaximizeMatchDisplay();
             }
 
             public void mouseDown(MouseEvent e) {

@@ -1,7 +1,10 @@
 package org.ic.tennistrader.ui.dashboard;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -67,6 +70,13 @@ public class WidgetContainer extends Composite {
 		
 		addListener(SWT.MouseUp, moveListener);
 		addListener(SWT.MouseDown, moveListener);
+		
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent me){
+				dashboard.setMaximizedControl(WidgetContainer.this);
+			}
+		});
 	}
 
 	// pre: component was already drawn
@@ -74,6 +84,10 @@ public class WidgetContainer extends Composite {
 		composite.setParent(this);
 		child = composite;
 		fitChild();
+	}
+	
+	public Control getWidget(){
+		return child;
 	}
 
 	private void fitChild() {
@@ -176,8 +190,19 @@ public class WidgetContainer extends Composite {
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);
+		this.width = width;
+		this.height = height;
 		fitChild();
 	}
+	
+	@Override
+	public void setBounds(Rectangle rectangle) {
+		super.setBounds(rectangle);
+		this.width = rectangle.width;
+		this.height = rectangle.height;
+		fitChild();
+	}
+	
 	
 	public Dashboard getDashboard(){
 		return dashboard;

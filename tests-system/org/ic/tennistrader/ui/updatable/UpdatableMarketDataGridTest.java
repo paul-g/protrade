@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class UpdatableMarketDataGridTest extends DisplayTest{
-    private UpdatableMarketDataGrid grid;
     private String filename;
     private Match match;
     private Shell shell;
@@ -22,7 +21,7 @@ public class UpdatableMarketDataGridTest extends DisplayTest{
     	shell = new Shell(display, SWT.NONE);
         filename = "data/test/fracsoft-reader/tso-fed.csv";
         match = new HistoricalMatch(filename);
-        grid = new UpdatableMarketDataGrid(shell, SWT.NONE, match);
+        new UpdatableMarketDataGrid(shell, SWT.NONE, match);
     }   
     
     @After

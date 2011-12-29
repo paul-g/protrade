@@ -2,11 +2,8 @@ package org.ic.tennistrader.ui;
 
 import java.util.List;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.ic.tennistrader.utils.Pair;
 
 public class PopupMenu {

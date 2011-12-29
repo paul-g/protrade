@@ -35,7 +35,7 @@ public class FracsoftReader extends MatchUpdaterThread {
 
 	private int inPlayPointer = -1;
 
-	private int updatesPerSecond = 1;
+	private int updatesPerSecond = 5;
 
 	private static final int DELAY_OFFSET = 1;
 	private static final int STATUS_OFFSET = 2;

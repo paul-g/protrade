@@ -116,9 +116,6 @@ public class PredictionCalculator {
 				.getFirstServePercent()) * serverStats.getSecondServeWins());
 	}
 
-	private static double po(double a, double b){
-	    return Math.pow(a,b);
-	}
 	// Calculating the chance of one player to win a game he/she's serving for
 	// based on ability (ind. of scoreline)
 	private static double calculatePWG(double p) {

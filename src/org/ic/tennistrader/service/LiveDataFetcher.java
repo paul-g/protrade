@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -59,12 +61,16 @@ public class LiveDataFetcher {
             widgets = listeners.get(match.getEventBetfair().getBetfairId());
         } else {
             widgets = new ArrayList<UpdatableWidget>();
+            /*            
+            System.out.println("Going to call set betting fetcher");
+            BetfairExchangeHandler.getSetBettingMarketData(match);
+            */            
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
         
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
-
+       
         // start the thread
         if (!started){
             started = true;
@@ -154,14 +160,14 @@ public class LiveDataFetcher {
             
     }
     */
-    public static void handleEvent(HashMap<EventBetfair, MOddsMarketData> data) {
+    public static void handleEvent(HashMap<EventBetfair, CompleteMarketData> data) {
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();
             //TODO check if market closed - then display result of bets
             List<UpdatableWidget> widgets = listeners.get(eb.getBetfairId());
             for (UpdatableWidget w : widgets)
-                w.handleUpdate(data.get(eb));
+                w.handleUpdate(data.get(eb).getmOddsMarketData());
         }
     }
 

@@ -2,30 +2,24 @@ package org.ic.tennistrader.ui;
 
 import java.awt.Canvas;
 import java.awt.Frame;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Slider;
-
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
-import org.ic.tennistrader.ui.chart.UpdatableChart;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
@@ -67,8 +61,6 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	public void handleMatchSelection(Match match) {
 		addMatchView(match);
 	}
-
-	private boolean firstTime = true;
 
 	private void addMatchView(Match match) {
 		//CTabItem[] items = folder.getItems();
@@ -115,30 +107,6 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			folder.setSelection(pos);
 	}
 
-	private Image setColor(CTabItem item, SashForm comp) {
-		final Display display = comp.getDisplay();
-		final Color foregroundColor = new org.eclipse.swt.graphics.Color(
-				display, 105, 105, 105);
-		final Color backgroundColor = new org.eclipse.swt.graphics.Color(
-				display, 168, 168, 168);
-		final Rectangle rect = item.getBounds();
-
-		Image newImage = new Image(display, rect.width, rect.height);
-
-		GC gc = new GC(newImage);
-		gc.setForeground(foregroundColor);
-		gc.setBackground(backgroundColor);
-		gc.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height / 2,
-				true);
-
-		gc.setForeground(backgroundColor);
-		gc.setBackground(foregroundColor);
-		gc.fillGradientRectangle(rect.x, rect.height / 2, rect.width,
-				rect.height, true);
-		gc.dispose();
-		return newImage;
-	}
-
 	/**
 	 * Adds an area for displaying match data
 	 * 
@@ -157,7 +125,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	 * @param ti
 	 */
 	private void addChart(Composite comp, Match match) {
-		DualChartWidget dcw = new DualChartWidget(comp, match);
+		new DualChartWidget(comp, match);
 		comp.update();
 	}
 

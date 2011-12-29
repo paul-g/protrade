@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.login;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import org.ic.tennistrader.Main;
 import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.pushingpixels.trident.Timeline;
 
-public class LoginShell {
+public class LoginShell implements LoginListener {
 
 	List<Listener> loginSucces = new ArrayList<Listener>();
 
@@ -57,6 +57,8 @@ public class LoginShell {
 	public Shell show() {
 		return loginShell;
 	}
+	
+	private final Text username;
 
 	public LoginShell(final Display display) {
 		this.loginShell = new Shell(display, SWT.NO_TRIM);// SWT.TRANSPARENCY_ALPHA);
@@ -102,7 +104,7 @@ public class LoginShell {
 
 		loginShell.setText(TITLE);
 
-		final Text username = new Text(loginShell, SWT.NONE);
+		username = new Text(loginShell, SWT.NONE);
 		username.setToolTipText("Please input your Betfair account login here");
 		username.setText("username");
 		username.setBounds(180, 165, 300, 30);
@@ -125,16 +127,8 @@ public class LoginShell {
 		
 		login.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				String user = username.getText();
-				if (BetfairAuthenticator.checkLogin(user, password.getText())) {
-					Main.username = user;
-					setSuccessLabel(true);
-					updateResult(SUCCESS);
-					handleLoginSuccess();
-				} else {
-					setSuccessLabel(false);
-					updateResult(FAIL);
-				}
+				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
+				BetfairAuthenticator.checkLogin(username.getText(), password.getText(), LoginShell.this);
 			}
 		});
 		
@@ -344,6 +338,28 @@ public class LoginShell {
 			e.gc.setForeground(loginShell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 			e.gc.drawString(text, (point.x-width)/2 , (point.y-height)/2, true);
 		}
+	}
+
+	@Override
+	public void handleLogin(final LoginResponse loginResponse) {
+		loginShell.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if (LoginResponse.SUCCESS.equals(loginResponse)){
+					Main.username = username.getText();
+					setSuccessLabel(true);
+					updateResult(SUCCESS);
+					handleLoginSuccess();
+				} else {
+					setSuccessLabel(false);
+					updateResult(FAIL);
+				}
+				
+				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
+			}
+		});
+		
+		
 	}
 
 }

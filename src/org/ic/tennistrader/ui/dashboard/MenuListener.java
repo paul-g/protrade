@@ -6,11 +6,11 @@ import org.eclipse.swt.events.MouseTrackAdapter;
 class MenuListener extends MouseTrackAdapter {
 
 	private final WidgetContainer widgetContainer;
-	private CornerMenu cornerMenu;
+	//private CornerMenu cornerMenu;
 
 	MenuListener(WidgetContainer widgetContainer, CornerMenu cornerMenu) {
 		this.widgetContainer = widgetContainer;
-		this.cornerMenu = cornerMenu;
+		//this.cornerMenu = cornerMenu;
 	}
 
 	@Override

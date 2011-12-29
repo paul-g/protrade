@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.ic.tennistrader.ui.main.StandardWindow;
 
 public class LowerToolBar{
 	
@@ -20,7 +21,7 @@ public class LowerToolBar{
 	private static boolean stop = false;
 	private static Logger log = Logger.getLogger(LowerToolBar.class);
 	
-	public LowerToolBar(final MainWindow mainWindow) {
+	public LowerToolBar(final StandardWindow mainWindow) {
 
 		final Shell shell = mainWindow.getShell();
 		
