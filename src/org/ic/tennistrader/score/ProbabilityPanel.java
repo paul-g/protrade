@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
@@ -81,7 +81,7 @@ public class ProbabilityPanel extends StandardWidgetContainer implements
 
         table.getParent().layout();
 
-        LiveDataFetcher.registerForMatchUpdate(this, match);
+        DataManager.registerForMatchUpdate(this, match);
 
     }
 

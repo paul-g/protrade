@@ -4,8 +4,7 @@ import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.MatchCsvWriter;
 
-public class MatchRecorderThread extends MatchThread{
-    
+public class MatchRecorderThread extends MatchThread {    
     private MatchCsvWriter writer;
     
     private final Logger log = Logger.getLogger(MatchRecorderThread.class);
@@ -29,8 +28,7 @@ public class MatchRecorderThread extends MatchThread{
     
     @Override
     public void setStop(){
-        this.stop = true;
-        
+        this.stop = true;        
         writer.close();
     }
 }

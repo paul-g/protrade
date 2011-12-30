@@ -28,7 +28,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static final String SET_BETTING_MARKET_NAME = "Set Betting";
 
 	// returns the match odds market data info
-	public static MOddsMarketData getMarketOdds(EventBetfair eventBetfair) {
+	public static MOddsMarketData getMatchOddsMarketData(EventBetfair eventBetfair) {
 		int marketId = -1;
 		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof MarketBetfair
@@ -299,7 +299,9 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		return result;
 	}
 
+	/*
 	public void getBetHistory() {
 		// ExchangeAPI.getBetHistory(context, int marketId, )
 	}
+	*/
 }

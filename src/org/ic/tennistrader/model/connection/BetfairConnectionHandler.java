@@ -98,7 +98,7 @@ public class BetfairConnectionHandler {
 	}	
 	
 	// returns a list of events and markets of the given event
-	public static List<EventMarketBetfair> getEventData(int eventId) {
+	private static List<EventMarketBetfair> getEventData(int eventId) {
 		List<EventMarketBetfair> tournaments = new ArrayList<EventMarketBetfair>();		
 		try {	
 			GetEventsResp resp = GlobalAPI.getEvents(apiContext, eventId);			
@@ -156,11 +156,11 @@ public class BetfairConnectionHandler {
 		return matches;
 	}
 	
-	public static boolean isMatch(EventBetfair emb) {
+	private static boolean isMatch(EventBetfair emb) {
 		return MatchUtils.isMatch(emb.toString());	
 	}
 	
-	public static RealMatch getMatch(EventBetfair eb) {
+	private static RealMatch getMatch(EventBetfair eb) {
 		return new RealMatch("", "", eb);
 	}
 	

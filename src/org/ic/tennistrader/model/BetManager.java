@@ -244,19 +244,19 @@ public class BetManager {
 		return profit;
 	}
 	
-    public static void setMatchedBets(List<Bet> matchedBets) {
+    protected static void setMatchedBets(List<Bet> matchedBets) {
         BetManager.matchedBets = matchedBets;
     }
 
-    public static List<Bet> getMatchedBets() {
+    protected static List<Bet> getMatchedBets() {
         return matchedBets;
     }
 
-    public static void setUnmatchedBets(List<Bet> unmatchedBets) {
+    protected static void setUnmatchedBets(List<Bet> unmatchedBets) {
         BetManager.unmatchedBets = unmatchedBets;
     }
 
-    public static List<Bet> getUnmatchedBets() {
+    protected static List<Bet> getUnmatchedBets() {
         return unmatchedBets;
     }
     

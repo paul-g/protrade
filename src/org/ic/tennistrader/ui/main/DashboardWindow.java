@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.LowerToolBar;
 import org.ic.tennistrader.ui.StandardWidgetResizeListener;
 import org.ic.tennistrader.ui.UpperToolBar;
@@ -100,7 +100,7 @@ public class DashboardWindow implements ApplicationWindow {
 				display.sleep();
 		}
 
-		LiveDataFetcher.stopAllThreads();
+		DataManager.stopAllThreads();
 		LowerToolBar.setStop();
 
 		display.dispose();
