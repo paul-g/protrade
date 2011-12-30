@@ -268,7 +268,7 @@ public class UpperToolBar {
 		usOpenFinal.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				openMatchView("data/fracsoft/fracsoft1.csv");
+				openMatchView("data/fracsoft/fracsoft1.csv", "data/fracsoft/fracsoft1_set.csv");				
 			}
 		});
 
@@ -352,6 +352,14 @@ public class UpperToolBar {
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
+			mainWindow.getDisplayPanel().handleMatchSelection(match);
+		}
+	}
+	
+	/** Open a new match view */
+	private void openMatchView(String filename, String setBettingFilename) {
+		if (filename != null) {
+			Match match = new HistoricalMatch(filename, setBettingFilename);
 			mainWindow.getDisplayPanel().handleMatchSelection(match);
 		}
 	}

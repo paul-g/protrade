@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
-import org.ic.tennistrader.service.FracsoftReader;
+import org.ic.tennistrader.service.threads.file_readers.FracsoftMatchOddsReader;
 import org.ic.tennistrader.utils.Pair;
 
 public class HistoricalMatch extends Match {
@@ -23,14 +23,25 @@ public class HistoricalMatch extends Match {
     public HistoricalMatch(String filename) {
         this.score = new Score();
         this.marketDatas = new ArrayList<MOddsMarketData>();
-        Pair<String, String> p = FracsoftReader.getPlayerNames(filename);
+        Pair<String, String> p = FracsoftMatchOddsReader.getPlayerNames(filename);
         setNames(player1, p.first());
         setNames(player2, p.second());
         this.filename = filename;
         this.name = getMatchName();
     }
 
-    private void setNames(Player player, String name) {
+    public HistoricalMatch(String filename, String setBettingFilename) {
+    	this.score = new Score();
+        this.marketDatas = new ArrayList<MOddsMarketData>();
+        Pair<String, String> p = FracsoftMatchOddsReader.getPlayerNames(filename);
+        setNames(player1, p.first());
+        setNames(player2, p.second());
+        this.filename = filename;
+        this.setBettingFilename = setBettingFilename;
+        this.name = getMatchName();
+	}
+
+	private void setNames(Player player, String name) {
         String names[] = name.split(" ");
         String firstname = names[0];
 

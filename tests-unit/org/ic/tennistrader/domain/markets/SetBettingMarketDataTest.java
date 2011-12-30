@@ -22,9 +22,9 @@ public class SetBettingMarketDataTest {
 	public void testAddSetScoreMarketPrices() {
 		MatchScore matchScore = new MatchScore(2, 1);
 		MarketPrices marketPrices = new MarketPrices();
-		setBettingMarketData.addSetScoreMarketPrices(matchScore, marketPrices);
+		setBettingMarketData.addMatchScoreMarketPrices(matchScore, marketPrices);
 		assertEquals(1, setBettingMarketData.getMatchScoreMarketData().size());
-		assertEquals(marketPrices, setBettingMarketData.getSetScoreMarketPrices(matchScore));
+		assertEquals(marketPrices, setBettingMarketData.getMatchScoreMarketPrices(matchScore));
 		assertEquals(marketPrices, setBettingMarketData.getSetScoreMarketPrices(2, 1));
 	}
 }

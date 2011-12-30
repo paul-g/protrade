@@ -9,7 +9,7 @@ public class SetBettingMarketData {
 		this.matchScoreMarketData = new HashMap<MatchScore, MarketPrices>();
 	}
 
-	public void addSetScoreMarketPrices(MatchScore matchScore,
+	public void addMatchScoreMarketPrices(MatchScore matchScore,
 			MarketPrices marketPrices) {
 		this.matchScoreMarketData.put(matchScore, marketPrices);
 		/*
@@ -19,7 +19,7 @@ public class SetBettingMarketData {
 		*/
 	}
 
-	public MarketPrices getSetScoreMarketPrices(MatchScore matchScore) {
+	public MarketPrices getMatchScoreMarketPrices(MatchScore matchScore) {
 		if (this.matchScoreMarketData.containsKey(matchScore))
 			return this.matchScoreMarketData.get(matchScore);
 		return null;
@@ -29,7 +29,7 @@ public class SetBettingMarketData {
 			int secondPlayerScore) {
 		MatchScore matchScore = new MatchScore(firstPlayerScore,
 				secondPlayerScore);
-		return getSetScoreMarketPrices(matchScore);
+		return getMatchScoreMarketPrices(matchScore);
 	}
 	
 	public HashMap<MatchScore, MarketPrices> getMatchScoreMarketData() {

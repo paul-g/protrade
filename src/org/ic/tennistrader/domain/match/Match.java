@@ -17,8 +17,9 @@ public abstract class Match {
     protected Score score = new Score();    
     protected List<MOddsMarketData> marketDatas;    
     protected String filename = null;
-    
-    public abstract boolean isInPlay();
+    protected String setBettingFilename = null;
+   
+	public abstract boolean isInPlay();
     
     public abstract String getName();
     
@@ -121,4 +122,13 @@ public abstract class Match {
     public PlayerEnum getServer(){
     	return score.getServer();
     }
+    
+    
+    public String getSetBettingFilename() {
+		return setBettingFilename;
+	}
+
+	public void setSetBettingFilename(String setBettingFilename) {
+		this.setBettingFilename = setBettingFilename;
+	}
 }

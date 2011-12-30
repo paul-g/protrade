@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.service.threads.BetfairDataUpdaterThread;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -75,7 +75,7 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 	@Test
 	public void testGetMatchScore() {
 		String runnerName = "Federer 2 - 0";
-		MatchScore matchScore = BetfairExchangeHandler.getMatchScore(runnerName);
+		MatchScore matchScore = MatchScore.getMatchScore(runnerName);
 		assertEquals(2, matchScore.getFirstPlayerScore());
 		assertEquals(0, matchScore.getSecondPlayerScore());
 		assertEquals("Federer", matchScore.getFirstPlayerLastName());

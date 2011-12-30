@@ -114,14 +114,13 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	// returns the set betting market data info
 	public static SetBettingMarketData getSetBettingMarketData(RealMatch match) {
 		EventBetfair eventBetfair = match.getEventBetfair();
-		SetBettingMarketData setBettingData;
+		SetBettingMarketData setBettingData = new SetBettingMarketData();
 		int marketId = -1;
 		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof MarketBetfair
 					&& emb.getName().equals(SET_BETTING_MARKET_NAME))
 				marketId = emb.getBetfairId();
 		}
-		setBettingData = new SetBettingMarketData();
 		try {
 			if (marketId == -1) {
 				GetEventsResp resp = GlobalAPI.getEvents(apiContext, eventBetfair
@@ -141,7 +140,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 			}
 			// create the string to display the Match Odds
 			if (marketId != -1) {
-				getSetBettingData(match, setBettingData, marketId);
+				setBettingData = getSetBettingData(match, marketId);
 			}
 		} catch (Exception e) {
 			log.info("Error fetching market info for the match - "
@@ -187,7 +186,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 			}
 			// create the string to display the Match Odds
 			if (setBettingMarketId != -1) {
-				getSetBettingData(match, setBettingData, setBettingMarketId);
+				setBettingData = getSetBettingData(match, setBettingMarketId);
 			}
 			if (mOddsMarketId != -1) {
 				mOddsData = getMatchOddsData(mOddsMarketId);
@@ -201,9 +200,10 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		return completeMarketData;
 	}
 
-	private static void getSetBettingData(RealMatch match,
-			SetBettingMarketData setBettingData, int setBettingMarketId)
+	private static SetBettingMarketData getSetBettingData(RealMatch match,
+			int setBettingMarketId)
 			throws Exception {
+		SetBettingMarketData setBettingData = new SetBettingMarketData();
 		Market selectedMarket = ExchangeAPI.getMarket(Exchange.UK,
 				apiContext, setBettingMarketId);
 		InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(
@@ -218,31 +218,17 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 					break;
 				}
 			}
-			MatchScore matchScore = getMatchScore(marketRunner.getName());
+			MatchScore matchScore = MatchScore.getMatchScore(marketRunner.getName());
 			if (matchScore.getFirstPlayerLastName().equals(match.getPlayerTwo().getLastname()))
 				matchScore = new MatchScore(matchScore.getSecondPlayerScore(), matchScore.getFirstPlayerScore());
 			//r.getSelectionId gives the market selection id
 			MarketPrices marketPrices = new MarketPrices();
 			marketPrices.setBackPrices(setBackValues(r));
 			marketPrices.setLayPrices(setLayValues(r));
-			setBettingData.addSetScoreMarketPrices(matchScore, marketPrices);
+			setBettingData.addMatchScoreMarketPrices(matchScore, marketPrices);
 		}
-	}
-	
-	public static MatchScore getMatchScore(String runnerName) {
-		char i = 0;//runnerName.charAt(0);
-		while (!Character.isDigit(runnerName.charAt(i)))
-			i++;
-		String lastName = runnerName.substring(0, i - 1);
-		int firstScore = Integer.parseInt(((Character)runnerName.charAt(i)).toString());
-		i++;
-		while (!Character.isDigit(runnerName.charAt(i)))
-			i++;
-		int secondScore = Integer.parseInt(((Character)runnerName.charAt(i)).toString());
-		MatchScore matchScore = new MatchScore(firstScore, secondScore);
-		matchScore.setFirstPlayerLastName(lastName);
-		return matchScore;
-	}
+		return setBettingData;
+	}	
 
 	// Returns the string containing the given market info
 	@SuppressWarnings("unused")

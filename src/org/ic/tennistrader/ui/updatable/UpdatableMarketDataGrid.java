@@ -243,6 +243,5 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
     @Override
     public void setDisposeListener(DisposeListener listener) {
         this.addDisposeListener(listener);
-
     }
 }
