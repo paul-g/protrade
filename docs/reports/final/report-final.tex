@@ -130,8 +130,10 @@ Below we present an overview of these technologies and explain the final choices
 
 \subsection{Languages}
 
+The choice of programming language greatly influences the development process, determining what functionality is available (either built-it or via libraries). We have opted for Java.
+
 \begin{description}
-\item[Java] is a widely used multi-purpose programming language, with good support for concurrency. It is platform-independent and provides a choice between native and emulated graphical toolkits. 
+\item[Java] is a widely used multi-purpose programming language with good support for concurrency. It is platform-independent and provides a choice between native and emulated graphical toolkits. 
 
 \item[XML] is usually the langauge of choice for managing the configuration of Java projects. It is ``typed'' (via schemas) and exstensbile and is generally used in conjuncture with build automation tools such as Ant.
 
@@ -139,18 +141,20 @@ Below we present an overview of these technologies and explain the final choices
 
 \end{description}
 
-The choice for Java as a main programming language was based on:
+Appart from being each member's ``main programming lanaguage'', the choice for Java was mainly based on the following key features:
 \begin{itemize}
-  \item team member's prior work experience - each team member was experienced with Java more than any other programming language
-  \item good concurrency support
-  \item good performance - ability to create native GUI components
-  \item garbage collection - 
+  \item good concurrency support which was vital for the application 
+  \item ability to create native GUI components which allows applications to match the OS look and feel and increases performance (via AWT or SWT)
+  \item large number of good, community tested libraries and APIs which facilitate accomplishing virtually any task at hand
 \end{itemize}
 
 Compared to C/C++ Java offers more in terms of conccurrency and is generally less error prone (due to garbage collection and lack of pointer arithmetic).
-Other languages were not considered due to lack of experience.
+
+Other languages (such as Haskell, Scala) were not considered since no team member had significant experience with them on large projects.
 
 \subsection{UI Libraries} 
+
+Since {\nmsp} is largely a visual application, it has been our aim to deliver a rich, customizable user interface. The choice of UI libraries helped implement this vision.
 
 \begin{description}
 
@@ -179,7 +183,10 @@ The main disadvantages of SWT are the increased complexity the programmer must h
 \end{itemize}
 
 Consequently, the decision to adopt SWT was based on the desire to provide a responsive, native looking application, even if this implied slightly less functionality.
+
 \subsection{Build Automation Tools}
+
+Build tools greatly increase efficiency by automating repetitive tasks. Automated tasks are easier to run and less error prone meaning they are more likely to be used by developpers. We used Apache Ant and and GNU make.
 
 \begin{description}
 \item[Apache Ant] is a Java tool used for application builds. It provides out of the box tasks varying from simple file manipulation to compilation and can be extended with more complex tasks such as testing and reporting for applications. These are usually provided by the API developper (e.g. JUnit or Cobertura) simplifying the process of integrating various technologies.
@@ -205,10 +212,12 @@ Consequently, the decision to adopt SWT was based on the desire to provide a res
 	<xslt in="${pmd.report.dir}/pmd.xml" style="${config.pmd.dir}/format.xslt" out="${pmd.report.dir}/pmd.html" />
 	</target>
 \end{lstlisting}
-\item[make] 
+\item[GNU make] is used to provide a wrapper arround the Ant build script which allows configuration of the Ant runtime (e.g. passing a different logger type at startup).
+
 \end{description}
 
-Our choice of technologies is explained in more detail in section ***.
+\subsection {Collaboration Tools}
+
 
 \section{Design}
 Explain the design of the software (high-level), possibly including a diagram of the major components of the project.
