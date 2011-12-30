@@ -12,7 +12,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -22,7 +21,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 import org.ic.tennistrader.ui.login.LoginShell;
@@ -31,7 +29,7 @@ import org.ic.tennistrader.ui.main.StandardWindow;
 public class UpperToolBar {
 	private ToolBar toolbar;
 	private ToolBar login;
-	private Shell profileWindow = null;
+	private ProfileWindow profileWindow = null;
 	private Shell preferencesWindow = null;
 	private ProfileData profileData;
 	private static Logger log = Logger.getLogger(UpperToolBar.class);
@@ -329,24 +327,7 @@ public class UpperToolBar {
 		playButtonItem.addListener(SWT.Selection, new DropDownListener(playButtonItem, playDropDown, null, false));
 	}
 
-	/** Text representation of the profile */
-	public String textProfile() {
-		String res ="";
-		try {
-			AccountFunds af = profileData.getUkAccountFunds();
-			res =
-				"Username : " + Main.username +
-				"\nBetfair points : " + af.getBetfairPoints() +
-				"\nCurrent balance : " + af.getBalance() +
-				"\nAvailable balance : " + af.getAvailable() +
-				"\nCredit limit : " + af.getCreditLimit() +
-				"\nExposure : " + af.getExposure() +
-				"\nExposure limit : " + af.getExposureLimit();
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
-		return res;
-	}
+
 
 	/** Open a new match view */
 	private void openMatchView(String filename) {
@@ -367,14 +348,7 @@ public class UpperToolBar {
 	/** Method invoking the Profile Window appearance */
 	public boolean openProfileWindow() {
 		if (profileWindow == null || profileWindow.isDisposed()) {
-			profileWindow = new Shell(toolbar.getDisplay(), SWT.SHELL_TRIM);
-			profileWindow.setLayout(new FillLayout());
-			profileWindow.setText("Profile");
-			profileWindow.setSize(200,200);
-			profileWindow.setLocation(1100,80);
-			Label profData = new Label(profileWindow,SWT.BORDER);
-			profData.setText(textProfile());
-			profileWindow.open();
+			profileWindow = new ProfileWindow(toolbar.getDisplay(),profileData);
 			return true;
 		} else {
 			profileWindow.forceActive();
