@@ -65,6 +65,13 @@
 			<arg value="-test" />
 		</java>
 	</target>
+	
+	<!-- RUN-testd task - runs the main class -->
+		<target name="run-testd" depends="compile">
+			<java classname="org.ic.tennistrader.Main" fork="true" classpathref="classpath">
+				<arg value="-testd" />
+			</java>
+		</target>
 
 	<!-- RUN-test task - runs the main class -->
 	<target name="run-testb" depends="compile">

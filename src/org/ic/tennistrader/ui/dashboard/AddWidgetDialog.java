@@ -54,7 +54,9 @@ public class AddWidgetDialog {
 		Button button = new Button(dialog, SWT.PUSH | SWT.FLAT);
 		Image image = new Image(Display.getCurrent(), "images/plus.png");
 		button.setImage(image);
+		button.setText("Add Now");
 		button.addListener(SWT.Selection, l);
+		image.dispose();
 		return button;
 	}
 
