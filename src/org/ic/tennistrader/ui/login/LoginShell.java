@@ -262,7 +262,7 @@ public class LoginShell implements LoginListener {
 		loginSucces.add(listener);
 	}
 
-	public void handleLoginSuccess() {
+	private void handleLoginSuccess() {
 		for (Listener l : loginSucces)
 			l.handleEvent(new Event());
 	}
@@ -281,7 +281,7 @@ public class LoginShell implements LoginListener {
 		bar.setSelection(bar.getMaximum());
 	}
 
-	static int[] circle(int r, int offsetX, int offsetY) {
+	protected static int[] circle(int r, int offsetX, int offsetY) {
 		int[] polygon = new int[8 * r + 4];
 		// x^2 + y^2 = r^2
 		for (int i = 0; i < 2 * r + 1; i++) {

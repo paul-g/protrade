@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.PredictionGui;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class PredictionGuiTest {
     
     @After
     public void tearDown() {
-        LiveDataFetcher.stopAllThreads();
+        DataManager.stopAllThreads();
         while (display.readAndDispatch()){
             // handle remaining work
         }

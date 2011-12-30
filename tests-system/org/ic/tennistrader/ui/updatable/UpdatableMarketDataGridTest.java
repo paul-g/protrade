@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.DisplayTest;
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +26,7 @@ public class UpdatableMarketDataGridTest extends DisplayTest{
     
     @After
     public void tearDown() {
-        LiveDataFetcher.stopAllThreads();
+        DataManager.stopAllThreads();
         super.tearDown();
     }
     

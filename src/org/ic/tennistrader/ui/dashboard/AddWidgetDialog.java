@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.StatisticsPanel;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.richlist.RichListView;
 import org.ic.tennistrader.ui.richlist.RichListElement;
@@ -54,7 +54,9 @@ public class AddWidgetDialog {
 		Button button = new Button(dialog, SWT.PUSH | SWT.FLAT);
 		Image image = new Image(Display.getCurrent(), "images/plus.png");
 		button.setImage(image);
+		button.setText("Add Now");
 		button.addListener(SWT.Selection, l);
+		image.dispose();
 		return button;
 	}
 
@@ -94,7 +96,7 @@ public class AddWidgetDialog {
 				// NOTE for market data grid, controller is also required
 				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(
 						widgetPlaceholder.getParent(), SWT.NONE, match);
-				LiveDataFetcher.registerForMatchUpdate(grid, match);
+				DataManager.registerForMatchUpdate(grid, match);
 				setSelection(grid);
 			}
 		});

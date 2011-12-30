@@ -21,7 +21,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.score.PredictionCalculator;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 
@@ -99,7 +99,7 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         
         initScoreLabels(PlayerEnum.PLAYER2);
 
-        LiveDataFetcher.registerForMatchUpdate(this, match);
+        DataManager.registerForMatchUpdate(this, match);
     }
 
 

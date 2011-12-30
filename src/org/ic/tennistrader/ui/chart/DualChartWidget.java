@@ -12,7 +12,7 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class DualChartWidget extends Composite implements UpdatableWidget{
@@ -59,7 +59,7 @@ public class DualChartWidget extends Composite implements UpdatableWidget{
 		
 		form.setWeights(new int[]{5,70,25});
 		
-		LiveDataFetcher.registerForMatchUpdate(this, match);
+		DataManager.registerForMatchUpdate(this, match);
 	}
 
 	@Override

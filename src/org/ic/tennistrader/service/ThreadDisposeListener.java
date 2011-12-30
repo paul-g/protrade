@@ -19,7 +19,7 @@ public class ThreadDisposeListener implements DisposeListener {
 
     @Override
     public void widgetDisposed(DisposeEvent arg0) {
-        LiveDataFetcher.unregister(widget, match);
+        DataManager.unregister(widget, match);
         final Logger log = Logger.getLogger(ThreadDisposeListener.class);
         log.info("Disposed widget " + widget.getClass() + " listening on match "  + match.toString());
     }
