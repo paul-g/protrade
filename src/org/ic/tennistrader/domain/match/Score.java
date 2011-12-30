@@ -218,6 +218,15 @@ public class Score {
 		}
 		currentSet = scores.get(maximumSetsPlayed - 1);
 	}
+	
+	public void setSetsVariable(int[] playerOneGames, int[] playerTwoGames) {
+		scores.clear();
+		for (int i = 0; i < playerOneGames.length; i++) {
+			SetScore sc = new SetScore(playerOneGames[i], playerTwoGames[i]);
+			scores.add(sc);
+		}
+		currentSet = scores.get(playerOneGames.length - 1);
+	}
 
 	public PlayerEnum getWinner() throws MatchNotFinishedException {
 		if (!this.isFinished())

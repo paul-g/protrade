@@ -180,8 +180,22 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         return label;
     }
 
-
-    public void setScores() {
+    public void setScores(){
+    	Score score = match.getScore();
+        
+        setPlayerScore(score , PlayerEnum.PLAYER1);
+        setPlayerScore(score , PlayerEnum.PLAYER2);
+        
+        try {
+        double[] result = PredictionCalculator.calculate(this.match);
+        
+        setPlayerPrediction(PredictionCalculator.getP1Data(result), PlayerEnum.PLAYER1);
+        setPlayerPrediction(PredictionCalculator.getP2Data(result), PlayerEnum.PLAYER2);
+        
+        } catch (Exception e){}
+    }
+    
+    public void setScores(MOddsMarketData newData) {
         Score score = match.getScore();
         
         setPlayerScore(score , PlayerEnum.PLAYER1);
@@ -192,6 +206,10 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         
         setPlayerPrediction(PredictionCalculator.getP1Data(result), PlayerEnum.PLAYER1);
         setPlayerPrediction(PredictionCalculator.getP2Data(result), PlayerEnum.PLAYER2);
+        
+        newData.setplayer1PredictedOdds(result[8]);
+        newData.setplayer2PredictedOdds(result[9]);
+        
         } catch (Exception e){}
     }
 
@@ -224,11 +242,11 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
     }
 
     @Override
-    public void handleUpdate(MOddsMarketData newData) {
+    public void handleUpdate(final MOddsMarketData newData) {
         display.asyncExec(new Runnable() {
             @Override
             public void run() {
-                setScores();
+                setScores(newData);
             }
         });
     }

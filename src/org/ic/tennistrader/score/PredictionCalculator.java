@@ -9,12 +9,10 @@ import org.ic.tennistrader.domain.match.Statistics;
 
 public class PredictionCalculator {
 
-	private static double pwosA;
-	private static double pwosB;
-	private static double pwgOnAverageA;
-	private static double pwgOnAverageB;
 	private static double pwgA;
 	private static double pwgB;
+	// By default have final set tiebreak, not advantage set
+	private static int TIEBREAK = 1;
 	
 	public static double[] getP1Data(double result[]){
 	    double [] res = new double[4];
@@ -42,62 +40,76 @@ public class PredictionCalculator {
 		PlayerEnum server = match.getServer();
 		Score score = match.getScore();
 
-		// Probability of player one/two to win on their serve in a game by
-		// ability
-		pwgOnAverageA = calculatePWG(calculatePWOS(playerOneStats));
-		pwgOnAverageB = calculatePWG(calculatePWOS(playerTwoStats));
-		///System.out.println("AAAAA" + pwgA);
-		///System.out.println("BBBBB" + pwgB);
-
-		// Even indices correspond to player 1, odd ones to player 2;
-		result[0] = pwosA = calculatePWOS(playerOneStats);
-		result[1] = pwosB = calculatePWOS(playerTwoStats);
-		
-		int [] points = convertPoints(score.getPlayerOnePoints(), score.getPlayerTwoPoints());
-		int pointsOne = points[0];
-		int pointsTwo = points[1];
+		//***NOTE: VERY IMPORTANT - Indice 1 corresponds to player 1, 0 to player 2 in all functions;
+	    //		   CONVENTIONS	  - Even indices in result corespond to player 1 results, odd ones to player 2 
+		result[0] = calculatePWOS(playerOneStats);
+		result[1] = calculatePWOS(playerTwoStats);
+		double pw1 = result[0];
+		double pw2 = result[1];
+		int [] points = convertPoints(
+							score.getPlayerOnePoints(), 
+							score.getPlayerTwoPoints());
+		int pOne = points[0];
+		int pTwo = points[1];
+		pwgA = calculateGamePercent(pOne, pTwo, result[0], 1);
+		pwgB = calculateGamePercent(pTwo, pOne, result[1], 1);		
 		
 		if (server == PlayerEnum.PLAYER1) {
-			result[2] = pwgA = calculateGamePercent(pointsOne,pointsTwo, result[0], 1);
-			result[3] = pwgB = 1.0 - result[2];
-			//System.out.println("GAME score 1: " + score.getCurrentSetScore().getPlayerOneGames());
-			//System.out.println("GAME score 2: " + score.getCurrentSetScore().getPlayerTwoGames());
-			//System.out.println("Points One: " + pointsOne);
-			//System.out.println("Points Two: " + pointsTwo);
-			//System.out.println(score.getPlayerTwoSets());			
-			result[4] = calculateCurrentSetPercent(pointsOne, pointsTwo, 
-					score.getCurrentSetScore().getPlayerOneGames(), 
-					score.getCurrentSetScore().getPlayerTwoGames(), 1);
-			result[5] = 1.0 - result[4];
-			result[6] = calculateWinMatch(result[4], score.getPlayerOneSets(), score.getPlayerTwoSets(),
-					1, score.getMaximumSetsPlayed() );
+			result[2] = calculateGamePercent(pOne, pTwo, result[0], 1);
+			result[3] = 1.0 - result[2];
+			
+			result[4] = calculateCurrentSetPercent( 
+							score.getCurrentSetScore().getPlayerOneGames(), 
+							score.getCurrentSetScore().getPlayerTwoGames(), 
+							pw1, pw2, 1);
+			result[5] = 1 - result[4];
+			
+			result[6] = calculateWinMatch(
+							result[4], 
+							score.getPlayerOneSets(), 
+							score.getPlayerTwoSets(),
+							pw1, pw2,
+							1, score.getMaximumSetsPlayed(), TIEBREAK);
 			result[7] = 1-result[6];
+			
+			// ODDS: [8]-player1, [9] - player2
 			result[8] = 1/result[6];
 			result[9] = 1/result[7];
-		} else {
-            result[3] = pwgB = calculateGamePercent(pointsOne,pointsTwo,  1 - result[1], 0);
-		    result[2] = pwgA = 1.0 - result[3];
-		    result[5] = calculateCurrentSetPercent(pointsOne, pointsTwo, 
-					score.getCurrentSetScore().getPlayerOneGames(), 
-					score.getCurrentSetScore().getPlayerTwoGames(), 0);
-			result[4] = 1.0 - result[5];
-			result[7] = calculateWinMatch(result[5], score.getPlayerOneSets(), score.getPlayerTwoSets(),
-					0, score.getMaximumSetsPlayed() );
+		} 
+		else {
+            result[3] = calculateGamePercent(pTwo, pOne, result[1], 1);
+		    result[2] = 1.0 - result[3];
+            
+		    result[5] = calculateCurrentSetPercent( 
+							score.getCurrentSetScore().getPlayerOneGames(), 
+							score.getCurrentSetScore().getPlayerTwoGames(), 
+							pw1, pw2, 0);
+			result[4] = 1 - result[5];
+			
+			result[7] = calculateWinMatch(
+							result[5], 
+							score.getPlayerOneSets(), 
+							score.getPlayerTwoSets(),
+							pw1, pw2,
+							0, score.getMaximumSetsPlayed(), TIEBREAK);
 			result[6] = 1-result[7];
+			
+			// ODDS: [8]-player1, [9] - player2
 			result[8] = 1/result[6];
 			result[9] = 1/result[7];
 		}
 		
 		DecimalFormat df = new DecimalFormat("#.###");
-		for (int i =0; i<8; i++){
-			
+		for (int i =0; i<10; i++){			
 			result[i] = Double.parseDouble(df.format(result[i]));
+			System.out.println(result[i]);
 		}
 		
 		return result;
 	}
 
-	// convert from standard points (e.g. 15, 30 ... ) to short points (1,2..)
+	
+	// Convert from standard points (e.g. 15, 30 ... ) to short points (1,2..)
 	private static int[] convertPoints(int pointsOne, int pointsTwo) {
 		if ( pointsOne >=  40 && pointsTwo >= 40)
 		{
@@ -108,6 +120,7 @@ public class PredictionCalculator {
 		return pts;
 	}
 
+	
 	// Probability of winning a point on service
 	// P (win) = P (noFault)P (win|noFault) + (1 − P (noFault))P (win|Fault)
 	private static double calculatePWOS(Statistics serverStats) {
@@ -116,20 +129,9 @@ public class PredictionCalculator {
 				.getFirstServePercent()) * serverStats.getSecondServeWins());
 	}
 
-	private static double po(double a, double b){
-	    return Math.pow(a,b);
-	}
-	// Calculating the chance of one player to win a game he/she's serving for
-	// based on ability (ind. of scoreline)
-	private static double calculatePWG(double p) {
-		double result = 0;
-		//result = po(p, 4) + 4 * po(p,4)
-		result = 15 - 24 * p + 10 * Math.pow(p, 2)
-				+ (20 * p * Math.pow(1 - p, 3) / (1 - 2 * p * (1 - p)));
-		return (result * Math.pow(p, 4));
-	}
-
-	private static double calculateGamePercent(int a, int b, double pwg, int c) {
+	
+	// Calculate current game winning % prob
+	public static double calculateGamePercent(int a, int b, double pw, int c) {
 		if (a>4 || b>4)
 			return -1; // not normally reachable code
 		if (a == 4 && b <= 2)
@@ -137,129 +139,156 @@ public class PredictionCalculator {
 		if (b == 4 && a <= 2)
 			return 1-c;
 		if (a == 3 && b == 3)
-			return (Math.pow(pwg, 2) / (Math.pow(pwg, 2) + Math.pow(1 - pwg, 2)));
-		return (pwg * calculateGamePercent(a + 1, b, pwg,c) + (1 - pwg)
-				* calculateGamePercent(a, b + 1, pwg,c));
+			return (Math.pow(pw, 2) / (Math.pow(pw, 2) + Math.pow(1 - pw, 2)));
+		return (pw * calculateGamePercent(a + 1, b, pw,c) + (1 - pw)
+				* calculateGamePercent(a, b + 1, pw,c));
 	}
 	
-	private static double calculateTiebreakerGamePercent(int a, int b, int c) {
+	
+	// assumes player is serving in the tiebreak at the moment of calculation
+	public static double calculateTiebreakerGamePercent(int a, int b, double pwA, double pwB, int c) {
 		if(a == 7 && b >= 0  && b <= 5) 
-			return c;
-		if(b == 7 && a >= 0  && a <= 5 )
-			return 1-c;
-		if ( a == 6 && b == 6){
+			return 1;
+		else if(b == 7 && a >= 0  && a <= 5 )
+			return 0;
+		else if ( a == 6 && b == 6){
 			if(c == 1 ) 
-				return pwosA*(1-pwosB)/(pwosA*(1-pwosB)+(1-pwosA)*pwosB);
+				return pwA*(1-pwB)/(pwA*(1-pwB)+(1-pwA)*pwB);
 			else 
-				return pwosB*(1-pwosA)/(pwosA*(1-pwosB)+(1-pwosA)*pwosB);
+				return pwB*(1-pwA)/(pwA*(1-pwB)+(1-pwA)*pwB);
 		}
+		// Enforcing Barnet*'s theorems: If player A is serving, he has the same probability of winning
+		//a tiebreaker game from all points (n + 1, n) or (n,n) or (n, n+1), where n ≥ 5.
+		else if(a+b > 12){
+			return -1;
+		}
+			
 		if( c == 1)
-			return pwosA*calculateTiebreakerGamePercent(a + 1, b, (a+b)%2) + 
-					(1-pwosA)*calculateTiebreakerGamePercent(a, b + 1, (a+b)%2 );
-		else 
-			return pwosB*calculateTiebreakerGamePercent(a, b + 1, 1 - (a+b)%2) + 
-				(1-pwosB)*calculateTiebreakerGamePercent(a+1, b, 1 -(a+b)%2 );
+			return pwA*calculateTiebreakerGamePercent(a + 1, b, pwA, pwB, (a+b)%2) + 
+					(1-pwA)*calculateTiebreakerGamePercent(a, b + 1, pwA, pwB,(a+b)%2 );
+		else
+			return pwB*calculateTiebreakerGamePercent(a, b + 1, pwA, pwB, (a+b)%2) + 
+				(1-pwB)*calculateTiebreakerGamePercent(a + 1, b, pwA, pwB, (a+b)%2 );
 	}
-
-	private static double calculateSetPercent(int a, int b, int c, int d, int s, int firstRun) {
+	
+	
+	// A set with tiebreaker
+	private static double calculateSetPercent(int c, int d, double pwA, double pwB, int s) {
 		if( (c == 6 && d >= 0  && d <= 4) ||  (c == 7 && d == 5) ){
-			if(firstRun == 1)
-				return s;
-			else
-				return firstRun - 5;
+			return 1;
 		}
 		if( (d == 6 && c >= 0  && c <= 4) ||  (d == 7 && c == 5) ){
-			if(firstRun == 1)
-				return 1-s;
-			else 
-				return 1- (firstRun - 5);			
+			return 0;		
 		}
 		if( c == 6 && d == 6 ){
-			double tb = 0;
-			if(firstRun == 1)
-			{
-				firstRun = s+5;
-				tb = calculateTiebreakerGamePercent(a, b, s);
-			}else {
-				tb = calculateTiebreakerGamePercent(0, 0, s);
-			}
-			return tb;
+			if (s == 1)
+				return calculateTiebreakerGamePercent(0, 0, pwA, pwB, 1);
+			else
+				return 1.0 - calculateTiebreakerGamePercent(0, 0, pwB, pwA, 1);
 		}
-		if (firstRun == 1)
-			firstRun = s+5;
 		if(s == 1 ){
-			if(firstRun == 1)
-				return pwgA*calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun) +
-				(1- pwgA) * calculateSetPercent(a, b, c, d + 1, 1 - s, firstRun);
-			else
-				return pwgOnAverageA*calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun) +
-				(1- pwgOnAverageA) * calculateSetPercent(a, b, c, d + 1, 1 - s, firstRun);
-						
-		} else {
-			if(firstRun == 1)
-				return pwgB*calculateSetPercent(a, b , c, d + 1 , 1 - s, firstRun) +
-				(1- pwgB) * calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun);
-			else
-				return pwgOnAverageB*calculateSetPercent(a, b , c, d + 1 , 1 - s, firstRun) +
-				(1- pwgOnAverageB) * calculateSetPercent(a, b, c + 1, d, 1 - s, firstRun);
-		}
+				return calculateGamePercent(0, 0, pwA, 1)*calculateSetPercent(c + 1, d, pwA, pwB, 0 ) +
+				(1-calculateGamePercent(0, 0, pwA, 1))*calculateSetPercent(c, d + 1, pwA, pwB, 0 );					
+		}else
+				return calculateGamePercent(0, 0, pwB, 1)*(calculateSetPercent(c, d + 1 , pwA, pwB, 1 - s)) +
+				(1- calculateGamePercent(0, 0, pwB, 1))*(calculateSetPercent(c + 1, d, pwA, pwB, 1 - s));
 	}
 	
-	private static double calculateCurrentSetPercent(int a, int b, int c, int d, int s) {
+	
+	// An advantage set
+	private static double calculateAdvSetPercent(int c, int d, double pwA, double pwB, int s) {
+		if( (c == 6 && d >= 0  && d <= 4) ){
+			return 1;
+		}
+		if( (d == 6 && c >= 0  && c <= 4) ){
+			return 0;		
+		}
+		if( c == 5 && d == 5 ){
+			if (s == 1){
+				return calculateGamePercent(0, 0, pwA, 1)*(1- calculateGamePercent(0, 0, pwB, 1))/
+						(calculateGamePercent(0, 0, pwA, 1)*(1- calculateGamePercent(0, 0, pwB, 1))+ 
+						 calculateGamePercent(0, 0, pwB, 1)*(1- calculateGamePercent(0, 0, pwA, 1)));
+			}else{
+				return 1 - calculateGamePercent(0, 0, pwB, 1)*(1- calculateGamePercent(0, 0, pwA, 1))/
+						(calculateGamePercent(0, 0, pwB, 1)*(1- calculateGamePercent(0, 0, pwA, 1))+ 
+						 calculateGamePercent(0, 0, pwA, 1)*(1- calculateGamePercent(0, 0, pwB, 1)));
+			}
+		}
+		if (c+d > 10)
+			return -1;
+		if(s == 1 ){
+				return calculateGamePercent(0, 0, pwA, 1)*(calculateAdvSetPercent(c + 1, d, pwA, pwB, 0 )) +
+				(1-calculateGamePercent(0, 0, pwA, 1)) * (calculateAdvSetPercent(c, d + 1, pwA, pwB, 0 ));					
+		}else{
+				return calculateGamePercent(0, 0, pwB, 1)*(calculateAdvSetPercent(c, d + 1 , pwA, pwB, 1)) +
+				(1- calculateGamePercent(0, 0, pwB, 1)) * (calculateAdvSetPercent(c + 1, d, pwA, pwB, 1));
+		}
+		
+	}
+	
+	
+	// Calculate % prob of winning the current set
+	public static double calculateCurrentSetPercent(int c, int d, double pwA, double pwB,int s) {
 		double winSetGameWon,winSetGameLost, winGame;
 		if (s == 1){
-			winSetGameWon = calculateSetPercent(a, b, c + 1, d, s, 1);
-			winSetGameLost = calculateSetPercent(a, b, c, d + 1, s, 1);
+			winSetGameWon = calculateSetPercent(c + 1, d, pwA, pwB, s);
+			winSetGameLost = calculateSetPercent(c, d + 1, pwA, pwB, s);
 			winGame = pwgA;
 		}
 		else {
-			winSetGameWon = calculateSetPercent(a, b, c, d + 1, s, 1);
-			winSetGameLost = calculateSetPercent(a, b, c + 1, d, s, 1);
+			winSetGameWon = 1-calculateSetPercent(c, d+1, pwA, pwB, 1);
+			winSetGameLost = 1-calculateSetPercent(c+1, d, pwA, pwB, 1);
 			winGame = pwgB;
 		}
 		return winGame*winSetGameWon + (1 - winGame)*winSetGameLost;
 	}
 	
-	// always computes the match percent of first player
-	private static double calculateMatchPercent(double winSet, int setScoreOne, int setScoreTwo, int maxSets ) {
-		if (setScoreOne >= Math.floor(maxSets/2.0) + 1)
+	
+	// Computes the match percent of player to win the match
+	private static double calculateMatchPercent(int setScoreOne, int setScoreTwo, double pwA, double pwB, int maxSets, int tiebreak) {
+		int score = (int)Math.round(Math.floor(maxSets/2) + 1);
+		if (setScoreOne >= score && setScoreTwo >= score)
+				return -1;
+		if (setScoreOne >= score)
 			return 1;
-		int j=2, s=2;
-		if (maxSets == 5){
-			j = 4;
-			s = 3;
-		}
-		return (fact(j-setScoreOne-setScoreTwo)/fact(s-1-setScoreOne)*fact(s-1-setScoreTwo))*
-			Math.pow(winSet,s-setScoreOne)*Math.pow(1-winSet, s-setScoreTwo-1);
+		if (setScoreTwo >= score)
+			return 0;
 		
+		double winSet = calculateSetPercent(0, 0, pwA, pwB, 1);
+		
+		// Choose between advantage or tiebreak final set
+		if (setScoreOne == score-1 && setScoreTwo == score-1){
+			if (tiebreak == 0)
+				return calculateAdvSetPercent(0, 0, pwA, pwB, 1);
+			else
+				return calculateSetPercent(0, 0, pwA, pwB, 1);
+		}
+		return (winSet*calculateMatchPercent(setScoreOne+1, setScoreTwo, pwA, pwB, maxSets, tiebreak ) +
+				(1-winSet)*calculateMatchPercent(setScoreOne, setScoreTwo+1, pwA, pwB, maxSets, tiebreak ));
 	}
 	
-	private static double calculateWinMatch( double winCurSet, int setScoreOne, int setScoreTwo, int s, int maxSets)
-	{
-		double winSet = calculateSetPercent(0, 0, 0, 0, s, 1);
+	
+	// Calculate inverted odds of match
+	public static double calculateWinMatch( double winCurSet, int setScoreOne, int setScoreTwo, double pwA, double pwB, int s, int maxSets, int tiebreak){
 		double winMatchSetWon,winMatchSetLost;
 		if (s == 1){
-			winMatchSetWon = calculateMatchPercent(winSet, setScoreOne+1, setScoreTwo, maxSets );
-			winMatchSetLost = calculateMatchPercent(winSet, setScoreOne, setScoreTwo+1, maxSets );
+			winMatchSetWon = calculateMatchPercent(setScoreOne+1, setScoreTwo, pwA, pwB, maxSets, tiebreak );
+			winMatchSetLost = calculateMatchPercent(setScoreOne, setScoreTwo+1, pwA, pwB, maxSets, tiebreak );
 		}
 		else 
 		{
-			winMatchSetWon = calculateMatchPercent(winSet, setScoreTwo+1, setScoreOne, maxSets );
-			winMatchSetLost = calculateMatchPercent(winSet, setScoreTwo, setScoreOne+1, maxSets );
+			winMatchSetWon = 1-calculateMatchPercent(setScoreOne, setScoreTwo+1, pwA, pwB, maxSets, tiebreak );
+			winMatchSetLost = 1-calculateMatchPercent(setScoreOne+1, setScoreTwo, pwA, pwB, maxSets, tiebreak );
 		}
 		return winCurSet*winMatchSetWon + (1-winCurSet)*winMatchSetLost;
 	}
 	
-	private static double fact(int n)
-	{
-		int result = 1;
-		if (n == 0 )
-			return 1;
-		for(int i=1; i<=n; i++)
-		{
-			result *= i;
-		}
-		return result;
-	}
 	
+	// For testing purposes only
+	public void setPWG(int s, double value) {
+		if (s==1)
+			pwgA = value;
+		else
+			pwgB = value;
+	}	
 }

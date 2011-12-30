@@ -15,6 +15,8 @@ public class MOddsMarketData {
 	private double player2TotalAmountMatched;
 	private int player1SelectiondId;
 	private int player2SelectionId;
+	private double player1PredictedOdds;
+	private double player2PredictedOdds;
 	private ArrayList<Pair<Double, Double>> pl1Lay, pl1Back, pl2Lay, pl2Back;
 	private Date date;
 	private String exchange;
@@ -193,5 +195,21 @@ public class MOddsMarketData {
 
 	public void setPlayer2SelectionId(int player2SelectionId) {
 		this.player2SelectionId = player2SelectionId;
+	}
+	
+	public double getplayer1PredictedOdds() {
+		return player1PredictedOdds;
+	}
+	
+	public double setplayer1PredictedOdds(double player1PredictedOdds) {
+		return this.player1PredictedOdds = player1PredictedOdds;
+	}
+	
+	public double getplayer2PredictedOdds() {
+		return player2PredictedOdds;
+	}
+	
+	public double setplayer2PredictedOdds(double player2PredictedOdds) {
+		return this.player2PredictedOdds = player2PredictedOdds;
 	}
 }
