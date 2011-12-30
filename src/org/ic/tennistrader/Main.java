@@ -3,15 +3,16 @@ package org.ic.tennistrader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.ic.tennistrader.ui.LoginShell;
-import org.ic.tennistrader.ui.MainWindow;
-import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.ic.tennistrader.authentication.Encrypt;
+import org.ic.tennistrader.ui.login.LoginShell;
+import org.ic.tennistrader.ui.main.ApplicationWindow;
+import org.ic.tennistrader.ui.main.StandardWindow;
 
 public final class Main {
 
@@ -35,7 +36,7 @@ public final class Main {
 
 		// start up the app
 		final Display display = new Display();
-		final MainWindow mw = new MainWindow(display);
+		final ApplicationWindow mw = makeApplicationWindow(display);
 
 		if (args.length == 1) {
 			if ("-test".equals(args[0])) {
@@ -78,6 +79,11 @@ public final class Main {
 
 			ls.run(display);
 		}
+	}
+
+	private static ApplicationWindow makeApplicationWindow(final Display display) {
+		return new StandardWindow(display);
+		//return new DashboardWindow(display);
 	}
 
 	public static void readAndDecryptConfigFile() {
@@ -132,7 +138,7 @@ public final class Main {
 	}
 
 	private static void startMainWindow(final Display display,
-			final MainWindow mw) {
+			final ApplicationWindow mw) {
 		mw.show();
 		mw.run(display);
 	}

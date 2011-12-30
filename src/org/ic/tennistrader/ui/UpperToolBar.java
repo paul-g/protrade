@@ -25,6 +25,8 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
+import org.ic.tennistrader.ui.login.LoginShell;
+import org.ic.tennistrader.ui.main.StandardWindow;
 
 public class UpperToolBar {
 	private ToolBar toolbar;
@@ -33,9 +35,9 @@ public class UpperToolBar {
 	private Shell preferencesWindow = null;
 	private ProfileData profileData;
 	private static Logger log = Logger.getLogger(UpperToolBar.class);
-	private MainWindow mainWindow;
+	private StandardWindow mainWindow;
 
-	public UpperToolBar(final MainWindow mainWindow) {
+	public UpperToolBar(final StandardWindow mainWindow) {
 		this.mainWindow = mainWindow;
 		final Shell shell = mainWindow.getShell();
 
@@ -74,7 +76,7 @@ public class UpperToolBar {
 	}
 
 	/** Profile button menu constructor */
-	private void makeProfileMenu(final MainWindow mainWindow, final Shell shell) {
+	private void makeProfileMenu(final StandardWindow mainWindow, final Shell shell) {
 		final ToolItem balanceItem = new ToolItem(login, SWT.DROP_DOWN);
 		balanceItem.setToolTipText("Balance");
 
@@ -143,7 +145,7 @@ public class UpperToolBar {
 					final Display nd = toolbar.getDisplay();
 					mainWindow.dispose();
 					final LoginShell ls = new LoginShell(nd);
-					final MainWindow mw = new MainWindow(nd); 
+					final StandardWindow mw = new StandardWindow(nd); 
 					mw.addLoadListener(new Listener() {
 						@Override
 						public void handleEvent(Event event) {
@@ -201,7 +203,7 @@ public class UpperToolBar {
 	}
 
 	/** New widget button constructor */
-	private void makeNewWidgetMenu(final MainWindow mainWindow,
+	private void makeNewWidgetMenu(final StandardWindow mainWindow,
 			final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 		widgetItem.setToolTipText("Widget Menu");
@@ -266,7 +268,7 @@ public class UpperToolBar {
 		usOpenFinal.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				openMatchView("data/fracsoft/fracsoft1.csv");
+				openMatchView("data/fracsoft/fracsoft1.csv", "data/fracsoft/fracsoft1_set.csv");				
 			}
 		});
 
@@ -350,6 +352,14 @@ public class UpperToolBar {
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
+			mainWindow.getDisplayPanel().handleMatchSelection(match);
+		}
+	}
+	
+	/** Open a new match view */
+	private void openMatchView(String filename, String setBettingFilename) {
+		if (filename != null) {
+			Match match = new HistoricalMatch(filename, setBettingFilename);
 			mainWindow.getDisplayPanel().handleMatchSelection(match);
 		}
 	}

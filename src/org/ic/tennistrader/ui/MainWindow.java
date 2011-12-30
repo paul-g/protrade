@@ -21,8 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.service.LiveDataFetcher;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
+import org.ic.tennistrader.ui.main.StandardWindow;
 
-public class MainWindow {
+public class MainWindow extends StandardWindow {
 
     private Shell shell;
     
@@ -53,6 +54,7 @@ public class MainWindow {
     }
     
     public MainWindow(Display display) {
+    	super(display);
         this.display = display;
     }
     
@@ -83,15 +85,19 @@ public class MainWindow {
         shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
+        log.info("Starting upper toolbar");
         utb = new UpperToolBar(this);
-
+        log.info("Upper toolbar started");
+        
         makeLayout();
 
         @SuppressWarnings("unused")
         MenuPanel mp = new MenuPanel(this);
 
+        log.info("Starting navigation panel");
         this.np = new NavigationPanel(sashFormLeft);
         notifyLoadEvent("Fetching betfair data");
+        log.info("Started navigation panel");
 
         this.dp = new DisplayPanel(sashFormRight, SWT.BORDER);
         

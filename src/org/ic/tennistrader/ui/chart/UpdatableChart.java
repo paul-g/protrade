@@ -2,11 +2,10 @@ package org.ic.tennistrader.ui.chart;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -15,23 +14,23 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
-import org.swtchart.Chart;
-import org.swtchart.IAxis;
-import org.swtchart.IErrorBar.ErrorBarType;
-import org.swtchart.IAxisSet;
-import org.swtchart.IBarSeries;
-import org.swtchart.IErrorBar;
-import org.swtchart.ILineSeries;
-import org.swtchart.ISeriesSet;
-import org.swtchart.ITitle;
-import org.swtchart.LineStyle;
-import org.swtchart.Range;
-import org.swtchart.ILineSeries.PlotSymbolType;
-import org.swtchart.ISeries.SeriesType;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
+import org.swtchart.Chart;
+import org.swtchart.IAxis;
+import org.swtchart.IAxisSet;
+import org.swtchart.IBarSeries;
+import org.swtchart.IErrorBar;
+import org.swtchart.IErrorBar.ErrorBarType;
+import org.swtchart.ILineSeries;
+import org.swtchart.ILineSeries.PlotSymbolType;
+import org.swtchart.ISeries.SeriesType;
+import org.swtchart.ISeriesSet;
+import org.swtchart.ITitle;
+import org.swtchart.LineStyle;
+import org.swtchart.Range;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
 	private IBarSeries endOfSets;
@@ -56,7 +55,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private ChartData chartData;
 	private Match match;
 	private Slider slider;
-	private int k = 0;
 
 	public UpdatableChart(Composite parent, int style, Match match,
 			Slider slider, ChartData chartData) {
@@ -100,27 +98,6 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		ITitle t = axis.getTitle();
 		t.setText(title);
 		t.setVisible(false);
-	}
-
-	private void addListeners() {
-		this.addMouseWheelListener(new MouseWheelListener() {
-			@Override
-			public void mouseScrolled(MouseEvent e) {
-				int units = e.count;
-				// IAxis yAxis = getAxisSet().getYAxis(0);
-				// System.out.println(e.x + " " + e.y);
-				if (units > 0) {
-					// Rotating forward
-					getAxisSet().zoomIn();
-					// getAxisSet().getXAxis(0).zoomIn();
-				} else {
-					// Rotating backward
-					getAxisSet().zoomOut();
-					// getAxisSet().getXAxis(0).zoomOut();
-				}
-			}
-		});
-
 	}
 
 	private void initSlider() {

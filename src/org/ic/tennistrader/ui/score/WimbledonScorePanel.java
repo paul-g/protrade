@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
@@ -31,7 +30,6 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
     private Match match;
     private Table scoreTable;
     private PlayerEnum server;
-    private TableColumn[] columns;
     private Display display;
     
     private Image im2;
@@ -119,7 +117,7 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
 
 
     private void dummyLabel() {
-        Label l  = new Label(this, SWT.NONE);
+      new Label(this, SWT.NONE);
     }
 
 

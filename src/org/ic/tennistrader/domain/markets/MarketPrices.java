@@ -1,0 +1,48 @@
+package org.ic.tennistrader.domain.markets;
+
+import java.util.ArrayList;
+import org.ic.tennistrader.utils.Pair;
+
+public class MarketPrices {
+	private ArrayList<Pair<Double, Double>> backPrices, layPrices;
+
+	public MarketPrices() {
+		this.backPrices = new ArrayList<Pair<Double, Double>>();
+		this.layPrices = new ArrayList<Pair<Double, Double>>();
+	}
+
+	public MarketPrices(ArrayList<Pair<Double, Double>> backPrices,
+			ArrayList<Pair<Double, Double>> layPrices) {
+		this.backPrices = backPrices;
+		this.layPrices = layPrices;
+
+	}
+
+	public void setLayPrices(ArrayList<Pair<Double, Double>> layPrices) {
+		this.layPrices = layPrices;
+	}
+
+	public ArrayList<Pair<Double, Double>> getLayPrices() {
+		return layPrices;
+	}
+
+	public void setBackPrices(ArrayList<Pair<Double, Double>> backPrices) {
+		this.backPrices = backPrices;
+	}
+
+	public ArrayList<Pair<Double, Double>> getBackPrices() {
+		return backPrices;
+	}
+	
+	public String toString() {
+		String msg = "Back prices: ";
+		for (Pair<Double, Double> price : backPrices) {
+			msg += price.second() + " at " + price.first() + " ";
+		}
+		msg += "Lay prices: ";
+		for (Pair<Double, Double> price : layPrices) {
+			msg += price.second() + " at " + price.first() + " ";
+		}
+		return msg;
+	}
+}

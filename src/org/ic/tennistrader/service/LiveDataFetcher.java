@@ -6,13 +6,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.service.threads.BetfairDataUpdaterThread;
 import org.ic.tennistrader.service.threads.MatchRecorderThread;
+import org.ic.tennistrader.service.threads.file_readers.FracsoftMatchOddsReader;
+import org.ic.tennistrader.service.threads.file_readers.FracsoftSetBettingReader;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
@@ -21,7 +25,9 @@ public class LiveDataFetcher {
     // one Betfair updater and many Fracsoft updater
     private static BetfairDataUpdaterThread dataUpdater = null;    
     private static HashMap<Match, MatchRecorderThread>  recordersMap = new HashMap<Match, MatchRecorderThread>();
-    private static HashMap<Match, FracsoftReader> fileReaders = new HashMap<Match, FracsoftReader>();    
+    private static HashMap<Match, FracsoftMatchOddsReader> fileReaders = new HashMap<Match, FracsoftMatchOddsReader>();
+    private static HashMap<Match, FracsoftSetBettingReader> fileSetReaders = new HashMap<Match, FracsoftSetBettingReader>();
+    
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
@@ -31,7 +37,7 @@ public class LiveDataFetcher {
 
     public static void registerForMatchUpdate(final UpdatableWidget widget, final Match match){
         if (match.isFromFile())
-            registerFromFile(widget, match, match.getFilename());
+            registerFromFile(widget, match);
         else
             registerLive(widget, (RealMatch)match);
         
@@ -59,12 +65,16 @@ public class LiveDataFetcher {
             widgets = listeners.get(match.getEventBetfair().getBetfairId());
         } else {
             widgets = new ArrayList<UpdatableWidget>();
+            /*            
+            System.out.println("Going to call set betting fetcher");
+            BetfairExchangeHandler.getSetBettingMarketData(match);
+            */            
         }
         widgets.add(widget);
         listeners.put(match.getEventBetfair().getBetfairId(), widgets);
         
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
-
+       
         // start the thread
         if (!started){
             started = true;
@@ -91,7 +101,7 @@ public class LiveDataFetcher {
 		dataUpdater.removeEvent(match.getEventBetfair());
 	}
 	
-	private static void registerFromFile(final UpdatableWidget widget, final Match match, String fileName) {
+	private static void registerFromFile(final UpdatableWidget widget, final Match match) {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !fileListeners.containsKey(match);
         if (isNewMatch)
@@ -102,7 +112,7 @@ public class LiveDataFetcher {
         fileListeners.put(match, widgets);
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
         if(isNewMatch) {
-            startFromFile(match, fileName);
+            startFromFile(match);
         }
     }
 
@@ -115,10 +125,17 @@ public class LiveDataFetcher {
     	if (widgets != null) {
     		widgets.remove(widget);
     		if (widgets.size() == 0) {
-    			FracsoftReader fracsoftReaderThread = fileReaders.get(match);
+    			FracsoftMatchOddsReader fracsoftReaderThread = fileReaders.get(match);
     			//removeMatch(match);
     			fracsoftReaderThread.setStop();
-    			fracsoftReaderThread.interrupt();
+    			fracsoftReaderThread.interrupt();    			
+    			
+    			if (fileSetReaders.containsKey(match)) {
+    				FracsoftSetBettingReader reader = fileSetReaders.get(match);
+    				reader.setStop();
+    				reader.interrupt();
+    			}
+    			
     			fileListeners.remove(match);
     		}
     	}
@@ -129,13 +146,21 @@ public class LiveDataFetcher {
         dataUpdater.start();
     }
     
-    private static void startFromFile(Match match, String fileName) {    	
-        final FracsoftReader fracsoftUpdater;
+    private static void startFromFile(Match match) {    	
+        final FracsoftMatchOddsReader fracsoftUpdater;
         try {
-            fracsoftUpdater = new FracsoftReader(match, fileName);
+            fracsoftUpdater = new FracsoftMatchOddsReader(match, match.getFilename());
             fileReaders.put(match, fracsoftUpdater);            
             log.info("Started Fracsoft thread");
-            fracsoftUpdater.start();            
+            fracsoftUpdater.start(); 
+            
+			if (match.getSetBettingFilename() != null) {
+				FracsoftSetBettingReader reader = new FracsoftSetBettingReader(
+						match, match.getSetBettingFilename());
+				fileSetReaders.put(match, reader);
+				reader.start();
+			}
+			
         } catch(FileNotFoundException fnfe) {
             log.error("Fracsoft file to be opened not found");
         }
@@ -154,14 +179,14 @@ public class LiveDataFetcher {
             
     }
     */
-    public static void handleEvent(HashMap<EventBetfair, MOddsMarketData> data) {
+    public static void handleEvent(HashMap<EventBetfair, CompleteMarketData> data) {
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();
             //TODO check if market closed - then display result of bets
             List<UpdatableWidget> widgets = listeners.get(eb.getBetfairId());
             for (UpdatableWidget w : widgets)
-                w.handleUpdate(data.get(eb));
+                w.handleUpdate(data.get(eb).getmOddsMarketData());
         }
     }
 
@@ -189,7 +214,12 @@ public class LiveDataFetcher {
     		dataUpdater.interrupt();
     	}
     	
-    	for (FracsoftReader fr : fileReaders.values()) {
+    	for (FracsoftMatchOddsReader fr : fileReaders.values()) {
+    		fr.setStop();
+    		fr.interrupt();
+    	}
+    	
+    	for (FracsoftSetBettingReader fr : fileSetReaders.values()) {
     		fr.setStop();
     		fr.interrupt();
     	}
@@ -201,8 +231,9 @@ public class LiveDataFetcher {
     }
     
     public static void setPlaybackSpeed(Match match, int updatesPerSecond) {
-    	FracsoftReader fracsoftReader = fileReaders.get(match);
-    	if (fracsoftReader != null)
-    	    fracsoftReader.setUpdatesPerSecond(updatesPerSecond);
+    	if (fileReaders.containsKey(match))
+    		fileReaders.get(match).setUpdatesPerSecond(updatesPerSecond);
+    	if (fileSetReaders.containsKey(match))
+    		fileSetReaders.get(match).setUpdatesPerSecond(updatesPerSecond);
     }
 }

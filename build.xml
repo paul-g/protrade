@@ -10,6 +10,7 @@
 	<property file="build.properties" />
 	<property name="lib.dir" value="lib" />
 	<property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
+	<property name="lib.jface.dir" value="${lib.dir}/jface" />
 	<property name="lib.axis.dir" value="${lib.dir}/axis" />
 	<property name="lib.htmlunit" value="${lib.dir}/htmlunit" />
 	<property name="lib.pmd" value="${lib.dir}/pmd" />
@@ -33,6 +34,7 @@
 		<pathelement location="${build.test.dir}" />
 		<fileset dir="${lib.dir}" includes="*.jar" excludes="cobertura.jar" />
 		<fileset dir="${lib.swt.dir}" includes="*.jar" />
+		<fileset dir="${lib.jface.dir}" includes="*.jar" />
 		<fileset dir="${lib.axis.dir}" includes="*.jar" />
 		<fileset dir="${lib.htmlunit}" includes="*.jar" />
 		<fileset dir="lib/swtbot/" includes="*.jar" />

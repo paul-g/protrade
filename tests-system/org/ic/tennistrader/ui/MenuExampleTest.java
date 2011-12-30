@@ -8,10 +8,7 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.WidgetResult;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -24,9 +21,9 @@ public class MenuExampleTest {
     @Test
     public void emptyLoginFail() throws Exception {
         Display display = new Display();
-        MenuExample me = new MenuExample(display);
+        new MenuExample(display);
         bot = new SWTBot(shell);
-        SWTBotMenu s = bot.shell("Test").contextMenu("Test");
+        bot.shell("Test").contextMenu("Test");
         //SWTBotMenu m = s.contextMenu("Test");
     }
 

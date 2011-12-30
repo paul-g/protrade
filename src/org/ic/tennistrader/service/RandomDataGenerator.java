@@ -28,11 +28,6 @@ public class RandomDataGenerator {
     
     private static final double INITIAL_SEED = 1.66; 
     
-    private static final double PL1_INITIAL_BACK_SEED = 1.66;
-    private static final double PL1_INITIAL_LAY_SEED = 1.66;
-    private static final double PL2_INITIAL_BACK_SEED = 5.72;
-    private static final double PL2_INITIAL_LAY_SEED = 5.72;
-
     private static int totalMatched = 0;
     private static double lpm = 1.6;
     
