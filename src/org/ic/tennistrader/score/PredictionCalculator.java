@@ -102,7 +102,7 @@ public class PredictionCalculator {
 		DecimalFormat df = new DecimalFormat("#.###");
 		for (int i =0; i<10; i++){			
 			result[i] = Double.parseDouble(df.format(result[i]));
-			System.out.println(result[i]);
+			//System.out.println(result[i]);
 		}
 		
 		return result;

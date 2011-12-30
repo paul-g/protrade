@@ -201,15 +201,24 @@ public class MOddsMarketData {
 		return player1PredictedOdds;
 	}
 	
-	public double setplayer1PredictedOdds(double player1PredictedOdds) {
-		return this.player1PredictedOdds = player1PredictedOdds;
+	public void setplayer1PredictedOdds(double player1PredictedOdds) {
+		System.out.println("called?");
+		if (player1PredictedOdds == 0) {
+			this.player1PredictedOdds = 0.00001;
+		} else {
+			this.player1PredictedOdds = player1PredictedOdds;
+		}
 	}
 	
 	public double getplayer2PredictedOdds() {
 		return player2PredictedOdds;
 	}
 	
-	public double setplayer2PredictedOdds(double player2PredictedOdds) {
-		return this.player2PredictedOdds = player2PredictedOdds;
+	public void setplayer2PredictedOdds(double player2PredictedOdds) {
+		if (player2PredictedOdds == 0) {
+			this.player2PredictedOdds = 0.00001;
+		} else {
+			this.player2PredictedOdds = player2PredictedOdds;
+		}
 	}
 }

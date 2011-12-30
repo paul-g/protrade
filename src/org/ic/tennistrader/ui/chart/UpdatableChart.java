@@ -34,24 +34,18 @@ import org.swtchart.Range;
 
 public class UpdatableChart extends Chart implements UpdatableWidget {
 	private IBarSeries endOfSets;
-	private ILineSeries firstSeries;
-	private ILineSeries secondSeries;
-	private ILineSeries maPl1Series;
-	private ILineSeries maPl2Series;
-	private IErrorBar pl1Spread;
-	private IErrorBar pl2Spread;
+	private ILineSeries firstSeries, secondSeries, maPl1Series, maPl2Series,
+			pl1Predicted, pl2Predicted;
+	private IErrorBar pl1Spread, pl2Spread;
 	private int sampleSize = 200;
-	private int seriesNr = 13;
+	private int seriesNr = 11;
 	private boolean decimalOdds;
 	private String xAxisTitle = "Time";
 	private String yAxisDecimalTitle = "Decimal Odds";
 	private String yAxisFractionalTitle = "Implied Odds (%)";
 	boolean pl1Selected;
 	boolean pl2Selected;
-	private boolean maPl2Selected;
-	private boolean maPl1Selected;
-	private boolean spPl1Selected;
-	private boolean spPl2Selected;
+	private boolean maPl1Selected, maPl2Selected, spPl1Selected, spPl2Selected;
 	private ChartData chartData;
 	private Match match;
 	private Slider slider;
@@ -65,7 +59,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		initSlider();
 
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
-
+		
 		setSeriesStyles();
 		decimalOdds = true;
 		pl1Selected = true;
@@ -82,7 +76,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		getLegend().setPosition(SWT.TOP);
 		// addListeners();
 
-		yAxis.setRange(new Range(1, 2));
+		yAxis.setRange(new Range(1, 3));
 		// this.getAxisSet().adjustRange();
 
 		xAxis.getTick().setVisible(false);
@@ -113,60 +107,73 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	private void setSeriesStyles() {
-
 		ISeriesSet seriesSet = this.getSeriesSet();
 		IAxisSet axisSet = this.getAxisSet();
 		axisSet.createYAxis();
-
-		// endOfSets = (IBarSeries) seriesSet.createSeries(SeriesType.BAR,
-		// "end of sets");
-		// endOfSets.setBarPadding(100);
-		// endOfSets.setYAxisId(1);
 		axisSet.getYAxis(1).setRange(new Range(0, 1));
+		endOfSets = createBarSeries(seriesSet, "end of Sets", 100, false);
+		endOfSets.setYAxisId(1);
 		// build first series
-		firstSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
-				"back odds " + match.getPlayerOne());
 		Color color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
-		firstSeries.setLineColor(color);
-		firstSeries.setSymbolSize(4);
-		// firstSeries.enableStep(true);
-		firstSeries.setAntialias(SWT.ON);
-		firstSeries.enableArea(true);
-		firstSeries.setSymbolType(PlotSymbolType.NONE);
-		pl1Spread = firstSeries.getYErrorBar();
-		pl1Spread.setType(ErrorBarType.BOTH);
-		pl1Spread.setVisible(false);
+		firstSeries = createLineSeries(seriesSet,
+				"back odds " + match.getPlayerOne(), color, LineStyle.SOLID,
+				PlotSymbolType.NONE, 0, false, SWT.ON, true, true);
+		pl1Spread = createSpread(firstSeries, ErrorBarType.BOTH, false);
 		// build second series
-		secondSeries = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
-				"back odds " + match.getPlayerTwo());
-		Color colorSr2 = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-		secondSeries.setLineColor(colorSr2);
-		secondSeries.setSymbolSize(4);
-		secondSeries.setSymbolType(PlotSymbolType.NONE);
-		secondSeries.enableStep(true);
-		secondSeries.setVisible(false);
-		pl2Spread = secondSeries.getYErrorBar();
-		pl2Spread.setType(ErrorBarType.BOTH);
-		pl2Spread.setVisible(false);
+		Color color2 = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+		secondSeries = createLineSeries(seriesSet,
+				"back odds " + match.getPlayerTwo(), color2, LineStyle.SOLID,
+				PlotSymbolType.NONE, 0, false, SWT.ON,false, false);
+		pl2Spread = createSpread(secondSeries, ErrorBarType.BOTH, false);
 		// building moving averages player 1
-		maPl1Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
-				"MA " + match.getPlayerOne());
 		Color color3 = Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_MAGENTA);
-		maPl1Series.setLineColor(color3);
-		maPl1Series.setSymbolSize(4);
-		maPl1Series.setSymbolType(PlotSymbolType.SQUARE);
-		maPl1Series.setVisible(false);
-
+		maPl1Series = createLineSeries(seriesSet, "MA " + match.getPlayerOne(),
+				color3, LineStyle.SOLID, PlotSymbolType.SQUARE, 4, false,
+				SWT.ON, false,  false);
 		// building moving averages player 2
-		maPl2Series = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
-				"MA " + match.getPlayerTwo());
 		Color color4 = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
-		maPl2Series.setLineColor(color4);
-		maPl2Series.setSymbolSize(4);
-		maPl2Series.setSymbolType(PlotSymbolType.TRIANGLE);
-		maPl2Series.setVisible(false);
+		maPl2Series = createLineSeries(seriesSet, "MA " + match.getPlayerOne(),
+				color4, LineStyle.SOLID, PlotSymbolType.TRIANGLE, 4, false,
+				SWT.ON, false, false);
+		pl1Predicted = createLineSeries(seriesSet,
+				"Predicted odds " + match.getPlayerOne(), color, LineStyle.DOT,
+				PlotSymbolType.NONE, 0, false, SWT.ON, false, true);
+		pl2Predicted = createLineSeries(seriesSet,
+				"Predicted odds " + match.getPlayerTwo(), color2,
+				LineStyle.DOT, PlotSymbolType.NONE, 0, false, SWT.ON, false, true);
+	}
 
+	private IBarSeries createBarSeries(ISeriesSet seriesSet, String title,
+			int i, boolean b) {
+		IBarSeries bar = (IBarSeries) seriesSet.createSeries(SeriesType.BAR,
+				title);
+		bar.setBarPadding(100);
+		return bar;
+	}
+
+	private IErrorBar createSpread(ILineSeries series, ErrorBarType type,
+			boolean visible) {
+		IErrorBar spread = series.getYErrorBar();
+		spread.setType(type);
+		spread.setVisible(visible);
+		return spread;
+	}
+
+	private ILineSeries createLineSeries(ISeriesSet seriesSet, String text,
+			Color color, LineStyle lineStyle, PlotSymbolType type,
+			int symbSize, boolean step, int antialias, boolean area, boolean visible) {
+		ILineSeries line = (ILineSeries) seriesSet.createSeries(
+				SeriesType.LINE, text);
+		line.setLineColor(color);
+		line.setLineStyle(lineStyle);
+		line.setSymbolType(PlotSymbolType.NONE);
+		line.setSymbolSize(symbSize);
+		line.enableStep(step);
+		line.setAntialias(antialias);
+		line.enableArea(area);
+		line.setVisible(visible);
+		return line;
 	}
 
 	/**
@@ -184,7 +191,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		showSeries(dataSize, false);
 		if (!this.isDisposed()) {
 			this.getAxisSet().getXAxis(0).adjustRange();
-			this.getAxisSet().getYAxis(0).adjustRange();
+		//	this.getAxisSet().getYAxis(0).adjustRange();
 		}
 	}
 
@@ -206,7 +213,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	private void showSeries(int i, boolean dragged) {
-		int size = (i ) < sampleSize ? (i ) : sampleSize;
+		int size = (i) < sampleSize ? (i) : sampleSize;
 		Date showXSeries[] = new Date[size];
 		ArrayList<double[]> dataArray = new ArrayList<double[]>();
 		for (int k = 0; k < seriesNr; k++) {
@@ -258,19 +265,17 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 						chartData.getPl2YSeries().get(b), pow) - Math.pow(
 						chartData.getPl2Lay().get(b).second(), pow)) * k;
 				nr++;
-				/*
-				 * dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
-				 * nr++; dataArray.get(nr)[a] =
-				 * chartData.getLayOverround().get(b); nr++;
-				 * dataArray.get(nr)[a] = chartData.getPl1Volume().get(b); nr++;
-				 * dataArray.get(nr)[a] = chartData.getPl2Volume().get(b); nr++;
-				 */
-				// dataArray.get(nr)[a] = chartData.endOfSets.get(b);
+				dataArray.get(nr)[a] = chartData.endOfSets.get(b);
+				nr++;
+				dataArray.get(nr)[a] = Math.pow(chartData.getPl1Predicted().get(b),
+						pow) * k;
+				nr++;
+				dataArray.get(nr)[a] = Math.pow(chartData.getPl2Predicted().get(b),
+						pow) * k;
 
 			}
 
-			// endOfSets.setXDateSeries(showXSeries);
-			// endOfSets.setYSeries(dataArray.get(12));
+			
 			firstSeries.setXDateSeries(showXSeries);
 			firstSeries.setYSeries(dataArray.get(0));
 			secondSeries.setXDateSeries(showXSeries);
@@ -283,13 +288,12 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 			pl1Spread.setMinusErrors(dataArray.get(5));
 			pl2Spread.setPlusErrors(dataArray.get(6));
 			pl2Spread.setMinusErrors(dataArray.get(7));
-			/*
-			 * oChart.setBackOverround(showXSeries, dataArray.get(8));
-			 * oChart.setLayOverround(showXSeries, dataArray.get(9));
-			 * oChart.setPl1Volume(showXSeries, dataArray.get(10));
-			 * oChart.setPl2Volume(showXSeries, dataArray.get(11));
-			 * oChart.adjust();
-			 */
+			endOfSets.setXDateSeries(showXSeries);
+			endOfSets.setYSeries(dataArray.get(8));
+			pl1Predicted.setXDateSeries(showXSeries);
+			pl1Predicted.setYSeries(dataArray.get(9));
+			pl2Predicted.setXDateSeries(showXSeries);
+			pl2Predicted.setYSeries(dataArray.get(10));
 			updateDisplay();
 		}
 	}

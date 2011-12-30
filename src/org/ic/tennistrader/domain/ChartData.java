@@ -6,12 +6,16 @@ import java.util.Date;
 
 
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.score.PredictionCalculator;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
 
 public class ChartData {
 	private ArrayList<Double> pl1YSeries;
 	private ArrayList<Double> pl2YSeries;
+	private ArrayList<Double> pl1Predicted;
+	private ArrayList<Double> pl2Predicted;
 	private ArrayList<Pair<Double,Double>> pl1Lay;
 	private ArrayList<Pair<Double,Double>> pl2Lay;
 	private ArrayList<Double> maPl1;
@@ -23,13 +27,23 @@ public class ChartData {
 	private ArrayList<Double> pl2Volume;
 	private double pl1TotalPrevVol, pl2TotalPrevVol;
 	private int dataSize;
+	private Match match;
+	private int prevNrSets; 
 	
 	public ArrayList<Integer> endOfSets;
 	
-	public ChartData(){
+	public ChartData(Match match){
+		this.match = match;
+		try{
+			prevNrSets = match.getScore().getPlayerOneSets() + match.getScore().getPlayerTwoSets();
+		} catch (NullPointerException e){
+			prevNrSets = 0;
+		}
 		dataSize = 0;
 		pl1YSeries = new ArrayList<Double>();
 		pl2YSeries = new ArrayList<Double>();
+		pl1Predicted = new ArrayList<Double>();
+		pl2Predicted = new ArrayList<Double>();
 		pl1Lay = new ArrayList<Pair<Double,Double>>();
 		pl2Lay = new ArrayList<Pair<Double,Double>>();
 		maPl1 = new ArrayList<Double>(); 
@@ -46,6 +60,14 @@ public class ChartData {
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
 		pl1YSeries = addValue(pl1YSeries,  data.getPl1LastMatchedPrice());
 		pl2YSeries = addValue(pl2YSeries,  data.getPl2LastMatchedPrice());
+		
+		try {
+			double [] result = calcPrediction(PredictionCalculator.calculate(match));
+			pl1Predicted = addValue(pl1Predicted,  result[0]);
+			pl2Predicted = addValue(pl2Predicted,  result[1]);
+		} catch (NullPointerException e) {
+
+		}
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
@@ -60,9 +82,25 @@ public class ChartData {
 	}
 	
 	
+	private double[] calcPrediction(double[] predicted) {
+		double pl1Pred = predicted[8];
+		if (pl1Pred == 0) pl1Pred = 0.0001;
+		double pl2Pred = predicted[9];
+		if (pl2Pred == 0) pl2Pred = 0.0001;
+		// TODO Auto-generated method stub
+		return new double[]{pl1Pred,pl2Pred};
+	}
+
 	private void addEndOfSet() {
-		if (getDataSize() % 10 == 0) {
+		int nrSets;
+		try {
+			nrSets = match.getScore().getPlayerOneSets() + match.getScore().getPlayerTwoSets();
+		} catch (NullPointerException e) {
+			nrSets = prevNrSets;
+		}
+		if (prevNrSets < nrSets) {
 			endOfSets.add(1);
+			prevNrSets = nrSets;
 		} else endOfSets.add(0);
 		
 		
@@ -152,11 +190,11 @@ public class ChartData {
 		return maPl12;
 	}
 
-	private ArrayList<Double> addValue(ArrayList<Double> pl1ySeries2, 
+	private ArrayList<Double> addValue(ArrayList<Double> series, 
 			double d) {
 		int i = this.getDataSize();
-		pl1ySeries2.add(i, d);
-		return pl1ySeries2;
+		series.add(i, d);
+		return series;
 	}
 
 	
@@ -255,4 +293,22 @@ public class ChartData {
 	public void setPl2Volume(ArrayList<Double> pl2Volume) {
 		this.pl2Volume = pl2Volume;
 	}
+
+	public ArrayList<Double> getPl1Predicted() {
+		return pl1Predicted;
+	}
+
+	public void setPl1Predicted(ArrayList<Double> pl1Predicted) {
+		this.pl1Predicted = pl1Predicted;
+	}
+
+	public ArrayList<Double> getPl2Predicted() {
+		return pl2Predicted;
+	}
+
+	public void setPl2Predicted(ArrayList<Double> pl2Predicted) {
+		this.pl2Predicted = pl2Predicted;
+	}
+	
+	
 }

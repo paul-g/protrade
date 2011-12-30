@@ -17,6 +17,8 @@ import org.ic.tennistrader.service.threads.BetfairDataUpdaterThread;
 import org.ic.tennistrader.service.threads.MatchRecorderThread;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftMatchOddsReader;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftSetBettingReader;
+import org.ic.tennistrader.ui.chart.DualChartWidget;
+import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 

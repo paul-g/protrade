@@ -14,8 +14,8 @@ import static org.ic.tennistrader.utils.Pair.pair;
 
 public class ChartDataTest {
 
-	MOddsMarketData data; 
-	ChartData chartData = new ChartData();
+	MOddsMarketData data;
+	ChartData chartData = new ChartData(null);
 
 	@Before
 	public void setUp(){

@@ -26,7 +26,7 @@ public class UpdatableChartTest extends DisplayTest{
 		filename = "data/test/fracsoft-reader/tso-fed.csv";
 	    match = new HistoricalMatch(filename);
 	    slider = new Slider(shell, SWT.BORDER);
-	    chartData =  new ChartData();
+	    chartData =  new ChartData(null);
 		chart = new UpdatableChart(shell, SWT.BORDER, match, slider, chartData);
 	}	
 	

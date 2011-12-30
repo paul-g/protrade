@@ -20,6 +20,7 @@ public class DualChartWidget extends Composite implements UpdatableWidget{
 	private final UpdatableChart largeChart;
 	private final OverroundChart smallChart;
 	private final ChartData chartData;
+	private final Match match;
 	
 	public static void main(String args[]) {
 		Display display = new Display();
@@ -42,9 +43,9 @@ public class DualChartWidget extends Composite implements UpdatableWidget{
 
 	public DualChartWidget(Composite parent, Match match){
 		super(parent, SWT.NONE);
-		chartData = new ChartData();
+		chartData = new ChartData(match);
 		setLayout(new FillLayout());
-		
+		this.match = match;
 		SashForm form = new SashForm(this, SWT.VERTICAL);
 		
 		Slider slider = new Slider(form, SWT.HORIZONTAL);

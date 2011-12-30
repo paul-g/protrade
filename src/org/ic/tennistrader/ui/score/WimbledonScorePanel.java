@@ -186,7 +186,6 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         
         try {
         double[] result = PredictionCalculator.calculate(this.match);
-        
         setPlayerPrediction(PredictionCalculator.getP1Data(result), PlayerEnum.PLAYER1);
         setPlayerPrediction(PredictionCalculator.getP2Data(result), PlayerEnum.PLAYER2);
         
@@ -204,9 +203,8 @@ public class WimbledonScorePanel extends StandardWidgetContainer implements
         
         setPlayerPrediction(PredictionCalculator.getP1Data(result), PlayerEnum.PLAYER1);
         setPlayerPrediction(PredictionCalculator.getP2Data(result), PlayerEnum.PLAYER2);
-        
-        newData.setplayer1PredictedOdds(result[8]);
-        newData.setplayer2PredictedOdds(result[9]);
+//        newData.setplayer1PredictedOdds(result[8]);
+//        newData.setplayer2PredictedOdds(result[9]);
         
         } catch (Exception e){}
     }
