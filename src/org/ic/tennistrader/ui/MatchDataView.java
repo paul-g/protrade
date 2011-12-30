@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 
 public class MatchDataView extends StandardWidgetContainer implements UpdatableWidget {
@@ -47,7 +47,7 @@ public class MatchDataView extends StandardWidgetContainer implements UpdatableW
         combo.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event arg0) {
-                LiveDataFetcher.setPlaybackSpeed(match, Integer
+                DataManager.setPlaybackSpeed(match, Integer
                         .parseInt(selectionItems[combo.getSelectionIndex()]));
             }
         });

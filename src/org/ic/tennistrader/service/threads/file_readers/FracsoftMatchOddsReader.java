@@ -9,8 +9,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
-import org.ic.tennistrader.service.LiveDataFetcher;
-import org.ic.tennistrader.service.RecordedDataFormat;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
 
@@ -183,12 +182,12 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 	}
 
 	@Override
-	public void runFileReader() {
+	protected void runFileReader() {
 		try {
-			LiveDataFetcher.handleFileEvent(this.match, getMarketData());
+			DataManager.handleFileEvent(this.match, getMarketData());
 			//setBettingReader.runFileReader();
 		} catch (EndOfFracsoftFileException e1) {
-			LiveDataFetcher.handleEndOfFile(this.match);
+			DataManager.handleEndOfFile(this.match);
 			this.setStop();
 		}
 		try {

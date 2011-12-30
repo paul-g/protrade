@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import org.ic.tennistrader.Main;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.DisplayPanel;
 import org.ic.tennistrader.ui.LowerToolBar;
 import org.ic.tennistrader.ui.NavigationPanel;
@@ -158,7 +158,7 @@ public class StandardWindow implements ApplicationWindow {
                 display.sleep();
         }
         
-        LiveDataFetcher.stopAllThreads();
+        DataManager.stopAllThreads();
         LowerToolBar.setStop();
         
         display.dispose();

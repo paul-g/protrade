@@ -10,8 +10,7 @@ import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
-import org.ic.tennistrader.service.BetfairUpdaterEvents;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 
 public class BetfairDataUpdaterThread extends MatchUpdaterThread {
     // private List<EventBetfair> events;
@@ -68,7 +67,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 			}
 			i = (i + 1) % 3;
 		}
-		LiveDataFetcher.handleEvent(newMap);
+		DataManager.handleEvent(newMap);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
