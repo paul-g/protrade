@@ -31,7 +31,7 @@ public class ProfileWindow {
 		shell.setLocation(1100,80);
 		Label profData = new Label(shell,SWT.BORDER);
 		profData.setText("Hello!");
-//		profData.setText(textProfile());
+		textProfile();
 		shell.open();
 	}
 	
