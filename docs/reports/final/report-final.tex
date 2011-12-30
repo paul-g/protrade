@@ -125,46 +125,64 @@ Explain why, give examples.
 This chapter introduces the main technologies used in building the {\nmsp} application and provides a high level overview of the application's design, describing some of the main technical challenges and how they were overcome.
 
 \section{Technologies}
-To facilitate the development of a responsive and feature rich application such as {\nm}, a number of technologies, frameworks and libraries were used throughout the development stage.
-This section provides a brief overview of the technologies used while a more in-depth analysis of the choice of technology is presented in section \ref{sec-choice}.
+To facilitate the development of a responsive and feature rich application such as {\nm}, a number of technologies, frameworks and libraries were used throughout the development stage. These were supplemented by standard build and collaboration tools meant to improve the team's efficiency and ensure that tight deadlines were met.
+Below we present an overview of these technologies and explain the final choices by comparing them with other alternatives.
 
 \subsection{Languages}
 
 \begin{description}
-\item[Java] This is a widely used multi-purpose programming language, with good support for concurrency. It is platform-independent and provides a choice between native and emulated graphical toolkits.
+\item[Java] is a widely used multi-purpose programming language, with good support for concurrency. It is platform-independent and provides a choice between native and emulated graphical toolkits. 
 
-\item[XML] Usually the langauge of choice for managing the configuration of Java projects, XML is ``typed'' (via schemas) and exstensbile. It is generally used in conjuncture with build automation tools such as Ant.
+\item[XML] is usually the langauge of choice for managing the configuration of Java projects. It is ``typed'' (via schemas) and exstensbile and is generally used in conjuncture with build automation tools such as Ant.
 
-\item[Bash] Bash scripts are useful for automating simple, repetitive tasks such as builds, pre-commit hooks etc.
+\item[Bash] scripts are useful for automating simple, repetitive tasks such as builds, pre-commit hooks etc.
 
 \end{description}
+
+The choice for Java as a main programming language was based on:
+\begin{itemize}
+  \item team member's prior work experience - each team member was experienced with Java more than any other programming language
+  \item good concurrency support
+  \item good performance - ability to create native GUI components
+  \item garbage collection - 
+\end{itemize}
+
+Compared to C/C++ Java offers more in terms of conccurrency and is generally less error prone (due to garbage collection and lack of pointer arithmetic).
+Other languages were not considered due to lack of experience.
 
 \subsection{UI Libraries} 
 
 \begin{description}
 
-\item[SWT] 
-SWT is a graphical widget toolkit with a platform dependent implementation. At the heart of its architecure is the ability to create native widgets. However this raises the issue of freeing allocated memory (which cannot be garbage col- lected by the JVM).
+\item[SWT] is a graphical widget toolkit with a platform dependent implementation. At the heart of its architecture is the ability to create native OS widgets. This approach is generally faster and results in a look and feel that matches exactly that of the OS the program is running on. However, it raises the issue of freeing allocated resources (which cannot be garbage collected since they reside outside the JVM). SWT has been ported on most operating systems, and is being used in a large number of projects including the popular Eclipse IDE.
 
-``The Standard Widget Toolkit is a graphical widget toolkit for use with the Java platform. It was originally developed by IBM and is now maintained by the Eclipse Foundation in tandem with the Eclipse IDE. It is an alternative to the AWT and Swing Java GUI toolkits provided by Sun Microsystems as part of the Java Platform, Standard Edition.
+\item[JFace] provides an API for handling common tasks which appear when working with SWT. It provides a higher level event model (based on actions and contributions), dialogs, wizards etc. However, since this higher level approach is based on a few simplifying assumptions, some of the flexibility of SWT is lost. This often means that in order exactly match the desired behaviour or appearance, one cannot rely on JFace.
 
-To display GUI elements, the SWT implementation accesses the native GUI libraries of the operating system using JNI (Java Native Interface) in a manner that is similar to those programs written using operating system-specific APIs. Programs that call SWT are portable, but the implementation of the toolkit, despite part of it being written in Java, is unique for each platform.''
-
-\item[JFace]
-
-\item[SWTChart] The SWTChart API provides a chart component with several basic function-
-alities (such as drawing line functions, bar charts etc). The chart can handle
-real-time updates (even for large data series), which is crucial to the purpose
-of our project and, since it is based on SWT, it integrates smoothly with the
-application’s UI design and implementation.
+\item[SWTChart] provides an API for creating chart components with standard functionalities such as drawing line functions, bar charts etc. It also provides more advanced options (antialiasing, transparency, multiple Y axis). The chart can handle real-time updates (even for large data series), which is crucial for the purpose of our project and, being based on SWT, it integrates smoothly with the rest of the application. 
 
 \end{description}
 
+Compared to the well established Swing toolkit, the SWT/JFace approach has several advantages:
+\begin{itemize}
+  \item UIs are generally faster while having the native look and feel of the OS they are running on
+  \item a richer out of the box widget set than Swing
+  \item via the ``SWT\_AWT bridge'' Swing components can be integrated into SWT code (this allows for easy integration of complex, non-standard widgets which were developped for Swing)
+  \item no garbage collection of OS resources (this results in a more predictable behaviour which is vital for real time applications)
+  \item the low level approach provides great flexibility (especially in terms of event handling)
+\end{itemize}
 
+The main disadvantages of SWT are the increased complexity the programmer must handle:
+\begin{itemize}
+  \item native OS resources must be freed manually (partly solved by JFace)
+  \item the low level approach exposes the event handling loop and makes the existence of a UI/event thread explicit. This forces the programmer to handle concurrency issues explicitly in order to obtain a responsive application (e.g. fork a thread for handling demanding tasks)
+  \item naturally, the increased complexity means that less functionality can be achieved than with Swing
+\end{itemize}
+
+Consequently, the decision to adopt SWT was based on the desire to provide a responsive, native looking application, even if this implied slightly less functionality.
 \subsection{Build Automation Tools}
 
 \begin{description}
-\item[Apache Ant] is a Java tool used for application builds. It provides out of the box tasks varying from simple file and folder manipulation to compilation and can be extended with more complex tasks such as testing and reporting for applications. These are usually provided by the API developper (e.g. JUnit or Cobertura) simplifying the process of integrating various technologies.
+\item[Apache Ant] is a Java tool used for application builds. It provides out of the box tasks varying from simple file manipulation to compilation and can be extended with more complex tasks such as testing and reporting for applications. These are usually provided by the API developper (e.g. JUnit or Cobertura) simplifying the process of integrating various technologies.
 
 \initlisting{Xml}{An example Ant task for generating PMD reports}
 \begin{lstlisting}
