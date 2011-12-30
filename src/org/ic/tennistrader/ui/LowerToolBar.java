@@ -34,6 +34,7 @@ public class LowerToolBar{
 		/* Setting the tool bar */
 		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(gridData);
+		toolbar.setBackgroundMode(SWT.INHERIT_FORCE);
 		
 		/* Internet availability */
 		ToolItem widgetItem = new ToolItem(toolbar, SWT.NULL);
