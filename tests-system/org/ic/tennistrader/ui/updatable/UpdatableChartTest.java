@@ -6,7 +6,7 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.DisplayTest;
 import org.ic.tennistrader.ui.chart.UpdatableChart;
 import org.junit.After;
@@ -32,7 +32,7 @@ public class UpdatableChartTest extends DisplayTest{
 	
 	@After
 	public void tearDown() {
-		LiveDataFetcher.stopAllThreads();
+		DataManager.stopAllThreads();
 		super.tearDown();
 	}
 	

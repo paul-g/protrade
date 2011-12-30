@@ -1,4 +1,4 @@
-package org.ic.tennistrader.service;
+package org.ic.tennistrader.service.threads.file_readers;
 
 public enum RecordedDataFormat {
 	FRACSOFT_SIMPLE(19), FRACSOFT_FULL(23), RECORDED_NO_TOTAL_MATCHED(22); 

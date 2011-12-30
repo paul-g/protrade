@@ -20,10 +20,10 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 					.getTournamentsData();
 			assertNotNull(tours);
 			for (Tournament t : tours) {
-				MOddsMarketData data = BetfairExchangeHandler.getMarketOdds(t.getEventBetfair());
+				MOddsMarketData data = BetfairExchangeHandler.getMatchOddsMarketData(t.getEventBetfair());
 				assertNotNull(data);
 				for (RealMatch m : t.getMatches()) {
-					data = BetfairExchangeHandler.getMarketOdds(m.getEventBetfair());
+					data = BetfairExchangeHandler.getMatchOddsMarketData(m.getEventBetfair());
 					assertNotNull(data);
 				}
 			}

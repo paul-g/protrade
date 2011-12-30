@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
@@ -16,23 +17,23 @@ import org.ic.tennistrader.model.BetManager;
 import org.ic.tennistrader.service.threads.BetfairDataUpdaterThread;
 import org.ic.tennistrader.service.threads.MatchRecorderThread;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftMatchOddsReader;
+import org.ic.tennistrader.service.threads.file_readers.FracsoftReader;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftSetBettingReader;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
-public class LiveDataFetcher {
-    
+public class DataManager {    
     // one Betfair updater and many Fracsoft updater
     private static BetfairDataUpdaterThread dataUpdater = null;    
     private static HashMap<Match, MatchRecorderThread>  recordersMap = new HashMap<Match, MatchRecorderThread>();
-    private static HashMap<Match, FracsoftMatchOddsReader> fileReaders = new HashMap<Match, FracsoftMatchOddsReader>();
-    private static HashMap<Match, FracsoftSetBettingReader> fileSetReaders = new HashMap<Match, FracsoftSetBettingReader>();
+    private static HashMap<Match, FracsoftReader<Pair<MOddsMarketData, Score>>> fileReaders = new HashMap<Match, FracsoftReader<Pair<MOddsMarketData, Score>>>();
+    private static HashMap<Match, FracsoftReader<SetBettingMarketData>> fileSetReaders = new HashMap<Match, FracsoftReader<SetBettingMarketData>>();
     
     // map of updatable widgets waiting for updates from the same betfair event id
     private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
     private static HashMap<Match, List<UpdatableWidget>> fileListeners = new HashMap<Match, List<UpdatableWidget>>();
-    private static Logger log = Logger.getLogger(LiveDataFetcher.class);
+    private static Logger log = Logger.getLogger(DataManager.class);
     private static boolean started = false;
 
     public static void registerForMatchUpdate(final UpdatableWidget widget, final Match match){
@@ -125,13 +126,13 @@ public class LiveDataFetcher {
     	if (widgets != null) {
     		widgets.remove(widget);
     		if (widgets.size() == 0) {
-    			FracsoftMatchOddsReader fracsoftReaderThread = fileReaders.get(match);
+    			FracsoftReader<Pair<MOddsMarketData, Score>> fracsoftReaderThread = fileReaders.get(match);
     			//removeMatch(match);
     			fracsoftReaderThread.setStop();
     			fracsoftReaderThread.interrupt();    			
     			
     			if (fileSetReaders.containsKey(match)) {
-    				FracsoftSetBettingReader reader = fileSetReaders.get(match);
+    				FracsoftReader<SetBettingMarketData> reader = fileSetReaders.get(match);
     				reader.setStop();
     				reader.interrupt();
     			}
@@ -141,7 +142,7 @@ public class LiveDataFetcher {
     	}
 	}
 
-	public static void start() {
+	private static void start() {
         log.info("Started Betfair thread");
         dataUpdater.start();
     }
@@ -214,12 +215,12 @@ public class LiveDataFetcher {
     		dataUpdater.interrupt();
     	}
     	
-    	for (FracsoftMatchOddsReader fr : fileReaders.values()) {
+    	for (FracsoftReader<Pair<MOddsMarketData, Score>> fr : fileReaders.values()) {
     		fr.setStop();
     		fr.interrupt();
     	}
     	
-    	for (FracsoftSetBettingReader fr : fileSetReaders.values()) {
+    	for (FracsoftReader<SetBettingMarketData> fr : fileSetReaders.values()) {
     		fr.setStop();
     		fr.interrupt();
     	}

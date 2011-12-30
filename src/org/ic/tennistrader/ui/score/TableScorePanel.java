@@ -12,7 +12,7 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 
 public class TableScorePanel extends StandardWidgetContainer implements
@@ -68,7 +68,7 @@ public class TableScorePanel extends StandardWidgetContainer implements
         scoreTable.redraw();
         scoreTable.getParent().layout();
 
-        LiveDataFetcher.registerForMatchUpdate(this, match);
+        DataManager.registerForMatchUpdate(this, match);
     }
 
     /* (non-Javadoc)
