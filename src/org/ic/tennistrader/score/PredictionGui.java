@@ -22,7 +22,7 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
@@ -119,7 +119,7 @@ public class PredictionGui extends StandardWidgetContainer {
                 Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
                         .getP2LayButtons()), match);
         grid.setBetController(betController);
-        LiveDataFetcher.registerForMatchUpdate(grid, match);
+        DataManager.registerForMatchUpdate(grid, match);
         // BetManager.registerGrid(match, table);
     }
     

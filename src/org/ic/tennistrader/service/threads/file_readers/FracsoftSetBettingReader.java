@@ -8,6 +8,7 @@ import org.ic.tennistrader.domain.markets.MarketPrices;
 import org.ic.tennistrader.domain.markets.MatchScore;
 import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
 
 public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketData> {
@@ -113,4 +114,9 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 			log.info("Fracsoft set betting thread interrupted");
 		}
 	}	
+	
+	@Override
+	public void setMatch(RealMatch match) {
+		this.match = match;
+	}
 }

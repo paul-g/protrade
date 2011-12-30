@@ -12,6 +12,7 @@ import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.ic.tennistrader.authentication.Encrypt;
 import org.ic.tennistrader.ui.login.LoginShell;
 import org.ic.tennistrader.ui.main.ApplicationWindow;
+import org.ic.tennistrader.ui.main.DashboardWindow;
 import org.ic.tennistrader.ui.main.StandardWindow;
 
 public final class Main {
@@ -36,12 +37,17 @@ public final class Main {
 
 		// start up the app
 		final Display display = new Display();
-		final ApplicationWindow mw = makeApplicationWindow(display);
+		final ApplicationWindow mw;
 
 		if (args.length == 1) {
 			if ("-test".equals(args[0])) {
+				mw = makeApplicationWindow(display);
+				startMainWindow(display, mw);
+			} else if ("-testd".equals(args[0])) {
+				mw  = makeDashboardApplicationWindow(display);
 				startMainWindow(display, mw);
 			} else if ("-testb".equals(args[0])) {
+				mw = makeApplicationWindow(display);
 				String username = Main.testUsername;
 				String password = Main.testPassword;
 				log.info("username " + username);
@@ -55,6 +61,7 @@ public final class Main {
 			}
 		} else {
 
+			mw = makeApplicationWindow(display);
 			final LoginShell ls = new LoginShell(display);
 
 			mw.addLoadListener(new Listener() {
@@ -83,8 +90,12 @@ public final class Main {
 
 	private static ApplicationWindow makeApplicationWindow(final Display display) {
 		return new StandardWindow(display);
-		//return new DashboardWindow(display);
 	}
+	
+	private static ApplicationWindow makeDashboardApplicationWindow(final Display display) {
+		return new DashboardWindow(display);
+	}
+
 
 	public static void readAndDecryptConfigFile() {
 		String filename = "config.local";

@@ -18,7 +18,7 @@ import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -115,7 +115,7 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	 */
 	private void addMatchData(Composite comp, final Match match) {
 		MatchDataView matchDataView = new MatchDataView(comp, SWT.BORDER, match);
-		LiveDataFetcher.registerForMatchUpdate(matchDataView, match);
+		DataManager.registerForMatchUpdate(matchDataView, match);
 	}
 
 	/**

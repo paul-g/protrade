@@ -50,7 +50,7 @@ public abstract class FracsoftReader<K> extends MatchUpdaterThread {
 	}
 	
 	@Override
-	protected void runBody() {
+	public void runBody() {
 		if (pointer != null)
 			runFileReader();
 	}

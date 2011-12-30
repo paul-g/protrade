@@ -14,7 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.service.LiveDataFetcher;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
@@ -117,7 +117,7 @@ public class DashboardConfiguration {
 				log.info("Added score panel");
 			} else if (line[0].trim().equals("org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid")) {
 				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(wc, SWT.NONE, match);
-				LiveDataFetcher.registerForMatchUpdate(grid, match);
+				DataManager.registerForMatchUpdate(grid, match);
 				wc.setWidget(grid);
 				log.info("Added chart");
 			} else {
