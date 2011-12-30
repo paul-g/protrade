@@ -190,7 +190,11 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		// set serieses values
 		showSeries(dataSize, false);
 		if (!this.isDisposed()) {
-			this.getAxisSet().getXAxis(0).adjustRange();
+			try {
+				this.getAxisSet().getXAxis(0).adjustRange();
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		//	this.getAxisSet().getYAxis(0).adjustRange();
 		}
 	}

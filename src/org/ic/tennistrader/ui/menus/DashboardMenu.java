@@ -39,19 +39,22 @@ public class DashboardMenu {
 		Menu menu = new Menu(shell, SWT.DROP_DOWN);
 		dasboard.setMenu(menu);
 
-		MenuItem newItem = new MenuItem(menu, SWT.PUSH);
-		newItem.setText("&New");
-		newItem.addSelectionListener(new SelectionAdapter(){
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				dashboardWindow.newDashboard();
-			}
-		});
+		makeNewMenu(menu);
 		
 		MenuItem saveItem = new MenuItem(menu, SWT.PUSH);
 		saveItem.setText("&Save");
 		
 		saveItem.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dashboardWindow.getDashboard().save();
+			}
+		});
+		
+		MenuItem saveAsItem = new MenuItem(menu, SWT.PUSH);
+		saveAsItem.setText("&Save As");
+		
+		saveAsItem.addSelectionListener(new SelectionAdapter(){
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				dashboardWindow.getDashboard().save();
@@ -65,6 +68,38 @@ public class DashboardMenu {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				dashboardWindow.loadDashboard("dashboard.dat");
+			}
+		});
+	}
+
+	private void makeNewMenu(Menu menu) {
+		MenuItem newItem = new MenuItem(menu, SWT.CASCADE);
+		newItem.setText("&New");
+		Menu newSubMenu = new Menu(newItem);
+		newItem.setMenu(newSubMenu);
+		
+		MenuItem newEmpty = new MenuItem(newSubMenu, SWT.PUSH);
+		newEmpty.setText("Empty");
+		
+		newEmpty.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dashboardWindow.newDashboard();
+			}
+		});
+		
+		MenuItem newPredefined = new MenuItem(newSubMenu, SWT.PUSH);
+		newPredefined.setText("Predefined");
+		
+		newPredefined.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				LayoutDialog ld = new LayoutDialog();
+				ld.show();
+				String s = ld.getSelection();
+				if (s != null) {
+					dashboardWindow.loadDashboard(s);
+				}
 			}
 		});
 	}

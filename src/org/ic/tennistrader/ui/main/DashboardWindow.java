@@ -71,12 +71,7 @@ public class DashboardWindow implements ApplicationWindow {
 
 		log.info("Adding menu");
 		new DashboardMenu(this);
-		log.info("Adding menu");
-
-		/*log.info("Starting dashboard");
-		dashboard = new Dashboard(shell);
-		// notifyLoadEvent("Fetching betfair data");
-		log.info("Started log.info("Adding menu");navigation panel");*/
+		log.info("Added menu");
 
 		// ltb = new LowerToolBar(this);
 		notifyLoadEvent("Done!");

@@ -7,6 +7,7 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
 import org.ic.tennistrader.ui.main.StandardWindow;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class UpperToolbarTest extends DisplayTest {
@@ -57,6 +58,7 @@ public class UpperToolbarTest extends DisplayTest {
 		assertNotNull(pmbutton);
 	}
 	
+	@Ignore
 	@Test
 	public void toolbarProfileCheck() {
 		// Profile button checks

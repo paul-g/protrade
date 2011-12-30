@@ -2,14 +2,11 @@ package org.ic.tennistrader.ui.dashboard;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.StatisticsPanel;
@@ -20,47 +17,26 @@ import org.ic.tennistrader.ui.richlist.RichListElement;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
-public class AddWidgetDialog {
+public class AddWidgetDialog extends RichListDialog {
 
 	private WidgetPlaceholder widgetPlaceholder;
 
 	private Composite selection;
 
-	private Shell dialog;
-
-	public AddWidgetDialog(final WidgetPlaceholder widgetPlaceholder) {
+	public AddWidgetDialog() {
+		setText("Add Widget");
+	}
+	
+	public void setWidgetPlaceholder(WidgetPlaceholder widgetPlaceholder) {
 		this.widgetPlaceholder = widgetPlaceholder;
-		Display d = Display.getCurrent();
-		dialog = new Shell(d, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		dialog.setLayout(new FillLayout());
-		dialog.setText("Add Widget To Dashboard");
-
-		RichListView r = new RichListView(dialog, SWT.NONE);
-		addElements(r);
-
-		dialog.open();
-		dialog.pack();
-		while (!dialog.isDisposed()) {
-			if (d.readAndDispatch())
-				d.sleep();
-		}
 	}
 
 	public Composite getSelection() {
 		return selection;
 	}
 
-	private Control makeElementControl(Listener l) {
-		Button button = new Button(dialog, SWT.PUSH | SWT.FLAT);
-		Image image = new Image(Display.getCurrent(), "images/plus.png");
-		button.setImage(image);
-		button.setText("Add Now");
-		button.addListener(SWT.Selection, l);
-		image.dispose();
-		return button;
-	}
-
-	private void addElements(RichListView r) {
+	@Override
+	protected void addElements(RichListView r) {
 		makeDualChartElement(r);
 		makeScorePanelEl(r);
 		makeMarketGridEl(r);

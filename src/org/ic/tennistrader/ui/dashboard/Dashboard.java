@@ -41,7 +41,7 @@ public class Dashboard extends Composite {
 
 	private void init(Shell shell) {
 		Rectangle r = shell.getClientArea();
-		data = new DashboardConfiguration(new HashMap<WidgetContainer, Point>(), this);
+		data = new DashboardConfiguration(this);
 		data.setDefaultWidgetHeight(r.height / DEFAULT_ROW_COUNT);
 		data.setDefaultWidgetWidth(r.width / DEFAULT_WIDGETS_PER_ROW);
 

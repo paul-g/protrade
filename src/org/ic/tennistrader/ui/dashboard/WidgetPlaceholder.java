@@ -25,9 +25,9 @@ class WidgetPlaceholder extends Composite {
 		b.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				AddWidgetDialog adw = new AddWidgetDialog(
-						WidgetPlaceholder.this);
-
+				AddWidgetDialog adw = new AddWidgetDialog();
+				adw.setWidgetPlaceholder(WidgetPlaceholder.this);
+				adw.show();
 				Composite selection = adw.getSelection();
 				if (selection != null) {
 					wc.setWidget(adw.getSelection());

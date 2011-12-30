@@ -33,7 +33,9 @@ public final class Main {
 	public static void main(String[] args) {
 
 		// read the config file
+		log.info("Reading config file");
 		readAndDecryptConfigFile();
+		log.info("Read config file");
 
 		// start up the app
 		final Display display = new Display();
@@ -44,6 +46,7 @@ public final class Main {
 				mw = makeApplicationWindow(display);
 				startMainWindow(display, mw);
 			} else if ("-testd".equals(args[0])) {
+				log.info("Starting in test mode with dashboad");
 				mw  = makeDashboardApplicationWindow(display);
 				startMainWindow(display, mw);
 			} else if ("-testb".equals(args[0])) {
@@ -95,7 +98,6 @@ public final class Main {
 	private static ApplicationWindow makeDashboardApplicationWindow(final Display display) {
 		return new DashboardWindow(display);
 	}
-
 
 	public static void readAndDecryptConfigFile() {
 		String filename = "config.local";
