@@ -313,4 +313,10 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 		addDisposeListener(listener);		
 	}
 
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

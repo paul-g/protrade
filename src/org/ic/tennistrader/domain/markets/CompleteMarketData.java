@@ -21,11 +21,11 @@ public class CompleteMarketData {
 		return this.mOddsMarketData;
 	}
 
-	public void setSetBettingMArketData(SetBettingMarketData setBettingMarketData) {
+	public void setSetBettingMarketData(SetBettingMarketData setBettingMarketData) {
 		this.setBettingMarketData = setBettingMarketData;
 	}
 
-	public SetBettingMarketData getSetBettingMArketData() {
+	public SetBettingMarketData getSetBettingMarketData() {
 		return this.setBettingMarketData;
 	}
 }

@@ -1,4 +1,4 @@
-package org.ic.tennistrader.model;
+package org.ic.tennistrader.model.betting;
 
 import java.util.ArrayList;
 import org.ic.tennistrader.domain.Bet;
@@ -7,6 +7,7 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
+import org.ic.tennistrader.model.betting.BetManager;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
 import static org.junit.Assert.*;

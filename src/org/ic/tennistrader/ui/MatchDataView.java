@@ -77,4 +77,10 @@ public class MatchDataView extends StandardWidgetContainer implements UpdatableW
 		this.addDisposeListener(listener);
 	}
 
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

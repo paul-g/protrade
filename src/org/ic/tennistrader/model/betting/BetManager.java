@@ -1,4 +1,4 @@
-package org.ic.tennistrader.model;
+package org.ic.tennistrader.model.betting;
 
 import java.util.ArrayList;
 import java.util.HashMap;

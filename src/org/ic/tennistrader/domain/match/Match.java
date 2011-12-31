@@ -11,13 +11,13 @@ import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;
 
 public abstract class Match {    
-    
     protected Player player1 = new Player();
     protected Player player2 = new Player();
     protected Score score = new Score();    
     protected List<MOddsMarketData> marketDatas;    
     protected String filename = null;
     protected String setBettingFilename = null;
+    private int currentSet = -1;
    
 	public abstract boolean isInPlay();
     
@@ -130,5 +130,13 @@ public abstract class Match {
 
 	public void setSetBettingFilename(String setBettingFilename) {
 		this.setBettingFilename = setBettingFilename;
+	}
+
+	public void setCurrentSet(int currentSet) {
+		this.currentSet = currentSet;
+	}
+
+	public int getCurrentSet() {
+		return currentSet;
 	}
 }

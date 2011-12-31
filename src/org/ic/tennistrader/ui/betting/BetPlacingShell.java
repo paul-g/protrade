@@ -14,7 +14,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.model.betting.BetManager;
 
 public class BetPlacingShell {
 	private Shell betShell;

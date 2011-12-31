@@ -25,6 +25,6 @@ public class SetBettingMarketDataTest {
 		setBettingMarketData.addMatchScoreMarketPrices(matchScore, marketPrices);
 		assertEquals(1, setBettingMarketData.getMatchScoreMarketData().size());
 		assertEquals(marketPrices, setBettingMarketData.getMatchScoreMarketPrices(matchScore));
-		assertEquals(marketPrices, setBettingMarketData.getSetScoreMarketPrices(2, 1));
+		assertEquals(marketPrices, setBettingMarketData.getMatchScoreMarketPrices(2, 1));
 	}
 }

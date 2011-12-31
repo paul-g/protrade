@@ -196,7 +196,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 					+ e.getMessage());
 		}
 		completeMarketData.setmOddsMarketData(mOddsData);
-		completeMarketData.setSetBettingMArketData(setBettingData);
+		completeMarketData.setSetBettingMarketData(setBettingData);
 		return completeMarketData;
 	}
 
@@ -219,8 +219,9 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 				}
 			}
 			MatchScore matchScore = MatchScore.getMatchScore(marketRunner.getName());
-			if (matchScore.getFirstPlayerLastName().equals(match.getPlayerTwo().getLastname()))
+			if (matchScore.getFirstPlayerLastName().equals(match.getPlayerTwo().getLastname())) {
 				matchScore = new MatchScore(matchScore.getSecondPlayerScore(), matchScore.getFirstPlayerScore());
+			}
 			//r.getSelectionId gives the market selection id
 			MarketPrices marketPrices = new MarketPrices();
 			marketPrices.setBackPrices(setBackValues(r));

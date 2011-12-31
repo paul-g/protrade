@@ -1,8 +1,8 @@
 <class-diagram version="1.0.6" icons="false" automaticImage="JPEG" always-add-relationships="true" 
   generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
   <class id="1" corner="BOTTOM_RIGHT" language="java" 
-    name="org.ic.tennistrader.model.connection.BetfairConnectionHandler" project="tennis-trader" 
-    file="/tennis-trader/src/org/ic/tennistrader/model/connection/BetfairConnectionHandler.java" binary="false">    
+    name="org.ic.tennistrader.controller.connection.BetfairConnectionHandler" project="tennis-trader" 
+    file="/tennis-trader/src/org/ic/tennistrader/controller/connection/BetfairConnectionHandler.java" binary="false">    
     <position x="134" y="530" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
@@ -81,24 +81,26 @@
       <operations public="true" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="10" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.BetManager" 
-    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/BetManager.java" binary="false">    
+  <class id="10" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.betting.BetManager" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/betting/BetManager.java" binary="false">    
     <position x="189" y="186" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
       <operations public="true" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="11" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.VirtualBetMarketInfo" 
-    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/VirtualBetMarketInfo.java" binary="false">    
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.betting.VirtualBetMarketInfo" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/betting/VirtualBetMarketInfo.java" 
+    binary="false">    
     <position x="-29" y="163" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="12" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.controller.BetController" 
-    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/controller/BetController.java" binary="false">    
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.betting.BetController" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/betting/BetController.java" 
+    binary="false">    
     <position x="308" y="-9" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
@@ -115,7 +117,7 @@
   </class>  
   <class id="14" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.DualChartWidget" 
     project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/DualChartWidget.java" binary="false">    
-    <position x="626" y="36" width="-1" height="-1"/>    
+    <position x="607" y="16" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -131,7 +133,7 @@
   </class>  
   <interface id="16" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.score.ScorePanel" 
     project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/score/ScorePanel.java" binary="false">    
-    <position x="704" y="85" width="-1" height="-1"/>    
+    <position x="678" y="63" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -149,104 +151,157 @@
   <class id="18" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid" 
     project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/updatable/UpdatableMarketDataGrid.java" 
     binary="false">    
-    <position x="529" y="-9" width="-1" height="-1"/>    
+    <position x="509" y="-27" width="-1" height="-1"/>    
     <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <dependency id="19">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <generalization id="20">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="17"/>  
-  </dependency>  
-  <association id="22">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="23" name="matchMarketData"/>      
-      <multiplicity id="24" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <association id="25">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="26" name="recordersMap"/>      
-      <multiplicity id="27" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <dependency id="28">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <association id="29">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="30" name="dataUpdater"/>      
-      <multiplicity id="31" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <association id="32">    
+  <class id="19" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.ScoreUpdateThread" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/ScoreUpdateThread.java" binary="false">    
+    <position x="765" y="358" width="122" height="75"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="20" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.StatisticsUpdateThread" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/StatisticsUpdateThread.java" 
+    binary="false">    
+    <position x="828" y="255" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="21" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.ProbabilityPanel" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/ProbabilityPanel.java" binary="false">    
+    <position x="760" y="106" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="22" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.PredictionGui" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/PredictionGui.java" binary="false">    
+    <position x="674" y="284" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="23">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="33" name="writer"/>      
-      <multiplicity id="34" minimum="0" maximum="1"/>    
+      <attribute id="24" name="writer"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="false" multiplicity="true"/>  
   </association>  
-  <realization id="35">    
+  <realization id="26">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="17"/>  
+  </realization>  
+  <dependency id="27">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <realization id="28">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="17"/>  
+  </realization>  
+  <generalization id="29">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <dependency id="30">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="31">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <association id="32">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="33" name="scoreUpdateThread"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="36" name="dataUpdater"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="39" name="fileSetReaders"/>      
+      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="42" name="fileReaders"/>      
+      <multiplicity id="43" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <dependency id="44">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="17"/>  
+  </dependency>  
+  <generalization id="45">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <dependency id="46">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="18"/>  
+  </dependency>  
+  <generalization id="47">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <realization id="48">    
     <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="17"/>  
   </realization>  
-  <association id="36">    
+  <association id="49">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="50" name="matchMarketData"/>      
+      <multiplicity id="51" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="52">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="53" name="recordersMap"/>      
+      <multiplicity id="54" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="55">    
     <end type="SOURCE" refId="18" navigable="false">      
-      <attribute id="37" name="betController"/>      
-      <multiplicity id="38" minimum="0" maximum="1"/>    
+      <attribute id="56" name="betController"/>      
+      <multiplicity id="57" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="false" multiplicity="true"/>  
   </association>  
-  <generalization id="39">    
+  <generalization id="58">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <generalization id="40">    
-    <end type="SOURCE" refId="16"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="41">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <association id="42">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="43" name="fileSetReaders"/>      
-      <multiplicity id="44" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <realization id="45">    
-    <end type="SOURCE" refId="18"/>    
-    <end type="TARGET" refId="17"/>  
-  </realization>  
-  <association id="46">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="47" name="fileReaders"/>      
-      <multiplicity id="48" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
   <classifier-display autosize="true" package="false" initial-value="false" signature="false" visibility="true">    
     <attributes public="true" package="false" protected="false" private="false"/>    
     <operations public="true" package="false" protected="false" private="false"/>  

@@ -10,10 +10,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.utils.Colours;
@@ -244,4 +244,10 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
     public void setDisposeListener(DisposeListener listener) {
         this.addDisposeListener(listener);
     }
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
 }

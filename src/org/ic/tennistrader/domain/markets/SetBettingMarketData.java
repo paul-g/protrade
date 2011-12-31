@@ -25,7 +25,7 @@ public class SetBettingMarketData {
 		return null;
 	}
 
-	public MarketPrices getSetScoreMarketPrices(int firstPlayerScore,
+	public MarketPrices getMatchScoreMarketPrices(int firstPlayerScore,
 			int secondPlayerScore) {
 		MatchScore matchScore = new MatchScore(firstPlayerScore,
 				secondPlayerScore);

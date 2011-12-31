@@ -3,24 +3,21 @@ package org.ic.tennistrader.service;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
-import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
-import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.model.betting.BetManager;
+import org.ic.tennistrader.model.prediction.SetMarketManager;
 import org.ic.tennistrader.service.threads.BetfairDataUpdaterThread;
 import org.ic.tennistrader.service.threads.MatchRecorderThread;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftMatchOddsReader;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftReader;
 import org.ic.tennistrader.service.threads.file_readers.FracsoftSetBettingReader;
-import org.ic.tennistrader.ui.chart.DualChartWidget;
-import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.ic.tennistrader.utils.Pair;
 
@@ -32,9 +29,9 @@ public class DataManager {
     private static HashMap<Match, FracsoftReader<SetBettingMarketData>> fileSetReaders = new HashMap<Match, FracsoftReader<SetBettingMarketData>>();
     
     // map of updatable widgets waiting for updates from the same betfair event id
-    private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
+    // private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
-    private static HashMap<Match, List<UpdatableWidget>> fileListeners = new HashMap<Match, List<UpdatableWidget>>();
+    private static HashMap<Match, List<UpdatableWidget>> listeners = new HashMap<Match, List<UpdatableWidget>>();
     private static Logger log = Logger.getLogger(DataManager.class);
     private static boolean started = false;
 
@@ -64,8 +61,8 @@ public class DataManager {
         dataUpdater.setMatch(match);
         List<UpdatableWidget> widgets;
         // add the widget as listener to the given match
-        if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
-            widgets = listeners.get(match.getEventBetfair().getBetfairId());
+        if (listeners.containsKey(match)) {
+            widgets = listeners.get(match);
         } else {
             widgets = new ArrayList<UpdatableWidget>();
             /*            
@@ -74,7 +71,7 @@ public class DataManager {
             */            
         }
         widgets.add(widget);
-        listeners.put(match.getEventBetfair().getBetfairId(), widgets);
+        listeners.put(match, widgets);
         
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
        
@@ -88,8 +85,8 @@ public class DataManager {
     private static void unregisterLive(UpdatableWidget widget, RealMatch match) {
     	//System.out.println("Unregister live entered");
     	List<UpdatableWidget> widgets = null;
-    	if (listeners.containsKey(match.getEventBetfair().getBetfairId())) {
-            widgets = listeners.get(match.getEventBetfair().getBetfairId());
+    	if (listeners.containsKey(match)) {
+            widgets = listeners.get(match);
         }
     	if (widgets != null) {
     		widgets.remove(widget);
@@ -100,19 +97,19 @@ public class DataManager {
 	}
 
 	private static void removeMatch(RealMatch match) {
-		listeners.remove(match.getEventBetfair().getBetfairId());
+		listeners.remove(match);
 		dataUpdater.removeEvent(match.getEventBetfair());
 	}
 	
 	private static void registerFromFile(final UpdatableWidget widget, final Match match) {
         List<UpdatableWidget> widgets;
-        boolean isNewMatch = !fileListeners.containsKey(match);
+        boolean isNewMatch = !listeners.containsKey(match);
         if (isNewMatch)
             widgets = new ArrayList<UpdatableWidget>();
         else
-            widgets = fileListeners.get(match);
+            widgets = listeners.get(match);
         widgets.add(widget);
-        fileListeners.put(match, widgets);
+        listeners.put(match, widgets);
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
         if(isNewMatch) {
             startFromFile(match);
@@ -122,8 +119,8 @@ public class DataManager {
     private static void unregisterFromFile(UpdatableWidget widget, Match match) {
     	//System.out.println("Unregister live entered");
     	List<UpdatableWidget> widgets = null;
-    	if (fileListeners.containsKey(match)) {
-            widgets = fileListeners.get(match);
+    	if (listeners.containsKey(match)) {
+            widgets = listeners.get(match);
         }
     	if (widgets != null) {
     		widgets.remove(widget);
@@ -139,7 +136,7 @@ public class DataManager {
     				reader.interrupt();
     			}
     			
-    			fileListeners.remove(match);
+    			listeners.remove(match);
     		}
     	}
 	}
@@ -182,7 +179,24 @@ public class DataManager {
             
     }
     */
-    public static void handleEvent(HashMap<EventBetfair, CompleteMarketData> data) {
+    public static void handleEvent(HashMap<Match, CompleteMarketData> data) {
+		for (Match match : data.keySet()) {
+			// TODO check if market closed - then display result of bets
+			CompleteMarketData marketData = data.get(match);
+			boolean isEndOfSet = false;
+			if (marketData.getSetBettingMarketData().getMatchScoreMarketData()
+					.size() > 0)
+				isEndOfSet = SetMarketManager.isSetEnd(match, marketData
+						.getSetBettingMarketData());
+			if (listeners.containsKey(match)) {
+				for (UpdatableWidget w : listeners.get(match)) {
+					w.handleUpdate(marketData.getmOddsMarketData());
+					if (isEndOfSet)
+						w.handleBettingMarketEndOFSet();
+				}
+			}  
+    	}
+    	/*
         Iterator<EventBetfair> i = data.keySet().iterator();
         while (i.hasNext()) {
             EventBetfair eb = i.next();
@@ -191,6 +205,7 @@ public class DataManager {
             for (UpdatableWidget w : widgets)
                 w.handleUpdate(data.get(eb).getmOddsMarketData());
         }
+        */
     }
 
     public static void handleFileEvent(Match match, Pair<MOddsMarketData, Score> dataScore) {        
@@ -199,13 +214,26 @@ public class DataManager {
         BetManager.updateMarketAvailableMatches(match, dataScore.first());
         if (dataScore.first().getMatchStatus().toLowerCase().equals("closed"))
         	BetManager.setBetsOutcome(match);
-        if (fileListeners.containsKey(match)) {
-            List<UpdatableWidget> widgets = fileListeners.get(match);
+        if (listeners.containsKey(match)) {
+            List<UpdatableWidget> widgets = listeners.get(match);
             for (UpdatableWidget w : widgets) {
                 w.handleUpdate(dataScore.first());
             }
         }
     }
+    
+	public static void handleSetBettingFileEvent(Match match,
+			SetBettingMarketData marketData) {
+		if ( marketData.getMatchScoreMarketData().size() > 0
+			&& SetMarketManager.isSetEnd(match, marketData) ) {
+				if (listeners.containsKey(match)) {
+		            List<UpdatableWidget> widgets = listeners.get(match);
+		            for (UpdatableWidget w : widgets) {
+		                w.handleBettingMarketEndOFSet();
+		            }
+		        }
+		}
+	}
     
     public static void handleEndOfFile(Match match) {
 		BetManager.setBetsOutcome(match);

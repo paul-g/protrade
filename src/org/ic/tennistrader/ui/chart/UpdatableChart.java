@@ -493,4 +493,9 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	 * @Override public void mouseScrolled(MouseEvent e) {
 	 * System.out.println(e.toString()); } }8
 	 */
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		chartData.addMarketEndOfSet();
+	}
 }

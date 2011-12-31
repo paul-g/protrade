@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
 import org.ic.tennistrader.service.DataManager;
@@ -36,7 +37,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 
 	@Override
 	public void runBody() {
-		HashMap<EventBetfair, CompleteMarketData> newMap = new HashMap<EventBetfair, CompleteMarketData>();
+		HashMap<Match, CompleteMarketData> newMap = new HashMap<Match, CompleteMarketData>();
 		List<EventBetfair> events = new ArrayList<EventBetfair>(
 				synchronizedEvents.getEvents());
 		for (EventBetfair eb : events) {
@@ -63,7 +64,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 				if (marketData.getPl1Back() != null) {
 					match.addMarketData(marketData);
 				}
-				newMap.put(eb, completeMarketData);
+				newMap.put(match, completeMarketData);
 			}
 			i = (i + 1) % 3;
 		}

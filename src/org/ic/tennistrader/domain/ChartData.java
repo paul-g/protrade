@@ -77,8 +77,7 @@ public class ChartData {
 		pl1Volume = addVolume(pl1Volume, data.getPlayer1TotalAmountMatched(),1);
 		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched(),2);
 		setDataSize(pl1YSeries.size());
-		addEndOfSet();
-		
+		checkScoreEndOfSet();		
 	}
 	
 	
@@ -90,8 +89,12 @@ public class ChartData {
 		// TODO Auto-generated method stub
 		return new double[]{pl1Pred,pl2Pred};
 	}
+	
+	public void addMarketEndOfSet() {
+		endOfSets.add(1);
+	}
 
-	private void addEndOfSet() {
+	private void checkScoreEndOfSet() {
 		int nrSets;
 		try {
 			nrSets = match.getScore().getPlayerOneSets() + match.getScore().getPlayerTwoSets();

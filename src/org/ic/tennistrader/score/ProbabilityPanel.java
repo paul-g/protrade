@@ -129,4 +129,10 @@ public class ProbabilityPanel extends StandardWidgetContainer implements
     public void setDisposeListener(DisposeListener listener) {
         this.addDisposeListener(listener);
     }
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
 }

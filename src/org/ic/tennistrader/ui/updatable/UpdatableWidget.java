@@ -9,6 +9,11 @@ public interface UpdatableWidget {
 	 */
 	public void handleUpdate(MOddsMarketData newData);
 	
+	/*
+	 * updates the widget with the new given market data
+	 */
+	public void handleBettingMarketEndOFSet();
+	
 	// adds the given listener when the widget is disposed
 	public void setDisposeListener(DisposeListener listener);
 }

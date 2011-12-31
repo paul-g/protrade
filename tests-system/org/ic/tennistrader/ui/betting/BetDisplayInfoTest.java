@@ -9,7 +9,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.model.betting.BetManager;
 import org.ic.tennistrader.ui.DisplayTest;
 import org.ic.tennistrader.ui.betting.BetDisplayInfo;
 import static org.ic.tennistrader.utils.Pair.pair;

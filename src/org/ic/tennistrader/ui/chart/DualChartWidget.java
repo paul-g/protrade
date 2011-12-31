@@ -74,4 +74,10 @@ public class DualChartWidget extends Composite implements UpdatableWidget{
 		largeChart.setDisposeListener(listener);
 		smallChart.setDisposeListener(listener);
 	}
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,4 +1,4 @@
-package org.ic.tennistrader.controller;
+package org.ic.tennistrader.model.betting;
 
 import java.util.List;
 import org.ic.tennistrader.ui.updatable.OddsButton;

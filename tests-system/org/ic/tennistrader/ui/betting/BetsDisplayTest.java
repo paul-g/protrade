@@ -14,7 +14,7 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.ui.DisplayTest;
 import org.ic.tennistrader.utils.Pair;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.model.betting.BetManager;
 import org.junit.Before;
 import org.junit.Test;
 

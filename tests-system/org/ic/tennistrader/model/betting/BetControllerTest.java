@@ -1,4 +1,4 @@
-package org.ic.tennistrader.controller;
+package org.ic.tennistrader.model.betting;
 
 import static org.junit.Assert.*;
 import java.util.Arrays;
@@ -12,6 +12,7 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
+import org.ic.tennistrader.model.betting.BetController;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

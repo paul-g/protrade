@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.model.betting.BetManager;
 import org.ic.tennistrader.ui.StandardTabbedWidgetContainer;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 

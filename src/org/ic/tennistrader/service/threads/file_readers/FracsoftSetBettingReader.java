@@ -10,6 +10,7 @@ import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.exceptions.EndOfFracsoftFileException;
+import org.ic.tennistrader.service.DataManager;
 
 public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketData> {
 	private static Logger log = Logger.getLogger(FracsoftSetBettingReader.class);
@@ -28,7 +29,6 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 			throws FileNotFoundException {
 		this.match = match;
 		log.info("Creating set betting fracsoft reader from file " + filename);
-		System.out.println("Creating set betting fracsoft reader from file " + filename);
 		String line1;
 		Scanner scanner = null;
 		int i = 0;
@@ -95,7 +95,7 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 	protected void runFileReader() {
 		try {
 			// LiveDataFetcher.handleFileEvent(this.match, getMarketData());
-			getMarketData();
+			DataManager.handleSetBettingFileEvent(this.match, getMarketData());
 			/*
 			SetBettingMarketData data = getMarketData();
 			System.out.println("New set betting update");

@@ -20,7 +20,7 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
 import org.ic.tennistrader.ui.betting.BetPlacingShell;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.model.BetManager;
+import org.ic.tennistrader.model.betting.BetManager;
 
 public class OddsButton {
 

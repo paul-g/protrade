@@ -15,13 +15,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.tennistrader.controller.BetController;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.EventMarketBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
@@ -33,7 +33,8 @@ public class PredictionGui extends StandardWidgetContainer {
 
     private ScoreUpdateThread scoreUpdateThread;
 
-    private StatisticsUpdateThread statisticsUpdateThread;
+    // NOT USED
+    // private StatisticsUpdateThread statisticsUpdateThread;
     
     private Match match;
 
