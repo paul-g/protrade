@@ -2,10 +2,12 @@ package org.ic.tennistrader.domain.match;
 
 import java.util.HashMap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.MatchScore;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 
 import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;
@@ -18,6 +20,7 @@ public abstract class Match {
     protected String filename = null;
     protected String setBettingFilename = null;
     private int currentSet = -1;
+    private List<MatchScore> impossibleScores = new ArrayList<MatchScore>();
    
 	public abstract boolean isInPlay();
     
@@ -138,5 +141,13 @@ public abstract class Match {
 
 	public int getCurrentSet() {
 		return currentSet;
+	}
+
+	public void setImpossibleScores(List<MatchScore> impossibleScores) {
+		this.impossibleScores = impossibleScores;
+	}
+
+	public List<MatchScore> getImpossibleScores() {
+		return impossibleScores;
 	}
 }

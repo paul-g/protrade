@@ -1,9 +1,7 @@
 package org.ic.tennistrader.ui.dashboard;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
