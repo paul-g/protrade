@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui.dashboard;
+package org.ic.tennistrader.ui.dialogs;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
