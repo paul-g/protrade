@@ -228,7 +228,7 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 		});
 	}
 	
-	private void showSeries(int i, boolean dragged) {
+	public void showSeries(int i, boolean dragged) {
 		int size = i + 1  < sampleSize ? i + 1 : sampleSize;
 		int seriesNr = 4;
 		Date showXSeries[] = new Date[size];
@@ -306,6 +306,10 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 		});
 		
 		
+	}
+	
+	public void setSlider(Slider slider){
+		this.slider = slider;
 	}
 
 	@Override

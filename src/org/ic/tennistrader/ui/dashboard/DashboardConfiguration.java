@@ -29,7 +29,7 @@ public class DashboardConfiguration {
 	private int defaultWidgetHeight;
 	private Map<WidgetContainer, Point> widgetMap;
 
-	private Dashboard dashboard;
+	private final Dashboard dashboard;
 
 	public DashboardConfiguration(Dashboard dashboard) {
 		widgetMap = new HashMap<WidgetContainer, Point>();
@@ -98,8 +98,8 @@ public class DashboardConfiguration {
 	public void load(String filename) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new FileInputStream(filename));
 
-		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-		
+		Match match = new HistoricalMatch("data/full/fulldataShort.csv");
+
 		// skip header
 		scanner.nextLine();
 
@@ -109,28 +109,36 @@ public class DashboardConfiguration {
 			WidgetContainer wc = new WidgetContainer(dashboard, SWT.BORDER, 10,
 					20);
 
-			if (line[0].trim().equals("org.ic.tennistrader.ui.chart.DualChartWidget")) {
+			if (line[0].trim().equals(
+					"org.ic.tennistrader.ui.chart.DualChartWidget")) {
 				wc.setWidget(new DualChartWidget(wc, match));
 				log.info("Added chart");
-			} else if (line[0].trim().equals("org.ic.tennistrader.ui.score.WimbledonScorePanel")) {
+			} else if (line[0].trim().equals(
+					"org.ic.tennistrader.ui.score.WimbledonScorePanel")) {
 				wc.setWidget(new WimbledonScorePanel(wc, match));
 				log.info("Added score panel");
-			} else if (line[0].trim().equals("org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid")) {
-				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(wc, SWT.NONE, match);
+			} else if (line[0].trim().equals(
+					"org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid")) {
+				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(wc,
+						SWT.NONE, match);
 				DataManager.registerForMatchUpdate(grid, match);
 				wc.setWidget(grid);
 				log.info("Added chart");
 			} else {
 				wc.setWidget(new WidgetPlaceholder(dashboard, SWT.BORDER, wc));
 			}
-			
+
 			int x = Integer.parseInt(line[1]);
 			int y = Integer.parseInt(line[2]);
-				
+
 			wc.setWidth(Integer.parseInt(line[3]));
 			wc.setHeight(Integer.parseInt(line[4]));
-			
-			updateLocation(wc, new Point(x,y));
+
+			updateLocation(wc, new Point(x, y));
 		}
+	}
+
+	public void setMatch(Match match) {
+		log.info("Set match to " + match);
 	}
 }

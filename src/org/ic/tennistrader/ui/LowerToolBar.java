@@ -13,18 +13,18 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.ic.tennistrader.ui.main.StandardWindow;
+import org.ic.tennistrader.ui.main.MainWindow;
 
-public class LowerToolBar{
-	
-	private ToolBar toolbar;
+public class LowerToolBar {
+
+	private final ToolBar toolbar;
 	private static boolean stop = false;
 	private static Logger log = Logger.getLogger(LowerToolBar.class);
-	
-	public LowerToolBar(final StandardWindow mainWindow) {
+
+	public LowerToolBar(final MainWindow mainWindow) {
 
 		final Shell shell = mainWindow.getShell();
-		
+
 		/* Setting span throughout the columns */
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
@@ -33,35 +33,40 @@ public class LowerToolBar{
 
 		/* Setting the tool bar */
 		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		toolbar.setLayoutData(gridData);
+		// toolbar.setLayoutData(gridData);
 		toolbar.setBackgroundMode(SWT.INHERIT_FORCE);
-		
+
 		/* Internet availability */
 		ToolItem widgetItem = new ToolItem(toolbar, SWT.NULL);
 		widgetItem.setToolTipText("Internet Connection");
 		final Image off = new Image(display, "images/connection_lost.png");
 		final Image on = new Image(display, "images/connection_on.png");
 		widgetItem.setImage(on);
-		
+
 		/* Memory usage bar */
 		Label name = new Label(toolbar, SWT.NULL);
-    	name.setText("Memory Usage");
-    	name.setAlignment(SWT.LEFT);
-    	name.setBounds(55,13,110,20);
+		name.setText("Memory Usage");
+		name.setAlignment(SWT.LEFT);
+		// name.setBounds(55, 13, 110, 20);
 		ProgressBar usage = new ProgressBar(toolbar, SWT.SMOOTH);
-    	usage.setBounds(170,11,150,22);
-    	usage.setSelection(100);
+		// usage.setBounds(170, 11, 150, 22);
+		usage.setSelection(100);
 		shell.open();
-		
+
 		/* Check threads */
 		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
 		createUsageBarCheck(shell, usage);
+
+		// toolbar.setSize(300, 65);
+		toolbar.pack();
+		toolbar.setLocation(0, 0);
 	}
 
 	/** Method invoking the Internet check thread */
-    private void createAndStartNetworkCheckThread(final Shell shell,
-            final ToolItem widgetItem, final Image off, final Image on) {
-        new Thread(new Runnable() {
+	private void createAndStartNetworkCheckThread(final Shell shell,
+			final ToolItem widgetItem, final Image off, final Image on) {
+		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				while (!stop) {
 					try {
@@ -71,6 +76,7 @@ public class LowerToolBar{
 					}
 					if (!shell.isDisposed()) {
 						toolbar.getDisplay().asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								if (isInternetReachable()) {
 									log.info("Connection - ON");
@@ -85,12 +91,12 @@ public class LowerToolBar{
 				}
 			}
 		}).start();
-    }
+	}
 
-    
-    /** Method invoking the memory usage check */
-    private void createUsageBarCheck (final Shell shell, final ProgressBar usage) {
-    	new Thread(new Runnable() {
+	/** Method invoking the memory usage check */
+	private void createUsageBarCheck(final Shell shell, final ProgressBar usage) {
+		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				while (!stop) {
 					try {
@@ -100,26 +106,28 @@ public class LowerToolBar{
 					}
 					if (!shell.isDisposed()) {
 						toolbar.getDisplay().asyncExec(new Runnable() {
+							@Override
 							public void run() {
-								double max = (double) Runtime.getRuntime().maxMemory();
-								double fraction = max - (double) Runtime.getRuntime().freeMemory();
+								double max = Runtime.getRuntime().maxMemory();
+								double fraction = max
+										- Runtime.getRuntime().freeMemory();
 								double selection = (fraction / max) * 100;
 								Runtime.getRuntime().gc();
 								int selection_int = (int) (selection);
-						    	usage.setSelection(selection_int);
+								usage.setSelection(selection_int);
 							}
 						});
 					}
 				}
 			}
 		}).start();
-    }
-	
+	}
+
 	/** Thread stopping value */
 	public static void setStop() {
 		stop = true;
 	}
-	
+
 	/** Method checking the Internet availability */
 	public boolean isInternetReachable() {
 		try {

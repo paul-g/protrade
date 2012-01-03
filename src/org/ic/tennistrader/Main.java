@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.ic.tennistrader.authentication.Encrypt;
 import org.ic.tennistrader.ui.login.LoginShell;
-import org.ic.tennistrader.ui.main.ApplicationWindow;
 import org.ic.tennistrader.ui.main.DashboardWindow;
+import org.ic.tennistrader.ui.main.MainWindow;
 import org.ic.tennistrader.ui.main.StandardWindow;
 
 public final class Main {
@@ -21,11 +21,23 @@ public final class Main {
 
 	private static final Logger log = Logger.getLogger(Main.class);
 
+	private static final String DASHBOARD_FLAG = "-d";
+
+	private static final String BYPASS_FLAG = "-b";
+
+	private static final String TEST_FLAG = "-t";
+
 	public static String username = "";
 	public static String password = "";
 
 	public static String testUsername = "";
 	public static String testPassword = "";
+
+	private static boolean dashboardOn = false;
+
+	private static boolean bypassOn = false;
+
+	private static boolean testOn = false;
 
 	private Main() {
 	}
@@ -39,32 +51,38 @@ public final class Main {
 
 		// start up the app
 		final Display display = new Display();
-		final ApplicationWindow mw;
+		final MainWindow mw;
 
-		if (args.length == 1) {
-			if ("-test".equals(args[0])) {
-				mw = makeApplicationWindow(display);
-				startMainWindow(display, mw);
-			} else if ("-testd".equals(args[0])) {
-				log.info("Starting in test mode with dashboad");
-				mw  = makeDashboardApplicationWindow(display);
-				startMainWindow(display, mw);
-			} else if ("-testb".equals(args[0])) {
-				mw = makeApplicationWindow(display);
-				String username = Main.testUsername;
-				String password = Main.testPassword;
-				log.info("username " + username);
-				Main.username = Main.testUsername;
-				Main.password = Main.testPassword;
-				if (BetfairAuthenticator.checkLogin(username, password)) {
-					startMainWindow(display, mw);
-				} else {
-					// login failed
-				}
+		for (String string : args) {
+			if (string.equals(DASHBOARD_FLAG)) {
+				dashboardOn = true;
+			} else if (string.equals(BYPASS_FLAG)) {
+				bypassOn = true;
+			} else if (string.equals(TEST_FLAG)) {
+				testOn = true;
 			}
-		} else {
+		}
 
+		log.info("Parsed args -> dashboard: " + dashboardOn + " bypass: "
+				+ bypassOn + " test: " + testOn);
+
+		if (dashboardOn) {
+			mw = makeDashboardApplicationWindow(display);
+		} else {
 			mw = makeApplicationWindow(display);
+		}
+
+		if (bypassOn) {
+			Main.username = Main.testUsername;
+			Main.password = Main.testPassword;
+			if (BetfairAuthenticator.checkLogin(testUsername, testPassword)) {
+				startMainWindow(display, mw);
+			} else {
+				// login failed
+			}
+		} else if (testOn) {
+			startMainWindow(display, mw);
+		} else {
 			final LoginShell ls = new LoginShell(display);
 
 			mw.addLoadListener(new Listener() {
@@ -91,11 +109,12 @@ public final class Main {
 		}
 	}
 
-	private static ApplicationWindow makeApplicationWindow(final Display display) {
+	private static MainWindow makeApplicationWindow(final Display display) {
 		return new StandardWindow(display);
 	}
-	
-	private static ApplicationWindow makeDashboardApplicationWindow(final Display display) {
+
+	private static MainWindow makeDashboardApplicationWindow(
+			final Display display) {
 		return new DashboardWindow(display);
 	}
 
@@ -151,7 +170,7 @@ public final class Main {
 	}
 
 	private static void startMainWindow(final Display display,
-			final ApplicationWindow mw) {
+			final MainWindow mw) {
 		mw.show();
 		mw.run(display);
 	}

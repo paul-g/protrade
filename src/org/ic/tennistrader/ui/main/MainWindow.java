@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-public interface ApplicationWindow {
+public interface MainWindow {
 
 	public abstract Shell show();
 

@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.LowerToolBar;
 import org.ic.tennistrader.ui.StandardWidgetResizeListener;
@@ -19,14 +18,14 @@ import org.ic.tennistrader.ui.UpperToolBar;
 import org.ic.tennistrader.ui.dashboard.Dashboard;
 import org.ic.tennistrader.ui.menus.DashboardMenu;
 
-public class DashboardWindow implements ApplicationWindow {
+public class DashboardWindow implements MainWindow {
 
 	private Shell shell;
 
-	private List<Listener> loadListeners = new ArrayList<Listener>();
+	private final List<Listener> loadListeners = new ArrayList<Listener>();
 
-	private Display display;
-	
+	private final Display display;
+
 	private Dashboard dashboard;
 
 	/* ToolBars */
@@ -53,7 +52,7 @@ public class DashboardWindow implements ApplicationWindow {
 
 	public static void main(String[] args) {
 		Display display = new Display();
-		ApplicationWindow mw = new DashboardWindow(display);
+		MainWindow mw = new DashboardWindow(display);
 		mw.show();
 		mw.run(display);
 	}
@@ -65,16 +64,20 @@ public class DashboardWindow implements ApplicationWindow {
 		this.shell = new Shell(display);
 		shell.setMaximized(true);
 		shell.setLayout(makeLayout());
-
 		shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
 		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+
+		// new UpperToolBar(mainWindow);
 
 		log.info("Adding menu");
 		new DashboardMenu(this);
 		log.info("Added menu");
 
+		System.out.println(shell.getClientArea());
+		dashboard = new Dashboard(shell);
+
+		// new LowerToolBar(this);
 		// ltb = new LowerToolBar(this);
-		notifyLoadEvent("Done!");
 	}
 
 	private Layout makeLayout() {
@@ -105,6 +108,7 @@ public class DashboardWindow implements ApplicationWindow {
 		shell.dispose();
 	}
 
+	@Override
 	public void addLoadListener(Listener listener) {
 		loadListeners.add(listener);
 	}
@@ -137,13 +141,13 @@ public class DashboardWindow implements ApplicationWindow {
 	public Shell getShell() {
 		return shell;
 	}
-	
-	public Dashboard getDashboard(){
+
+	public Dashboard getDashboard() {
 		return dashboard;
 	}
 
 	public void newDashboard() {
-		if (dashboard != null) { 
+		if (dashboard != null) {
 			dashboard.dispose();
 		}
 		dashboard = new Dashboard(shell);
@@ -151,6 +155,10 @@ public class DashboardWindow implements ApplicationWindow {
 	}
 
 	public void loadDashboard(String filename) {
+
+		if (dashboard != null) {
+			dashboard.dispose();
+		}
 		dashboard = new Dashboard(shell, filename);
 		shell.layout();
 	}
