@@ -110,25 +110,78 @@ There are several factors which have contributed to the increasing popularity of
 \end{itemize}
 
 
-
 \section{State of the Art Applications for Tennis Trading}
 
-Although, as we have seen, tennis trading is a major market there are currently no good applications to support it.
-Explain why, give examples.
-
-Tennis trading is a rapidly developing market, so it is not surprising that there are already quite a few solutions that are attempting to fill this niche. However, most of them approach the subject from a too general perspective. In order to provide a better overall picture here is the outline.
+Tennis trading is a rapidly developing market, so it is not surprising that there are already quite a few solutions 
+that are attempting to fill this niche. However, most of them approach the subject from a too general perspective. 
+In order to provide a better overall picture here is the outline.
 
 \subsection{Betfair}
 
-Betfair's own application attempts to cover the whole variety of sports, therefore, losing sharpness in perception of the most important events in the tennis world. This in turn leads to an unfriendly user interface, overloaded with features that will never be used in the tennis trading environment.
+Betfair's own application attempts to cover the whole variety of sports, therefore, losing sharpness in perception 
+of the most important events in the tennis world. This in turn leads to an unfriendly user interface, overloaded with 
+features that are probably not going to be used in tennis trading environment. Most importantly, the application lacks 
+visual features that provide a better picture of the game flow, such as graph chart of odds.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale = 0.36]{betfair.png}
+\end{center}
+\caption{Betfair platform}
+\end{figure}
+
+This results in users having not enough information to build their assumptions upon, thus, making it unclear to the 
+common trader and, consequently, less attractive than competitors' products on the market.
+
+However, at the same time Betfair's attempt gives a good harness to be used in the project, considering the range of 
+features implemented. For example, player statistics provides good background knowledge about the match, whilst latest 
+odds give a picture of the actual game.
 
 \subsection{BetAngel}
 
+BetAngel software is also wide in scope of different sports covered, moreover, its particular platforms are more specialised 
+in the sport given. Tennis Trader is a very informative application, which, however, does not have many visual features. 
+Consequently, it cannot provide a thorough view of the game, leaving out the data that could be given to the end users for 
+technical analysis of the market.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale = 0.36]{betangel.png}
+\end{center}
+\caption{BetAngel Tennis Trader}
+\end{figure}
+
+In particular, even though the application provides implied probabilities for different ways the match can take, it does not give 
+any previous or background information upon the match, making users rely on the engine provided by the platform. 
+
 \subsection{Fracsoft}
+
+Fracsoft solution is an informative, well-structured platform, that not only provides match figures to the end users, but also gives a better 
+picture of the game itself, by drawing out the odds history for the players. However, even though visual part of the application is 
+present, some of crucial data is still missing - for example, player statistics that provide background information or implied odds 
+engine which is used for own bets correction.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale = 0.36]{fracsoft.png}
+\end{center}
+\caption{FracSoft platform}
+\end{figure}
+
+Among many features that were implemented in the FracSoft software there are some that might be unnecessary for the common user, therefore 
+overcomplicating the interface. In particular, the relative size of the important pieces of UI, such as betting buttons, is not big enough 
+to stand out, and, considering the overall theme of the application, makes it even harder to find with a naked eye.
 
 \section{Our Solution}
 
 \nmsp aims to fill this gap by providing ... (Briefly describe functionality, explaining why our application solves the issues $\rightarrow$ answering ``Why should you buy this product?'')
+
+The \nmsp aims to fill this gap by providing the most informative platform for tennis trading, at the same time without making user interface 
+too overloaded with unnecessary features. The key strength lies within the specialisation of the project - as it can be easily seen from the 
+betting applications overview, their developers do not focus on one particular sport, instead software teams try to cover as many markets as possible. 
+Consequently, there is no application that would be fully appropriate within one market, as all of them have unnecessary features.
+
+\nmsp is an attempt to combine good visual base with the depth of data provided.
 
 \chapter{Technical Description}
 

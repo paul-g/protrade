@@ -1,6 +1,7 @@
 package org.ic.tennistrader.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -31,7 +32,7 @@ public class ProfileWindow {
 		profileData = profdata;
 		
 		/* Grid Layout of the page */
-		GridLayout gl = new GridLayout(2,true);
+		GridLayout gl = new GridLayout(3,false);
 		gd = new GridData(SWT.CENTER,SWT.CENTER,true,true);
 		gd.minimumWidth = 150;
 		
@@ -54,28 +55,29 @@ public class ProfileWindow {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		addLabel("USERNAME",Main.username);
-		addLabel("BETFAIR POINTS",af.getBetfairPoints()+"");
-		addLabel("CURRENT BALANCE",af.getBalance()+"");
-		addLabel("AVAILABLE BALANCE",af.getAvailable()+"");
-		addLabel("CREDIT LIMIT",af.getCreditLimit()+"");
-		addLabel("EXPOSURE",af.getExposure()+"");
-		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
-//		addLabel("USERNAME","");
-//		addLabel("BETFAIR POINTS","");
-//		addLabel("CURRENT BALANCE","");
-//		addLabel("AVAILABLE BALANCE","");
-//		addLabel("CREDIT LIMIT","");
-//		addLabel("EXPOSURE","");
-//		addLabel("EXPOSURE LIMIT","");
+		new Label(shell, SWT.NONE).setImage(new Image(display,"images/profile/user.png"));
+//		addLabel("USERNAME",Main.username);
+//		addLabel("BETFAIR POINTS",af.getBetfairPoints()+"");
+//		addLabel("CURRENT BALANCE",af.getBalance()+"");
+//		addLabel("AVAILABLE BALANCE",af.getAvailable()+"");
+//		addLabel("CREDIT LIMIT",af.getCreditLimit()+"");
+//		addLabel("EXPOSURE",af.getExposure()+"");
+//		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
+		addLabel("USERNAME","");
+		addLabel("BETFAIR POINTS","");
+		addLabel("CURRENT BALANCE","");
+		addLabel("AVAILABLE BALANCE","");
+		addLabel("CREDIT LIMIT","");
+		addLabel("EXPOSURE","");
+		addLabel("EXPOSURE LIMIT","");
 	}
 	
 	/** Method for label addition */
 	private void addLabel(String key,String value) {
-		Label nkey = new Label(shell, SWT.BORDER);
+		Label nkey = new Label(shell, SWT.NONE);
 		nkey.setText(key);
 		nkey.setLayoutData(gd);
-		Label nvalue = new Label(shell, SWT.BORDER);
+		Label nvalue = new Label(shell, SWT.NONE);
 		nvalue.setText(value);
 		nvalue.setLayoutData(gd);
 		nvalue.setAlignment(SWT.CENTER);
