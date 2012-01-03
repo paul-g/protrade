@@ -1,8 +1,11 @@
 package org.ic.tennistrader.model.betting;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.PlayerEnum;
@@ -28,6 +31,7 @@ public class BetManagerTest {
         //Bet bet = new Bet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, pair(2.5, 10.0));
     	BetManager.setMatchedBets(new ArrayList<Bet>());
         BetManager.setUnmatchedBets(new ArrayList<Bet>());
+        BetManager.setMatchMarketData(new ConcurrentHashMap<Match, VirtualBetMarketInfo>());
     }
     
     @After
@@ -68,10 +72,12 @@ public class BetManagerTest {
     
     @Test
     public void testMatchedBet() {
-    	MOddsMarketData data = new MOddsMarketData();
+    	MOddsMarketData data = createMarket(PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 10.0);
+    	/*new MOddsMarketData();
     	ArrayList<Pair<Double, Double>> pl1Back = new ArrayList<Pair<Double, Double>>();
     	pl1Back.add(pair(2.5, 10.0));
     	data.setPl1Back(pl1Back);
+    	*/
     	BetManager.updateMarketAvailableMatches(match, data);
     	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 10.0);
     	assertEquals(1, BetManager.getMatchedBets().size());
@@ -169,6 +175,38 @@ public class BetManagerTest {
     	BetManager.updateMarketAvailableMatches(match, data);
     	assertEquals(1, BetManager.getMatchedBets().size());
     	assertEquals(0, BetManager.getUnmatchedBets().size());
+    }
+    
+    @Test
+    public void testMatchLiability() {
+    	MOddsMarketData data = createMarket(PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 50.0);
+    	BetManager.updateMarketAvailableMatches(match, data);    	
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 10.0);
+    	assertEquals(10.0, BetManager.getMatchLiability(match), Math.pow(10, -5));    	
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 10.0);
+    	assertEquals(20.0, BetManager.getMatchLiability(match), Math.pow(10, -5));
+    	
+    	data = createMarket(PlayerEnum.PLAYER1, BetTypeEnum.L, 4.0, 50.0);
+    	BetManager.updateMarketAvailableMatches(match, data);
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.L, 4.0, 10.0);
+    	assertEquals(30.0, BetManager.getMatchLiability(match), Math.pow(10, -5));
+    }
+    
+    @Test
+    public void testTotalLiability() {
+    	MOddsMarketData data = createMarket(PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 50.0);
+    	BetManager.updateMarketAvailableMatches(match, data);    	
+    	data = createMarket(PlayerEnum.PLAYER1, BetTypeEnum.L, 4.0, 50.0);
+    	BetManager.updateMarketAvailableMatches(match, data);
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 10.0);  	
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, 10.0);    	
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.L, 4.0, 10.0);
+    	
+    	HistoricalMatch newMatch = new HistoricalMatch(new Player(), new Player());
+    	data = createMarket(PlayerEnum.PLAYER1, BetTypeEnum.L, 4.0, 50.0);
+    	BetManager.updateMarketAvailableMatches(newMatch, data);
+    	BetManager.placeBet(match, PlayerEnum.PLAYER1, BetTypeEnum.L, 4.0, 10.0);
+    	assertEquals(60.0, BetManager.getTotalLiabiltiy(), Math.pow(10, -5));
     }
 
 	private MOddsMarketData createMarket(PlayerEnum player, BetTypeEnum betType, double odds, double value) {

@@ -3,6 +3,7 @@ package org.ic.tennistrader.model.betting;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
@@ -12,12 +13,10 @@ import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.utils.Pair;
-
 import static org.ic.tennistrader.utils.Pair.pair;
 
 public class BetManager {
-    //TODO this should be synchronized
-    private static HashMap<Match, VirtualBetMarketInfo> matchMarketData = new HashMap<Match, VirtualBetMarketInfo>();
+    private static ConcurrentHashMap<Match, VirtualBetMarketInfo> matchMarketData = new ConcurrentHashMap<Match, VirtualBetMarketInfo>();
     private static List<Bet> matchedBets = new ArrayList<Bet>();
     private static List<Bet> unmatchedBets = new ArrayList<Bet>();
     private static Logger log = Logger.getLogger(BetManager.class);
@@ -273,7 +272,21 @@ public class BetManager {
     	else
     		return 0.0;
     }
-
+    
+    public static double getMatchLiability(Match match) {
+    	if (matchMarketData.containsKey(match))
+    		return matchMarketData.get(match).getLiability();
+    	return 0;
+    }
+    
+    public static double getTotalLiabiltiy() {
+    	double totalLiability = 0;
+    	for (Match match : matchMarketData.keySet()) {
+    		totalLiability += matchMarketData.get(match).getLiability();
+    	}
+    	return totalLiability;
+    }
+    
 	public static boolean isValidPrice(Double odds) {
 		if (odds > 1000)
 			return false;
@@ -304,5 +317,10 @@ public class BetManager {
 		if (odds > 1)
 			return true;
 		return false;
+	}
+	
+	public static void setMatchMarketData(
+			ConcurrentHashMap<Match, VirtualBetMarketInfo> matchMarketData) {
+		BetManager.matchMarketData = matchMarketData;
 	}
 }
