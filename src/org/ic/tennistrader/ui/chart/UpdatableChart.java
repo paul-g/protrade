@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.ui.chart.ChartSettings.ResultSet;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.swtchart.Chart;
 import org.swtchart.IAxis;
@@ -45,7 +46,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	private String yAxisFractionalTitle = "Implied Odds (%)";
 	boolean pl1Selected;
 	boolean pl2Selected;
-	private boolean maPl1Selected, maPl2Selected, spPl1Selected, spPl2Selected;
+	private boolean maPl1Selected, maPl2Selected, spPl1Selected, spPl2Selected,
+					predPl1Selected, predPl2Selected;
 	private ChartData chartData;
 	private Match match;
 	private Slider slider;
@@ -56,7 +58,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		this.match = match;
 		this.slider = slider;
 		this.chartData = chartData;
-		initSlider();
+		//initSlider();
 
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
@@ -133,15 +135,15 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				SWT.ON, false,  false);
 		// building moving averages player 2
 		Color color4 = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
-		maPl2Series = createLineSeries(seriesSet, "MA " + match.getPlayerOne(),
+		maPl2Series = createLineSeries(seriesSet, "MA " + match.getPlayerTwo(),
 				color4, LineStyle.SOLID, PlotSymbolType.TRIANGLE, 4, false,
 				SWT.ON, false, false);
 		pl1Predicted = createLineSeries(seriesSet,
 				"Predicted odds " + match.getPlayerOne(), color, LineStyle.DOT,
-				PlotSymbolType.NONE, 0, false, SWT.ON, false, true);
+				PlotSymbolType.NONE, 0, false, SWT.ON, false, false);
 		pl2Predicted = createLineSeries(seriesSet,
 				"Predicted odds " + match.getPlayerTwo(), color2,
-				LineStyle.DOT, PlotSymbolType.NONE, 0, false, SWT.ON, false, true);
+				LineStyle.DOT, PlotSymbolType.NONE, 0, false, SWT.ON, false, false);
 	}
 
 	private IBarSeries createBarSeries(ISeriesSet seriesSet, String title,
@@ -216,7 +218,7 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		}
 	}
 
-	private void showSeries(int i, boolean dragged) {
+	public void showSeries(int i, boolean dragged) {
 		int size = (i) < sampleSize ? (i) : sampleSize;
 		Date showXSeries[] = new Date[size];
 		ArrayList<double[]> dataArray = new ArrayList<double[]>();
@@ -373,9 +375,8 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		final MenuItem player1 = new MenuItem(menu, SWT.CHECK);
 		player1.setText(match.getPlayerOne().toString());
-		this.setMenu(menu);
-		this.getPlotArea().setMenu(menu);
-
+		player1.setSelection(true);
+		
 		final MenuItem player2 = new MenuItem(menu, SWT.CHECK);
 		player2.setText(match.getPlayerTwo().toString());
 
@@ -390,34 +391,39 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 		final MenuItem spPlayer2 = new MenuItem(menu, SWT.CHECK);
 		spPlayer2.setText("Back/Lay Spread " + match.getPlayerTwo());
+		
+		final MenuItem predPlayer1 = new MenuItem(menu, SWT.CHECK);
+		predPlayer1.setText("Predicted odds " + match.getPlayerOne());
+
+		final MenuItem predPlayer2 = new MenuItem(menu, SWT.CHECK);
+		predPlayer2.setText("Predicted odds " + match.getPlayerTwo());
+
 
 		final MenuItem stretch = new MenuItem(menu, SWT.CHECK);
 		stretch.setText("Stretch");
 
 		player1.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				// cannot deselect both
-				if (!player1.getSelection() && !player2.getSelection()) {
-					player1.setSelection(true);
-					return;
-				}
+//				// cannot deselect both
+//				if (!player1.getSelection() && !player2.getSelection()) {
+//					player1.setSelection(true);
+//					return;
+//				}
 				pl1Selected = !pl1Selected;
 				firstSeries.setVisible(pl1Selected);
-				// oChart.visibility(pl1Selected, pl2Selected);
 				updateDisplay();
 			}
 		});
 
 		player2.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				// cannot deselect both
-				if (!player2.getSelection() && !player1.getSelection()) {
-					player2.setSelection(true);
-					return;
-				}
+//				// cannot deselect both
+//				if (!player2.getSelection() && !player1.getSelection()) {
+//					player2.setSelection(true);
+//					return;
+//				}
 				pl2Selected = !pl2Selected;
 				secondSeries.setVisible(pl2Selected);
-				// oChart.visibility(pl1Selected, pl2Selected);
 				updateDisplay();
 			}
 		});
@@ -453,6 +459,22 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 				updateDisplay();
 			}
 		});
+		
+		predPlayer1.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event arg0) {
+				predPl1Selected = !predPl1Selected;
+				pl1Predicted.setVisible(predPl1Selected);
+			}
+		});
+		
+		predPlayer2.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event arg0) {
+				predPl2Selected = !predPl2Selected;
+				pl2Predicted.setVisible(predPl2Selected);
+			}
+		});
 
 		stretch.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
@@ -471,6 +493,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 		// set the menu
 		setMenu(menu);
 		getPlotArea().setMenu(menu);
+	}
+	
+	public void setSlider(Slider slider){
+		this.slider = slider;
 	}
 
 	@Override
@@ -498,4 +524,131 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 	public void handleBettingMarketEndOFSet() {
 		chartData.addMarketEndOfSet();
 	}
+	
+	public int getSampleSize(){
+		return this.sampleSize;
+	}
+
+	public LineProp getPl1Bo() {
+		return new LineProp(firstSeries);
+	}
+	
+	public LineProp getPl1MA() {
+		return new LineProp(maPl1Series);
+	}
+	
+	public LineProp getPl1Pred() {
+		return new LineProp(pl1Predicted);
+	}
+	
+	public LineProp getPl2Bo() {
+		return new LineProp(secondSeries);
+	}
+	
+	public LineProp getPl2MA() {
+		return new LineProp(maPl2Series);
+	}
+	
+	public LineProp getPl2Pred() {
+		return new LineProp(pl2Predicted);
+	}
+	
+	public void setPl1BO(ResultSet res){
+		firstSeries.setLineColor(res.getColor());
+		firstSeries.setAntialias(res.getAntialias());
+		firstSeries.enableStep(res.getStep());
+		firstSeries.enableArea(res.getArea());
+	}
+	
+	public void setPl1MA(ResultSet res){
+		maPl1Series.setLineColor(res.getColor());
+		maPl1Series.setAntialias(res.getAntialias());
+		maPl1Series.enableStep(res.getStep());
+		maPl1Series.enableArea(res.getArea());
+	}
+	
+	public void setPl1Pred(ResultSet res){
+		pl1Predicted.setLineColor(res.getColor());
+		pl1Predicted.setAntialias(res.getAntialias());
+		pl1Predicted.enableStep(res.getStep());
+		pl1Predicted.enableArea(res.getArea());
+	}
+	
+	public void setPl2BO(ResultSet res){
+		secondSeries.setLineColor(res.getColor());
+		secondSeries.setAntialias(res.getAntialias());
+		secondSeries.enableStep(res.getStep());
+		secondSeries.enableArea(res.getArea());
+	}
+	
+	public void setPl2MA(ResultSet res){
+		maPl2Series.setLineColor(res.getColor());
+		maPl2Series.setAntialias(res.getAntialias());
+		maPl2Series.enableStep(res.getStep());
+		maPl2Series.enableArea(res.getArea());
+	}
+	
+	public void setPl2Pred(ResultSet res){
+		pl2Predicted.setLineColor(res.getColor());
+		pl2Predicted.setAntialias(res.getAntialias());
+		pl2Predicted.enableStep(res.getStep());
+		pl2Predicted.enableArea(res.getArea());
+	}
+	
+		
+	
+	
+	
+	
+	class LineProp{
+		private Color color;
+		private boolean step;
+		private boolean antialias;
+		private boolean area;
+		
+		LineProp(ILineSeries line){
+			this.color = line.getLineColor();
+			System.out.println(this.color);
+			this.step = line.isStepEnabled();
+			if (line.getAntialias() == SWT.ON) this.antialias = true; 
+			else this.antialias = false;
+			this.area = line.isAreaEnabled();
+		}
+
+		public Color getColor() {
+			System.out.println(color);
+			return color;
+		}
+
+		public void setColor(Color color) {
+			this.color = color;
+		}
+
+		public boolean isStep() {
+			return step;
+		}
+
+		public void setStep(boolean step) {
+			this.step = step;
+		}
+
+		public boolean isAntialias() {
+			return antialias;
+		}
+
+		public void setAntialias(boolean antialias) {
+			this.antialias = antialias;
+		}
+
+		public boolean isArea() {
+			return area;
+		}
+
+		public void setArea(boolean area) {
+			this.area = area;
+		}
+		
+		
+	}
+	
 }
