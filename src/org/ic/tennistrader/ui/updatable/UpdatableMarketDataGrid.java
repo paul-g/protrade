@@ -57,9 +57,9 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         headerDataSmall.grabExcessHorizontalSpace = true;
 
         Display display = getDisplay();
-        Color oddsColour = Colours.getOddsButtonColor(display);
-        createLabel("Back", Colours.getBackColor(display), headerData, SWT.RIGHT);
-        createLabel("Lay", Colours.getLayColor(display), headerData, SWT.NONE);
+        Color oddsColour = Colours.getOddsButtonColor();
+        createLabel("Back", Colours.getBackColor(), headerData, SWT.RIGHT);
+        createLabel("Lay", Colours.getLayColor(), headerData, SWT.NONE);
         createLabel("LPM", oddsColour , headerDataSmall, SWT.NONE);
         createLabel("Matched", oddsColour, headerDataSmall, SWT.NONE);
         createLabel("Mkt%", oddsColour, headerDataSmall, SWT.NONE);
@@ -92,7 +92,7 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         final Display display = getDisplay();
 
         for (int i = 0; i < 2; i++) {
-            pBackButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(display), oddsFont, this);
+            pBackButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(), oddsFont, this);
             /*
              * Composite comp = pBackButtons[i].getComp(); Image
              * backBackgroundImage =
@@ -109,14 +109,14 @@ public class UpdatableMarketDataGrid extends StandardWidgetContainer implements
         }
 
         
-        pBackButtons[2] = new OddsButton(this, Colours.getBackColor(display), oddsFont, this);
-        pLayButtons[0] = new OddsButton(this, Colours.getLayColor(display), oddsFont, this);
+        pBackButtons[2] = new OddsButton(this, Colours.getBackColor(), oddsFont, this);
+        pLayButtons[0] = new OddsButton(this, Colours.getLayColor(), oddsFont, this);
 
         for (int i = 1; i < 3; i++)
-            pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(display), oddsFont, this);
+            pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(), oddsFont, this);
         
         for (int i=0;i<p1MarketInfoButtons.length;i++) {
-        	pMarketInfo[i] = new OddsButton(this, Colours.getOddsButtonColor(display), oddsFont, this);
+        	pMarketInfo[i] = new OddsButton(this, Colours.getOddsButtonColor(), oddsFont, this);
         	pMarketInfo[i].setOdds("             ");
         	pMarketInfo[i].setCurrency("");
         }
