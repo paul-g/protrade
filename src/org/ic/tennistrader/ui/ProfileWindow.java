@@ -39,7 +39,7 @@ public class ProfileWindow {
 		/* Shell Layout */
 		shell.setLayout(gl);
 		shell.setText("Profile");
-		shell.setSize(400,300);
+		shell.setSize(500,300);
 		shell.setLocation(1100,80);
 		
 		/* Labels and Shell opening */
@@ -55,21 +55,38 @@ public class ProfileWindow {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		new Label(shell, SWT.NONE).setImage(new Image(display,"images/profile/user.png"));
-//		addLabel("USERNAME",Main.username);
-//		addLabel("BETFAIR POINTS",af.getBetfairPoints()+"");
-//		addLabel("CURRENT BALANCE",af.getBalance()+"");
-//		addLabel("AVAILABLE BALANCE",af.getAvailable()+"");
-//		addLabel("CREDIT LIMIT",af.getCreditLimit()+"");
-//		addLabel("EXPOSURE",af.getExposure()+"");
-//		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
-		addLabel("USERNAME","");
-		addLabel("BETFAIR POINTS","");
-		addLabel("CURRENT BALANCE","");
-		addLabel("AVAILABLE BALANCE","");
-		addLabel("CREDIT LIMIT","");
-		addLabel("EXPOSURE","");
-		addLabel("EXPOSURE LIMIT","");
+		addDescriptionLabel(new Image(display,"images/profile/user.png"),1);
+		addLabel("USERNAME",Main.username);
+		addDescriptionLabel(new Image(display,"images/profile/betfair.png"),1);
+		addLabel("BETFAIR POINTS",af.getBetfairPoints()+"");
+		addDescriptionLabel(new Image(display,"images/profile/deposit.png"),2);
+		addLabel("CURRENT BALANCE",af.getBalance()+"");
+		addLabel("AVAILABLE BALANCE",af.getAvailable()+"");
+		addDescriptionLabel(new Image(display,"images/profile/credit.png"),3);
+		addLabel("CREDIT LIMIT",af.getCreditLimit()+"");
+		addLabel("EXPOSURE",af.getExposure()+"");
+		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
+		
+		// TEST
+//		addDescriptionLabel(new Image(display,"images/profile/user.png"),1);
+//		addLabel("USERNAME","");
+//		addDescriptionLabel(new Image(display,"images/profile/betfair.png"),1);
+//		addLabel("BETFAIR POINTS","");
+//		addDescriptionLabel(new Image(display,"images/profile/deposit.png"),2);
+//		addLabel("CURRENT BALANCE","");
+//		addLabel("AVAILABLE BALANCE","");
+//		addDescriptionLabel(new Image(display,"images/profile/credit.png"),3);
+//		addLabel("CREDIT LIMIT","");
+//		addLabel("EXPOSURE","");
+//		addLabel("EXPOSURE LIMIT","");
+	}
+	
+	private void addDescriptionLabel(Image img, int span) {
+		GridData ngd = new GridData(SWT.CENTER,SWT.CENTER,true,true);
+		ngd.verticalSpan = span;
+		Label descr = new Label(shell, SWT.NONE);
+		descr.setImage(new Image(display,"images/profile/user.png"));
+		descr.setLayoutData(ngd);
 	}
 	
 	/** Method for label addition */
