@@ -13,8 +13,11 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
@@ -71,6 +74,9 @@ public class DashboardConfiguration {
 	public void save(String filename) {
 		try {
 			BufferedWriter out = openFile(filename);
+			Rectangle displayArea = Display.getCurrent().getClientArea();
+			out.write(displayArea.width + "x" + displayArea.height + "\n");
+			out.write("class,x,y,width,height\n");
 			Set<WidgetContainer> widgets = widgetMap.keySet();
 			for (WidgetContainer wc : widgets)
 				writeWidget(out, wc, widgetMap.get(wc));
@@ -91,7 +97,6 @@ public class DashboardConfiguration {
 	private BufferedWriter openFile(String filename) throws IOException {
 		FileWriter fstream = new FileWriter(filename);
 		BufferedWriter out = new BufferedWriter(fstream);
-		out.write("class,x,y,width,height\n");
 		return out;
 	}
 
@@ -100,8 +105,25 @@ public class DashboardConfiguration {
 
 		Match match = new HistoricalMatch("data/full/fulldataShort.csv");
 
+		String resolution = scanner.nextLine();
+		String dimensions[] = resolution.split("x");
+		int width = Integer.parseInt(dimensions[0]);
+		int height = Integer.parseInt(dimensions[1]);
+
+		log.info("Identified dashboard native resolution " + height + "x"
+				+ width);
+
 		// skip header
 		scanner.nextLine();
+
+		Rectangle area = Display.getCurrent().getClientArea();
+		log.info("Rescaling dashboard. Dashboard client area: " + area);
+		log.info("Current display size is : "
+				+ Display.getCurrent().getClientArea());
+		double xRatio = (double) width / area.width;
+		double yRatio = (double) height / area.height;
+
+		log.info("xRatio: " + xRatio + " yRatio: " + yRatio);
 
 		while (scanner.hasNext()) {
 			String s = scanner.nextLine();
@@ -124,6 +146,10 @@ public class DashboardConfiguration {
 				DataManager.registerForMatchUpdate(grid, match);
 				wc.setWidget(grid);
 				log.info("Added chart");
+			} else if (line[0].trim().equals(
+					"org.ic.tennistrader.score.StatisticsPanel")) {
+				StatisticsPanel sp = new StatisticsPanel(wc, match);
+				wc.setWidget(sp);
 			} else {
 				wc.setWidget(new WidgetPlaceholder(dashboard, SWT.BORDER, wc));
 			}
@@ -136,6 +162,11 @@ public class DashboardConfiguration {
 
 			updateLocation(wc, new Point(x, y));
 		}
+
+		dashboard.scaleWidgets(xRatio, yRatio);
+		dashboard.layoutWidgets();
+
+		log.info("Dashboard rescaled");
 	}
 
 	public void setMatch(Match match) {
