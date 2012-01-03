@@ -15,7 +15,14 @@ public class MarketPrices {
 			ArrayList<Pair<Double, Double>> layPrices) {
 		this.backPrices = backPrices;
 		this.layPrices = layPrices;
-
+	}
+	
+	public void addBackPrice(Pair<Double, Double> newPrice) {
+		this.backPrices.add(newPrice);
+	}
+	
+	public void addLayPrice(Pair<Double, Double> newPrice) {
+		this.layPrices.add(newPrice);
 	}
 
 	public void setLayPrices(ArrayList<Pair<Double, Double>> layPrices) {
