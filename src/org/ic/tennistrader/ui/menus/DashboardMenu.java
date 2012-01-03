@@ -1,16 +1,27 @@
 package org.ic.tennistrader.ui.menus;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.tennistrader.authentication.BetfairAuthenticator;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
+import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.ui.dialogs.LiveMatchDialog;
 import org.ic.tennistrader.ui.main.DashboardWindow;
+import org.ic.tennistrader.ui.main.LayoutDialog;
 
 public class DashboardMenu {
 
-	private DashboardWindow dashboardWindow;
+	private static final Logger log = Logger.getLogger(DashboardMenu.class);
+
+	private final DashboardWindow dashboardWindow;
 
 	public DashboardMenu(DashboardWindow dashboardWindow) {
 		this.dashboardWindow = dashboardWindow;
@@ -18,15 +29,115 @@ public class DashboardMenu {
 		Menu menuBar = new Menu(shell, SWT.BAR);
 		makeDashboardMenu(shell, menuBar);
 		makeAboutMenu(shell, menuBar);
+		makeOpenMenu(shell, menuBar);
+		shell.setMenuBar(menuBar);
+	}
+
+	private void makeOpenMenu(final Shell shell, Menu menuBar) {
+		MenuItem openHeader = new MenuItem(menuBar, SWT.CASCADE);
+		openHeader.setText("&Open");
+
+		Menu openMenu = new Menu(shell, SWT.DROP_DOWN);
+		openHeader.setMenu(openMenu);
+
+		MenuItem liveMatchMenu = new MenuItem(openMenu, SWT.DROP_DOWN);
+		liveMatchMenu.setText("&Live Match");
+		liveMatchMenu.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent se) {
+				BetfairAuthenticator.checkLogin("corina409", "testpass1");
+				LiveMatchDialog lmd = new LiveMatchDialog(shell);
+				lmd.open();
+				Match match = lmd.getSelectedMatch();
+				log.info("Dialog selection " + match);
+				dashboardWindow.getDashboard().setMatch(match);
+
+			}
+		});
+
+		MenuItem simulationMenu = new MenuItem(openMenu, SWT.CASCADE);
+		simulationMenu.setText("&Recorded Match");
+		simulationMenu.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				System.out.println("Opening simulation");
+			}
+		});
+
+		final Menu playDropDown = new Menu(shell, SWT.DROP_DOWN);
+
+		simulationMenu.setMenu(playDropDown);
+
+		makeRecordedItem(playDropDown, "US Open Final 2011",
+				"data/fracsoft/fracsoft1.csv",
+				"data/fracsoft/fracsoft1_set.csv");
+
+		makeRecordedItem(playDropDown, "US Open Final 2011(full)",
+				"data/full/fulldata1.csv");
+
+		makeRecordedItem(playDropDown, "US Open Final 2011(full, but short)",
+				"data/full/fulldataShort.csv");
+
+		makeRecordedItem(playDropDown,
+				"Barclays ATP World Tour Finals 2011 Tsonga v Federer - set 3",
+				"data/recorded/tso-fed-set-3.csv");
+
+		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
+		playItem.setText("From File");
+		playItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				FileDialog dialog = new FileDialog(dashboardWindow.getShell(),
+						SWT.SAVE);
+				String[] filterNames = new String[] { "CSV Files",
+						"All Files (*)" };
+				String[] filterExtensions = new String[] { "*.csv", "*" };
+				String filterPath = "/";
+				String platform = SWT.getPlatform();
+				if (platform.equals("win32") || platform.equals("wpf")) {
+					filterNames = new String[] { "CSV Files", "All Files (*.*)" };
+					filterExtensions = new String[] { "*.csv", "*.*" };
+					filterPath = "c:\\";
+				}
+				dialog.setFilterNames(filterNames);
+				dialog.setFilterExtensions(filterExtensions);
+				dialog.setFilterPath(filterPath);
+				dialog.setFileName("myfile");
+
+				openMatchView(dialog.open());
+			}
+		});
+	}
+
+	private void makeRecordedItem(final Menu playDropDown, final String text,
+			final String matchPath, final String setPath) {
+
+		MenuItem usOpenFinalFullShort = new MenuItem(playDropDown, SWT.PUSH);
+		usOpenFinalFullShort.setText(text);
+		usOpenFinalFullShort.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				openMatchView(matchPath, setPath);
+			}
+		});
+	}
+
+	private void makeRecordedItem(final Menu playDropDown, final String text,
+			final String filePath) {
+		MenuItem usOpenFinalFullShort = new MenuItem(playDropDown, SWT.PUSH);
+		usOpenFinalFullShort.setText(text);
+		usOpenFinalFullShort.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				openMatchView(filePath);
+			}
+		});
 	}
 
 	private void makeAboutMenu(Shell shell, Menu menuBar) {
-		// About button
 		MenuItem aboutMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		aboutMenuHeader.setText("A&bout");
-		shell.setMenuBar(menuBar);
 
-		// About drop down menu
 		Menu aboutMenu = new Menu(shell, SWT.DROP_DOWN);
 		aboutMenuHeader.setMenu(aboutMenu);
 	}
@@ -34,40 +145,39 @@ public class DashboardMenu {
 	private void makeDashboardMenu(Shell shell, Menu menuBar) {
 		MenuItem dasboard = new MenuItem(menuBar, SWT.CASCADE);
 		dasboard.setText("&Dashboard");
-		shell.setMenuBar(menuBar);
 
 		Menu menu = new Menu(shell, SWT.DROP_DOWN);
 		dasboard.setMenu(menu);
 
 		makeNewMenu(menu);
-		
+
 		MenuItem saveItem = new MenuItem(menu, SWT.PUSH);
 		saveItem.setText("&Save");
-		
-		saveItem.addSelectionListener(new SelectionAdapter(){
+
+		saveItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				dashboardWindow.getDashboard().save();
 			}
 		});
-		
+
 		MenuItem saveAsItem = new MenuItem(menu, SWT.PUSH);
 		saveAsItem.setText("&Save As");
-		
-		saveAsItem.addSelectionListener(new SelectionAdapter(){
+
+		saveAsItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				dashboardWindow.getDashboard().save();
 			}
 		});
-		
+
 		MenuItem loadItem = new MenuItem(menu, SWT.PUSH);
 		loadItem.setText("&Load");
-		
-		loadItem.addSelectionListener(new SelectionAdapter(){
+
+		loadItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dashboardWindow.loadDashboard("dashboard.dat");
+				dashboardWindow.loadDashboard("templates/dashboard.dat");
 			}
 		});
 	}
@@ -77,21 +187,21 @@ public class DashboardMenu {
 		newItem.setText("&New");
 		Menu newSubMenu = new Menu(newItem);
 		newItem.setMenu(newSubMenu);
-		
+
 		MenuItem newEmpty = new MenuItem(newSubMenu, SWT.PUSH);
 		newEmpty.setText("Empty");
-		
-		newEmpty.addSelectionListener(new SelectionAdapter(){
+
+		newEmpty.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				dashboardWindow.newDashboard();
 			}
 		});
-		
+
 		MenuItem newPredefined = new MenuItem(newSubMenu, SWT.PUSH);
 		newPredefined.setText("Predefined");
-		
-		newPredefined.addSelectionListener(new SelectionAdapter(){
+
+		newPredefined.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				LayoutDialog ld = new LayoutDialog();
@@ -103,4 +213,21 @@ public class DashboardMenu {
 			}
 		});
 	}
+
+	/** Open a new match view */
+	private void openMatchView(String filename) {
+		if (filename != null) {
+			Match match = new HistoricalMatch(filename);
+			// mainWindow.getDisplayPanel().handleMatchSelection(match);
+		}
+	}
+
+	/** Open a new match view */
+	private void openMatchView(String filename, String setBettingFilename) {
+		if (filename != null) {
+			Match match = new HistoricalMatch(filename, setBettingFilename);
+			// mainWindow.getDisplayPanel().handleMatchSelection(match);
+		}
+	}
+
 }

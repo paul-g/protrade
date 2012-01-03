@@ -1,7 +1,0 @@
-class,x,y,width,height
- org.ic.tennistrader.score.StatisticsPanel,1277,156,617,566
- org.ic.tennistrader.ui.dashboard.WidgetPlaceholder,0,572,640,572
- org.ic.tennistrader.ui.chart.DualChartWidget,3,702,1917,442
- org.ic.tennistrader.ui.score.WimbledonScorePanel,1280,0,640,148
- org.ic.tennistrader.ui.chart.DualChartWidget,0,0,1242,572
- org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid,-7,572,1287,572

@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui.dashboard;
+package org.ic.tennistrader.ui.dialogs;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -12,6 +12,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
+import org.ic.tennistrader.ui.dashboard.WidgetPlaceholder;
 import org.ic.tennistrader.ui.richlist.RichListView;
 import org.ic.tennistrader.ui.richlist.RichListElement;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;

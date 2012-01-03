@@ -8,8 +8,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.ic.tennistrader.ui.dialogs.AddWidgetDialog;
 
-class WidgetPlaceholder extends Composite {
+public class WidgetPlaceholder extends Composite {
 
 	private final Button b;
 

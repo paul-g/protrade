@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui.menus;
+package org.ic.tennistrader.ui.main;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.ic.tennistrader.ui.dashboard.RichListDialog;
+import org.ic.tennistrader.ui.dialogs.RichListDialog;
 import org.ic.tennistrader.ui.layout.LayoutDescriptor;
 import org.ic.tennistrader.ui.layout.LayoutRegistry;
 import org.ic.tennistrader.ui.richlist.RichListElement;
