@@ -216,7 +216,7 @@ public class Dashboard extends Composite {
 		}
 	}
 
-	private void scaleWidgets(double xRatio, double yRatio) {
+	public void scaleWidgets(double xRatio, double yRatio) {
 		log.info("Scaling widgets -> xRatio :" + xRatio + " yRatio " + yRatio);
 		Map<WidgetContainer, Point> map = dashboardConfiguration.getWidgetMap();
 		Set<WidgetContainer> widgets = map.keySet();
