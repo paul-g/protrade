@@ -14,10 +14,10 @@ public class LayoutRegistry {
 	
 	private LayoutRegistry() {
 		layouts = new ArrayList<LayoutDescriptor>();
-		initCharMaster();
+		initChartMaster();
 	}
 
-	private void initCharMaster() {
+	private void initChartMaster() {
 		addLayout(new LayoutDescriptor("Chart Master", "Many chart layout",
 				"templates/chart-master/"));
 	}

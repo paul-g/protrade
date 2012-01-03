@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,129 +24,152 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.service.DataManager;
-import org.ic.tennistrader.ui.StandardWidgetContainer;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
+import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
+import org.ic.tennistrader.ui.widgets.WidgetType;
 
-public class PredictionGui extends StandardWidgetContainer {
+public class PredictionGui extends MatchViewerWidget {
 
-    private static Logger log = Logger.getLogger(PredictionGui.class);
+	private static Logger log = Logger.getLogger(PredictionGui.class);
 
-    private ScoreUpdateThread scoreUpdateThread;
+	private final ScoreUpdateThread scoreUpdateThread;
 
-    // NOT USED
-    // private StatisticsUpdateThread statisticsUpdateThread;
-    
-    private Match match;
+	// NOT USED
+	// private StatisticsUpdateThread statisticsUpdateThread;
 
-    private StatisticsPanel st;
-    
-    public static void main(String args[]) {
-        final Display display = new Display();
-        Shell shell = new Shell(display, SWT.SHELL_TRIM);
-        shell.setLayout(new FillLayout());
+	private final StatisticsPanel st;
 
-        Player playerOne = new Player("Rafael", "Nadal");
-        Player playerTwo = new Player("Del Potro", "Juan Martin");
+	public static void main(String args[]) {
+		final Display display = new Display();
+		Shell shell = new Shell(display, SWT.SHELL_TRIM);
+		shell.setLayout(new FillLayout());
 
-        Match match = new RealMatch("","", new EventBetfair("Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
-        MOddsMarketData modds =new MOddsMarketData();
-        modds.setDelay(5);
-        match.addMarketData(modds);
-        match.setPlayer1(playerOne);
-        match.setPlayer2(playerTwo);
+		Player playerOne = new Player("Rafael", "Nadal");
+		Player playerTwo = new Player("Del Potro", "Juan Martin");
 
-        new PredictionGui(shell, SWT.BORDER, match).start();
+		Match match = new RealMatch("", "", new EventBetfair(
+				"Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
+		MOddsMarketData modds = new MOddsMarketData();
+		modds.setDelay(5);
+		match.addMarketData(modds);
+		match.setPlayer1(playerOne);
+		match.setPlayer2(playerTwo);
 
-        shell.open();
+		new PredictionGui(shell, SWT.BORDER, match).start();
 
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch())
-                display.sleep();
-        }
-        
-        display.dispose();
-    }
-    
-    public PredictionGui(final Composite parent, int style, Match match) {
-        super(parent, style);
-     log.info("Started prediction GUI");
-        this.match = match;
+		shell.open();
 
-        GridLayout mainLayout  = new GridLayout();
-        mainLayout.numColumns = 2;
-        this.setLayout(mainLayout);
-        
-        @SuppressWarnings("unused")
-        WimbledonScorePanel sc = new WimbledonScorePanel(this, match);
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
 
-        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1 , 2);
-        st = new StatisticsPanel(this, match);
-        st.setLayoutData(gd);
+		display.dispose();
+	}
 
-        addMarketDataGrid(this, match);
-        
-        //this.statisticsUpdateThread = new StatisticsUpdateThread(match);
-        //this.statisticsUpdateThread.addListener(st);
+	public PredictionGui(final Composite parent, int style, Match match) {
+		super(parent, style);
+		log.info("Started prediction GUI");
+		this.match = match;
 
-        this.scoreUpdateThread = new ScoreUpdateThread(match);
-        //Image im = new Image(this.getDisplay(), "images/scoreboard.png" );
-        //this.setBackgroundImage(im);
-    }
-    
-    public void start(){
-        String statsString = getStatsString("data/test/tennisinsight-tso-fed.dat");
-        new StatisticsParser(statsString, match).parseAndSetStatistics();
-        st.handleEvent(new Event());
-        //statisticsUpdateThread.start();
-        if (match.isInPlay()) {
-         log.info("Live match: starting score update thread");
-            // only start score fetching for live matches
-            scoreUpdateThread.start();
-        }
-    }
-    
-    /**
-* Adds the market data grid with back and lay values and amounts
-*
-* @param comp
-* @param ti
-*/
-    private void addMarketDataGrid(Composite comp, Match match) {
-        UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
-                SWT.NONE, match);
-        grid.setLayoutData( new GridData(GridData.FILL, GridData.FILL, true, true, 1 , 1));
-        BetController betController = new BetController(Arrays.asList(grid
-                .getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
-                Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
-                        .getP2LayButtons()), match);
-        grid.setBetController(betController);
-        DataManager.registerForMatchUpdate(grid, match);
-        // BetManager.registerGrid(match, table);
-    }
-    
+		GridLayout mainLayout = new GridLayout();
+		mainLayout.numColumns = 2;
+		this.setLayout(mainLayout);
 
+		@SuppressWarnings("unused")
+		MatchViewerWidget sc = new WimbledonScorePanel(this, match);
 
-    @Override
-    public String getTitle() {
-        return "Prediction";
-    }
-    
-    private static String getStatsString(String filename) {
+		GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1,
+				2);
+		st = new StatisticsPanel(this, match);
+		st.setLayoutData(gd);
 
-        Scanner scanner;
-        String test = "";
+		addMarketDataGrid(this, match);
 
-        try {
-            scanner = new Scanner(new FileInputStream(filename));
-        
-            while (scanner.hasNext()){
-            test += scanner.nextLine() + "\n";
-            }
-        } catch (FileNotFoundException e) {
-            // log.error(e.getMessage());
-        }
+		// this.statisticsUpdateThread = new StatisticsUpdateThread(match);
+		// this.statisticsUpdateThread.addListener(st);
 
-        return test;
-    }   
+		this.scoreUpdateThread = new ScoreUpdateThread(match);
+		// Image im = new Image(this.getDisplay(), "images/scoreboard.png" );
+		// this.setBackgroundImage(im);
+	}
+
+	public void start() {
+		String statsString = getStatsString("data/test/tennisinsight-tso-fed.dat");
+		new StatisticsParser(statsString, match).parseAndSetStatistics();
+		st.handleEvent(new Event());
+		// statisticsUpdateThread.start();
+		if (match.isInPlay()) {
+			log.info("Live match: starting score update thread");
+			// only start score fetching for live matches
+			scoreUpdateThread.start();
+		}
+	}
+
+	/**
+	 * Adds the market data grid with back and lay values and amounts
+	 * 
+	 * @param comp
+	 * @param ti
+	 */
+	private void addMarketDataGrid(Composite comp, Match match) {
+		UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
+				SWT.NONE, match);
+		grid.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true,
+				true, 1, 1));
+		BetController betController = new BetController(Arrays.asList(grid
+				.getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
+				Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
+						.getP2LayButtons()), match);
+		grid.setBetController(betController);
+		DataManager.registerForMatchUpdate(grid, match);
+		// BetManager.registerGrid(match, table);
+	}
+
+	@Override
+	public String getTitle() {
+		return "Prediction";
+	}
+
+	private static String getStatsString(String filename) {
+
+		Scanner scanner;
+		String test = "";
+
+		try {
+			scanner = new Scanner(new FileInputStream(filename));
+
+			while (scanner.hasNext()) {
+				test += scanner.nextLine() + "\n";
+			}
+		} catch (FileNotFoundException e) {
+			// log.error(e.getMessage());
+		}
+
+		return test;
+	}
+
+	@Override
+	public void handleUpdate(MOddsMarketData newData) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setDisposeListener(DisposeListener listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public WidgetType getName() {
+		return WidgetType.PREDICTION_GUI;
+	}
 }

@@ -218,7 +218,7 @@ public class DashboardMenu {
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
-			// mainWindow.getDisplayPanel().handleMatchSelection(match);
+			dashboardWindow.getDashboard().setMatch(match);
 		}
 	}
 
@@ -226,7 +226,7 @@ public class DashboardMenu {
 	private void openMatchView(String filename, String setBettingFilename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename, setBettingFilename);
-			// mainWindow.getDisplayPanel().handleMatchSelection(match);
+			dashboardWindow.getDashboard().setMatch(match);
 		}
 	}
 

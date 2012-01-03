@@ -13,9 +13,10 @@ import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.dashboard.WidgetPlaceholder;
-import org.ic.tennistrader.ui.richlist.RichListView;
 import org.ic.tennistrader.ui.richlist.RichListElement;
+import org.ic.tennistrader.ui.richlist.RichListView;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
+import org.ic.tennistrader.ui.updatable.MatchDataView;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
 
 public class AddWidgetDialog extends RichListDialog {
@@ -27,7 +28,7 @@ public class AddWidgetDialog extends RichListDialog {
 	public AddWidgetDialog() {
 		setText("Add Widget");
 	}
-	
+
 	public void setWidgetPlaceholder(WidgetPlaceholder widgetPlaceholder) {
 		this.widgetPlaceholder = widgetPlaceholder;
 	}
@@ -42,10 +43,29 @@ public class AddWidgetDialog extends RichListDialog {
 		makeScorePanelEl(r);
 		makeMarketGridEl(r);
 		makeStatisticsPanelEl(r);
+		makeMatchDataViewEl(r);
+	}
+
+	private void makeMatchDataViewEl(RichListView r) {
+		Control control = makeElementControl(new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
+				setSelection(new MatchDataView(widgetPlaceholder.getParent(),
+						SWT.NONE, match));
+			}
+		});
+		RichListElement element = new RichListElement(r, SWT.BORDER,
+				"Displays match summary", "Match Viewer", control);
+		element.addInfoListener(new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				System.out.println("StatisticsPanel INFO");
+			}
+		});
 	}
 
 	private void makeStatisticsPanelEl(RichListView r) {
-		Image image = new Image(Display.getCurrent(), "images/chart.png");
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -55,7 +75,7 @@ public class AddWidgetDialog extends RichListDialog {
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Displays match statistics", "Statistics Panel", image, control);
+				"Displays match statistics", "Statistics Panel", control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -65,21 +85,28 @@ public class AddWidgetDialog extends RichListDialog {
 	}
 
 	private void makeMarketGridEl(RichListView r) {
-		Image image = new Image(Display.getCurrent(), "images/chart.png");
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
+				Match match = getCurrentMatch();
+
+				UpdatableMarketDataGrid grid;
+
+				if (match != null) {
+					grid = new UpdatableMarketDataGrid(
+							widgetPlaceholder.getParent(), SWT.NONE, match);
+					DataManager.registerForMatchUpdate(grid, match);
+				} else {
+					grid = new UpdatableMarketDataGrid(
+							widgetPlaceholder.getParent(), SWT.NONE);
+				}
 				// NOTE for market data grid, controller is also required
-				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(
-						widgetPlaceholder.getParent(), SWT.NONE, match);
-				DataManager.registerForMatchUpdate(grid, match);
 				setSelection(grid);
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Displays market info and handles bet placing",
-				"Market Grid", image, control);
+				"Displays market info and handles bet placing", "Market Grid",
+				control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -89,7 +116,8 @@ public class AddWidgetDialog extends RichListDialog {
 	}
 
 	private void makeScorePanelEl(RichListView r) {
-		Image image = new Image(Display.getCurrent(), "images/score-panel-small.png");
+		Image image = new Image(Display.getCurrent(),
+				"images/score-panel-small.png");
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -131,5 +159,9 @@ public class AddWidgetDialog extends RichListDialog {
 	private void setSelection(Composite selection) {
 		this.selection = selection;
 		dialog.dispose();
+	}
+
+	private Match getCurrentMatch() {
+		return widgetPlaceholder.getDashboard().getMatch();
 	}
 }

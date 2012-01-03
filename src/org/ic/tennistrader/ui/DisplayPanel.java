@@ -20,6 +20,8 @@ import org.ic.tennistrader.listener.MatchSelectionListener;
 import org.ic.tennistrader.score.PredictionGui;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
+import org.ic.tennistrader.ui.updatable.MatchDataView;
+import org.ic.tennistrader.ui.widgets.StandardTabbedWidgetContainer;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;

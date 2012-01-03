@@ -3,6 +3,7 @@ package org.ic.tennistrader.score;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -12,14 +13,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.ui.StandardWidgetContainer;
+import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
+import org.ic.tennistrader.ui.widgets.WidgetType;
 
-public class StatisticsPanel extends StandardWidgetContainer implements
-		Listener {
-
-	private final Match match;
+public class StatisticsPanel extends MatchViewerWidget implements Listener {
 
 	private final Tree tree;
 
@@ -143,4 +143,26 @@ public class StatisticsPanel extends StandardWidgetContainer implements
 		item.setText(2, playerTwoValue);
 	}
 
+	@Override
+	public void handleUpdate(MOddsMarketData newData) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setDisposeListener(DisposeListener listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public WidgetType getName() {
+		return WidgetType.STATISTICS_PANEL;
+	}
 }
