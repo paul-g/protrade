@@ -11,7 +11,9 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -26,6 +28,7 @@ import org.ic.tennistrader.ui.widgets.SearchTree;
 public class NavigationPanel {
 
 	private final CTabFolder folder;
+	private Label loadingLabel;
 
 	private final List<MatchSelectionListener> listeners = new ArrayList<MatchSelectionListener>();
 
@@ -43,7 +46,8 @@ public class NavigationPanel {
 
 		GridData gridData = makeLayoutData();
 		folder.setLayoutData(gridData);
-
+		
+		
 		makeLiveMatchesItem();
 
 		makeRecordedMatchesItem();
@@ -61,9 +65,12 @@ public class NavigationPanel {
 
 		Composite composite = new Composite(folder, SWT.NONE);
 		composite.setLayout(new FillLayout());
-		BetfairAuthenticator.checkLogin("corina409", "testpass1");
+		
 		searchTree = new SearchTree(composite);
 
+		loadingLabel = new Label(searchTree, SWT.None);
+		loadingLabel.setText("Loading matches...");
+		
 		fetchTennisMatches(searchTree.getTree());
 		navigation.setControl(composite);
 
@@ -89,18 +96,28 @@ public class NavigationPanel {
 	}
 
 	// only fetches matches from Betfair
-	private void fetchTennisMatches(Tree tree) {
-		List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
-		for (Tournament t : tours) {
-			TreeItem item = new TreeItem(tree, SWT.NONE);
-			item.setText(t.toString());
-
-			for (RealMatch m : t.getMatches()) {
-				TreeItem child = new TreeItem(item, SWT.NONE);
-				child.setText(m.toString());
-				matchMap.put(child, m);
+	private void fetchTennisMatches(final Tree tree) {			
+		new Thread() {
+			public void run() {
+				final List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
+				tree.getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						for (Tournament t : tours) {
+							TreeItem item = new TreeItem(tree, SWT.NONE);
+							item.setText(t.toString());
+							for (RealMatch m : t.getMatches()) {
+								TreeItem child = new TreeItem(item, SWT.NONE);
+								child.setText(m.toString());
+								matchMap.put(child, m);
+							}
+						}
+						loadingLabel.setVisible(false);
+						tree.layout();
+					}					
+				});
 			}
-		}
+		}.start();		
 	}
 
 	public CTabFolder getFolder() {
