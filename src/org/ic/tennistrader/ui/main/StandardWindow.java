@@ -22,10 +22,10 @@ import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.DisplayPanel;
 import org.ic.tennistrader.ui.LowerToolBar;
 import org.ic.tennistrader.ui.NavigationPanel;
-import org.ic.tennistrader.ui.StandardWidgetResizeListener;
 import org.ic.tennistrader.ui.UpperToolBar;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.menus.MenuPanel;
+import org.ic.tennistrader.ui.widgets.StandardWidgetResizeListener;
 
 public class StandardWindow implements MainWindow {
 

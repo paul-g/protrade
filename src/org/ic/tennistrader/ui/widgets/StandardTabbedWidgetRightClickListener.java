@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.widgets;
 
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;

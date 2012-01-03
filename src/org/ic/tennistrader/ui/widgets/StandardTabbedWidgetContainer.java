@@ -1,4 +1,4 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.widgets;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -141,7 +141,7 @@ public class StandardTabbedWidgetContainer {
         return item;
     }
     
-    public void addWidgetAsTab(StandardWidgetContainer swc){
+    public void addWidgetAsTab(MatchViewerWidget swc){
         final CTabItem item = new CTabItem(folder, SWT.CLOSE);
         
         item.setText(swc.getTitle());

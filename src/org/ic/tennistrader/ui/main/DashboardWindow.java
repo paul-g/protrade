@@ -13,10 +13,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.LowerToolBar;
-import org.ic.tennistrader.ui.StandardWidgetResizeListener;
 import org.ic.tennistrader.ui.UpperToolBar;
 import org.ic.tennistrader.ui.dashboard.Dashboard;
 import org.ic.tennistrader.ui.menus.DashboardMenu;
+import org.ic.tennistrader.ui.widgets.StandardWidgetResizeListener;
 
 public class DashboardWindow implements MainWindow {
 

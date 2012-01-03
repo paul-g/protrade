@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
@@ -21,7 +22,11 @@ import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
+import org.ic.tennistrader.ui.updatable.MatchDataView;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
+import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
+import org.ic.tennistrader.ui.widgets.SavableWidget;
+import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class DashboardConfiguration {
 
@@ -33,6 +38,8 @@ public class DashboardConfiguration {
 	private Map<WidgetContainer, Point> widgetMap;
 
 	private final Dashboard dashboard;
+
+	private Match match;
 
 	public DashboardConfiguration(Dashboard dashboard) {
 		widgetMap = new HashMap<WidgetContainer, Point>();
@@ -88,8 +95,13 @@ public class DashboardConfiguration {
 
 	private void writeWidget(BufferedWriter out, WidgetContainer wc, Point point)
 			throws IOException {
-		String line = "" + wc.getWidget().getClass().toString().substring(5)
-				+ "," + point.x + "," + point.y;
+		Control control = wc.getWidget();
+		log.info(control.getClass());
+		if (!(control instanceof SavableWidget))
+			throw new RuntimeException(
+					"Widget Cannot be Saved! It is not a SavableWidget");
+		String type = ((SavableWidget) control).getWidgetType().toString();
+		String line = "" + type + "," + point.x + "," + point.y;
 		line += "," + wc.getWidth() + "," + wc.getHeight();
 		out.write(line + "\n");
 	}
@@ -131,27 +143,28 @@ public class DashboardConfiguration {
 			WidgetContainer wc = new WidgetContainer(dashboard, SWT.BORDER, 10,
 					20);
 
-			if (line[0].trim().equals(
-					"org.ic.tennistrader.ui.chart.DualChartWidget")) {
-				wc.setWidget(new DualChartWidget(wc, match));
+			String type = line[0].trim();
+
+			Control widget;
+
+			if (type.equals(WidgetType.DUAL_CHART.toString())) {
+				widget = new DualChartWidget(wc, match);
 				log.info("Added chart");
-			} else if (line[0].trim().equals(
-					"org.ic.tennistrader.ui.score.WimbledonScorePanel")) {
-				wc.setWidget(new WimbledonScorePanel(wc, match));
+			} else if (type.equals(WidgetType.SCORE_PANEL.toString())) {
+				widget = new WimbledonScorePanel(wc, match);
 				log.info("Added score panel");
-			} else if (line[0].trim().equals(
-					"org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid")) {
+			} else if (type.equals(WidgetType.MARKET_GRID.toString())) {
 				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(wc,
 						SWT.NONE, match);
 				DataManager.registerForMatchUpdate(grid, match);
-				wc.setWidget(grid);
+				widget = grid;
 				log.info("Added chart");
-			} else if (line[0].trim().equals(
-					"org.ic.tennistrader.score.StatisticsPanel")) {
-				StatisticsPanel sp = new StatisticsPanel(wc, match);
-				wc.setWidget(sp);
+			} else if (type.equals(WidgetType.STATISTICS_PANEL.toString())) {
+				widget = new StatisticsPanel(wc, match);
+			} else if (type.equals(WidgetType.MATCH_VIEW.toString())) {
+				widget = new MatchDataView(wc, SWT.NONE);
 			} else {
-				wc.setWidget(new WidgetPlaceholder(dashboard, SWT.BORDER, wc));
+				widget = new WidgetPlaceholder(dashboard, SWT.BORDER, wc);
 			}
 
 			int x = Integer.parseInt(line[1]);
@@ -159,6 +172,8 @@ public class DashboardConfiguration {
 
 			wc.setWidth(Integer.parseInt(line[3]));
 			wc.setHeight(Integer.parseInt(line[4]));
+
+			wc.setWidget(widget);
 
 			updateLocation(wc, new Point(x, y));
 		}
@@ -171,5 +186,16 @@ public class DashboardConfiguration {
 
 	public void setMatch(Match match) {
 		log.info("Set match to " + match);
+		this.match = match;
+		for (WidgetContainer wc : widgetMap.keySet()) {
+			Control c = wc.getWidget();
+			if (c instanceof MatchViewerWidget) {
+				((MatchViewerWidget) c).setMatchAndRegisterForUpdates(match);
+			}
+		}
+	}
+
+	public Match getMatch() {
+		return match;
 	}
 }

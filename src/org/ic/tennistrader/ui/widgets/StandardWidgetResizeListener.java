@@ -1,8 +1,9 @@
-package org.ic.tennistrader.ui;
+package org.ic.tennistrader.ui.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.ic.tennistrader.ui.GraphicsUtils;
 
 public class StandardWidgetResizeListener implements Listener{
 

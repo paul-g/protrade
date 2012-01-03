@@ -256,4 +256,8 @@ public class Dashboard extends Composite {
 	public void setMatch(Match match) {
 		dashboardConfiguration.setMatch(match);
 	}
+
+	public Match getMatch() {
+		return dashboardConfiguration.getMatch();
+	}
 }

@@ -1,8 +1,8 @@
 1920x1200
 class,x,y,width,height
- org.ic.tennistrader.ui.dashboard.WidgetPlaceholder,0,0,640,548
- org.ic.tennistrader.ui.score.WimbledonScorePanel,643,935,1277,161
- org.ic.tennistrader.ui.dashboard.WidgetPlaceholder,1280,0,640,548
- org.ic.tennistrader.score.StatisticsPanel,730,538,1025,390
- org.ic.tennistrader.ui.dashboard.WidgetPlaceholder,0,548,640,548
- org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid,640,0,1209,150
+PLACEHOLDER,0,548,640,548
+PLACEHOLDER,1280,0,640,548
+PLACEHOLDER,1280,548,640,548
+SCORE_PANEL,0,0,640,548
+MARKET_GRID,8,550,1272,546
+MATCH_VIEW,640,0,636,97

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.FillLayout;
@@ -14,46 +15,45 @@ import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.betting.BetManager;
-import org.ic.tennistrader.ui.StandardTabbedWidgetContainer;
-import org.ic.tennistrader.ui.StandardWidgetContainer;
+import org.ic.tennistrader.ui.widgets.StandardTabbedWidgetContainer;
 
-public class BetsDisplay extends StandardTabbedWidgetContainer{    
+public class BetsDisplay extends StandardTabbedWidgetContainer {
 	private static BetsDisplay betsDisplay;
-    private static List<Label> activeBets = new ArrayList<Label>();
-    private static Composite composite = null;
-    private static HashMap<Match, BetDisplayInfo> matchBets = new HashMap<Match, BetDisplayInfo>();
-    private static HashMap<Bet, Label> unmatchedBetsLabels = new HashMap<Bet, Label>();
-    public final static DecimalFormat DOUBLE_FORMAT = new DecimalFormat("#.##");
-    
-    public BetsDisplay(Composite parent, int style){
-        super(parent, style);
-        CTabItem cti = new CTabItem(folder, SWT.CLOSE);
-        cti.setText("Active Bets");
-        folder.setSimple(false);
-        folder.setMinimizeVisible(true);
-        folder.setMaximizeVisible(true);
+	private static List<Label> activeBets = new ArrayList<Label>();
+	private static Composite composite = null;
+	private static HashMap<Match, BetDisplayInfo> matchBets = new HashMap<Match, BetDisplayInfo>();
+	private static HashMap<Bet, Label> unmatchedBetsLabels = new HashMap<Bet, Label>();
+	public final static DecimalFormat DOUBLE_FORMAT = new DecimalFormat("#.##");
 
-        Composite comp = new StandardWidgetContainer(folder, SWT.NONE);
-        BetsDisplay.composite = comp;
-        RowLayout rl = new RowLayout();
-        rl.type = SWT.VERTICAL;
-        comp.setLayout(rl);
-        cti.setControl(comp);
-        folder.setSelection(cti);
-        betsDisplay = this;
-        
-        parent.layout();
-    }
+	public BetsDisplay(Composite parent, int style) {
+		super(parent, style);
+		CTabItem cti = new CTabItem(folder, SWT.CLOSE);
+		cti.setText("Active Bets");
+		folder.setSimple(false);
+		folder.setMinimizeVisible(true);
+		folder.setMaximizeVisible(true);
 
-    public static void addBet(Bet bet) {
-        Label betLabel = new Label(composite, SWT.NONE);
-        setBetLabelText(bet, betLabel);
-        if (bet.getUnmatchedValue() > 0)
-            unmatchedBetsLabels.put(bet, betLabel);
-        activeBets.add(betLabel);
-        updateMatchTab(bet, betLabel);
-        composite.layout();
-    }
+		Composite comp = new Composite(folder, SWT.NONE);
+		BetsDisplay.composite = comp;
+		RowLayout rl = new RowLayout();
+		rl.type = SWT.VERTICAL;
+		comp.setLayout(rl);
+		cti.setControl(comp);
+		folder.setSelection(cti);
+		betsDisplay = this;
+
+		parent.layout();
+	}
+
+	public static void addBet(Bet bet) {
+		Label betLabel = new Label(composite, SWT.NONE);
+		setBetLabelText(bet, betLabel);
+		if (bet.getUnmatchedValue() > 0)
+			unmatchedBetsLabels.put(bet, betLabel);
+		activeBets.add(betLabel);
+		updateMatchTab(bet, betLabel);
+		composite.layout();
+	}
 
 	private static void updateMatchTab(Bet bet, Label betLabel) {
 		betsDisplay.updateTab(bet, betLabel);
@@ -82,9 +82,9 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 
 	private void addBetDisplay(Bet bet, Label betLabel,
 			BetDisplayInfo betDisplayInfo) {
-		betDisplayInfo.setPlayerWinnerProfits(BetManager
-				.getFirstPlayerWinnerProfit(bet.getMatch()), BetManager
-				.getSecondPlayerWinnerProfit(bet.getMatch()));
+		betDisplayInfo.setPlayerWinnerProfits(
+				BetManager.getFirstPlayerWinnerProfit(bet.getMatch()),
+				BetManager.getSecondPlayerWinnerProfit(bet.getMatch()));
 		betDisplayInfo.addBet(bet, betLabel);
 	}
 
@@ -93,42 +93,50 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 			@Override
 			public void run() {
 				Label betLabel = new Label(composite, SWT.NONE);
-				betLabel.setText((bet.getType() == BetTypeEnum.B ? "Back " : "Lay ")
-						+ bet.getPlayer().toString() + " for " + bet.getAmount()
-						+ "£ at " + bet.getOdds() + " was " + ((bet.getProfit() > 0) ? "" : "not ")
-						+ " successful and your " + (bet.getProfit() > 0 ? "profit " : "loss ")
-						+ " is: " + (bet.getProfit() > 0 ? bet.getProfit() : ((-1) * bet.getProfit()) )
-						+ "");
+				betLabel.setText((bet.getType() == BetTypeEnum.B ? "Back "
+						: "Lay ")
+						+ bet.getPlayer().toString()
+						+ " for "
+						+ bet.getAmount()
+						+ "£ at "
+						+ bet.getOdds()
+						+ " was "
+						+ ((bet.getProfit() > 0) ? "" : "not ")
+						+ " successful and your "
+						+ (bet.getProfit() > 0 ? "profit " : "loss ")
+						+ " is: "
+						+ (bet.getProfit() > 0 ? bet.getProfit() : ((-1) * bet
+								.getProfit())) + "");
 				activeBets.add(betLabel);
 				BetDisplayInfo betDisplayInfo = matchBets.get(bet.getMatch());
 				betDisplayInfo.addBet(bet, betLabel);
 				composite.layout();
-			}			
-		});		
+			}
+		});
 	}
 
-    public static void updateUnmatchedBet(final Bet bet) {
-        if (unmatchedBetsLabels.containsKey(bet)) {
-            final Label betLabel = unmatchedBetsLabels.get(bet);
-            composite.getDisplay().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    setBetLabelText(bet, betLabel);
-                    betsDisplay.updateTabLabel(bet, betLabel);
-                    composite.layout();
-                }
-            });
-            if (bet.getUnmatchedValue() == 0)
-                unmatchedBetsLabels.remove(bet);
-        }
-    }
+	public static void updateUnmatchedBet(final Bet bet) {
+		if (unmatchedBetsLabels.containsKey(bet)) {
+			final Label betLabel = unmatchedBetsLabels.get(bet);
+			composite.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					setBetLabelText(bet, betLabel);
+					betsDisplay.updateTabLabel(bet, betLabel);
+					composite.layout();
+				}
+			});
+			if (bet.getUnmatchedValue() == 0)
+				unmatchedBetsLabels.remove(bet);
+		}
+	}
 
-    protected void updateTabLabel(Bet bet, Label betLabel) {
-        if (matchBets.containsKey(bet.getMatch())) {
-            BetDisplayInfo betDisplayInfo = matchBets.get(bet.getMatch());
-            betDisplayInfo.updateBetLabel(bet, betLabel);
-        } 
-    }
+	protected void updateTabLabel(Bet bet, Label betLabel) {
+		if (matchBets.containsKey(bet.getMatch())) {
+			BetDisplayInfo betDisplayInfo = matchBets.get(bet.getMatch());
+			betDisplayInfo.updateBetLabel(bet, betLabel);
+		}
+	}
 
 	private static void setBetLabelText(Bet bet, Label betLabel) {
 		String betLabelText = bet.getDescription();
@@ -138,28 +146,28 @@ public class BetsDisplay extends StandardTabbedWidgetContainer{
 		}
 		betLabel.setText(betLabelText);
 	}
-	
-	public static Composite getComposite() {
-        return composite;
-    }
 
-    public static void setComposite(Composite composite) {
-        BetsDisplay.composite = composite;
-    }
-    
-    public static List<Label> getActiveBets() {
+	public static Composite getComposite() {
+		return composite;
+	}
+
+	public static void setComposite(Composite composite) {
+		BetsDisplay.composite = composite;
+	}
+
+	public static List<Label> getActiveBets() {
 		return activeBets;
 	}
-    
-    public static void setActiveBets(List<Label> aBets) {
+
+	public static void setActiveBets(List<Label> aBets) {
 		activeBets = aBets;
 	}
-    
-    public static HashMap<Bet, Label> getUnmatchedBetsLabels() {
+
+	public static HashMap<Bet, Label> getUnmatchedBetsLabels() {
 		return unmatchedBetsLabels;
 	}
-    
-    public static void setUnmatchedBetsLabels(HashMap<Bet, Label> map) {
+
+	public static void setUnmatchedBetsLabels(HashMap<Bet, Label> map) {
 		unmatchedBetsLabels = map;
 	}
 }
