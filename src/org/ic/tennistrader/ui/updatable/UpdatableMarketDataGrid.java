@@ -291,7 +291,7 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.MARKET_GRID;
 	}
 }

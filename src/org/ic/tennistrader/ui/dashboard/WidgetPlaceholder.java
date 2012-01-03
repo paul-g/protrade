@@ -48,7 +48,7 @@ public class WidgetPlaceholder extends Composite implements SavableWidget {
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.PLACEHOLDER;
 	}
 }

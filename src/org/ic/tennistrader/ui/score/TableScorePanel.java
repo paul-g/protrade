@@ -161,7 +161,7 @@ public class TableScorePanel extends MatchViewerWidget implements ScorePanel {
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return null;
 	}
 }

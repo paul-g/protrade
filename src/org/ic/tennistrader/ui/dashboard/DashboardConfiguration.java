@@ -100,7 +100,7 @@ public class DashboardConfiguration {
 		if (!(control instanceof SavableWidget))
 			throw new RuntimeException(
 					"Widget Cannot be Saved! It is not a SavableWidget");
-		String type = ((SavableWidget) control).getName().toString();
+		String type = ((SavableWidget) control).getWidgetType().toString();
 		String line = "" + type + "," + point.x + "," + point.y;
 		line += "," + wc.getWidth() + "," + wc.getHeight();
 		out.write(line + "\n");
@@ -162,7 +162,7 @@ public class DashboardConfiguration {
 			} else if (type.equals(WidgetType.STATISTICS_PANEL.toString())) {
 				widget = new StatisticsPanel(wc, match);
 			} else if (type.equals(WidgetType.MATCH_VIEW.toString())) {
-				widget = new MatchDataView(wc, SWT.NONE, match);
+				widget = new MatchDataView(wc, SWT.NONE);
 			} else {
 				widget = new WidgetPlaceholder(dashboard, SWT.BORDER, wc);
 			}

@@ -285,7 +285,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.SCORE_PANEL;
 	}
 }

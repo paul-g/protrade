@@ -169,7 +169,7 @@ public class PredictionGui extends MatchViewerWidget {
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.PREDICTION_GUI;
 	}
 }

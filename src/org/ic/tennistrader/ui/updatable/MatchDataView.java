@@ -17,21 +17,37 @@ import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class MatchDataView extends MatchViewerWidget implements UpdatableWidget {
 
-	Label marketStatus;
+	private Label marketStatus;
+	private Label nameLabel;
+	private Label statusLabel;
 
-	public MatchDataView(Composite arg0, int arg1, final Match match) {
-		super(arg0, arg1);
+	public MatchDataView(Composite parent, int style) {
+		super(parent, style);
 
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.type = SWT.VERTICAL;
-		this.setLayout(rowLayout);
+		String name = "No match selected";
+		String status = "No match selected";
 
-		Label name = new Label(this, SWT.BORDER);
-		name.setText("Match : " + match.getName());
+		init(match, name, status);
+	}
 
-		Label status = new Label(this, SWT.BORDER);
-		String st = (match.isInPlay() ? "In Progress" : "Not In Progress");
-		status.setText("Status: " + st);
+	public MatchDataView(Composite parent, int style, final Match match) {
+		super(parent, style);
+		this.match = match;
+
+		String name = match.getName();
+		String status = match.getStatus();
+
+		init(match, name, status);
+	}
+
+	private void init(final Match match, String name, String status) {
+		setLayout(new RowLayout(SWT.VERTICAL));
+
+		nameLabel = new Label(this, SWT.BORDER);
+		nameLabel.setText("Match : " + name);
+
+		statusLabel = new Label(this, SWT.BORDER);
+		statusLabel.setText("Status: " + status);
 
 		marketStatus = new Label(this, SWT.BORDER);
 		marketStatus.setText("");
@@ -47,12 +63,14 @@ public class MatchDataView extends MatchViewerWidget implements UpdatableWidget 
 		combo.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				DataManager.setPlaybackSpeed(match, Integer
-						.parseInt(selectionItems[combo.getSelectionIndex()]));
+				if (match != null)
+					DataManager.setPlaybackSpeed(match,
+							Integer.parseInt(selectionItems[combo
+									.getSelectionIndex()]));
 			}
 		});
 
-		this.pack();
+		pack();
 	}
 
 	private void changeStatus(String status) {
@@ -83,7 +101,17 @@ public class MatchDataView extends MatchViewerWidget implements UpdatableWidget 
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.MATCH_VIEW;
+	}
+
+	@Override
+	public void setMatch(Match match) {
+		this.match = match;
+		nameLabel.setText(match.getName());
+		nameLabel.pack();
+		statusLabel.setText(match.getStatus());
+		statusLabel.pack();
+		layout();
 	}
 }

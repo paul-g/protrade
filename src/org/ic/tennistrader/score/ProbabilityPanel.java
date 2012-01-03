@@ -137,7 +137,7 @@ public class ProbabilityPanel extends MatchViewerWidget implements
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.PROBABILITY_PANEL;
 	}
 }

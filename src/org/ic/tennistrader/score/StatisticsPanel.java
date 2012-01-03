@@ -162,7 +162,7 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.STATISTICS_PANEL;
 	}
 }

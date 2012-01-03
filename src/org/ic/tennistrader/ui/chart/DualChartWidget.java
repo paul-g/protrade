@@ -161,7 +161,7 @@ public class DualChartWidget extends MatchViewerWidget {
 	}
 
 	@Override
-	public WidgetType getName() {
+	public WidgetType getWidgetType() {
 		return WidgetType.DUAL_CHART;
 	}
 }
