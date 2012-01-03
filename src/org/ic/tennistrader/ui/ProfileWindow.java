@@ -39,7 +39,7 @@ public class ProfileWindow {
 		/* Shell Layout */
 		shell.setLayout(gl);
 		shell.setText("Profile");
-		shell.setSize(400,300);
+		shell.setSize(500,300);
 		shell.setLocation(1100,80);
 		
 		/* Labels and Shell opening */
@@ -64,11 +64,17 @@ public class ProfileWindow {
 //		addLabel("EXPOSURE",af.getExposure()+"");
 //		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
 		addLabel("USERNAME","");
+		new Label(shell, SWT.NONE).setImage(new Image(display,"images/profile/betfair.png"));
 		addLabel("BETFAIR POINTS","");
+		new Label(shell, SWT.NONE).setImage(new Image(display,"images/profile/deposit.png"));
 		addLabel("CURRENT BALANCE","");
+		new Label(shell, SWT.NONE);
 		addLabel("AVAILABLE BALANCE","");
+		new Label(shell, SWT.NONE).setImage(new Image(display,"images/profile/credit.png"));
 		addLabel("CREDIT LIMIT","");
+		new Label(shell, SWT.NONE);
 		addLabel("EXPOSURE","");
+		new Label(shell, SWT.NONE);
 		addLabel("EXPOSURE LIMIT","");
 	}
 	
