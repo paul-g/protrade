@@ -124,7 +124,7 @@ public class DualChartWidget extends MatchViewerWidget {
 				Slider slider = (Slider) event.widget;
 				if (slider.getMaximum() > largeChart.getSampleSize())
 					largeChart.showSeries(slider.getSelection(), true);
-				smallChart.showSeries(slider.getSelection(), true);
+				smallChart.showSeries(slider.getSelection() + 1, true);
 			}
 		});
 		largeChart.setSlider(slider);

@@ -292,25 +292,11 @@ public class OverroundChart extends UpdatableChart {
 		}
 	}
 
-	private void updateDisplay() {
-		final Composite parent = getParent();
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (!isDisposed())
-					redraw();
-				if (parent != null && !parent.isDisposed())
-					parent.update();
-			}
-		});
-	}
-
-	private void updateData(MOddsMarketData data) {
+	protected void updateData(MOddsMarketData data) {
 		// add new market data to the data structures
-		int dataSize = chartData.getDataSize() - 1;
-
+		//int dataSize = chartData.getDataSize() - 1;
 		// set serieses values
-		showSeries(dataSize, false);
+		showSeries(chartData.getDataSize(), false);
 		if (!isDisposed()) {
 			getAxisSet().getXAxis(0).adjustRange();
 			getAxisSet().getYAxis(0).adjustRange();
@@ -318,25 +304,10 @@ public class OverroundChart extends UpdatableChart {
 	}
 
 	@Override
-	public void handleUpdate(final MOddsMarketData newData) {
-		// TODO Auto-generated method stub
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				updateData(newData);
-				if (!isDisposed()) {
-					redraw();
-					getParent().update();
-				}
-			}
-		});
-
-	}
-
-	@Override
 	public void handleBettingMarketEndOFSet() {
 		// TODO Auto-generated method stub
-
+		
 	}
+		
 
 }

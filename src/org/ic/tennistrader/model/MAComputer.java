@@ -1,26 +1,35 @@
 package org.ic.tennistrader.model;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 
 public class MAComputer extends SeriesComputer {
 	@Override
-	public double[] computeValues(ArrayList<Double> oldValues) {
-		int size = oldValues.size();
+	public double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
+		int size = oldValues.size() - startIndex + 1;
 		double[] values = new double[size];
 		int i;
 		double sum = 0;
+		
+		if (startIndex < 10) {
+			for (i = 0; i < 10 && i < oldValues.size(); i++) {
+				sum += oldValues.get(i);
+				if (i >= startIndex)
+					values[i - startIndex] = sum / (i + 1);
+			}
+		}
+		/*
 		for (i = 0; i < 10 && i < size; i++) {
 			sum += oldValues.get(i);
 			values[i] = sum / (i + 1);
 		}
-		for (i = 10; i < size; i++) {
+		*/
+		i = (startIndex > 10) ? startIndex : 10;
+		for (; i < oldValues.size(); i++) {
 			sum = values[i - 1] * 10 - oldValues.get(i - 10)
 					+ oldValues.get(i);
-			values[i] = sum / 10;
+			values[i - startIndex] = sum / 10;
 		}
 		return values;
 	}

@@ -3,18 +3,17 @@ package org.ic.tennistrader.ui.chart;
 import java.util.ArrayList;
 import java.util.Date;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.model.BackValuesComputer;
 import org.ic.tennistrader.ui.chart.ChartSettings.ResultSet;
 import org.swtchart.IAxis;
 import org.swtchart.IAxisSet;
@@ -71,8 +70,8 @@ public class OddsChart extends UpdatableChart {
 	private void init(Composite parent, String pl1Name, String pl2Name) {
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-		setSeriesStyles(pl1Name, pl2Name);
-
+		//setSeriesStyles(pl1Name, pl2Name);
+		
 		decimalOdds = true;
 		pl1Selected = true;
 
@@ -83,7 +82,24 @@ public class OddsChart extends UpdatableChart {
 		configureAxis(yAxis, yAxisDecimalTitle, LineStyle.NONE, false);
 
 		getTitle().setVisible(false);
-		makeMenus(parent, pl1Name, pl2Name);
+		
+		ChartMenu chartMenu = new ChartMenu();
+		SeriesProperties player1Back = new SeriesProperties(SeriesType.LINE,
+				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER1,
+				"BACK ODDS pl 1", new BackValuesComputer());
+		chartMenu.addSeriesItem(player1Back);
+		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
+				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER2,
+				"BACK ODDS pl 2", new BackValuesComputer()));
+		//makeMenus(parent, pl1Name, pl2Name);
+		
+		addSeries(new BackValuesComputer(), player1Back);
+				
+		makeMenu(chartMenu);
+		
+		
+		
+		
 
 		getLegend().setPosition(SWT.TOP);
 		// addListeners();
@@ -92,12 +108,13 @@ public class OddsChart extends UpdatableChart {
 		// this.getAxisSet().adjustRange();
 
 		xAxis.getTick().setVisible(false);
-
+/*
 		IAxis yAxis2 = getAxisSet().getYAxis(1);
 		configureAxis(yAxis2, null, LineStyle.NONE, false);
 		yAxis2.getTick().setVisible(false);
+		*/
 	}
-
+	
 	private void configureAxis(IAxis axis, String title, LineStyle lineStyle,
 			boolean visible) {
 		axis.getGrid().setStyle(lineStyle);
@@ -196,10 +213,9 @@ public class OddsChart extends UpdatableChart {
 	/**
 	 * Populates the chart with the given market data
 	 */
-	private void updateData(MOddsMarketData data) {
+	protected void updateData(MOddsMarketData data) {
 		// add new market data to the data structures
 		int dataSize = chartData.getDataSize() - 1;
-
 		// update size of the slider and selection based on what the user was
 		// previously viewing
 		updateSlider(dataSize);
@@ -333,33 +349,6 @@ public class OddsChart extends UpdatableChart {
 		updateDisplay();
 	}
 
-	@Override
-	public void handleUpdate(final MOddsMarketData newData) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				updateData(newData);
-				if (!isDisposed()) {
-					redraw();
-					getParent().update();
-				}
-			}
-		});
-	}
-
-	private void updateDisplay() {
-		final Composite parent = getParent();
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (!isDisposed())
-					redraw();
-				if (parent != null && !parent.isDisposed())
-					parent.update();
-			}
-		});
-	}
-
 	private void updateSlide() {
 		final Composite comp = slider.getParent();
 		if (comp != null) {
@@ -375,6 +364,8 @@ public class OddsChart extends UpdatableChart {
 		}
 	}
 
+	
+	/*
 	private void makeMenus(Composite parent, String pl1Name, String pl2Name) {
 
 		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
@@ -519,6 +510,7 @@ public class OddsChart extends UpdatableChart {
 		setMenu(menu);
 		getPlotArea().setMenu(menu);
 	}
+	*/
 
 	@Override
 	public void handleBettingMarketEndOFSet() {

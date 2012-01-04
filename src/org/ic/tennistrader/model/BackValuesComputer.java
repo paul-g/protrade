@@ -8,11 +8,10 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 public class BackValuesComputer extends SeriesComputer {
 
 	@Override
-	public double[] computeValues(ArrayList<Double> oldValues) {
-		double[] values = new double[oldValues.size()];
-		int i = 0;
-		for (Double val : oldValues)
-			values[i++] = val;
+	public double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
+		double[] values = new double[oldValues.size() - startIndex + 1];
+		for (int i = startIndex; i < oldValues.size(); i++)
+			values[i - startIndex] = oldValues.get(i);
 		return values;
 	}
 
