@@ -21,7 +21,7 @@ import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class DualChartWidget extends MatchViewerWidget {
 
-	private final UpdatableChart largeChart;
+	private final OddsChart largeChart;
 	private final OverroundChart smallChart;
 	private ChartData chartData;
 	private Match match;
@@ -61,7 +61,7 @@ public class DualChartWidget extends MatchViewerWidget {
 
 		Slider slider = null;
 
-		largeChart = new UpdatableChart(form, SWT.NONE, slider);
+		largeChart = new OddsChart(form, SWT.NONE, slider);
 		smallChart = new OverroundChart(form, SWT.NONE, largeChart, slider);
 
 		slider = new Slider(form, SWT.HORIZONTAL);
@@ -82,7 +82,7 @@ public class DualChartWidget extends MatchViewerWidget {
 
 		Slider slider = null;
 
-		largeChart = new UpdatableChart(form, SWT.BORDER, match, slider,
+		largeChart = new OddsChart(form, SWT.BORDER, match, slider,
 				chartData);
 
 		smallChart = new OverroundChart(form, SWT.NONE, match, largeChart,

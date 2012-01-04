@@ -16,11 +16,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.tennistrader.ui.chart.UpdatableChart.LineProp;
 
 public class ChartSettings {
 	
-	UpdatableChart chart;
+	OddsChart chart;
 	TreeMap<String,Color> colorList = new TreeMap<String,Color>();
 	Display display;
 	Shell shell;
@@ -35,7 +34,7 @@ public class ChartSettings {
 		d.dispose();
 	}
 	
-	public ChartSettings(Display display, UpdatableChart largeChart, String namePl1, String namePl2) {
+	public ChartSettings(Display display, OddsChart largeChart, String namePl1, String namePl2) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
 		this.display = Display.getCurrent();
 		this.chart = largeChart;
@@ -224,8 +223,6 @@ public class ChartSettings {
 		public void setArea(Button area) {
 			this.area = area;
 		}
-			
-		
 	}
 	
 }

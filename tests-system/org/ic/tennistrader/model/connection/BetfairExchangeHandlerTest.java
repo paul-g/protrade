@@ -25,6 +25,7 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 				for (RealMatch m : t.getMatches()) {
 					data = BetfairExchangeHandler.getMatchOddsMarketData(m.getEventBetfair());
 					assertNotNull(data);
+					break;
 				}
 			}
 		} else {
@@ -45,6 +46,7 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 				for (RealMatch m : t.getMatches()) {
 					data = BetfairExchangeHandler.getSetBettingMarketData(m);
 					assertNotNull(data);
+					break;
 				}
 			}
 		} else {
@@ -65,6 +67,7 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 				for (RealMatch m : t.getMatches()) {
 					data = BetfairExchangeHandler.getCompleteMarketData(m);
 					assertNotNull(data);
+					break;
 				}
 			}
 		} else {

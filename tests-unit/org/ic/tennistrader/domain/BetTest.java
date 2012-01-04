@@ -4,7 +4,6 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.junit.Before;
 import org.junit.Test;
 import static org.ic.tennistrader.utils.Pair.pair;

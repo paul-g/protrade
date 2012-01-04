@@ -2,10 +2,7 @@ package org.ic.tennistrader.ui.chart;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
@@ -18,30 +15,26 @@ import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.ui.updatable.UpdatableWidget;
-import org.swtchart.Chart;
 import org.swtchart.IAxis;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeries.SeriesType;
 import org.swtchart.ISeriesSet;
 
-public class OverroundChart extends Chart implements UpdatableWidget {
+public class OverroundChart extends UpdatableChart {
 	private ILineSeries backOverround;
 	private ILineSeries layOverround;
+	
 	private IBarSeries pl1Volume;
 	private IBarSeries pl2Volume;
+	
 	private boolean isBackOverround;
 	private boolean isLayOverround;
+	
 	private static final String yOverroundTitle = "Overround";
 	private static final String yVolumeTitle = "Volume";
-	private ChartData chartData;
-	private final int sampleSize = 200;
-	private Slider slider;
-
-	private static final Logger log = Logger.getLogger(OverroundChart.class);
-
-	public OverroundChart(Composite parent, int style, UpdatableChart syncWith,
+	
+	public OverroundChart(Composite parent, int style, OddsChart syncWith,
 			Slider slider) {
 		super(parent, style);
 		this.slider = slider;
@@ -49,7 +42,7 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 	}
 
 	public OverroundChart(Composite parent, int style, Match match,
-			UpdatableChart syncWith, ChartData chartData, Slider slider) {
+			OddsChart syncWith, ChartData chartData, Slider slider) {
 		super(parent, style);
 		this.chartData = chartData;
 		this.slider = slider;
@@ -59,7 +52,7 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 		init(parent, syncWith, slider, pl1Name, pl2Name);
 	}
 
-	private void init(Composite parent, UpdatableChart syncWith,
+	private void init(Composite parent, OddsChart syncWith,
 			Slider slider, String pl1Name, String pl2Name) {
 
 		getTitle().setVisible(false);
@@ -197,7 +190,7 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 		// this.getAxisSet().getYAxis(0).setRange(new Range(0,150));
 	}
 
-	private void makeMenu(final UpdatableChart updatableChart, Composite parent) {
+	private void makeMenu(final OddsChart oddsChart, Composite parent) {
 		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
 		setMenu(menu);
 		getPlotArea().setMenu(menu);
@@ -220,8 +213,8 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 					volume.setSelection(false);
 				}
 				setBackOverround(overroundBack.getSelection());
-				visibility(updatableChart.pl1Selected,
-						updatableChart.pl2Selected);
+				visibility(oddsChart.pl1Selected,
+						oddsChart.pl2Selected);
 			}
 		});
 
@@ -235,8 +228,8 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 					volume.setSelection(false);
 				}
 				setLayOverround(overroundLay.getSelection());
-				visibility(updatableChart.pl1Selected,
-						updatableChart.pl2Selected);
+				visibility(oddsChart.pl1Selected,
+						oddsChart.pl2Selected);
 			}
 		});
 
@@ -250,8 +243,8 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 					overroundLay.setSelection(false);
 					setBackOverround(false);
 					setLayOverround(false);
-					visibility(updatableChart.pl1Selected,
-							updatableChart.pl2Selected);
+					visibility(oddsChart.pl1Selected,
+							oddsChart.pl2Selected);
 					// allignment();
 				}
 			}
@@ -340,28 +333,10 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 
 	}
 
-	public void setSlider(Slider slider) {
-		this.slider = slider;
-	}
-
-	@Override
-	public void setDisposeListener(DisposeListener listener) {
-		addDisposeListener(listener);
-	}
-
 	@Override
 	public void handleBettingMarketEndOFSet() {
 		// TODO Auto-generated method stub
 
-	}
-
-	public void setMatch(Match match) {
-		log.info("Set match " + match);
-
-	}
-
-	public void setChartData(ChartData chartData) {
-		this.chartData = chartData;
 	}
 
 }

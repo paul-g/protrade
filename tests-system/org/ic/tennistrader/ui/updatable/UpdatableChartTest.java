@@ -8,13 +8,13 @@ import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.DisplayTest;
-import org.ic.tennistrader.ui.chart.UpdatableChart;
+import org.ic.tennistrader.ui.chart.OddsChart;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class UpdatableChartTest extends DisplayTest{
-	private UpdatableChart chart;
+	private OddsChart chart;
 	private String filename;
 	private Match match;
 	private Slider slider;
@@ -27,7 +27,7 @@ public class UpdatableChartTest extends DisplayTest{
 	    match = new HistoricalMatch(filename);
 	    slider = new Slider(shell, SWT.BORDER);
 	    chartData =  new ChartData(null);
-		chart = new UpdatableChart(shell, SWT.BORDER, match, slider, chartData);
+		chart = new OddsChart(shell, SWT.BORDER, match, slider, chartData);
 	}	
 	
 	@After

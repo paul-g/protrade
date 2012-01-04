@@ -222,7 +222,7 @@ public class BetPlacingShell {
 			final PlayerEnum betPlayer, final BetTypeEnum betType) {
 		final Button submitButton = new Button(betShell, SWT.NONE);
 		submitButton.setText("Place bet");
-		Display display = betShell.getDisplay();
+		//Display display = betShell.getDisplay();
 		if (betType.equals(BetTypeEnum.B)) {
 			submitButton.setBackground(Colours.getBackColor());
 		} else {
