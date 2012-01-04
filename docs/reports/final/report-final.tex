@@ -149,8 +149,9 @@ technical analysis of the market.
 \caption{BetAngel Tennis Trader}
 \end{figure}
 
-In particular, even though the application provides implied probabilities for different ways the match can take, it does not give 
-any previous or background information upon the match, making users rely on the engine provided by the platform. 
+Even though BetAngel solution gives the end user some tennis specific information, it still relies on trader's input for the prediction 
+mechanism. Therefore, considering the pace of the game and the rate at which the information is updated, this issue significantly complicates 
+the work done by the end user, at the same time lowering the overall efficiency.
 
 \subsection{Fracsoft}
 
@@ -163,12 +164,16 @@ engine which is used for own bets correction.
 \begin{center}
 \includegraphics[scale = 0.36]{fracsoft.png}
 \end{center}
-\caption{FracSoft platform}
+\caption{FracSoft Data Viewer}
 \end{figure}
 
-Among many features that were implemented in the FracSoft software there are some that might be unnecessary for the common user, therefore 
+Among many features that were implemented in Fracsoft Data Viewer there are some that might be unnecessary for the common user, therefore 
 overcomplicating the interface. In particular, the relative size of the important pieces of UI, such as betting buttons, is not big enough 
 to stand out, and, considering the overall theme of the application, makes it even harder to find with a naked eye.
+
+Furthermore, there is a worse fundamental issue revealed when the correlation between the match and market data is considered. The matter is 
+that Data Viewer does not provide enough information that would connect events happening in both media - therefore making the process of decision 
+making even harder. Taking the speed of the game into account, this problem becomes the biggest weakness of the application.
 
 \section{Our Solution}
 
@@ -179,7 +184,8 @@ too overloaded with unnecessary features. The key strength lies within the speci
 betting applications overview, their developers do not focus on one particular sport, instead software teams try to cover as many markets as possible. 
 Consequently, there is no application that would be fully appropriate within one market, as all of them have unnecessary features.
 
-\nmsp is an attempt to combine good visual base with the depth of data provided.
+\nmsp is an attempt to combine good visual base with the depth of data provided, at the same time automating the work needed to be done for the 
+information updates.
 
 \chapter{Technical Description}
 
@@ -509,7 +515,7 @@ A task which automatically generates the classes, compiles, packages them and up
 
 We have classified potential risks into three main categories:
 \begin{itemize}
-\item Technology risks
+	\item Technology risks
 	\begin{itemize}
 		\item initially selected APIs do not provide adequate functionality
 		\item critical APIs (e.g. Betfair) are hard to use
