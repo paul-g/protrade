@@ -98,6 +98,18 @@ public final class Bet {
     public double getUnmatchedValue() {
         return unmatchedValue;
     }
+    
+    public double getCurrentLiability() {
+    	if (this.type.equals(BetTypeEnum.L))
+    		return (value.first() - 1) * (value.second() - unmatchedValue);
+    	return value.second() - unmatchedValue;
+    }
+    
+    public double getPossibleLiability() {
+    	if (this.type.equals(BetTypeEnum.L))
+    		return (value.first() - 1) * value.second();
+    	return value.second();
+    }
 
     public String getDescription() {
         return (this.getType() == BetTypeEnum.B ? "Back "

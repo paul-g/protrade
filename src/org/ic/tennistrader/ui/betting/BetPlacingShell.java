@@ -200,9 +200,9 @@ public class BetPlacingShell {
         
 		if (betType.equals(BetTypeEnum.B)) {
 
-			infoLabel.setBackground(Colours.getBackColor(display));
+			infoLabel.setBackground(Colours.getBackColor());
 		} else {
-			infoLabel.setBackground(Colours.getLayColor(display));
+			infoLabel.setBackground(Colours.getLayColor());
 		}
 		infoLabel.setLayoutData(infoGridData);
 	}
@@ -224,9 +224,9 @@ public class BetPlacingShell {
 		submitButton.setText("Place bet");
 		Display display = betShell.getDisplay();
 		if (betType.equals(BetTypeEnum.B)) {
-			submitButton.setBackground(Colours.getBackColor(display));
+			submitButton.setBackground(Colours.getBackColor());
 		} else {
-			submitButton.setBackground(Colours.getLayColor(display));
+			submitButton.setBackground(Colours.getLayColor());
 		}
 		submitButton.addListener(SWT.MouseUp, new Listener() {
 			@Override

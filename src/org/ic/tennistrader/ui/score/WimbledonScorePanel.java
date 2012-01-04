@@ -24,6 +24,7 @@ import org.ic.tennistrader.score.PredictionCalculator;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
+import org.ic.tennistrader.utils.Colours;
 
 public class WimbledonScorePanel extends MatchViewerWidget implements
 		ScorePanel {
@@ -67,6 +68,11 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	public WimbledonScorePanel(Composite parent, Match match) {
 		super(parent, SWT.NONE);
 		this.match = match;
+		Display display = getDisplay();
+		Image im = new Image(display, "images/green.jpg");
+		this.im2 = new Image(display, "images/scoreboard1.png");
+		this.setBackgroundImage(im);
+
 		int name1Len = match.getPlayer(PlayerEnum.PLAYER1).toString().length();
 		int name2Len = match.getPlayer(PlayerEnum.PLAYER2).toString().length();
 
@@ -173,7 +179,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		gd.grabExcessHorizontalSpace = true;
 		Font f = new Font(display, "Times", 14, SWT.BOLD);
 		Label label = new Label(comp, SWT.NONE);
-		label.setBackgroundImage(im2);
+		// label.setBackgroundImage(im2);
+		label.setBackground(Colours.getScoreLabelBackgroundColor());
 		label.setFont(f);
 		label.setLayoutData(gd);
 		label.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
@@ -186,7 +193,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		Label label = new Label(comp, SWT.NONE);
-		label.setBackgroundImage(im2);
+		// label.setBackgroundImage(im2);
+		label.setBackground(Colours.getScoreLabelBackgroundColor());
 		label.setFont(f);
 		label.setLayoutData(gd);
 		label.setForeground(foreground);
