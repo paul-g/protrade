@@ -55,13 +55,10 @@ public class UpdatableChart extends Chart implements UpdatableWidget {
 
 	private static final Logger log = Logger.getLogger(UpdatableChart.class);
 
-	public UpdatableChart(Composite parent, int style, Slider slider,
-			ChartData chartData) {
+	public UpdatableChart(Composite parent, int style, Slider slider) {
 		super(parent, style);
 		this.match = null;
 		this.slider = slider;
-		this.chartData = chartData;
-
 		init(parent, "Player 1", "Player 2");
 	}
 

@@ -42,12 +42,10 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 	private static final Logger log = Logger.getLogger(OverroundChart.class);
 
 	public OverroundChart(Composite parent, int style, UpdatableChart syncWith,
-			ChartData chartData, Slider slider) {
+			Slider slider) {
 		super(parent, style);
-		this.chartData = chartData;
 		this.slider = slider;
-
-		init(parent, syncWith, chartData, slider, "Player 1", "Player 2");
+		init(parent, syncWith, slider, "Player 1", "Player 2");
 	}
 
 	public OverroundChart(Composite parent, int style, Match match,
@@ -58,11 +56,11 @@ public class OverroundChart extends Chart implements UpdatableWidget {
 		String pl1Name = match.getPlayerOne().toString();
 		String pl2Name = match.getPlayerTwo().toString();
 
-		init(parent, syncWith, chartData, slider, pl1Name, pl2Name);
+		init(parent, syncWith, slider, pl1Name, pl2Name);
 	}
 
 	private void init(Composite parent, UpdatableChart syncWith,
-			ChartData chartData, Slider slider, String pl1Name, String pl2Name) {
+			Slider slider, String pl1Name, String pl2Name) {
 
 		getTitle().setVisible(false);
 
