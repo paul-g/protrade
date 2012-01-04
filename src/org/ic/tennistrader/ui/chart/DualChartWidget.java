@@ -61,16 +61,13 @@ public class DualChartWidget extends MatchViewerWidget {
 
 		Slider slider = null;
 
-		largeChart = new UpdatableChart(form, SWT.NONE, slider, chartData);
-
-		smallChart = new OverroundChart(form, SWT.NONE, largeChart, chartData,
-				slider);
+		largeChart = new UpdatableChart(form, SWT.NONE, slider);
+		smallChart = new OverroundChart(form, SWT.NONE, largeChart, slider);
 
 		slider = new Slider(form, SWT.HORIZONTAL);
 		initSlider(slider);
 
 		form.setWeights(new int[] { 7, 65, 25, 3 });
-
 	}
 
 	public DualChartWidget(Composite parent, Match match) {
@@ -164,5 +161,7 @@ public class DualChartWidget extends MatchViewerWidget {
 		this.chartData = new ChartData(match);
 		largeChart.setMatch(match);
 		largeChart.setChartData(chartData);
+		smallChart.setMatch(match);
+		smallChart.setChartData(chartData);
 	}
 }
