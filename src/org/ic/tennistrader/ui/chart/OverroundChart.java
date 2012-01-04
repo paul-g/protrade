@@ -3,6 +3,7 @@ package org.ic.tennistrader.ui.chart;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
@@ -25,7 +26,7 @@ import org.swtchart.ILineSeries;
 import org.swtchart.ISeries.SeriesType;
 import org.swtchart.ISeriesSet;
 
-public class OverroundChart extends Chart implements UpdatableWidget{
+public class OverroundChart extends Chart implements UpdatableWidget {
 	private ILineSeries backOverround;
 	private ILineSeries layOverround;
 	private IBarSeries pl1Volume;
@@ -35,52 +36,81 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 	private static final String yOverroundTitle = "Overround";
 	private static final String yVolumeTitle = "Volume";
 	private ChartData chartData;
-	private int sampleSize = 200;
+	private final int sampleSize = 200;
 	private Slider slider;
-	
-	public OverroundChart(Composite parent, int style, Match match, UpdatableChart syncWith, ChartData chartData, Slider slider) {
+
+	private static final Logger log = Logger.getLogger(OverroundChart.class);
+
+	public OverroundChart(Composite parent, int style, UpdatableChart syncWith,
+			ChartData chartData, Slider slider) {
 		super(parent, style);
 		this.chartData = chartData;
 		this.slider = slider;
+
+		init(parent, syncWith, chartData, slider, "Player 1", "Player 2");
+	}
+
+	public OverroundChart(Composite parent, int style, Match match,
+			UpdatableChart syncWith, ChartData chartData, Slider slider) {
+		super(parent, style);
+		this.chartData = chartData;
+		this.slider = slider;
+		String pl1Name = match.getPlayerOne().toString();
+		String pl2Name = match.getPlayerTwo().toString();
+
+		init(parent, syncWith, chartData, slider, pl1Name, pl2Name);
+	}
+
+	private void init(Composite parent, UpdatableChart syncWith,
+			ChartData chartData, Slider slider, String pl1Name, String pl2Name) {
+
 		getTitle().setVisible(false);
-		createSeries(match);
-		//setBackOverround(true);
+
+		createSeries(pl1Name, pl2Name);
+		// setBackOverround(true);
 		getLegend().setPosition(SWT.BOTTOM);
-		IAxis yAxis  = getAxisSet().getYAxis(0); 
+		IAxis yAxis = getAxisSet().getYAxis(0);
 		yAxis.getTitle().setText(yVolumeTitle);
-		yAxis.getTitle().setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
+		yAxis.getTitle().setFont(
+				new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
 		getAxisSet().getXAxis(0).getTitle().setVisible(false);
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
-		//this.getAxisSet().getXAxis(0).adjustRange();
-		//this.getAxisSet().adjustRange();
-		//this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
+		// this.getAxisSet().getXAxis(0).adjustRange();
+		// this.getAxisSet().adjustRange();
+		// this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
 		makeMenu(syncWith, parent);
 	}
 
-	private void createSeries(Match match) {
+	private void createSeries(String pl1Name, String pl2Name) {
 		ISeriesSet seriesSet = this.getSeriesSet();
-		backOverround = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, "back overround");
+		backOverround = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
+				"back overround");
 		Color color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		backOverround.setLineColor(color);
-		layOverround = (ILineSeries) seriesSet.createSeries(SeriesType.LINE, "lay overround");
+		layOverround = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
+				"lay overround");
 		color = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		layOverround.setLineColor(color);
-		pl1Volume = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, match.getPlayerOne() +  " Volume");
+
+		pl1Volume = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, pl1Name
+				+ " Volume");
 		color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
 		pl1Volume.setBarColor(color);
 		pl1Volume.setBarPadding(90);
-		pl2Volume = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, match.getPlayerTwo() + " Volume");
+
+		pl2Volume = (IBarSeries) seriesSet.createSeries(SeriesType.BAR, pl2Name
+				+ " Volume");
 		color = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		pl2Volume.setBarColor(color);
 		pl2Volume.setBarPadding(90);
 		backOverround.setVisible(false);
 		layOverround.setVisible(false);
-		//pl1Volume.setVisible(false);
+		// pl1Volume.setVisible(false);
 		pl2Volume.setVisible(false);
 	}
-	
-	public void visibility(boolean pl1, boolean pl2){
-		if (isBackOverround || isLayOverround){
+
+	public void visibility(boolean pl1, boolean pl2) {
+		if (isBackOverround || isLayOverround) {
 			this.getAxisSet().getYAxis(0).getTitle().setText(yOverroundTitle);
 			pl1Volume.setVisible(false);
 			pl2Volume.setVisible(false);
@@ -94,56 +124,56 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 			pl2Volume.setVisible(pl2);
 		}
 	}
-	
-	public void setPl1Volume(Date[] xData, double[] yData){
+
+	public void setPl1Volume(Date[] xData, double[] yData) {
 		setPl1VolumeX(xData);
 		setPl1VolumeY(yData);
 	}
-	
-	public void setPl1VolumeX(Date[] xData){
+
+	public void setPl1VolumeX(Date[] xData) {
 		pl1Volume.setXDateSeries(xData);
 	}
-	
-	public void setPl1VolumeY(double[] yData){
+
+	public void setPl1VolumeY(double[] yData) {
 		pl1Volume.setYSeries(yData);
 	}
-	
-	public void setPl2Volume(Date[] xData, double[] yData){
+
+	public void setPl2Volume(Date[] xData, double[] yData) {
 		setPl2VolumeX(xData);
 		setPl2VolumeY(yData);
 	}
-	
-	public void setPl2VolumeX(Date[] xData){
+
+	public void setPl2VolumeX(Date[] xData) {
 		pl2Volume.setXDateSeries(xData);
 	}
-	
-	public void setPl2VolumeY(double[] yData){
+
+	public void setPl2VolumeY(double[] yData) {
 		pl2Volume.setYSeries(yData);
 	}
-	
-	
-	public void setLayOverround(Date[] xData, double[] yData){
+
+	public void setLayOverround(Date[] xData, double[] yData) {
 		setLayOverroundX(xData);
 		setLayOverroundY(yData);
 	}
-	
-	public void setLayOverroundX(Date[] xData){
+
+	public void setLayOverroundX(Date[] xData) {
 		layOverround.setXDateSeries(xData);
 	}
-	
-	public void setLayOverroundY(double[] yData){
+
+	public void setLayOverroundY(double[] yData) {
 		layOverround.setYSeries(yData);
 	}
-	public void setBackOverround(Date[] xData, double[] yData){
+
+	public void setBackOverround(Date[] xData, double[] yData) {
 		setBackOverroundX(xData);
 		setBackOverroundY(yData);
 	}
-	
-	public void setBackOverroundX(Date[] xData){
+
+	public void setBackOverroundX(Date[] xData) {
 		backOverround.setXDateSeries(xData);
 	}
-	
-	public void setBackOverroundY(double[] yData){
+
+	public void setBackOverroundY(double[] yData) {
 		backOverround.setYSeries(yData);
 	}
 
@@ -159,18 +189,14 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 		return isLayOverround;
 	}
 
-
-
 	public void setLayOverround(boolean isLayOverround) {
 		this.isLayOverround = isLayOverround;
 	}
 
-
-
 	public void adjust() {
 		this.getAxisSet().adjustRange();
-		//this.getAxisSet().getXAxis(0).adjustRange();
-		//this.getAxisSet().getYAxis(0).setRange(new Range(0,150));
+		// this.getAxisSet().getXAxis(0).adjustRange();
+		// this.getAxisSet().getYAxis(0).setRange(new Range(0,150));
 	}
 
 	private void makeMenu(final UpdatableChart updatableChart, Composite parent) {
@@ -185,8 +211,9 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 		overroundLay.setSelection(false);
 		final MenuItem volume = new MenuItem(menu, SWT.CHECK);
 		volume.setText("Volume");
-		
+
 		overroundBack.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event arg0) {
 				if (!overroundBack.getSelection()
 						&& !overroundLay.getSelection()) {
@@ -195,11 +222,13 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 					volume.setSelection(false);
 				}
 				setBackOverround(overroundBack.getSelection());
-				visibility(updatableChart.pl1Selected, updatableChart.pl2Selected);
+				visibility(updatableChart.pl1Selected,
+						updatableChart.pl2Selected);
 			}
 		});
-		
+
 		overroundLay.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event arg0) {
 				if (!overroundLay.getSelection()
 						&& !overroundBack.getSelection()) {
@@ -208,11 +237,13 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 					volume.setSelection(false);
 				}
 				setLayOverround(overroundLay.getSelection());
-				visibility(updatableChart.pl1Selected, updatableChart.pl2Selected);
+				visibility(updatableChart.pl1Selected,
+						updatableChart.pl2Selected);
 			}
 		});
-		
+
 		volume.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event arg0) {
 				if (!volume.getSelection()) {
 					volume.setSelection(true);
@@ -221,24 +252,25 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 					overroundLay.setSelection(false);
 					setBackOverround(false);
 					setLayOverround(false);
-					visibility(updatableChart.pl1Selected, updatableChart.pl2Selected);
+					visibility(updatableChart.pl1Selected,
+							updatableChart.pl2Selected);
 					// allignment();
 				}
 			}
 		});
 	}
-	
+
 	public void showSeries(int i, boolean dragged) {
-		int size = i + 1  < sampleSize ? i + 1 : sampleSize;
+		int size = i + 1 < sampleSize ? i + 1 : sampleSize;
 		int seriesNr = 4;
 		Date showXSeries[] = new Date[size];
 		ArrayList<double[]> dataArray = new ArrayList<double[]>();
 		for (int k = 0; k < seriesNr; k++) {
 			dataArray.add(k, new double[size]);
 		}
-		
+
 		int z = i < sampleSize ? 0 : 1;
-		
+
 		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
 			// variables for updating series according decimal/implied setting
 
@@ -246,13 +278,16 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 				int nr = 0;
 				int b = (i - sampleSize + 1) * z + a;
 				showXSeries[a] = chartData.getxSeries().get(b);
-				
-				 dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
-				 nr++; dataArray.get(nr)[a] =
-				 chartData.getLayOverround().get(b); nr++;
-				 dataArray.get(nr)[a] = chartData.getPl1Volume().get(b); nr++;
-				 dataArray.get(nr)[a] = chartData.getPl2Volume().get(b); nr++;
-				 
+
+				dataArray.get(nr)[a] = chartData.getBackOverround().get(b);
+				nr++;
+				dataArray.get(nr)[a] = chartData.getLayOverround().get(b);
+				nr++;
+				dataArray.get(nr)[a] = chartData.getPl1Volume().get(b);
+				nr++;
+				dataArray.get(nr)[a] = chartData.getPl2Volume().get(b);
+				nr++;
+
 				// dataArray.get(nr)[a] = chartData.endOfSets.get(b);
 
 			}
@@ -265,7 +300,7 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 			updateDisplay();
 		}
 	}
-	
+
 	private void updateDisplay() {
 		final Composite parent = getParent();
 		getDisplay().asyncExec(new Runnable() {
@@ -273,12 +308,12 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 			public void run() {
 				if (!isDisposed())
 					redraw();
-				 if (parent != null && !parent.isDisposed())
+				if (parent != null && !parent.isDisposed())
 					parent.update();
 			}
 		});
 	}
-	
+
 	private void updateData(MOddsMarketData data) {
 		// add new market data to the data structures
 		int dataSize = chartData.getDataSize() - 1;
@@ -304,23 +339,31 @@ public class OverroundChart extends Chart implements UpdatableWidget{
 				}
 			}
 		});
-		
-		
+
 	}
-	
-	public void setSlider(Slider slider){
+
+	public void setSlider(Slider slider) {
 		this.slider = slider;
 	}
 
 	@Override
 	public void setDisposeListener(DisposeListener listener) {
-		addDisposeListener(listener);		
+		addDisposeListener(listener);
 	}
 
 	@Override
 	public void handleBettingMarketEndOFSet() {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public void setMatch(Match match) {
+		log.info("Set match " + match);
+
+	}
+
+	public void setChartData(ChartData chartData) {
+		this.chartData = chartData;
 	}
 
 }

@@ -1,15 +1,14 @@
 package org.ic.tennistrader.ui.chart;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Slider;
@@ -22,56 +21,25 @@ import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class DualChartWidget extends MatchViewerWidget {
 
-	private static Display display;
 	private final UpdatableChart largeChart;
 	private final OverroundChart smallChart;
-	private final ChartData chartData;
-	private final Match match;
-	ChartSettings window = null;
+	private ChartData chartData;
+	private Match match;
+	private ChartSettings window = null;
+
+	private static final Logger log = Logger.getLogger(DualChartWidget.class);
 
 	public static void main(String args[]) {
-		display = new Display();
+		Display display = new Display();
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 5;
-		layout.makeColumnsEqualWidth = true;
-		shell.setLayout(layout);
+
+		shell.setLayout(new FillLayout());
+
 		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-		Label pl1 = new Label(shell, SWT.CENTER);
-		pl1.setText("" + match.getPlayerOne());
-		Button pl1BO = new Button(shell, SWT.CHECK);
-		pl1BO.setText("Back Odds");
-		Button pl1MA = new Button(shell, SWT.CHECK);
-		pl1MA.setText("MA");
-		Button pl1Pred = new Button(shell, SWT.CHECK);
-		pl1Pred.setText("Pred");
-		Button settings = new Button(shell, SWT.PUSH);
-		settings.setText("Chart settings");
-		Label pl2 = new Label(shell, SWT.CENTER);
-		pl2.setText("" + match.getPlayerTwo());
-		Button pl2BO = new Button(shell, SWT.CHECK);
-		pl2BO.setText("Back Odds");
-		Button pl2MA = new Button(shell, SWT.CHECK);
-		pl2MA.setText("MA");
-		Button pl2Pred = new Button(shell, SWT.CHECK);
-		pl2Pred.setText("Pred");
 
-		settings.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-
-				Shell shell = new Shell(display, SWT.SHELL_TRIM);
-				shell.open();
-			}
-
-		});
-
-		//
-
-		//
 		// new DualChartWidget(shell, match);
-		//
-		// shell.setMaximized(true);
+		new DualChartWidget(shell);
+
 		shell.open();
 
 		while (!shell.isDisposed()) {
@@ -79,6 +47,30 @@ public class DualChartWidget extends MatchViewerWidget {
 				display.sleep();
 		}
 		display.dispose();
+	}
+
+	public DualChartWidget(Composite parent) {
+		super(parent, SWT.NONE);
+		match = null;
+		chartData = null;
+		setLayout(new FillLayout());
+
+		SashForm form = new SashForm(this, SWT.VERTICAL);
+		Composite settingsPanel = new Composite(form, SWT.BORDER);
+		initSettingsPanel(settingsPanel);
+
+		Slider slider = null;
+
+		largeChart = new UpdatableChart(form, SWT.NONE, slider, chartData);
+
+		smallChart = new OverroundChart(form, SWT.NONE, largeChart, chartData,
+				slider);
+
+		slider = new Slider(form, SWT.HORIZONTAL);
+		initSlider(slider);
+
+		form.setWeights(new int[] { 7, 65, 25, 3 });
+
 	}
 
 	public DualChartWidget(Composite parent, Match match) {
@@ -115,8 +107,8 @@ public class DualChartWidget extends MatchViewerWidget {
 				String namePl1 = match.getPlayerOne().toString();
 				String namePl2 = match.getPlayerTwo().toString();
 				if (window == null || window.isDisposed()) {
-					window = new ChartSettings(display, largeChart, namePl1,
-							namePl2);
+					window = new ChartSettings(Display.getCurrent(),
+							largeChart, namePl1, namePl2);
 				} else {
 					window.forceActive();
 				}
@@ -163,5 +155,14 @@ public class DualChartWidget extends MatchViewerWidget {
 	@Override
 	public WidgetType getWidgetType() {
 		return WidgetType.DUAL_CHART;
+	}
+
+	@Override
+	public void setMatch(Match match) {
+		log.info("Setting match to " + match);
+		this.match = match;
+		this.chartData = new ChartData(match);
+		largeChart.setMatch(match);
+		largeChart.setChartData(chartData);
 	}
 }

@@ -7,7 +7,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
@@ -21,34 +20,43 @@ import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class StatisticsPanel extends MatchViewerWidget implements Listener {
 
-	private final Tree tree;
+	private Tree tree;
+	private TreeColumn playerOneColumn;
+	private TreeColumn playerTwoColumn;
 
-	private final Display display;
+	public StatisticsPanel(Composite parent) {
+		super(parent, SWT.NONE);
+		init(parent, "Player 1", "Player 2");
+	}
 
 	public StatisticsPanel(Composite parent, Match match) {
 		super(parent, SWT.NONE);
 		this.match = match;
-		this.display = parent.getDisplay();
+		String pl1Lastname = match.getPlayerOne().getLastname();
+		String pl2Lastname = match.getPlayerTwo().getLastname();
+		init(parent, pl1Lastname, pl2Lastname);
+	}
+
+	private void init(Composite parent, String pl1Lastname, String pl2Lastname) {
 		setLayout(new FillLayout());
 
 		this.tree = new Tree(this, SWT.NONE);
 		tree.setHeaderVisible(true);
 
-		TreeColumn[] tcolumn = new TreeColumn[3];
-		tcolumn[0] = new TreeColumn(tree, SWT.LEFT);
-		tcolumn[0].setText(match.getPlayerOne().getLastname());
-		tcolumn[0].setWidth(140);
-		tcolumn[0].setResizable(false);
+		playerOneColumn = new TreeColumn(tree, SWT.LEFT);
+		playerOneColumn.setText(pl1Lastname);
+		playerOneColumn.setWidth(140);
+		playerOneColumn.setResizable(false);
 
-		tcolumn[1] = new TreeColumn(tree, SWT.CENTER);
-		tcolumn[1].setText("VS");
-		tcolumn[1].setWidth(140);
-		tcolumn[1].setResizable(false);
+		TreeColumn midColumn = new TreeColumn(tree, SWT.CENTER);
+		midColumn.setText("VS");
+		midColumn.setWidth(140);
+		midColumn.setResizable(false);
 
-		tcolumn[2] = new TreeColumn(tree, SWT.RIGHT);
-		tcolumn[2].setText(match.getPlayerTwo().getLastname());
-		tcolumn[2].setWidth(140);
-		tcolumn[2].setResizable(false);
+		playerTwoColumn = new TreeColumn(tree, SWT.RIGHT);
+		playerTwoColumn.setText(pl2Lastname);
+		playerTwoColumn.setWidth(140);
+		playerTwoColumn.setResizable(false);
 	}
 
 	public Tree getTree() {
@@ -58,7 +66,7 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 	@Override
 	public void handleEvent(Event arg0) {
 		System.out.println("Added stats");
-		display.asyncExec(new Runnable() {
+		getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				SiteParser parser = new SiteParser();
@@ -164,5 +172,12 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 	@Override
 	public WidgetType getWidgetType() {
 		return WidgetType.STATISTICS_PANEL;
+	}
+
+	@Override
+	public void setMatch(Match match) {
+		this.match = match;
+		playerOneColumn.setText(match.getPlayerOne().getLastname());
+		playerTwoColumn.setText(match.getPlayerTwo().getLastname());
 	}
 }

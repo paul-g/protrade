@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.service.DataManager;
@@ -50,9 +49,15 @@ public class AddWidgetDialog extends RichListDialog {
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-				setSelection(new MatchDataView(widgetPlaceholder.getParent(),
-						SWT.NONE, match));
+				Match match = getCurrentMatch();
+				Composite composite;
+				if (match != null)
+					composite = new MatchDataView(
+							widgetPlaceholder.getParent(), SWT.NONE, match);
+				else
+					composite = new MatchDataView(
+							widgetPlaceholder.getParent(), SWT.NONE);
+				setSelection(composite);
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,
@@ -69,9 +74,14 @@ public class AddWidgetDialog extends RichListDialog {
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-				setSelection(new StatisticsPanel(widgetPlaceholder.getParent(),
-						match));
+				Match match = getCurrentMatch();
+				Composite widget;
+				if (match != null)
+					widget = new StatisticsPanel(widgetPlaceholder.getParent(),
+							match);
+				else
+					widget = new StatisticsPanel(widgetPlaceholder.getParent());
+				setSelection(widget);
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,
@@ -121,8 +131,14 @@ public class AddWidgetDialog extends RichListDialog {
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-				setSelection(new WimbledonScorePanel(widgetPlaceholder, match));
+				Match match = getCurrentMatch();
+				Composite widget;
+				if (match != null) {
+					widget = new WimbledonScorePanel(widgetPlaceholder, match);
+				} else {
+					widget = new WimbledonScorePanel(widgetPlaceholder);
+				}
+				setSelection(widget);
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,
@@ -141,8 +157,13 @@ public class AddWidgetDialog extends RichListDialog {
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
-				setSelection(new DualChartWidget(widgetPlaceholder, match));
+				Match match = getCurrentMatch();
+				Composite widget;
+				if (match != null)
+					widget = new DualChartWidget(widgetPlaceholder, match);
+				else
+					widget = new DualChartWidget(widgetPlaceholder);
+				setSelection(widget);
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,

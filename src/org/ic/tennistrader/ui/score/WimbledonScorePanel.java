@@ -29,9 +29,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		ScorePanel {
 	private Table scoreTable;
 	private PlayerEnum server;
-	private final Display display;
 
-	private final Image im2;
+	private Image im2;
 
 	private static final String[] colLabelText = { "1", "2", "3", "4", "", "",
 			"Sts", "", "Gms", "", "Pts", "" };
@@ -60,16 +59,25 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	private static final int DEFAULT_EXTRA_SPACE = 3;
 	private int nameSize = DEFAULT_NAME_SIZE;
 
+	public WimbledonScorePanel(Composite parent) {
+		super(parent, SWT.NONE);
+		init(40, 40);
+	}
+
 	public WimbledonScorePanel(Composite parent, Match match) {
 		super(parent, SWT.NONE);
 		this.match = match;
-		this.display = parent.getDisplay();
-		Image im = new Image(this.display, "images/scoreboard.png");
-		this.im2 = new Image(this.display, "images/scoreboard1.png");
-		this.setBackgroundImage(im);
-
 		int name1Len = match.getPlayer(PlayerEnum.PLAYER1).toString().length();
 		int name2Len = match.getPlayer(PlayerEnum.PLAYER2).toString().length();
+
+		init(name1Len, name2Len);
+	}
+
+	private void init(int name1Len, int name2Len) {
+		Display display = getDisplay();
+		Image im = new Image(display, "images/scoreboard.png");
+		this.im2 = new Image(display, "images/scoreboard1.png");
+		setBackgroundImage(im);
 
 		nameSize = (name1Len > name2Len ? name1Len : name2Len);
 
@@ -78,7 +86,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		GridLayout gl = new GridLayout();
 		gl.numColumns = nCols;
-		this.setLayout(gl);
+		setLayout(gl);
 
 		for (int i = 0; i < nCols; i++)
 			colLabels.add(makeColLabel(colLabelText[i]));
@@ -99,7 +107,6 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		dummyLabel(nCols - 5);
 
 		initScoreLabels(PlayerEnum.PLAYER2);
-
 	}
 
 	private static String makeSizer(int n) {
@@ -119,15 +126,21 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	private void initScoreLabels(PlayerEnum player) {
+		Display display = getDisplay();
 		Map<Integer, Label> map = new HashMap<Integer, Label>();
+
+		String playername;
+		if (match != null)
+			playername = match.getPlayer(player).toString();
+		else
+			playername = player.toString();
 
 		for (int i = 0; i < 4; i++)
 			map.put(SETS[i], makeScoreLabelWithText(this, " 0 "));
 
 		map.put(NAME,
-				makeScoreLabelWithText(this, match.getPlayer(player)
-						+ makeSizer(nameSize
-								- match.getPlayer(player).toString().length())));
+				makeScoreLabelWithText(this, playername
+						+ makeSizer(nameSize - playername.length())));
 		map.put(PRED_MATCH,
 				makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(
 						display, "Times", 12, SWT.NONE), display
@@ -155,6 +168,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	private Label makeScoreLabelWithText(Composite comp, String string) {
+		Display display = getDisplay();
 		GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		Font f = new Font(display, "Times", 14, SWT.BOLD);
@@ -181,6 +195,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	private Label makeColLabel(String string) {
+		Display display = getDisplay();
 		Label label = new Label(this, SWT.NONE);
 		label.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
 		label.setText(string);
@@ -265,7 +280,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 	@Override
 	public void handleUpdate(final MOddsMarketData newData) {
-		display.asyncExec(new Runnable() {
+		getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				setScores(newData);
@@ -287,5 +302,16 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	@Override
 	public WidgetType getWidgetType() {
 		return WidgetType.SCORE_PANEL;
+	}
+
+	@Override
+	public void setMatch(Match match) {
+		this.match = match;
+		Label pl1Name = labelMap.get(PlayerEnum.PLAYER1).get(NAME);
+		pl1Name.setText(match.getPlayerOne().toString());
+
+		Label pl2Name = labelMap.get(PlayerEnum.PLAYER2).get(NAME);
+		pl2Name.setText(match.getPlayerTwo().toString());
+
 	}
 }
