@@ -4,8 +4,10 @@ import org.eclipse.swt.SWT;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.SeriesComputer;
 import org.ic.tennistrader.ui.chart.ChartSettings.ResultSet;
+import org.swtchart.IErrorBar;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeries;
+import org.swtchart.IErrorBar.ErrorBarType;
 import org.swtchart.ISeries.SeriesType;
 
 public class SeriesProperties {
@@ -14,6 +16,8 @@ public class SeriesProperties {
 	private PlayerEnum player;
 	private String name;
 	private ISeries chartSeries;
+	private IErrorBar errorBar;
+	private boolean visibleErrorBar;
 	private boolean selected;
 	private SeriesComputer computer;
 	private LineProp lineProp;
@@ -28,6 +32,8 @@ public class SeriesProperties {
 		this.computer = computer;
 		this.lineProp = lineProp;
 		this.chartSeries = null;
+		this.errorBar = null;
+		this.visibleErrorBar = false;
 	}
 	
 	public SeriesType getChartType() {
@@ -48,6 +54,9 @@ public class SeriesProperties {
 
 	public void setChartSeries(ISeries chartSeries) {
 		this.chartSeries = chartSeries;
+		this.errorBar = this.chartSeries.getYErrorBar();
+		this.errorBar.setType(ErrorBarType.BOTH);
+		this.errorBar.setVisible(this.visibleErrorBar);
 	}
 
 	public ISeries getChartSeries() {
@@ -90,5 +99,23 @@ public class SeriesProperties {
 			lineSeries.enableStep(lineProp.isStep());
 			lineSeries.enableArea(lineProp.isArea());
 		}
+	}
+
+	public void setErrorBar(IErrorBar errorBar) {
+		this.errorBar = errorBar;
+	}
+
+	public IErrorBar getErrorBar() {
+		return errorBar;
+	}
+
+	public void setVisibleErrorBar(boolean visibleErrorBar) {
+		this.visibleErrorBar = visibleErrorBar;
+		if (this.errorBar != null)
+			this.errorBar.setVisible(this.visibleErrorBar);
+	}
+
+	public boolean isVisibleErrorBar() {
+		return visibleErrorBar;
 	}
 }

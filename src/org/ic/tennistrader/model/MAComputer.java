@@ -6,8 +6,42 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 
 public class MAComputer extends SeriesComputer {
 	@Override
+	public double[] computeValues(PlayerEnum player, ChartData chartData,
+			int startIndex) {
+		double[] values = new double[0];
+		ArrayList<Double> oldValues;
+		if (chartData != null) {
+			if (player.equals(PlayerEnum.PLAYER1)) {
+				oldValues = chartData.getPl1YSeries();
+			}
+			else {
+				oldValues = chartData.getPl2YSeries();
+			}
+			int size = oldValues.size() - startIndex;
+			values = new double[size];
+			int i;
+			double sum = 0;
+			
+			if (startIndex < 10) {
+				for (i = 0; i < 10 && i < oldValues.size(); i++) {
+					sum += oldValues.get(i);
+					if (i >= startIndex)
+						values[i - startIndex] = sum / (i + 1);
+				}
+			}
+			i = (startIndex > 10) ? startIndex : 10;
+			for (; i < oldValues.size(); i++) {
+				sum = values[i - 1] * 10 - oldValues.get(i - 10)
+						+ oldValues.get(i);
+				values[i - startIndex] = sum / 10;
+			}
+		}
+		return values;
+	}
+	
+	@Override
 	public double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
-		int size = oldValues.size() - startIndex + 1;
+		int size = oldValues.size() - startIndex;
 		double[] values = new double[size];
 		int i;
 		double sum = 0;
@@ -34,7 +68,7 @@ public class MAComputer extends SeriesComputer {
 		return values;
 	}
 
-	@Override
+	//@Override
 	public double[] addValue(PlayerEnum player, ChartData chartData, double player1newValue, double player2newValue) {
 		ArrayList<Double> oldValues, backValues;
 		double newValue;

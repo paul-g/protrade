@@ -6,16 +6,34 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 
 public class BackValuesComputer extends SeriesComputer {
-
+	@Override
+	public double[] computeValues(PlayerEnum player, ChartData chartData,
+			int startIndex) {
+		double[] values = new double[0];
+		ArrayList<Double> oldValues;
+		if (chartData != null) {
+			if (player.equals(PlayerEnum.PLAYER1)) {
+				oldValues = chartData.getPl1YSeries();
+			}
+			else {
+				oldValues = chartData.getPl2YSeries();
+			}
+			values = new double[oldValues.size() - startIndex];
+			for (int i = startIndex; i < oldValues.size(); i++)
+				values[i - startIndex] = oldValues.get(i);
+		}
+		return values;
+	}
+	
 	@Override
 	public double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
-		double[] values = new double[oldValues.size() - startIndex + 1];
+		double[] values = new double[oldValues.size() - startIndex];
 		for (int i = startIndex; i < oldValues.size(); i++)
 			values[i - startIndex] = oldValues.get(i);
 		return values;
 	}
 
-	@Override
+	//@Override
 	public double[] addValue(PlayerEnum player, ChartData chartData, double player1newValue, double player2newValue) {
 		ArrayList<Double> oldValues;
 		double newValue;
@@ -34,5 +52,7 @@ public class BackValuesComputer extends SeriesComputer {
 		values[i] = newValue;
 		return values;
 	}
+
+	
 
 }

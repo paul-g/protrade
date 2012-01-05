@@ -6,8 +6,27 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 
 public class OverroundComputer extends SeriesComputer{
-
 	@Override
+	public double[] computeValues(PlayerEnum player, ChartData chartData,
+			int startIndex) {
+		double[] values = new double[0];
+		ArrayList<Double> oldValues;
+		if (chartData != null) {
+			if (player.equals(PlayerEnum.PLAYER1)) {
+				oldValues = chartData.getBackOverround();
+			}
+			else {
+				oldValues = chartData.getLayOverround();
+			}
+			int size = oldValues.size() - startIndex;
+			values = new double[size];
+			for (int i = 0; i < size; i++) {
+				values[i] = oldValues.get(i + startIndex);
+			}
+		}
+		return values;
+	}
+	//@Override
 	public double[] addValue(PlayerEnum player, ChartData chartData,
 			double player1newValue, double player2newValue) {
 		// TODO Auto-generated method stub
@@ -16,8 +35,8 @@ public class OverroundComputer extends SeriesComputer{
 
 	@Override
 	protected double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		int size = oldValues.size();
+		return new double[1];
 	}
 
 }

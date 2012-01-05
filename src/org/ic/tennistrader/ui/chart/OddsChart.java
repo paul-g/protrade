@@ -26,6 +26,7 @@ import org.swtchart.LineStyle;
 import org.swtchart.Range;
 
 public class OddsChart extends UpdatableChart {
+	/*
 	private IBarSeries endOfSets;
 	
 	private ILineSeries firstSeries, secondSeries, maPl1Series, maPl2Series,
@@ -34,6 +35,7 @@ public class OddsChart extends UpdatableChart {
 	private IErrorBar pl1Spread, pl2Spread;
 	
 	private final int seriesNr = 11;
+	*/
 	
 	private boolean decimalOdds;
 	
@@ -131,11 +133,15 @@ public class OddsChart extends UpdatableChart {
 				"MA pl 2", new MAComputer(), new LineProp()));
 		
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
-				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER1,
+				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER1,
 				"Predicted pl 1", new BackValuesComputer(), new LineProp()));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
-				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER2,
+				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER2,
 				"Predicted pl 2", new BackValuesComputer(), new LineProp()));
+		
+		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.BAR,
+				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER1,
+				"End of sets", new BackValuesComputer(), new LineProp()));
 		
 		addSeries(new BackValuesComputer(), player1Back);
 		//addSeries(new BackValuesComputer(), player2Back);

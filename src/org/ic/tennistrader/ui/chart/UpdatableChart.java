@@ -16,13 +16,11 @@ import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.SeriesComputer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.swtchart.Chart;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
-import org.swtchart.ISeries;
 
 public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	private static final Logger log = Logger.getLogger(UpdatableChart.class);
@@ -31,7 +29,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	private ConcurrentHashMap<SeriesProperties, SeriesComputer> computerSeries = new ConcurrentHashMap<SeriesProperties, SeriesComputer>();;
 	protected Slider slider;
 	protected final int sampleSize = 200;
-	private int startingIndex = 0;
+	private int startingIndex = 1;
 	private Composite parent;
 	protected ChartMenu chartMenu;
 
@@ -52,10 +50,24 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		updateSeriesProperties(properties);
 		// TODO add to chart; make menus with reference to properties
 		if (chartData != null) {
-			properties.getChartSeries().setYSeries(
-					seriesComputer.computeValues(properties.getPlayer(),
-							chartData, startingIndex));
+			
+			computeValues(properties);
 			//properties.getChartSeries().setXDateSeries(new Date[]);
+		}
+	}
+
+	private void computeValues(SeriesProperties properties) {
+		SeriesComputer seriesComputer = properties.getComputer();
+		properties.getChartSeries().setYSeries(
+				seriesComputer.computeValues(properties.getPlayer(),
+						chartData, startingIndex));
+		if (properties.getMarketType().equals(MarketSeriesType.BACK_ODDS)) {
+			properties.getErrorBar().setPlusErrors(
+					seriesComputer.computePlusErrors(properties.getPlayer(),
+							chartData, startingIndex));
+			properties.getErrorBar().setMinusErrors(
+					seriesComputer.computeMinusErrors(properties.getPlayer(),
+							chartData, startingIndex));
 		}
 	}
 
@@ -113,14 +125,11 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 										prop.getPlayer(), chartData,
 										newData.getPl1LastMatchedPrice(),
 										newData.getPl2LastMatchedPrice()));
-						prop.getChartSeries().setXSeries(...)
+						prop.getChartSeries().setXSeries(...);
 					}
 				}
+				updateDisplay();
 				*/
-				if (!isDisposed()) {
-					redraw();
-					getParent().update();
-				}
 			}
 		});
 	}
@@ -178,7 +187,37 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 				updateDisplay();
 			}
 		});
+		if(prop.getMarketType().equals(MarketSeriesType.BACK_ODDS)) {
+			addSpreadMenuItem(menu, prop, newMenuItem);
+		}
 	}
+
+	private void addSpreadMenuItem(Menu menu, final SeriesProperties prop,
+			final MenuItem newMenuItem) {
+		final MenuItem spreadMenuItem = new MenuItem(menu, SWT.CHECK);
+		spreadMenuItem.setText("Spread " + prop.getName());
+		spreadMenuItem.setSelection(false);
+		spreadMenuItem.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event arg0) {
+				if (newMenuItem.getSelection() && spreadMenuItem.getSelection())
+					addErrorSeries(prop.getComputer(), prop);
+				else if (newMenuItem.getSelection())
+					removeErrorSeries(prop);
+				updateDisplay();
+			}
+		});
+	}
+
+	protected void addErrorSeries(SeriesComputer computer, SeriesProperties prop) {
+		prop.setVisibleErrorBar(true);
+	}
+	
+	protected void removeErrorSeries(SeriesProperties prop) {
+		prop.setVisibleErrorBar(false);
+	}
+
+	
 
 	public void setChartMenu(ChartMenu chartMenu) {
 		this.chartMenu = chartMenu;
@@ -218,11 +257,13 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			}
 			
 			for (SeriesProperties seriesProp : computerSeries.keySet()) {
-				SeriesComputer computer = computerSeries.get(seriesProp);
-				ISeries series = seriesProp.getChartSeries();
-				series.setYSeries(computer.computeValues(seriesProp
+				/*
+				seriesProp.getChartSeries().setYSeries(computer.computeValues(seriesProp
 						.getPlayer(), chartData, b));
-				series.setXDateSeries(showXSeries);
+						*/
+				this.startingIndex = b;
+				computeValues(seriesProp);
+				seriesProp.getChartSeries().setXDateSeries(showXSeries);
 			}
 			
 			// adjust() ???overround

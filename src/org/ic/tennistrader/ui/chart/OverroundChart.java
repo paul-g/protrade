@@ -62,8 +62,12 @@ public class OverroundChart extends UpdatableChart {
 		chartMenu = new ChartMenu();
 		SeriesProperties overround = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER1,
-				"Overround", new OverroundComputer(), new LineProp());
+				"Overround Back", new OverroundComputer(), new LineProp());
 		chartMenu.addSeriesItem(overround);
+		SeriesProperties overroundl = new SeriesProperties(SeriesType.LINE,
+				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER2,
+				"Overround Lay", new OverroundComputer(), new LineProp());
+		chartMenu.addSeriesItem(overroundl);
 		SeriesProperties volume1 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER1,
 				"Volume pl 1", new VolumeComputer(), new LineProp());
@@ -74,7 +78,6 @@ public class OverroundChart extends UpdatableChart {
 		chartMenu.addSeriesItem(volume2);
 		
 		addSeries(new BackValuesComputer(), overround);
-		
 		
 		
 		// setBackOverround(true);

@@ -37,8 +37,8 @@ public class DualChartWidget extends MatchViewerWidget {
 
 		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
 
-		// new DualChartWidget(shell, match);
-		new DualChartWidget(shell);
+		new DualChartWidget(shell, match);
+		//new DualChartWidget(shell);
 
 		shell.open();
 
@@ -128,7 +128,7 @@ public class DualChartWidget extends MatchViewerWidget {
 				Slider slider = (Slider) event.widget;
 				if (slider.getMaximum() > largeChart.getSampleSize())
 					largeChart.showSeries(slider.getSelection(), true);
-				smallChart.showSeries(slider.getSelection() + 1, true);
+				smallChart.showSeries(slider.getSelection(), true);
 			}
 		});
 		largeChart.setSlider(slider);
