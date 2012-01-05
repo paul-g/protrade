@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.tennistrader.Main;
+import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.domain.profile.AccountFunds;
 import org.ic.tennistrader.domain.profile.ProfileData;
 
@@ -39,7 +39,7 @@ public class ProfileWindow {
 		/* Shell Layout */
 		shell.setLayout(gl);
 		shell.setText("Profile");
-		shell.setSize(500,300);
+		shell.setSize(500,500);
 		shell.setLocation(1100,80);
 		
 		/* Labels and Shell opening */
@@ -55,11 +55,24 @@ public class ProfileWindow {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		addDescriptionLabel(new Image(display,"images/profile/user.png"),1);
-		addLabel("USERNAME",Main.username);
-		addDescriptionLabel(new Image(display,"images/profile/betfair.png"),1);
+		addDescriptionLabel(new Image(display,"images/profile/user.png"),3);
+		addLabel("USERNAME",profileData.getUsername()+"");
+		addLabel("FIRST NAME", profileData.getFirstName()+"");
+		addLabel("LAST NAME", profileData.getSurname()+"");
+		addDescriptionLabel(new Image(display,"images/profile/address.png"),3);
+		addLabel("ADDRESS 1",profileData.getAddress1()+"");
+		addLabel("ADDRESS 2",profileData.getAddress2()+"");
+		addLabel("ADDRESS 3",profileData.getAddress3()+"");
+		addDescriptionLabel(new Image(display,"images/profile/location.png"),3);
+		addLabel("CITY",profileData.getTownCity()+"");
+		addLabel("POST CODE", profileData.getPostCode()+"");
+		addLabel("COUNTRY", profileData.getCountry()+"");
+		addDescriptionLabel(new Image(display,"images/profile/contacts.png"),3);
+		addLabel("HOME PHONE", profileData.getHomePhone()+"");
+		addLabel("MOBILE PHONE", profileData.getMobilePhone()+"");
+		addLabel("E-MAIL ADDRESS",profileData.getEmailAddress()+"");
+		addDescriptionLabel(new Image(display,"images/profile/deposit.png"),3);
 		addLabel("BETFAIR POINTS",af.getBetfairPoints()+"");
-		addDescriptionLabel(new Image(display,"images/profile/deposit.png"),2);
 		addLabel("CURRENT BALANCE",af.getBalance()+"");
 		addLabel("AVAILABLE BALANCE",af.getAvailable()+"");
 		addDescriptionLabel(new Image(display,"images/profile/credit.png"),3);
@@ -68,11 +81,24 @@ public class ProfileWindow {
 		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
 
 		/* TEST */
-//		addDescriptionLabel(new Image(display,"images/profile/user.png"),1);
+//		addDescriptionLabel(new Image(display,"images/profile/user.png"),3);
 //		addLabel("USERNAME","");
-//		addDescriptionLabel(new Image(display,"images/profile/betfair.png"),1);
+//		addLabel("FIRST NAME", "");
+//		addLabel("LAST NAME", "");
+//		addDescriptionLabel(new Image(display,"images/profile/address.png"),3);
+//		addLabel("ADDRESS 1", "");
+//		addLabel("ADDRESS 2", "");
+//		addLabel("ADDRESS 3", "");
+//		addDescriptionLabel(new Image(display,"images/profile/location.png"),3);
+//		addLabel("CITY", "");
+//		addLabel("POST CODE", "");
+//		addLabel("COUNTRY", "");
+//		addDescriptionLabel(new Image(display,"images/profile/contacts.png"),3);
+//		addLabel("HOME PHONE", "");
+//		addLabel("MOBILE PHONE", "");
+//		addLabel("E-MAIL ADDRESS","");
+//		addDescriptionLabel(new Image(display,"images/profile/deposit.png"),3);
 //		addLabel("BETFAIR POINTS","");
-//		addDescriptionLabel(new Image(display,"images/profile/deposit.png"),2);
 //		addLabel("CURRENT BALANCE","");
 //		addLabel("AVAILABLE BALANCE","");
 //		addDescriptionLabel(new Image(display,"images/profile/credit.png"),3);
@@ -95,10 +121,9 @@ public class ProfileWindow {
 		Label nkey = new Label(shell, SWT.BORDER);
 		nkey.setText(key);
 		nkey.setLayoutData(gd);
-		Label nvalue = new Label(shell, SWT.BORDER);
+		Text nvalue = new Text(shell, SWT.BORDER);
 		nvalue.setText(value);
 		nvalue.setLayoutData(gd);
-		nvalue.setAlignment(SWT.CENTER);
 	}
 	
 	/** External dispose check */
