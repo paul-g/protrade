@@ -55,7 +55,7 @@ public class LowerToolBar {
 
 		/* Check threads */
 		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		createUsageBarCheck(shell, usage);
+		//createUsageBarCheck(shell, usage);
 
 		// toolbar.setSize(300, 65);
 		toolbar.pack();
