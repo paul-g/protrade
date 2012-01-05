@@ -1,10 +1,13 @@
 package org.ic.tennistrader.ui.chart;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -13,20 +16,24 @@ import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.SeriesComputer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.swtchart.Chart;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
+import org.swtchart.ISeries;
 
 public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	private static final Logger log = Logger.getLogger(UpdatableChart.class);
+	private ChartSettings window = null;
 	protected ChartData chartData;
 	private ConcurrentHashMap<SeriesProperties, SeriesComputer> computerSeries = new ConcurrentHashMap<SeriesProperties, SeriesComputer>();;
 	protected Slider slider;
 	protected final int sampleSize = 200;
 	private int startingIndex = 0;
 	private Composite parent;
+	protected ChartMenu chartMenu;
 
 	public UpdatableChart(Composite parent, int style) {
 		super(parent, style);
@@ -40,6 +47,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 				properties.getChartType(), properties.getName()));
 		properties.setSelected(true);
 		properties.getChartSeries().setVisible(true);
+		properties.updateLineProperties();
 		computerSeries.put(properties, seriesComputer);
 		updateSeriesProperties(properties);
 		// TODO add to chart; make menus with reference to properties
@@ -47,14 +55,15 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			properties.getChartSeries().setYSeries(
 					seriesComputer.computeValues(properties.getPlayer(),
 							chartData, startingIndex));
+			//properties.getChartSeries().setXDateSeries(new Date[]);
 		}
 	}
 
 	public void removeSeries(SeriesProperties properties) {
 		properties.setSelected(false);
 		properties.getChartSeries().setVisible(false);
+		this.getSeriesSet().deleteSeries(properties.getName());
 		computerSeries.remove(properties);
-		// TODO remove from the chart
 	}
 
 	public void updateSeriesProperties(SeriesProperties properties) {
@@ -96,6 +105,18 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			@Override
 			public void run() {
 				updateData(newData);
+				/*
+				for (SeriesProperties prop : computerSeries.keySet()) {
+					if (chartData != null) {
+						prop.getChartSeries().setYSeries(
+								computerSeries.get(prop).addValue(
+										prop.getPlayer(), chartData,
+										newData.getPl1LastMatchedPrice(),
+										newData.getPl2LastMatchedPrice()));
+						prop.getChartSeries().setXSeries(...)
+					}
+				}
+				*/
 				if (!isDisposed()) {
 					redraw();
 					getParent().update();
@@ -119,51 +140,94 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		});
 	}
 	
-	protected void makeMenu(ChartMenu chartMenu) {
-		Menu menu = new Menu(parent.getShell());
+	protected void makeMenu() {
+		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
 		this.setMenu(menu);
 		this.getPlotArea().setMenu(menu);
 		for(final SeriesProperties prop : chartMenu.getSeriesItems()) {
-			final MenuItem newMenuItem = new MenuItem(menu, SWT.PUSH);
-			newMenuItem.setText(prop.getName());
-			newMenuItem.setSelection(prop.isSelected());
-			newMenuItem.addListener(SWT.Selection, new Listener(){
-				@Override
-				public void handleEvent(Event arg0) {
-					prop.setSelected(!prop.isSelected());
-					newMenuItem.setSelection(prop.isSelected());
-					if (prop.isSelected())
-						addSeries(prop.getComputer(), prop);
-					else
-						removeSeries(prop);
-					updateDisplay();
-				}
-			});
+			createMenuItem(menu, prop);
 		}
+		MenuItem settingsItem = new MenuItem(menu, SWT.BUTTON1);
+		settingsItem.setText("Settings...");
+		settingsItem.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event arg0) {
+				String namePl1 = "Player1";
+				String namePl2 = "Player2";
+				if (window == null || window.isDisposed()) {
+					window = new ChartSettings(Display.getCurrent(),
+							UpdatableChart.this, namePl1, namePl2);
+				} else {
+					window.forceActive();
+				}
+			}
+		});
 	}
 
-	/*
-	 * public void showSeries(int i, boolean dragged) { int size = (i) <
-	 * sampleSize ? (i) : sampleSize; int seriesNr = computerSeries.size(); //
-	 * ??? Date showXSeries[] = new Date[size]; ArrayList<double[]> dataArray =
-	 * new ArrayList<double[]>(); for (int k = 0; k < seriesNr; k++) {
-	 * dataArray.add(k, new double[size]); } int z = i < sampleSize ? 0 : 1; //
-	 * i - 1 for overround.. ???
-	 * 
-	 * if (slider.getMaximum() == slider.getSelection() + 1 || dragged) { //
-	 * TODO some pow and k for odds chart int b = (i - sampleSize + 1) * z;
-	 * this.startingIndex = b; for (int a = 0; a < size; a++) { int nr = 0;
-	 * showXSeries[a] = chartData.getxSeries().get(b);
-	 * 
-	 * ConcurrentHashMap<ISeries, SeriesComputer> newComputerSeries = new
-	 * ConcurrentHashMap<ISeries, SeriesComputer>(); // TODO display for each
-	 * series appropriate range of values for (SeriesProperties seriesProp :
-	 * computerSeries.keySet()) { SeriesComputer computer =
-	 * computerSeries.get(seriesProp); ISeries series =
-	 * seriesProp.getChartSeries();
-	 * series.setYSeries(computer.computeValues(seriesProp .getPlayer(),
-	 * chartData, b)); series.setXDateSeries(showXSeries); } } // adjust()
-	 * ???overround updateDisplay(); } }
-	 */
+	private void createMenuItem(Menu menu, final SeriesProperties prop) {
+		final MenuItem newMenuItem = new MenuItem(menu, SWT.CHECK);
+		newMenuItem.setText(prop.getName());
+		newMenuItem.setSelection(prop.isSelected());
+		newMenuItem.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event arg0) {
+				if (newMenuItem.getSelection())
+					addSeries(prop.getComputer(), prop);
+				else
+					removeSeries(prop);
+				updateDisplay();
+			}
+		});
+	}
 
+	public void setChartMenu(ChartMenu chartMenu) {
+		this.chartMenu = chartMenu;
+	}
+
+	public ChartMenu getChartMenu() {
+		return chartMenu;
+	}
+	
+	public int getSampleSize() {
+		return this.sampleSize;
+	}
+
+	
+	public void showSeries(int i, boolean dragged) {
+		int size = (i) < sampleSize ? (i) : sampleSize;
+		int seriesNr = computerSeries.size();
+		// ???
+		Date showXSeries[] = new Date[size];
+		ArrayList<double[]> dataArray = new ArrayList<double[]>();
+		for (int k = 0; k < seriesNr; k++) {
+			dataArray.add(k, new double[size]);
+		}
+		int z = i < sampleSize ? 0 : 1;
+		// i - 1 for overround.. ???
+
+		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
+			// TODO some pow and k for odds chart
+			int b = (i - sampleSize + 1) * z;
+			this.startingIndex = b;
+			for (int a = 0; a < size; a++) {
+				int nr = 0;
+				showXSeries[a] = chartData.getxSeries().get(b + a);
+
+				// TODO display for each series appropriate range of values
+				
+			}
+			
+			for (SeriesProperties seriesProp : computerSeries.keySet()) {
+				SeriesComputer computer = computerSeries.get(seriesProp);
+				ISeries series = seriesProp.getChartSeries();
+				series.setYSeries(computer.computeValues(seriesProp
+						.getPlayer(), chartData, b));
+				series.setXDateSeries(showXSeries);
+			}
+			
+			// adjust() ???overround
+			updateDisplay();
+		}
+	}
+	 
 }

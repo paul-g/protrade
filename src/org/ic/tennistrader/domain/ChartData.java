@@ -39,7 +39,7 @@ public class ChartData {
 		} catch (NullPointerException e){
 			prevNrSets = 0;
 		}
-		dataSize = 0;
+		dataSize = 1;
 		pl1YSeries = new ArrayList<Double>();
 		pl2YSeries = new ArrayList<Double>();
 		pl1Predicted = new ArrayList<Double>();
@@ -54,6 +54,21 @@ public class ChartData {
 		pl1Volume = new ArrayList<Double>();
 		pl2Volume = new ArrayList<Double>();
 		endOfSets = new ArrayList<Integer>();
+		
+		pl1YSeries.add(0.0);
+		pl2YSeries.add(0.0);
+		pl1Predicted.add(0.0);
+		pl2Predicted.add(0.0);
+		pl1Lay.add(pair(0.0, 0.0));
+		pl2Lay.add(pair(0.0, 0.0));
+		maPl1.add(0.0);
+		maPl2.add(0.0);
+		xSeries .add(Calendar.getInstance().getTime());
+		backOverround.add(0.0);
+		layOverround.add(0.0);
+		pl1Volume.add(0.0);
+		pl2Volume.add(0.0);
+		endOfSets.add(0);
 	}
 	
 	public void updateData(MOddsMarketData data){

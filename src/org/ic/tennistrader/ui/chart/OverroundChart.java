@@ -1,6 +1,5 @@
 package org.ic.tennistrader.ui.chart;
 
-import java.util.ArrayList;
 import java.util.Date;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -8,13 +7,14 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.model.BackValuesComputer;
+import org.ic.tennistrader.model.OverroundComputer;
+import org.ic.tennistrader.model.VolumeComputer;
 import org.swtchart.IAxis;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
@@ -57,7 +57,26 @@ public class OverroundChart extends UpdatableChart {
 
 		getTitle().setVisible(false);
 
-		createSeries(pl1Name, pl2Name);
+		//createSeries(pl1Name, pl2Name);
+		
+		chartMenu = new ChartMenu();
+		SeriesProperties overround = new SeriesProperties(SeriesType.LINE,
+				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER1,
+				"Overround", new OverroundComputer(), new LineProp());
+		chartMenu.addSeriesItem(overround);
+		SeriesProperties volume1 = new SeriesProperties(SeriesType.BAR,
+				MarketSeriesType.VOLUME, PlayerEnum.PLAYER1,
+				"Volume pl 1", new VolumeComputer(), new LineProp());
+		chartMenu.addSeriesItem(volume1);
+		SeriesProperties volume2 = new SeriesProperties(SeriesType.BAR,
+				MarketSeriesType.VOLUME, PlayerEnum.PLAYER2,
+				"Volume pl 2", new VolumeComputer(), new LineProp());
+		chartMenu.addSeriesItem(volume2);
+		
+		addSeries(new BackValuesComputer(), overround);
+		
+		
+		
 		// setBackOverround(true);
 		getLegend().setPosition(SWT.BOTTOM);
 		IAxis yAxis = getAxisSet().getYAxis(0);
@@ -69,7 +88,10 @@ public class OverroundChart extends UpdatableChart {
 		// this.getAxisSet().getXAxis(0).adjustRange();
 		// this.getAxisSet().adjustRange();
 		// this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
-		makeMenu(syncWith, parent);
+		
+		
+		//makeMenu(syncWith, parent);
+		makeMenu();
 	}
 
 	private void createSeries(String pl1Name, String pl2Name) {
@@ -190,6 +212,7 @@ public class OverroundChart extends UpdatableChart {
 		// this.getAxisSet().getYAxis(0).setRange(new Range(0,150));
 	}
 
+	/*
 	private void makeMenu(final OddsChart oddsChart, Composite parent) {
 		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
 		setMenu(menu);
@@ -250,7 +273,9 @@ public class OverroundChart extends UpdatableChart {
 			}
 		});
 	}
-
+	*/
+	
+	/*
 	public void showSeries(int i, boolean dragged) {
 		int size = i + 1 < sampleSize ? i + 1 : sampleSize;
 		int seriesNr = 4;
@@ -291,12 +316,13 @@ public class OverroundChart extends UpdatableChart {
 			updateDisplay();
 		}
 	}
+	*/
 
 	protected void updateData(MOddsMarketData data) {
 		// add new market data to the data structures
 		//int dataSize = chartData.getDataSize() - 1;
 		// set serieses values
-		showSeries(chartData.getDataSize(), false);
+		showSeries(chartData.getDataSize() - 1, false);
 		if (!isDisposed()) {
 			getAxisSet().getXAxis(0).adjustRange();
 			getAxisSet().getYAxis(0).adjustRange();

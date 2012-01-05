@@ -2,7 +2,7 @@ package org.ic.tennistrader.ui.chart;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.swtchart.ILineSeries;
+import org.eclipse.swt.widgets.Display;
 
 public class LineProp {
 	private Color color;
@@ -10,15 +10,11 @@ public class LineProp {
 	private boolean antialias;
 	private boolean area;
 
-	LineProp(ILineSeries line) {
-		this.color = line.getLineColor();
-		System.out.println(this.color);
-		this.step = line.isStepEnabled();
-		if (line.getAntialias() == SWT.ON)
-			this.antialias = true;
-		else
-			this.antialias = false;
-		this.area = line.isAreaEnabled();
+	LineProp() {
+		this.color = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+		this.step = true;
+		this.antialias = true;
+		this.area = false;
 	}
 
 	public Color getColor() {

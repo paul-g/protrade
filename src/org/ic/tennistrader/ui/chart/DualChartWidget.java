@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -16,6 +15,7 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 
@@ -25,7 +25,7 @@ public class DualChartWidget extends MatchViewerWidget {
 	private final OverroundChart smallChart;
 	private ChartData chartData;
 	private Match match;
-	private ChartSettings window = null;
+	//private ChartSettings window = null;
 
 	private static final Logger log = Logger.getLogger(DualChartWidget.class);
 
@@ -56,8 +56,8 @@ public class DualChartWidget extends MatchViewerWidget {
 		setLayout(new FillLayout());
 
 		SashForm form = new SashForm(this, SWT.VERTICAL);
-		Composite settingsPanel = new Composite(form, SWT.BORDER);
-		initSettingsPanel(settingsPanel);
+		//Composite settingsPanel = new Composite(form, SWT.BORDER);
+		//initSettingsPanel(settingsPanel);
 
 		Slider slider = null;
 
@@ -67,7 +67,7 @@ public class DualChartWidget extends MatchViewerWidget {
 		slider = new Slider(form, SWT.HORIZONTAL);
 		initSlider(slider);
 
-		form.setWeights(new int[] { 7, 65, 25, 3 });
+		form.setWeights(new int[] { 65, 25, 3 });
 	}
 
 	public DualChartWidget(Composite parent, Match match) {
@@ -77,23 +77,26 @@ public class DualChartWidget extends MatchViewerWidget {
 		setLayout(new FillLayout());
 
 		SashForm form = new SashForm(this, SWT.VERTICAL);
-		Composite settingsPanel = new Composite(form, SWT.BORDER);
-		initSettingsPanel(settingsPanel);
+		//Composite settingsPanel = new Composite(form, SWT.BORDER);
+		//initSettingsPanel(settingsPanel);
 
 		Slider slider = null;
 
-		largeChart = new OddsChart(form, SWT.BORDER, match, slider,
+		largeChart = new OddsChart(form, SWT.BORDER, this.match, slider,
 				chartData);
 
 		smallChart = new OverroundChart(form, SWT.NONE, match, largeChart,
 				chartData, slider);
 
+		DataManager.registerForMatchUpdate(this, match);
+		
 		slider = new Slider(form, SWT.HORIZONTAL);
 		initSlider(slider);
 
-		form.setWeights(new int[] { 7, 65, 25, 3 });
+		form.setWeights(new int[] { 65, 25, 3 });
 	}
 
+	/*
 	private void initSettingsPanel(Composite settingsPanel) {
 		settingsPanel.setLayout(new FillLayout());
 		Button settings = new Button(settingsPanel, SWT.PUSH);
@@ -112,6 +115,7 @@ public class DualChartWidget extends MatchViewerWidget {
 			}
 		});
 	}
+	*/
 
 	private void initSlider(Slider slider) {
 		slider.setMaximum(1);
@@ -163,5 +167,6 @@ public class DualChartWidget extends MatchViewerWidget {
 		largeChart.setChartData(chartData);
 		smallChart.setMatch(match);
 		smallChart.setChartData(chartData);
+		DataManager.registerForMatchUpdate(this, match);
 	}
 }

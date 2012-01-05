@@ -1,5 +1,6 @@
 package org.ic.tennistrader.ui.chart;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,10 +17,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.swtchart.ILineSeries;
 
 public class ChartSettings {
 	
-	OddsChart chart;
+	UpdatableChart chart;
 	TreeMap<String,Color> colorList = new TreeMap<String,Color>();
 	Display display;
 	Shell shell;
@@ -34,7 +37,7 @@ public class ChartSettings {
 		d.dispose();
 	}
 	
-	public ChartSettings(Display display, OddsChart largeChart, String namePl1, String namePl2) {
+	public ChartSettings(Display display, UpdatableChart largeChart, String namePl1, String namePl2) {
 		shell = new Shell(display, SWT.SHELL_TRIM);
 		this.display = Display.getCurrent();
 		this.chart = largeChart;
@@ -80,19 +83,30 @@ public class ChartSettings {
 		Label colorL = new Label(shell, SWT.BEGINNING);
 		colorL.setText("Color settings");
 		colorL.setLayoutData(gridData6);
+		
+		final HashMap<SeriesProperties, ResultSet> results = new HashMap<SeriesProperties, ResultSet>();
 		Label pl1 = new Label(shell, SWT.BEGINNING);
 		pl1.setText(namePl1);
 		pl1.setLayoutData(gridData6);
-		final ResultSet pl1BO = addRow("Back Odds",gridData1, chart.getPl1Bo());
-		final ResultSet pl1MA = addRow("Moving Average",gridData1, chart.getPl1MA());
-		final ResultSet pl1Pred = addRow("Predicted Odds",gridData1, chart.getPl1Pred());
+		for (SeriesProperties prop : this.chart.getChartMenu().getSeriesItems()) {
+			if (prop.getPlayer().equals(PlayerEnum.PLAYER1) && prop.getChartSeries() != null
+					&& prop.getChartSeries() instanceof ILineSeries) {
+				ResultSet resultSet = addRow(prop.getName(), gridData1, prop.getLineProp());
+				results.put(prop, resultSet);
+			}
+				
+		}
 		Label pl2 = new Label(shell, SWT.BEGINNING);
 		pl2.setText(namePl2);
 		pl2.setLayoutData(gridData6);
-		final ResultSet pl2BO = addRow("Back Odds",gridData1, chart.getPl2Bo());
-		final ResultSet pl2MA = addRow("Moving Average",gridData1, chart.getPl2MA());
-		final ResultSet pl2Pred = addRow("Predcted Odds",gridData1, chart.getPl2Pred());
-		
+		for (SeriesProperties prop : this.chart.getChartMenu().getSeriesItems()) {
+			if (prop.getPlayer().equals(PlayerEnum.PLAYER2) && prop.getChartSeries() != null
+					&& prop.getChartSeries() instanceof ILineSeries) {
+				ResultSet resultSet = addRow(prop.getName(), gridData1, prop.getLineProp());
+				results.put(prop, resultSet);
+			}
+				
+		}
 		Button close = new Button(shell, SWT.PUSH);
 		close.setText("Close");
 		close.addListener(SWT.Selection, new Listener(){
@@ -109,12 +123,17 @@ public class ChartSettings {
 
 			@Override
 			public void handleEvent(Event arg0) {
+				/*
 				chart.setPl1BO(pl1BO);
 				chart.setPl1MA(pl1MA);
 				chart.setPl1Pred(pl1Pred);
 				chart.setPl2BO(pl2BO);
 				chart.setPl2MA(pl2MA);
 				chart.setPl2Pred(pl2Pred);
+				*/
+				for (SeriesProperties prop : results.keySet()) {
+					prop.setLineProp(results.get(prop));
+				}
 				shell.dispose();
 			}
 		
@@ -140,7 +159,7 @@ public class ChartSettings {
 			combo.add(entry.getKey());
 		}
 		combo.select(getNr(prop.getColor()));
-		System.out.println(getNr(prop.getColor()));
+		//System.out.println(getNr(prop.getColor()));
 		final Label colorLabel = new Label(shell, SWT.NONE);
 		colorLabel.setLayoutData(gridData1);
 		colorLabel.setBackground(
