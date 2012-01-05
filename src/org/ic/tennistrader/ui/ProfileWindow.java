@@ -66,8 +66,8 @@ public class ProfileWindow {
 		addLabel("CREDIT LIMIT",af.getCreditLimit()+"");
 		addLabel("EXPOSURE",af.getExposure()+"");
 		addLabel("EXPOSURE LIMIT",af.getExposureLimit()+"");
-		
-		// TEST
+
+		/* TEST */
 //		addDescriptionLabel(new Image(display,"images/profile/user.png"),1);
 //		addLabel("USERNAME","");
 //		addDescriptionLabel(new Image(display,"images/profile/betfair.png"),1);
@@ -81,20 +81,21 @@ public class ProfileWindow {
 //		addLabel("EXPOSURE LIMIT","");
 	}
 	
+	/** Method for description labels */
 	private void addDescriptionLabel(Image img, int span) {
 		GridData ngd = new GridData(SWT.CENTER,SWT.CENTER,true,true);
 		ngd.verticalSpan = span;
 		Label descr = new Label(shell, SWT.NONE);
-		descr.setImage(new Image(display,"images/profile/user.png"));
+		descr.setImage(img);
 		descr.setLayoutData(ngd);
 	}
 	
 	/** Method for label addition */
 	private void addLabel(String key,String value) {
-		Label nkey = new Label(shell, SWT.NONE);
+		Label nkey = new Label(shell, SWT.BORDER);
 		nkey.setText(key);
 		nkey.setLayoutData(gd);
-		Label nvalue = new Label(shell, SWT.NONE);
+		Label nvalue = new Label(shell, SWT.BORDER);
 		nvalue.setText(value);
 		nvalue.setLayoutData(gd);
 		nvalue.setAlignment(SWT.CENTER);
