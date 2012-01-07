@@ -50,7 +50,7 @@ public class DashboardMenu {
 				lmd.open();
 				Match match = lmd.getSelectedMatch();
 				log.info("Dialog selection " + match);
-				dashboardWindow.getDashboard().setMatch(match);
+				dashboardWindow.getCurrentDashboard().setMatch(match);
 
 			}
 		});
@@ -157,7 +157,7 @@ public class DashboardMenu {
 		saveItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dashboardWindow.getDashboard().save();
+				dashboardWindow.getCurrentDashboard().save();
 			}
 		});
 
@@ -167,7 +167,7 @@ public class DashboardMenu {
 		saveAsItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dashboardWindow.getDashboard().save();
+				dashboardWindow.getCurrentDashboard().save();
 			}
 		});
 
@@ -218,7 +218,7 @@ public class DashboardMenu {
 	private void openMatchView(String filename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename);
-			dashboardWindow.getDashboard().setMatch(match);
+			dashboardWindow.getCurrentDashboard().setMatch(match);
 		}
 	}
 
@@ -226,7 +226,7 @@ public class DashboardMenu {
 	private void openMatchView(String filename, String setBettingFilename) {
 		if (filename != null) {
 			Match match = new HistoricalMatch(filename, setBettingFilename);
-			dashboardWindow.getDashboard().setMatch(match);
+			dashboardWindow.getCurrentDashboard().setMatch(match);
 		}
 	}
 

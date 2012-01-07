@@ -6,6 +6,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
@@ -13,10 +16,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.LowerToolBar;
-import org.ic.tennistrader.ui.UpperToolBar;
 import org.ic.tennistrader.ui.dashboard.Dashboard;
 import org.ic.tennistrader.ui.menus.DashboardMenu;
-import org.ic.tennistrader.ui.widgets.StandardWidgetResizeListener;
+import org.ic.tennistrader.ui.toolbars.DashboardCoolBar;
+import org.ic.tennistrader.ui.toolbars.DashboardToolBar;
 
 public class DashboardWindow implements MainWindow {
 
@@ -29,8 +32,10 @@ public class DashboardWindow implements MainWindow {
 	private Dashboard dashboard;
 
 	/* ToolBars */
-	private UpperToolBar utb;
+	private DashboardToolBar utb;
 	private LowerToolBar ltb;
+
+	private Composite dashboardComp;
 
 	private static Logger log = Logger.getLogger(StandardWindow.class);
 
@@ -60,28 +65,45 @@ public class DashboardWindow implements MainWindow {
 	private void show(Display display) {
 
 		notifyLoadEvent("Login successful! Starting application...");
+		log.info(display.getClientArea());
 
-		this.shell = new Shell(display);
+		shell = new Shell(display);
+		shell.setSize(display.getClientArea().width,
+				display.getClientArea().height);
 		shell.setMaximized(true);
 		shell.setLayout(makeLayout());
-		shell.addListener(SWT.Resize, new StandardWidgetResizeListener(shell));
+		// shell.addListener(SWT.Resize, new
+		// StandardWidgetResizeListener(shell));
 		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-		// new UpperToolBar(mainWindow);
+		DashboardCoolBar dcb = new DashboardCoolBar(shell);
+		dcb.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,
+				1));
 
 		log.info("Adding menu");
 		new DashboardMenu(this);
 		log.info("Added menu");
 
-		System.out.println(shell.getClientArea());
-		dashboard = new Dashboard(shell);
+		log.info(display.getClientArea());
+		log.info("Adding dashboard");
+		dashboardComp = new Composite(shell, SWT.BORDER);
+		dashboardComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
+		dashboardComp.setLayout(new FillLayout());
+		log.info(display.getClientArea());
+		/*
+		 * dashboard.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
+		 * 1, 1));
+		 */
+		log.info("Added dashboard");
+		LowerToolBar ltb = new LowerToolBar(shell);
+		ltb.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,
+				1));
 
-		// new LowerToolBar(this);
-		// ltb = new LowerToolBar(this);
 	}
 
 	private Layout makeLayout() {
-		return new FillLayout();
+		return new GridLayout(1, true);
 	}
 
 	/*
@@ -104,6 +126,7 @@ public class DashboardWindow implements MainWindow {
 		display.dispose();
 	}
 
+	@Override
 	public void dispose() {
 		shell.dispose();
 	}
@@ -129,7 +152,7 @@ public class DashboardWindow implements MainWindow {
 		}
 	}
 
-	public UpperToolBar getUpperToolBar() {
+	public DashboardToolBar getUpperToolBar() {
 		return utb;
 	}
 
@@ -142,7 +165,7 @@ public class DashboardWindow implements MainWindow {
 		return shell;
 	}
 
-	public Dashboard getDashboard() {
+	public Dashboard getCurrentDashboard() {
 		return dashboard;
 	}
 
@@ -151,7 +174,8 @@ public class DashboardWindow implements MainWindow {
 			dashboard.dispose();
 		}
 		dashboard = new Dashboard(shell);
-		shell.layout();
+		dashboard.setParent(dashboardComp);
+		shell.pack();
 	}
 
 	public void loadDashboard(String filename) {
@@ -159,7 +183,7 @@ public class DashboardWindow implements MainWindow {
 		if (dashboard != null) {
 			dashboard.dispose();
 		}
-		dashboard = new Dashboard(shell, filename);
-		shell.layout();
+		dashboard = new Dashboard(dashboardComp, filename);
+		shell.pack();
 	}
 }

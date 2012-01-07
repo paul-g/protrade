@@ -44,6 +44,8 @@ public class Dashboard extends Composite {
 
 	private void init(Composite parent) {
 		Rectangle r = parent.getClientArea();
+		log.info("Initializing dashboard");
+		log.info("Parent area: " + parent.getClientArea());
 		clientArea = getClientArea();
 		dashboardConfiguration = new DashboardConfiguration(this);
 		dashboardConfiguration.setDefaultWidgetHeight(r.height
@@ -51,8 +53,8 @@ public class Dashboard extends Composite {
 		dashboardConfiguration.setDefaultWidgetWidth(r.width
 				/ DEFAULT_WIDGETS_PER_ROW);
 
-		log.info("Initializing dashboard with default widget count "
-				+ DEFAULT_WIDGET_COUNT + " default height: "
+		log.info("Default widget count " + DEFAULT_WIDGET_COUNT
+				+ " default height: "
 				+ dashboardConfiguration.getDefaultWidgetHeight()
 				+ " default width: "
 				+ dashboardConfiguration.getDefaultWidgetWidth());

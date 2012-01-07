@@ -15,4 +15,6 @@ public interface MainWindow {
 	public abstract void addLoadListener(Listener l);
 	
 	public abstract Shell getShell();
+
+	public abstract void dispose();
 }
