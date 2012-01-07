@@ -30,7 +30,8 @@ public class ChartData {
 	private Match match;
 	private int prevNrSets; 
 	
-	public ArrayList<Integer> endOfSets;
+	private ArrayList<Integer> endOfSets;
+	
 	
 	public ChartData(Match match){
 		this.match = match;
@@ -81,7 +82,7 @@ public class ChartData {
 			pl1Predicted = addValue(pl1Predicted,  result[0]);
 			pl2Predicted = addValue(pl2Predicted,  result[1]);
 		} catch (NullPointerException e) {
-
+			//System.out.println("NULL");
 		}
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(),data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(),data.getPl2Lay());
@@ -95,7 +96,10 @@ public class ChartData {
 		checkScoreEndOfSet();		
 	}
 	
-	
+	public ArrayList<Integer> getEndOfSets() {
+		return endOfSets;
+	}
+
 	private double[] calcPrediction(double[] predicted) {
 		double pl1Pred = predicted[8];
 		if (pl1Pred == 0) pl1Pred = 0.0001;
@@ -106,6 +110,7 @@ public class ChartData {
 	}
 	
 	public void addMarketEndOfSet() {
+		//System.out.println("Adding end of set from market");
 		endOfSets.add(1);
 	}
 
@@ -117,6 +122,7 @@ public class ChartData {
 			nrSets = prevNrSets;
 		}
 		if (prevNrSets < nrSets) {
+			//System.out.println("Adding end of set from score");
 			endOfSets.add(1);
 			prevNrSets = nrSets;
 		} else endOfSets.add(0);

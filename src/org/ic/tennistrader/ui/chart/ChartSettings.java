@@ -3,30 +3,40 @@ package org.ic.tennistrader.ui.chart;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.swtchart.ILineSeries;
+import org.swtchart.ILineSeries.PlotSymbolType;
 
-public class ChartSettings {
+public class ChartSettings extends Dialog{	
+	private UpdatableChart chart;
 	
-	UpdatableChart chart;
-	TreeMap<String,Color> colorList = new TreeMap<String,Color>();
-	Display display;
-	Shell shell;
+	private TreeMap<String, PlotSymbolType> symbolList = new TreeMap<String, PlotSymbolType>();
+	private String namePl1, namePl2;	
 	
+	private HashMap<SeriesProperties, ResultSet> propertiesResults = new HashMap<SeriesProperties, ResultSet>();
+	
+	private Composite composite;
+	
+	/*
 	public static void main(String[] args){
 		Display d = new Display();
 		ChartSettings c = new ChartSettings(d,null, "nadal", "pavel");
@@ -36,18 +46,58 @@ public class ChartSettings {
 		}
 		d.dispose();
 	}
+	*/
 	
-	public ChartSettings(Display display, UpdatableChart largeChart, String namePl1, String namePl2) {
-		shell = new Shell(display, SWT.SHELL_TRIM);
-		this.display = Display.getCurrent();
+	public ChartSettings(Composite settingsPanel, UpdatableChart largeChart) {
+		super(settingsPanel.getShell());
+		// this.display = Display.getCurrent();
 		this.chart = largeChart;
-		initColorList();
-		initWindow(namePl1, namePl2);
+		this.namePl1 = largeChart.getPlayer1Name();
+		this.namePl2 = largeChart.getPlayer2Name();
+		// initColorList();
 		
-		shell.open();
+		initSymbolList();
 		
+		//initWindow(namePl1, namePl2);
+		
+		//mainShell.open();
+
 	}
 
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		this.composite = (Composite) super.createDialogArea(parent);
+		initWindow(namePl1, namePl2);
+		return composite;
+	}
+
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		super.createButtonsForButtonBar(parent);
+		// createButton(parent, RESET_ID, "Reset All", false);
+	}
+	
+	@Override
+	protected void okPressed(){
+		for (SeriesProperties prop : propertiesResults.keySet()) {
+			prop.setLineProp(propertiesResults.get(prop));
+		}
+		super.okPressed();
+	}
+	
+	
+	private void initSymbolList() {
+		symbolList.put("Circle", PlotSymbolType.CIRCLE);
+		symbolList.put("Square", PlotSymbolType.SQUARE);
+		symbolList.put("Diamond", PlotSymbolType.DIAMOND);
+		symbolList.put("Triangle", PlotSymbolType.TRIANGLE);
+		symbolList.put("Inverted Triangle", PlotSymbolType.INVERTED_TRIANGLE);
+		symbolList.put("Cross", PlotSymbolType.CROSS);
+		symbolList.put("Plus", PlotSymbolType.PLUS);
+		symbolList.put("None", PlotSymbolType.NONE);
+	}
+	
+	/*
 	private void initColorList() {
 		colorList.put("Black", display.getSystemColor(SWT.COLOR_BLACK));
 		colorList.put("Blue", display.getSystemColor(SWT.COLOR_BLUE));
@@ -66,153 +116,206 @@ public class ChartSettings {
 		colorList.put("White", display.getSystemColor(SWT.COLOR_WHITE));
 		colorList.put("Yellow", display.getSystemColor(SWT.COLOR_YELLOW));
 	}
+	*/
 
 	private void initWindow(String namePl1, String namePl2) {
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 6; 
+		layout.numColumns = 8; 
 		//layout.makeColumnsEqualWidth = true;
-		shell.setLayout(layout);
+		composite.setLayout(layout);
 		GridData gridData1 = new GridData();
 		gridData1.horizontalAlignment = GridData.FILL;
 		gridData1.horizontalSpan = 1;
 		gridData1.grabExcessHorizontalSpace=true;
 		GridData gridData6 = new GridData();
 		gridData6.horizontalAlignment = GridData.FILL;
-		gridData6.horizontalSpan = 6;
+		gridData6.horizontalSpan = 8;
 		gridData6.grabExcessHorizontalSpace=true;
-		Label colorL = new Label(shell, SWT.BEGINNING);
-		colorL.setText("Color settings");
+		
+		FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
+		fontRegistry.put("label1", new FontData[] { new FontData("Arial", 14,
+				SWT.BOLD) });
+		fontRegistry.put("label", new FontData[] { new FontData("Courier New",
+				12, SWT.BOLD) });
+		
+		Label colorL = new Label(composite, SWT.BEGINNING);
+		colorL.setText("Chart settings");
+		colorL.setFont(fontRegistry.get("label1"));
 		colorL.setLayoutData(gridData6);
 		
-		final HashMap<SeriesProperties, ResultSet> results = new HashMap<SeriesProperties, ResultSet>();
+		/*
 		Label pl1 = new Label(shell, SWT.BEGINNING);
 		pl1.setText(namePl1);
-		pl1.setLayoutData(gridData6);
+		pl1.setFont(fontRegistry.get("label"));
+		pl1.setLayoutData(gridData1);
+		*/
+		
 		for (SeriesProperties prop : this.chart.getChartMenu().getSeriesItems()) {
 			if (prop.getPlayer().equals(PlayerEnum.PLAYER1) && prop.getChartSeries() != null
 					&& prop.getChartSeries() instanceof ILineSeries) {
-				ResultSet resultSet = addRow(prop.getName(), gridData1, prop.getLineProp());
-				results.put(prop, resultSet);
+				ResultSet resultSet = addRow(prop.getFullName(), gridData6, prop.getLineProp());
+				propertiesResults.put(prop, resultSet);
 			}
 				
 		}
+		
+		/*
 		Label pl2 = new Label(shell, SWT.BEGINNING);
 		pl2.setText(namePl2);
-		pl2.setLayoutData(gridData6);
+		pl2.setFont(fontRegistry.get("label"));
+		pl2.setLayoutData(gridData1);
+		*/
+		
 		for (SeriesProperties prop : this.chart.getChartMenu().getSeriesItems()) {
 			if (prop.getPlayer().equals(PlayerEnum.PLAYER2) && prop.getChartSeries() != null
 					&& prop.getChartSeries() instanceof ILineSeries) {
-				ResultSet resultSet = addRow(prop.getName(), gridData1, prop.getLineProp());
-				results.put(prop, resultSet);
+				ResultSet resultSet = addRow(prop.getFullName(), gridData6, prop.getLineProp());
+				propertiesResults.put(prop, resultSet);
 			}
 				
 		}
-		Button close = new Button(shell, SWT.PUSH);
+		
+		/*
+		Button close = new Button(mainShell, SWT.PUSH);
 		close.setText("Close");
 		close.addListener(SWT.Selection, new Listener(){
 			@Override
 			public void handleEvent(Event arg0) {
-				shell.dispose();
+				mainShell.dispose();
 			}
 			
 		});
 		
-		Button apply = new Button(shell, SWT.PUSH);
+		Button apply = new Button(mainShell, SWT.PUSH);
 		apply.setText("Apply");
 		apply.addListener(SWT.Selection, new Listener(){
 
 			@Override
 			public void handleEvent(Event arg0) {
-				/*
-				chart.setPl1BO(pl1BO);
-				chart.setPl1MA(pl1MA);
-				chart.setPl1Pred(pl1Pred);
-				chart.setPl2BO(pl2BO);
-				chart.setPl2MA(pl2MA);
-				chart.setPl2Pred(pl2Pred);
-				*/
+				
+				//chart.setPl1BO(pl1BO);
+				//chart.setPl1MA(pl1MA);
+				//chart.setPl1Pred(pl1Pred);
+				//chart.setPl2BO(pl2BO);
+				//chart.setPl2MA(pl2MA);
+				//chart.setPl2Pred(pl2Pred);
+				
 				for (SeriesProperties prop : results.keySet()) {
 					prop.setLineProp(results.get(prop));
 				}
-				shell.dispose();
+				mainShell.dispose();
 			}
 		
-		});
-		
-		
+		});		
+		*/
 	}
+	
 
-	private ResultSet addRow(String text, GridData gridData1, LineProp prop) {
-		Label label = new Label(shell, SWT.BEGINNING);
-		label.setText(text);
-		Button areaB = new Button(shell, SWT.CHECK);
+	private ResultSet addRow(String text, GridData gridData,
+			final LineProp prop) {
+		Group g = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 7;
+		g.setLayout(layout);
+		g.setLayoutData(gridData);
+		g.setText(text);
+		Button areaB = new Button(g, SWT.CHECK);
 		areaB.setText("area");
 		areaB.setSelection(prop.isArea());
-		Button antialiasB = new Button(shell, SWT.CHECK);
+		Button antialiasB = new Button(g, SWT.CHECK);
 		antialiasB.setText("antialias");
 		antialiasB.setSelection(prop.isAntialias());
-		Button stepB = new Button(shell, SWT.CHECK);
+		Button stepB = new Button(g, SWT.CHECK);
 		stepB.setText("step");
 		stepB.setSelection(prop.isStep());
-		final Combo combo = new Combo(shell, SWT.NULL);
-		for (Map.Entry<String, Color> entry : colorList.entrySet()){
+		Label symbL = new Label(g, SWT.NULL);
+		symbL.setText("Symbol:");
+		final Combo combo = new Combo(g, SWT.NULL);
+		for (Map.Entry<String, PlotSymbolType> entry : symbolList.entrySet()) {
 			combo.add(entry.getKey());
 		}
-		combo.select(getNr(prop.getColor()));
-		//System.out.println(getNr(prop.getColor()));
-		final Label colorLabel = new Label(shell, SWT.NONE);
-		colorLabel.setLayoutData(gridData1);
-		colorLabel.setBackground(
-				colorList.get((String)combo.getItem(combo.getSelectionIndex())));
-		combo.addSelectionListener(new SelectionListener(){
-			public void widgetSelected(SelectionEvent e){
-				colorLabel.setBackground(
-						colorList.get((String)combo.getItem(combo.getSelectionIndex())));
-			}
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				
+		combo.select(getNr(prop.getSymbolType()));
+		final Button b = new Button(g, SWT.PUSH | SWT.BORDER);
+		final Text t = new Text(g, SWT.BORDER | SWT.MULTI);
+		t.setBackground(prop.getColor());
+		b.setText("Change Line Color");
+		b.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ColorDialog cd = new ColorDialog(ChartSettings.this.getShell());
+				cd.setText("ColorDialog Demo");
+				cd.setRGB(prop.getColor().getRGB());
+				RGB newColor = cd.open();
+				if (newColor == null) {
+					return;
+				}
+				Color newC = new Color(Display.getCurrent(), newColor);
+				t.setBackground(newC);
 			}
 		});
-		ResultSet res = new ResultSet(areaB, antialiasB,stepB,colorLabel);
+		ResultSet res = new ResultSet(areaB, antialiasB, stepB, t,
+				combo);
 		return res;
 	}
 
-	private int getNr(Color color) {
-		int i =0;
-		for (Map.Entry<String, Color> entry : colorList.entrySet()){
-			if (entry.getValue().equals(color))
+	private int getNr(PlotSymbolType symb) {
+		int i = 0;
+		for (Map.Entry<String, PlotSymbolType> entry : symbolList.entrySet()) {
+			if (entry.getValue().equals(symb))
 				return i;
 			i++;
 		}
 		return i;
 	}
-
+	
+	/*
 	public void forceActive() {
-		shell.forceActive();
+		mainShell.forceActive();
 	}
 
 	public boolean isDisposed() {
-		return shell.isDisposed();
+		return mainShell.isDisposed();
 	}
+	*/
+	
+
+	public String getNamePl1() {
+		return namePl1;
+	}
+
+	public void setNamePl1(String namePl1) {
+		this.namePl1 = namePl1;
+	}
+
+	public String getNamePl2() {
+		return namePl2;
+	}
+
+	public void setNamePl2(String namePl2) {
+		this.namePl2 = namePl2;
+	}
+
 
 	class ResultSet {
 		private Button area;
 		private Button antialias;
-		private Button step; 
-		private Label label;
-		
-		ResultSet(Button area, Button antialias, Button step, Label l){
-			this.antialias=antialias;
-			this.area=area;
-			this.step=step;
-			this.label = l;
+		private Button step;
+		private Text text;
+		private Combo symbol;
+
+		ResultSet(Button area, Button antialias, Button step, Text t,
+				Combo symbol) {
+			this.antialias = antialias;
+			this.area = area;
+			this.step = step;
+			this.text = t;
+			this.symbol = symbol;
 		}
 
 		public int getAntialias() {
-			if (antialias.getSelection()) return SWT.ON;
-			else return SWT.OFF;
+			if (antialias.getSelection())
+				return SWT.ON;
+			else
+				return SWT.OFF;
 		}
 
 		public void setAntialias(Button antialias) {
@@ -228,11 +331,11 @@ public class ChartSettings {
 		}
 
 		public Color getColor() {
-			return label.getBackground();
+			return text.getBackground();
 		}
 
-		public void setLabel(Label label) {
-			this.label = label;
+		public void setText(Text text) {
+			this.text = text;
 		}
 
 		public boolean getArea() {
@@ -242,6 +345,11 @@ public class ChartSettings {
 		public void setArea(Button area) {
 			this.area = area;
 		}
+		
+		public PlotSymbolType getSymbolType(){
+			return symbolList.get(symbol.getItem(symbol.getSelectionIndex()));
+		}
+
 	}
 	
 }

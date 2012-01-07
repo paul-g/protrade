@@ -22,9 +22,9 @@ import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.DisplayPanel;
 import org.ic.tennistrader.ui.LowerToolBar;
 import org.ic.tennistrader.ui.NavigationPanel;
-import org.ic.tennistrader.ui.UpperToolBar;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.menus.MenuPanel;
+import org.ic.tennistrader.ui.toolbars.DashboardToolBar;
 import org.ic.tennistrader.ui.widgets.StandardWidgetResizeListener;
 
 public class StandardWindow implements MainWindow {
@@ -44,7 +44,7 @@ public class StandardWindow implements MainWindow {
 	private NavigationPanel np;
 
 	/* ToolBars */
-	private UpperToolBar utb;
+	private DashboardToolBar utb;
 	private LowerToolBar ltb;
 
 	private static Logger log = Logger.getLogger(StandardWindow.class);
@@ -87,7 +87,7 @@ public class StandardWindow implements MainWindow {
 		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
 		log.info("Starting upper toolbar");
-		utb = new UpperToolBar(this);
+		utb = new DashboardToolBar(shell);
 		log.info("Upper toolbar started");
 
 		makeLayout();
@@ -109,7 +109,7 @@ public class StandardWindow implements MainWindow {
 
 		notifyLoadEvent("Configuring toolbars");
 
-		ltb = new LowerToolBar(this);
+		// ltb = new LowerToolBar(this);
 
 		notifyLoadEvent("Done!");
 		shell.layout();
@@ -211,6 +211,7 @@ public class StandardWindow implements MainWindow {
 		return this.shell;
 	}
 
+	@Override
 	public void dispose() {
 		shell.dispose();
 	}
@@ -251,7 +252,7 @@ public class StandardWindow implements MainWindow {
 		dp.addMatchViewer();
 	}
 
-	public UpperToolBar getUpperToolBar() {
+	public DashboardToolBar getUpperToolBar() {
 		return utb;
 	}
 

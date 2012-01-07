@@ -1,7 +1,6 @@
 package org.ic.tennistrader.ui.chart;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -10,17 +9,13 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.model.BackValuesComputer;
-import org.ic.tennistrader.model.MAComputer;
+import org.ic.tennistrader.model.chart_computers.BackValuesComputer;
+import org.ic.tennistrader.model.chart_computers.MAComputer;
+import org.ic.tennistrader.model.chart_computers.PredictedComputer;
+import org.ic.tennistrader.model.chart_computers.SetEndComputer;
 import org.swtchart.IAxis;
 import org.swtchart.IAxisSet;
-import org.swtchart.IBarSeries;
-import org.swtchart.IErrorBar;
-import org.swtchart.IErrorBar.ErrorBarType;
-import org.swtchart.ILineSeries;
-import org.swtchart.ILineSeries.PlotSymbolType;
 import org.swtchart.ISeries.SeriesType;
-import org.swtchart.ISeriesSet;
 import org.swtchart.ITitle;
 import org.swtchart.LineStyle;
 import org.swtchart.Range;
@@ -43,6 +38,7 @@ public class OddsChart extends UpdatableChart {
 	private final String yAxisDecimalTitle = "Decimal Odds";
 	private final String yAxisFractionalTitle = "Implied Odds (%)";
 	
+	/*
 	boolean pl1Selected;
 	boolean pl2Selected;
 	/*
@@ -53,7 +49,9 @@ public class OddsChart extends UpdatableChart {
 	public OddsChart(Composite parent, int style, Slider slider) {
 		super(parent, style);
 		this.slider = slider;
-		init(parent, "Player 1", "Player 2");
+		this.player1Name = "Player 1";
+		this.player2Name = "Player 2";
+		init(parent);
 	}
 
 	public OddsChart(Composite parent, int style, Match match,
@@ -61,14 +59,16 @@ public class OddsChart extends UpdatableChart {
 		super(parent, style);
 		this.slider = slider;
 		this.chartData = chartData;
-		String pl1Name = match.getPlayerOne().toString();
-		String pl2Name = match.getPlayerTwo().toString();
+		this.player1Name = match.getPlayerOne().toString();
+		this.player2Name = match.getPlayerTwo().toString();
 
 		//initSlider();
-		init(parent, pl1Name, pl2Name);
+		init(parent);
+		makeMenu();
+		
 	}
 
-	private void init(Composite parent, String pl1Name, String pl2Name) {
+	private void init(Composite parent) {
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
 
 		//setSeriesStyles(pl1Name, pl2Name);
@@ -76,7 +76,7 @@ public class OddsChart extends UpdatableChart {
 		
 		
 		decimalOdds = true;
-		pl1Selected = true;
+		//pl1Selected = true;
 
 		IAxis xAxis = getAxisSet().getXAxis(0);
 		configureAxis(xAxis, xAxisTitle, LineStyle.NONE, false);
@@ -89,7 +89,7 @@ public class OddsChart extends UpdatableChart {
 		
 		
 		//makeMenus(parent, pl1Name, pl2Name);
-		makeMenu();
+		
 		
 		
 		
@@ -117,33 +117,40 @@ public class OddsChart extends UpdatableChart {
 		chartMenu = new ChartMenu();
 		SeriesProperties player1Back = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER1,
-				"BACK ODDS pl 1", new BackValuesComputer(), new LineProp());
+				"BACK ODDS", this.player1Name, new BackValuesComputer(), new LineProp());
 		chartMenu.addSeriesItem(player1Back);
 		SeriesProperties player2Back = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER2,
-				"BACK ODDS pl 2", new BackValuesComputer(), new LineProp());
+				"BACK ODDS", this.player2Name, new BackValuesComputer(), new LineProp());
 		chartMenu.addSeriesItem(player2Back);
 		
 		
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.MOVING_AVERAGE, PlayerEnum.PLAYER1,
-				"MA pl 1", new MAComputer(), new LineProp()));
+				"MA", this.player1Name, new MAComputer(), new LineProp()));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.MOVING_AVERAGE, PlayerEnum.PLAYER2,
-				"MA pl 2", new MAComputer(), new LineProp()));
+				"MA", this.player2Name, new MAComputer(), new LineProp()));
 		
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER1,
-				"Predicted pl 1", new BackValuesComputer(), new LineProp()));
+				"Predicted", this.player1Name, new PredictedComputer(), new LineProp()));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER2,
-				"Predicted pl 2", new BackValuesComputer(), new LineProp()));
+				"Predicted", this.player2Name, new PredictedComputer(), new LineProp()));
 		
+		LineProp endOfSetsProp = new LineProp();
+		endOfSetsProp.setyAxisId(1);
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER1,
-				"End of sets", new BackValuesComputer(), new LineProp()));
+				"End of sets", "", new SetEndComputer(),endOfSetsProp));
+		/*
+		 * endOfSets.setYAxisId(1);
+		 * 
+		 */
 		
-		addSeries(new BackValuesComputer(), player1Back);
+		//addSeries(new BackValuesComputer(), player1Back);
+		initialSeries.add(player1Back);
 		//addSeries(new BackValuesComputer(), player2Back);
 	}
 	
@@ -210,7 +217,7 @@ public class OddsChart extends UpdatableChart {
 				color2, LineStyle.DOT, PlotSymbolType.NONE, 0, false, SWT.ON,
 				false, false);
 	}
-	*/
+	
 
 	private IBarSeries createBarSeries(ISeriesSet seriesSet, String title,
 			int i, boolean b) {
@@ -244,7 +251,8 @@ public class OddsChart extends UpdatableChart {
 		line.setVisible(visible);
 		return line;
 	}
-
+	*/
+	
 	/**
 	 * Populates the chart with the given market data
 	 */

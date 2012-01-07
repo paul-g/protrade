@@ -2,12 +2,12 @@ package org.ic.tennistrader.ui.chart;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -16,36 +16,47 @@ import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.model.SeriesComputer;
+import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.model.chart_computers.SeriesComputer;
 import org.ic.tennistrader.ui.updatable.UpdatableWidget;
 import org.swtchart.Chart;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
 
 public abstract class UpdatableChart extends Chart implements UpdatableWidget {
-	private static final Logger log = Logger.getLogger(UpdatableChart.class);
-	private ChartSettings window = null;
+	private static final Logger log = Logger.getLogger(UpdatableChart.class); 
 	protected ChartData chartData;
 	private ConcurrentHashMap<SeriesProperties, SeriesComputer> computerSeries = new ConcurrentHashMap<SeriesProperties, SeriesComputer>();;
+	protected List<SeriesProperties> initialSeries;
 	protected Slider slider;
 	protected final int sampleSize = 200;
 	private int startingIndex = 1;
 	private Composite parent;
+	private Menu menu;
 	protected ChartMenu chartMenu;
+	protected String player1Name;
+	protected String player2Name;
 
 	public UpdatableChart(Composite parent, int style) {
 		super(parent, style);
 		this.parent = parent;
+		initialSeries = new ArrayList<SeriesProperties>();
 		//computerSeries 
+	}
+	
+	protected void addInitialSeries() {
+		for (SeriesProperties seriesProp : initialSeries){
+			addSeries(seriesProp.getComputer(), seriesProp);
+		}
 	}
 
 	public void addSeries(SeriesComputer seriesComputer,
 			SeriesProperties properties) {
 		properties.setChartSeries(this.getSeriesSet().createSeries(
-				properties.getChartType(), properties.getName()));
+				properties.getChartType(), properties.getFullName()));
 		properties.setSelected(true);
 		properties.getChartSeries().setVisible(true);
-		properties.updateLineProperties();
+		properties.updateSeriesProperties();
 		computerSeries.put(properties, seriesComputer);
 		updateSeriesProperties(properties);
 		// TODO add to chart; make menus with reference to properties
@@ -74,7 +85,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	public void removeSeries(SeriesProperties properties) {
 		properties.setSelected(false);
 		properties.getChartSeries().setVisible(false);
-		this.getSeriesSet().deleteSeries(properties.getName());
+		this.getSeriesSet().deleteSeries(properties.getFullName());
 		computerSeries.remove(properties);
 	}
 
@@ -95,6 +106,14 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	public void setMatch(Match match) {
+		this.player1Name = match.getPlayerOne().toString();
+		this.player2Name = match.getPlayerTwo().toString();
+		for (SeriesProperties seriesProp : chartMenu.getSeriesItems()) {
+			seriesProp.setPlayerName(seriesProp.getPlayer().equals(
+					PlayerEnum.PLAYER1) ? player1Name : player2Name);
+		}
+		makeMenu();
+		
 		log.info("Set match " + match);
 	}
 
@@ -150,7 +169,8 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 	
 	protected void makeMenu() {
-		Menu menu = new Menu(parent.getShell(), SWT.POP_UP);
+		addInitialSeries();
+		menu = new Menu(parent.getShell(), SWT.POP_UP);
 		this.setMenu(menu);
 		this.getPlotArea().setMenu(menu);
 		for(final SeriesProperties prop : chartMenu.getSeriesItems()) {
@@ -161,21 +181,24 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		settingsItem.addListener(SWT.Selection, new Listener(){
 			@Override
 			public void handleEvent(Event arg0) {
-				String namePl1 = "Player1";
-				String namePl2 = "Player2";
-				if (window == null || window.isDisposed()) {
-					window = new ChartSettings(Display.getCurrent(),
-							UpdatableChart.this, namePl1, namePl2);
-				} else {
-					window.forceActive();
-				}
+				//String namePl1 = "Player1";
+				//String namePl2 = "Player2";
+				//Composite settingsPanel = new Composite(form, SWT.BORDER);
+				ChartSettings csd = new ChartSettings(UpdatableChart.this.getParent().getShell(),
+						UpdatableChart.this);
+				csd.open();
 			}
 		});
+	}
+	
+	private void updateMenu() {
+		List<MenuItem> menuItems = new ArrayList<MenuItem>();
+		for (MenuItem mi : menuItems) mi.dispose();
 	}
 
 	private void createMenuItem(Menu menu, final SeriesProperties prop) {
 		final MenuItem newMenuItem = new MenuItem(menu, SWT.CHECK);
-		newMenuItem.setText(prop.getName());
+		newMenuItem.setText(prop.getFullName());
 		newMenuItem.setSelection(prop.isSelected());
 		newMenuItem.addListener(SWT.Selection, new Listener(){
 			@Override
@@ -195,7 +218,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	private void addSpreadMenuItem(Menu menu, final SeriesProperties prop,
 			final MenuItem newMenuItem) {
 		final MenuItem spreadMenuItem = new MenuItem(menu, SWT.CHECK);
-		spreadMenuItem.setText("Spread " + prop.getName());
+		spreadMenuItem.setText("Spread " + prop.getFullName());
 		spreadMenuItem.setSelection(false);
 		spreadMenuItem.addListener(SWT.Selection, new Listener(){
 			@Override
@@ -271,4 +294,11 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		}
 	}
 	 
+	public String getPlayer1Name() {
+		return player1Name;
+	}
+
+	public String getPlayer2Name() {
+		return player2Name;
+	}
 }

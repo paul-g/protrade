@@ -8,8 +8,10 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.ic.tennistrader.ui.main.StandardWindow;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class LowerToolbarTest extends DisplayTest {
 	
 	private StandardWindow mw;

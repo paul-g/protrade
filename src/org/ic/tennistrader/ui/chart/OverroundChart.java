@@ -12,9 +12,9 @@ import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.model.BackValuesComputer;
-import org.ic.tennistrader.model.OverroundComputer;
-import org.ic.tennistrader.model.VolumeComputer;
+import org.ic.tennistrader.model.chart_computers.BackValuesComputer;
+import org.ic.tennistrader.model.chart_computers.OverroundComputer;
+import org.ic.tennistrader.model.chart_computers.VolumeComputer;
 import org.swtchart.IAxis;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
@@ -38,7 +38,9 @@ public class OverroundChart extends UpdatableChart {
 			Slider slider) {
 		super(parent, style);
 		this.slider = slider;
-		init(parent, syncWith, slider, "Player 1", "Player 2");
+		this.player1Name = "Player 1";
+		this.player2Name = "Player 2";
+		init(parent, syncWith, slider);
 	}
 
 	public OverroundChart(Composite parent, int style, Match match,
@@ -46,14 +48,17 @@ public class OverroundChart extends UpdatableChart {
 		super(parent, style);
 		this.chartData = chartData;
 		this.slider = slider;
-		String pl1Name = match.getPlayerOne().toString();
-		String pl2Name = match.getPlayerTwo().toString();
+		this.player1Name = match.getPlayerOne().toString();
+		this.player2Name = match.getPlayerTwo().toString();
 
-		init(parent, syncWith, slider, pl1Name, pl2Name);
+		init(parent, syncWith, slider);
+		
+		makeMenu();
+		
 	}
 
 	private void init(Composite parent, OddsChart syncWith,
-			Slider slider, String pl1Name, String pl2Name) {
+			Slider slider) {
 
 		getTitle().setVisible(false);
 
@@ -62,22 +67,23 @@ public class OverroundChart extends UpdatableChart {
 		chartMenu = new ChartMenu();
 		SeriesProperties overround = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER1,
-				"Overround Back", new OverroundComputer(), new LineProp());
+				"Overround Back", "", new OverroundComputer(), new LineProp());
 		chartMenu.addSeriesItem(overround);
 		SeriesProperties overroundl = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER2,
-				"Overround Lay", new OverroundComputer(), new LineProp());
+				"Overround Lay", "", new OverroundComputer(), new LineProp());
 		chartMenu.addSeriesItem(overroundl);
 		SeriesProperties volume1 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER1,
-				"Volume pl 1", new VolumeComputer(), new LineProp());
+				"Volume", this.player1Name, new VolumeComputer(), new LineProp());
 		chartMenu.addSeriesItem(volume1);
 		SeriesProperties volume2 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER2,
-				"Volume pl 2", new VolumeComputer(), new LineProp());
+				"Volume", this.player2Name, new VolumeComputer(), new LineProp());
 		chartMenu.addSeriesItem(volume2);
 		
-		addSeries(new BackValuesComputer(), overround);
+		//addSeries(new BackValuesComputer(), overround);
+		initialSeries.add(overround);
 		
 		
 		// setBackOverround(true);
@@ -94,9 +100,10 @@ public class OverroundChart extends UpdatableChart {
 		
 		
 		//makeMenu(syncWith, parent);
-		makeMenu();
+		
 	}
 
+	/* Old ones
 	private void createSeries(String pl1Name, String pl2Name) {
 		ISeriesSet seriesSet = this.getSeriesSet();
 		backOverround = (ILineSeries) seriesSet.createSeries(SeriesType.LINE,
@@ -124,6 +131,7 @@ public class OverroundChart extends UpdatableChart {
 		// pl1Volume.setVisible(false);
 		pl2Volume.setVisible(false);
 	}
+	*/
 
 	public void visibility(boolean pl1, boolean pl2) {
 		if (isBackOverround || isLayOverround) {
@@ -214,6 +222,24 @@ public class OverroundChart extends UpdatableChart {
 		// this.getAxisSet().getXAxis(0).adjustRange();
 		// this.getAxisSet().getYAxis(0).setRange(new Range(0,150));
 	}
+	
+	protected void updateData(MOddsMarketData data) {
+		// add new market data to the data structures
+		//int dataSize = chartData.getDataSize() - 1;
+		// set serieses values
+		showSeries(chartData.getDataSize() - 1, false);
+		if (!isDisposed()) {
+			getAxisSet().getXAxis(0).adjustRange();
+			getAxisSet().getYAxis(0).adjustRange();
+		}
+	}
+
+	@Override
+	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
+		
 
 	/*
 	private void makeMenu(final OddsChart oddsChart, Composite parent) {
@@ -320,23 +346,4 @@ public class OverroundChart extends UpdatableChart {
 		}
 	}
 	*/
-
-	protected void updateData(MOddsMarketData data) {
-		// add new market data to the data structures
-		//int dataSize = chartData.getDataSize() - 1;
-		// set serieses values
-		showSeries(chartData.getDataSize() - 1, false);
-		if (!isDisposed()) {
-			getAxisSet().getXAxis(0).adjustRange();
-			getAxisSet().getYAxis(0).adjustRange();
-		}
-	}
-
-	@Override
-	public void handleBettingMarketEndOFSet() {
-		// TODO Auto-generated method stub
-		
-	}
-		
-
 }

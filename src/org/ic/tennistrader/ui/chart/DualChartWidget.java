@@ -37,9 +37,9 @@ public class DualChartWidget extends MatchViewerWidget {
 
 		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
 
-		new DualChartWidget(shell, match);
-		//new DualChartWidget(shell);
-
+		//new DualChartWidget(shell, match);
+		DualChartWidget dualChart = new DualChartWidget(shell);
+		dualChart.setMatch(match);
 		shell.open();
 
 		while (!shell.isDisposed()) {
