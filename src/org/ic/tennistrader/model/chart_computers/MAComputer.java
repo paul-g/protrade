@@ -1,4 +1,4 @@
-package org.ic.tennistrader.model;
+package org.ic.tennistrader.model.chart_computers;
 
 import java.util.ArrayList;
 import org.ic.tennistrader.domain.ChartData;

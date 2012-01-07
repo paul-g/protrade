@@ -1,11 +1,11 @@
-package org.ic.tennistrader.model;
+package org.ic.tennistrader.model.chart_computers;
 
 import java.util.ArrayList;
 
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 
-public class VolumeComputer extends SeriesComputer {
+public class OverroundComputer extends SeriesComputer{
 	@Override
 	public double[] computeValues(PlayerEnum player, ChartData chartData,
 			int startIndex) {
@@ -13,10 +13,10 @@ public class VolumeComputer extends SeriesComputer {
 		ArrayList<Double> oldValues;
 		if (chartData != null) {
 			if (player.equals(PlayerEnum.PLAYER1)) {
-				oldValues = chartData.getPl1Volume();
+				oldValues = chartData.getBackOverround();
 			}
 			else {
-				oldValues = chartData.getPl2Volume();
+				oldValues = chartData.getLayOverround();
 			}
 			int size = oldValues.size() - startIndex;
 			values = new double[size];
@@ -26,7 +26,6 @@ public class VolumeComputer extends SeriesComputer {
 		}
 		return values;
 	}
-
 	//@Override
 	public double[] addValue(PlayerEnum player, ChartData chartData,
 			double player1newValue, double player2newValue) {
@@ -36,8 +35,8 @@ public class VolumeComputer extends SeriesComputer {
 
 	@Override
 	protected double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		int size = oldValues.size();
+		return new double[1];
 	}
 
 }
