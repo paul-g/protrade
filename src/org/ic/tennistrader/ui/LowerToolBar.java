@@ -6,34 +6,29 @@ import java.net.URL;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.ic.tennistrader.ui.main.MainWindow;
 
-public class LowerToolBar {
+public class LowerToolBar extends Composite {
 
 	private final ToolBar toolbar;
 	private static boolean stop = false;
 	private static Logger log = Logger.getLogger(LowerToolBar.class);
 
-	public LowerToolBar(final MainWindow mainWindow) {
-
-		final Shell shell = mainWindow.getShell();
-
+	public LowerToolBar(final Composite parent) {
+		super(parent, SWT.NONE);
+		setLayout(new FillLayout());
 		/* Setting span throughout the columns */
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 3;
-		Display display = shell.getDisplay();
+		Display display = getDisplay();
 
 		/* Setting the tool bar */
-		this.toolbar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		// toolbar.setLayoutData(gridData);
+		this.toolbar = new ToolBar(this, SWT.FLAT | SWT.RIGHT);
 		toolbar.setBackgroundMode(SWT.INHERIT_FORCE);
 
 		/* Internet availability */
@@ -47,19 +42,18 @@ public class LowerToolBar {
 		Label name = new Label(toolbar, SWT.NULL);
 		name.setText("Memory Usage");
 		name.setAlignment(SWT.LEFT);
-		// name.setBounds(55, 13, 110, 20);
+		name.setBounds(55, 13, 110, 20);
 		ProgressBar usage = new ProgressBar(toolbar, SWT.SMOOTH);
-		// usage.setBounds(170, 11, 150, 22);
+		usage.setBounds(170, 11, 150, 22);
 		usage.setSelection(100);
-		shell.open();
 
 		/* Check threads */
-		createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		//createUsageBarCheck(shell, usage);
+		// createAndStartNetworkCheckThread(shell, widgetItem, off, on);
+		// createUsageBarCheck(shell, usage);
 
 		// toolbar.setSize(300, 65);
-		toolbar.pack();
-		toolbar.setLocation(0, 0);
+		// toolbar.pack();
+		// toolbar.setLocation(0, 0);
 	}
 
 	/** Method invoking the Internet check thread */
