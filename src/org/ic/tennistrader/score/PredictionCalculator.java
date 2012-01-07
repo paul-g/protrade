@@ -1,12 +1,18 @@
 package org.ic.tennistrader.score;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.lang.Number;
 
+import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.domain.match.Statistics;
+import org.ic.tennistrader.model.prediction.StatisticMeasures;
 
 public class PredictionCalculator {
 
@@ -55,10 +61,9 @@ public class PredictionCalculator {
 		return result;
 	}
 	
-	public double[] calculateOddsWithRecalibratedPWOS(Match match){
+	public double[] calculateOddsWithRecalibratedPWOS(Match match, int avgPeriod){
 		double[] result = new double[2];
-		// needs access to marketOddsForServer, put 0 as dummy value, need someone to integrate this (Corina?)
-		recalibratePWOS(/*double marketOddsForServer*/0, match);
+		recalibratePWOS(match, avgPeriod);
 		double[] res = calculate(match);
 		// player 1
 		result[0] = res[8];
@@ -139,16 +144,20 @@ public class PredictionCalculator {
 		return result;
 	}
 	
-	// Recalibrate model PWOS so it is closest to the PWOS the actual market odds would indicate
+	// Recalibrate model PWOS so it is closest to the average PWOS the actual market odds would indicate
 	// Models assumes that PWOS perceived by market changes only for the player serving
-	public void recalibratePWOS(double actualOdds, Match match){
+	// avgPeriod should be 7s
+	public void recalibratePWOS(Match match, int avgPeriod){
+		
+		PlayerEnum server = match.getServer();
+		
+		double actualOdds = StatisticMeasures.Avg(getOddsInTimePeriod(match, avgPeriod));
 	    double oddsTemp = 0;
 	    double errorOld = actualOdds;
 	    
 	    // Assume that a current professional player's pwos can fluctuate with +- 0.05 after a point
-	    // In prof tennis a player's pw always > 0.05, so no boundary conditions
+	    // In prof tennis a player's statistical pw always > 0.05, so no boundary conditions	    
 	    
-	    PlayerEnum server = match.getServer();
 	    if (server == PlayerEnum.PLAYER1){
 	    	pwA = pwA - 0.05;
 	    
@@ -170,6 +179,30 @@ public class PredictionCalculator {
                  pwB = pwB + 0.01;
 	    	}
     	}
+	}
+	
+	public static ArrayList<Double> getOddsInTimePeriod(Match match, int avgPeriod){
+		PlayerEnum server = match.getServer();
+		List<MOddsMarketData> marketDatas = new ArrayList<MOddsMarketData>();
+		ArrayList<Double> OddsLastSecs = new ArrayList<Double>();
+		marketDatas = match.getMarketDatas();
+		MOddsMarketData lastData = match.getLastMarketData();
+		Iterator iter = marketDatas.iterator();
+		
+		// determine first odds data object within the avgPeriod of the last one
+		while(iter.hasNext()){
+			MOddsMarketData data = (MOddsMarketData)iter.next();
+			if ((lastData.getDelay() - data.getDelay()) <= avgPeriod){
+				OddsLastSecs.add(data.getLastPriceMatched(server));			
+				break;
+			}
+		}
+		while(iter.hasNext()){
+			double value = ((MOddsMarketData)iter.next()).getLastPriceMatched(server);
+			OddsLastSecs.add(value);
+		}
+		
+		return OddsLastSecs;
 	}
 
 	
@@ -354,5 +387,7 @@ public class PredictionCalculator {
 			pwgA = value;
 		else
 			pwgB = value;
-	}	
+	}
+	
+	
 }
