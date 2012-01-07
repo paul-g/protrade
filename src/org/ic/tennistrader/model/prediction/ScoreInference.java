@@ -6,8 +6,33 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.score.PredictionCalculator;
 
+
 // Dynamic odds checking for score inference
 public class ScoreInference {
+	
+	private Score currentGameInferredScore = new Score();
+	
+	// when calling use avgPeriod = 7s.
+	public void runPointCheck(Match match, int avgPeriod){
+		int point = isPointScored(match, avgPeriod);
+		
+		
+		// Shahin, can you make updates on the chart with the point events, gamesWon? 
+		// (once Corina creates a thread running this)
+			
+		
+		// player 1 won the point
+		if (point == 0){
+			currentGameInferredScore.addPlayerOnePoint();
+			// put updated inferred score on chart
+		}
+		// player 2 won the point
+		else{
+			currentGameInferredScore.addPlayerTwoPoint();
+			// put point on chart
+		}
+
+	}	
 	
     /* For checking to avoid falsely recognising post-scoring odds fluctuations.
 	 * a timer value(avgPeriod) = 7s for the server is given in *Huang
@@ -15,51 +40,50 @@ public class ScoreInference {
 	 *  Method must wait 7s for odds to stabilize and after wait for new market data;
 	 * related to Heuristic 4: Averaging Odds During Fluctuation / page 46 *Huang paper
 	 *
-	 * Returns 0 if player 1 won the point, 1 if player 2 scored, and -1 if neither scored
+	 * Returns 0 if player 1 won the point, 1 if player 2 scored
 	 */
 	public int isPointScored(Match match, int avgPeriod){
 		int threshold = -1;
 		int change = -1;
 		int changeOverManyPoints = -1;
-		while(true){
+		
+		// wait 7s(avgPeriod)
+		//  Can you please help me on this, Corina? I'd need a separate thread that runs this method
+		//  and put it to sleep for 7s
+		
+		
+		double[] minMax = getOddsBounds(match, avgPeriod);
+		double largeChange = StatisticMeasures.InterQuartileRange(
+				PredictionCalculator.getOddsInTimePeriod(match, avgPeriod));
+		double startOdds = match.getLastMarketData().getLastPriceMatched(match.getServer());
+		
+		// Keep checking odds till a point is score by either player
+		while (change == -1 && threshold== -1 && changeOverManyPoints== -1){
+			double prevOdds = match.getLastMarketData().getLastPriceMatched(match.getServer());		
 			
 			
-			// wait 7s(avgPeriod)
-			//  Can you please help me on this, Corina? I'd need a separate thread that runs this method
-			//  and put it to sleep for 7s
+			// wait for new MOdds
+			//  thread sleep till new MOdds arrive
+			//	 Can you please help me on this, Corina ?
+			// After separate thread is done, Shahin can plot point events on chart 
 			
 			
-			double[] minMax = getOddsBounds(match, avgPeriod);
-			double largeChange = StatisticMeasures.InterQuartileRange(
-					PredictionCalculator.getOddsInTimePeriod(match, avgPeriod));
-			double startOdds = match.getLastMarketData().getLastPriceMatched(match.getServer());
+			double actualOdds = match.getLastMarketData().getLastPriceMatched(match.getServer());
 			
-			while (change == -1 && threshold== -1){
-				double prevOdds = match.getLastMarketData().getLastPriceMatched(match.getServer());		
-				
-				
-				// wait for new MOdds
-				//  same as above
-				//	 Can you please help me on this, Corina ?
-				// After separate thread is done, Shahin can plot point events on chart 
-				
-				
-				double actualOdds = match.getLastMarketData().getLastPriceMatched(match.getServer());
-				
-				threshold = checkPointByThreshold(actualOdds, minMax[0], minMax[1], match.getServer());
-				change = checkPointByLargeChange(actualOdds,  prevOdds, largeChange, 
-													minMax[0], minMax[1], match.getServer());
-				changeOverManyPoints = checkPointByLargeChange(actualOdds,  startOdds, largeChange, 
-																minMax[0], minMax[1], match.getServer());
-			}
-			// Threshold check takes priority. If threshold values not attaines, check for major odds change
-			// to cover up the remaining cases in which points are scored
-			if(threshold != -1)
-				return threshold;
-			if(change != -1)
-				return change;
-			return changeOverManyPoints;
+			threshold = checkPointByThreshold(actualOdds, minMax[0], minMax[1], match.getServer());
+			change = checkPointByLargeChange(actualOdds,  prevOdds, largeChange, 
+												minMax[0], minMax[1], match.getServer());
+			changeOverManyPoints = checkPointByLargeChange(actualOdds,  startOdds, largeChange, 
+															minMax[0], minMax[1], match.getServer());
 		}
+		// Threshold check takes priority. If threshold values not attaines, check for major odds change
+		// to cover up the remaining cases in which points are scored
+		if(threshold != -1)
+			return threshold;
+		if(change != -1)
+			return change;
+		
+		return changeOverManyPoints;
 	}
 	
 	/* Check if threshold min/max are exceeded by new market odds
