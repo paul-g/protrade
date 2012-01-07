@@ -56,7 +56,13 @@ public class ProfileWindow {
 			e.getMessage();
 		}
 		addDescriptionLabel(new Image(display,"images/profile/user.png"),3);
-		addLabel("USERNAME",toS(profileData.getUsername()));
+		Label uname = new Label(shell, SWT.BORDER);
+		uname.setText("USERNAME");
+		uname.setLayoutData(gd);
+		Label name = new Label(shell, SWT.BORDER);
+		name.setText(toS(profileData.getUsername()));
+		name.setLayoutData(gd);
+		name.setAlignment(SWT.CENTER);
 		addLabel("FIRST NAME", toS(profileData.getFirstName()));
 		addLabel("LAST NAME", toS(profileData.getSurname()));
 		addDescriptionLabel(new Image(display,"images/profile/address.png"),3);
