@@ -86,8 +86,9 @@ public class ProbabilityPanel extends MatchViewerWidget implements
 	}
 
 	public void updateTable() {
-
-		double[] result = PredictionCalculator.calculate(this.match);
+		
+		PredictionCalculator calc = new PredictionCalculator(this.match);
+		double[] result = calc.calculate(this.match);
 		// double[] result = {0,0,0,0,0};
 
 		Table table = this.table;

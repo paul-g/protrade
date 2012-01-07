@@ -3,6 +3,7 @@ package org.ic.tennistrader.score;
 import java.text.DecimalFormat;
 
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.domain.match.Statistics;
@@ -11,6 +12,8 @@ public class PredictionCalculator {
 
 	private static double pwgA;
 	private static double pwgB;
+	private static double pwA;
+	private static double pwB;
 	// By default have final set tiebreak, not advantage set
 	private static int TIEBREAK = 1;
 	
@@ -30,11 +33,42 @@ public class PredictionCalculator {
 		return res;
     }
 	
-	public static double[] calculate(Match match) {
-		double[] result = new double[10];
-
+	public PredictionCalculator(Match match){
+		initialPWOS(match);
+	}
+	
+	private void initialPWOS(Match match){
 		Statistics playerOneStats = match.getPlayerOne().getStatistics();
 		Statistics playerTwoStats = match.getPlayerTwo().getStatistics();
+		pwA = calculatePWOS(playerOneStats);
+		pwB = calculatePWOS(playerTwoStats);
+	};
+	
+	// Shahin, you can use this method, or the PWOS recalibrated one, for the chart display of odds,
+	// don't know which provides better overlay with actual odds (surprisingly nobody tried it), 
+	// but I obviously assume the recalibrated one (and I can barely want to see the overlay over a match's duration)
+	public double[] calculateOddsWithStaticPWOS(Match match){
+		double[] result = new double[2];
+		double[] res = calculate(match);
+		result[0] = res[8];
+		result[1] = res[9];
+		return result;
+	}
+	
+	public double[] calculateOddsWithRecalibratedPWOS(Match match){
+		double[] result = new double[2];
+		// needs access to marketOddsForServer, put 0 as dummy value, need someone to integrate this (Corina?)
+		recalibratePWOS(/*double marketOddsForServer*/0, match);
+		double[] res = calculate(match);
+		// player 1
+		result[0] = res[8];
+		// player 2
+		result[1] = res[9];
+		return result;
+	}
+	
+	public double[] calculate(Match match) {
+		double[] result = new double[10];
 		
 		
 		PlayerEnum server = match.getServer();
@@ -42,10 +76,8 @@ public class PredictionCalculator {
 
 		//***NOTE: VERY IMPORTANT - Indice 1 corresponds to player 1, 0 to player 2 in all functions;
 	    //		   CONVENTIONS	  - Even indices in result corespond to player 1 results, odd ones to player 2 
-		result[0] = calculatePWOS(playerOneStats);
-		result[1] = calculatePWOS(playerTwoStats);
-		double pw1 = result[0];
-		double pw2 = result[1];
+		result[0] = pwA;
+		result[1] = pwB;
 		int [] points = convertPoints(
 							score.getPlayerOnePoints(), 
 							score.getPlayerTwoPoints());
@@ -61,14 +93,14 @@ public class PredictionCalculator {
 			result[4] = calculateCurrentSetPercent( 
 							score.getCurrentSetScore().getPlayerOneGames(), 
 							score.getCurrentSetScore().getPlayerTwoGames(), 
-							pw1, pw2, 1);
+							pwA, pwB, 1);
 			result[5] = 1 - result[4];
 			
 			result[6] = calculateWinMatch(
 							result[4], 
 							score.getPlayerOneSets(), 
 							score.getPlayerTwoSets(),
-							pw1, pw2,
+							pwA, pwB,
 							1, score.getMaximumSetsPlayed(), TIEBREAK);
 			result[7] = 1-result[6];
 			
@@ -83,14 +115,14 @@ public class PredictionCalculator {
 		    result[5] = calculateCurrentSetPercent( 
 							score.getCurrentSetScore().getPlayerOneGames(), 
 							score.getCurrentSetScore().getPlayerTwoGames(), 
-							pw1, pw2, 0);
+							pwA, pwB, 0);
 			result[4] = 1 - result[5];
 			
 			result[7] = calculateWinMatch(
 							result[5], 
 							score.getPlayerOneSets(), 
 							score.getPlayerTwoSets(),
-							pw1, pw2,
+							pwA, pwB,
 							0, score.getMaximumSetsPlayed(), TIEBREAK);
 			result[6] = 1-result[7];
 			
@@ -102,10 +134,42 @@ public class PredictionCalculator {
 		DecimalFormat df = new DecimalFormat("#.###");
 		for (int i =0; i<10; i++){			
 			result[i] = Double.parseDouble(df.format(result[i]));
-			//System.out.println(result[i]);
 		}
 		
 		return result;
+	}
+	
+	// Recalibrate model PWOS so it is closest to the PWOS the actual market odds would indicate
+	// Models assumes that PWOS perceived by market changes only for the player serving
+	public void recalibratePWOS(double actualOdds, Match match){
+	    double oddsTemp = 0;
+	    double errorOld = actualOdds;
+	    
+	    // Assume that a current professional player's pwos can fluctuate with +- 0.05 after a point
+	    // In prof tennis a player's pw always > 0.05, so no boundary conditions
+	    
+	    PlayerEnum server = match.getServer();
+	    if (server == PlayerEnum.PLAYER1){
+	    	pwA = pwA - 0.05;
+	    
+	    	// iterate 10 times, searching for the pwos giving the closest value to the actual odds
+	    	while(Math.abs(actualOdds - oddsTemp) <= errorOld){
+	    		errorOld = Math.abs(actualOdds - oddsTemp);    		
+	            // Calculate 1/match-winning probability(odds) for player 1:
+	            oddsTemp = calculate(match)[8];
+	            pwA = pwA + 0.01;
+	    	}
+	    } 
+	    else {
+	    	pwB = pwB - 0.05;
+	    	// iterate max 10 times, searching for the pwos giving the closest value to the actual odds
+	    	while(Math.abs(actualOdds - oddsTemp) <= errorOld){
+                 errorOld = Math.abs(actualOdds - oddsTemp);
+                 // Calculate 1/match-winning probability(odds) for player 2:
+                 oddsTemp = calculate(match)[9];
+                 pwB = pwB + 0.01;
+	    	}
+    	}
 	}
 
 	

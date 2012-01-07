@@ -219,7 +219,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
 		try {
-			double[] result = PredictionCalculator.calculate(this.match);
+			double[] result = new PredictionCalculator(this.match).calculate(this.match);
 			setPlayerPrediction(PredictionCalculator.getP1Data(result),
 					PlayerEnum.PLAYER1);
 			setPlayerPrediction(PredictionCalculator.getP2Data(result),
@@ -236,7 +236,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
 		try {
-			double[] result = PredictionCalculator.calculate(this.match);
+			double[] result = new PredictionCalculator(this.match).calculate(this.match);
 
 			setPlayerPrediction(PredictionCalculator.getP1Data(result),
 					PlayerEnum.PLAYER1);

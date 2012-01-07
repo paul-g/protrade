@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 import java.lang.reflect.*;
 import java.text.DecimalFormat;
 
-@Ignore
 public class PredictionCalculatorTest {
 
     private Match match;
@@ -37,8 +36,8 @@ public class PredictionCalculatorTest {
     @Test
     public void pointPrediction() {
     	double[] expected = {0.682, 0.704};
-    	assertEquals(0, Double.compare(PredictionCalculator.calculate(match)[0], expected[0]));
-    	assertEquals(0, Double.compare(PredictionCalculator.calculate(match)[1], expected[1]));
+    	assertEquals(0, Double.compare(new PredictionCalculator(match).calculate(match)[0], expected[0]));
+    	assertEquals(0, Double.compare(new PredictionCalculator(match).calculate(match)[1], expected[1]));
     }
     
     @Test 
@@ -79,7 +78,7 @@ public class PredictionCalculatorTest {
     	
     	// Testing library functions: calculateGamePercent, calculateTiebreakerGamePercent
     	try{
-    		PredictionCalculator calc = new PredictionCalculator();
+    		PredictionCalculator calc = new PredictionCalculator(match);
     		Class[] args1 = new Class[4];
 	    	args1[0] = Integer.TYPE;
 	    	args1[1] = Integer.TYPE;
@@ -114,7 +113,7 @@ public class PredictionCalculatorTest {
 	    	for (int i=0; i<8; i++){
 	    		for (int j=0; j<8; j++){
 	    			Object[] values = {new Integer(i), new Integer(j), new Double(0.62),new Double(0.60), new Integer(1) };
-	    			Double res = Double.parseDouble(df2.format((Double)method2.invoke(new PredictionCalculator(),(Object[])values)));
+	    			Double res = Double.parseDouble(df2.format((Double)method2.invoke(new PredictionCalculator(match),(Object[])values)));
 	    			//System.out.println("RES"+res + "EXP"+TbGameExpMatrix[i*8+j]);
 	    			assertEquals(0, Double.compare(res, TbGameExpMatrix[i*8+j]) );
 	    		}
@@ -124,7 +123,7 @@ public class PredictionCalculatorTest {
 	    	for (int i=0; i<8; i++){
 	    		for (int j=0; j<8; j++){
 	    			Object[] values = {new Integer(j), new Integer(i), new Double(0.60),new Double(0.62), new Integer(1) };
-	    			Double res = Double.parseDouble(df2.format(1-(Double)method2.invoke(new PredictionCalculator(),(Object[])values)));
+	    			Double res = Double.parseDouble(df2.format(1-(Double)method2.invoke(new PredictionCalculator(match),(Object[])values)));
 	    			//System.out.println("RES"+res + "EXP"+TbGameExpMatrixSnd[i*8+j]);
 	    			assertEquals(0, Double.compare(res, TbGameExpMatrixSnd[i*8+j]) );
 	    		}
@@ -148,7 +147,7 @@ public class PredictionCalculatorTest {
 
 		// Testing library function
 		try{
-			PredictionCalculator calc = new PredictionCalculator();
+			PredictionCalculator calc = new PredictionCalculator(match);
 			Class[] args = new Class[5];
 			args[0] = Integer.TYPE;
 			args[1] = Integer.TYPE;
@@ -185,7 +184,7 @@ public class PredictionCalculatorTest {
 
 		// Testing library function
 		try{
-			PredictionCalculator calc = new PredictionCalculator();
+			PredictionCalculator calc = new PredictionCalculator(match);
 			Class[] args = new Class[5];
 			args[0] = Integer.TYPE;
 			args[1] = Integer.TYPE;
@@ -220,7 +219,7 @@ public class PredictionCalculatorTest {
 	
 		// Testing library function
 		try{
-			PredictionCalculator calc = new PredictionCalculator();
+			PredictionCalculator calc = new PredictionCalculator(match);
 			Class[] args = new Class[6];
 			args[0] = Integer.TYPE;
 			args[1] = Integer.TYPE;
@@ -250,7 +249,7 @@ public class PredictionCalculatorTest {
 		 int p1 = 0;
 		 int p2 = 0;
 		 DecimalFormat df = new DecimalFormat("#.###");
-		 PredictionCalculator calc = new PredictionCalculator();
+		 PredictionCalculator calc = new PredictionCalculator(match);
 		 
 		 // Current game%
 		 double winCurGamePlayer2 = Double.parseDouble(df.format(calc.calculateGamePercent(p1, p2, pw2, 1)));
@@ -306,7 +305,7 @@ public class PredictionCalculatorTest {
 	  	match.setPlayer1(player1);
 	  	match.setPlayer2(player2);
 	  	
-	  	double[] result = PredictionCalculator.calculate(match);
+	  	double[] result = new PredictionCalculator(match).calculate(match);
 	  	
 	  	/*for (double res:result){			
 			System.out.println(res);

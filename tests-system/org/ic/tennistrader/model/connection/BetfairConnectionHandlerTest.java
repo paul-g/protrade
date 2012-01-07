@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 import java.util.List;
 import org.ic.tennistrader.domain.Tournament;
 import org.ic.tennistrader.domain.profile.ProfileData;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class BetfairConnectionHandlerTest extends BetfairConnectionTest{	
 	@Test
 	public void testGetTournamentsData() {

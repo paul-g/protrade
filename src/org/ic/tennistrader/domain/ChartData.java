@@ -77,7 +77,7 @@ public class ChartData {
 		pl2YSeries = addValue(pl2YSeries,  data.getPl2LastMatchedPrice());
 		
 		try {
-			double [] result = calcPrediction(PredictionCalculator.calculate(match));
+			double [] result = calcPrediction(new PredictionCalculator(match).calculateOddsWithStaticPWOS(match));
 			pl1Predicted = addValue(pl1Predicted,  result[0]);
 			pl2Predicted = addValue(pl2Predicted,  result[1]);
 		} catch (NullPointerException e) {
