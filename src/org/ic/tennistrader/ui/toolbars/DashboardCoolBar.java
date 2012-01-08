@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
+import org.ic.tennistrader.listener.HoverListener;
 
 public class DashboardCoolBar extends Composite {
 
@@ -90,7 +91,7 @@ public class DashboardCoolBar extends Composite {
 		t.setText("Search...");
 		t.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true,
 				1, 1));
-
+		t.addMouseListener(new HoverListener(t));
 		Button x = new Button(c, SWT.PUSH);
 		x.setImage(new Image(Display.getCurrent(), "images/toolbar/cross.png"));
 		x.setLayoutData(new GridData(GridData.END, GridData.FILL, false, true,
