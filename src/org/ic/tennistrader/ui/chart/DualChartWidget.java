@@ -167,6 +167,6 @@ public class DualChartWidget extends MatchViewerWidget {
 		largeChart.setChartData(chartData);
 		smallChart.setMatch(match);
 		smallChart.setChartData(chartData);
-		DataManager.registerForMatchUpdate(this, match);
+		//DataManager.registerForMatchUpdate(this, match);
 	}
 }

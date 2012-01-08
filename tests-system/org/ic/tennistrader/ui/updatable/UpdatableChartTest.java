@@ -11,10 +11,8 @@ import org.ic.tennistrader.ui.DisplayTest;
 import org.ic.tennistrader.ui.chart.OddsChart;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class UpdatableChartTest extends DisplayTest{
 	private OddsChart chart;
 	private String filename;

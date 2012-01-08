@@ -10,10 +10,8 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.markets.MatchScore;
 import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.domain.match.RealMatch;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 	@Test
 	public void testMarketOdds() {

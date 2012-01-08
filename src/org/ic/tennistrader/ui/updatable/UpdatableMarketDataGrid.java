@@ -73,7 +73,6 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 		headerDataSmall.horizontalAlignment = GridData.FILL;
 		headerDataSmall.grabExcessHorizontalSpace = true;
 
-		Display display = getDisplay();
 		Color oddsColour = Colours.getOddsButtonColor();
 		createLabel("Back", Colours.getBackColor(), headerData,
 				SWT.RIGHT);
@@ -108,7 +107,6 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 		player.setFont(titleFont);
 		player.setText(playerName);
 
-		final Display display = getDisplay();
 
 		for (int i = 0; i < 2; i++) {
 			pBackButtons[i] = new OddsButton(this,

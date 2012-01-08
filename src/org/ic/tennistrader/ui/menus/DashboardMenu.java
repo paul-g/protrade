@@ -45,7 +45,6 @@ public class DashboardMenu {
 		liveMatchMenu.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent se) {
-				BetfairAuthenticator.checkLogin("corina409", "testpass1");
 				LiveMatchDialog lmd = new LiveMatchDialog(shell);
 				lmd.open();
 				Match match = lmd.getSelectedMatch();

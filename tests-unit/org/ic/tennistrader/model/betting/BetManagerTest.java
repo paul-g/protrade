@@ -1,25 +1,26 @@
 package org.ic.tennistrader.model.betting;
 
+import static org.ic.tennistrader.utils.Pair.pair;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
-import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.model.betting.BetManager;
 import org.ic.tennistrader.utils.Pair;
-import static org.ic.tennistrader.utils.Pair.pair;
-import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+
 public class BetManagerTest {
     private Player firstPlayer;
 	private Player secondPlayer;
