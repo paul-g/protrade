@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
@@ -39,6 +40,8 @@ public class MarketDataGrid extends MatchViewerWidget implements
 	private Font oddsFont;
 	private Font titleFont;
 	private Label player1, player2;
+	private Label pl1PandL, pl2PandL;
+	private Label backOR, layOR;
 
 	public MarketDataGrid(Composite parent, int style) {
 		super(parent, style);
@@ -74,8 +77,10 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		headerDataSmall.grabExcessHorizontalSpace = true;
 
 		Color oddsColour = Colours.getOddsButtonColor();
-		createLabel("Back", Colours.getBackColor(), headerData, SWT.RIGHT);
-		createLabel("Lay", Colours.getLayColor(), headerData, SWT.NONE);
+		backOR = createOddsLabel("Back", Colours.getBackColor(), headerData,
+				SWT.LEFT, SWT.RIGHT);
+		layOR = createOddsLabel("Lay", Colours.getLayColor(), headerData,
+				SWT.RIGHT, SWT.LEFT);
 		createLabel("LPM", oddsColour, headerDataSmall, SWT.NONE);
 		createLabel("Matched", oddsColour, headerDataSmall, SWT.NONE);
 		createLabel("Mkt%", oddsColour, headerDataSmall, SWT.NONE);
@@ -83,12 +88,76 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		createLabel("Wght", oddsColour, headerDataSmall, SWT.NONE);
 		createLabel("High", oddsColour, headerDataSmall, SWT.NONE);
 
-		player1 = new Label(this, SWT.NONE);
+		Composite pl1Label = createLabelComposite();
+		player1 = new Label(pl1Label, SWT.NONE);
+		pl1PandL = new Label(pl1Label, SWT.NONE);
 		initLayout(pl1Lastname, player1, p1BackButtons, p1LayButtons,
 				p1MarketInfoButtons, true);
-		player2 = new Label(this, SWT.NONE);
+		Composite pl2Label = createLabelComposite();
+		player2 = new Label(pl2Label, SWT.NONE);
+		pl2PandL = new Label(pl2Label, SWT.NONE);
 		initLayout(pl2Lastname, player2, p2BackButtons, p2LayButtons,
 				p2MarketInfoButtons, false);
+		updatePandL(pl1PandL, 23);
+		updatePandL(pl2PandL, -10);
+	}
+
+	private Label createOddsLabel(String string, Color color,
+			GridData headerData, int or, int lab) {
+		Composite c = new Composite(this, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = headerData.horizontalSpan;
+		c.setBackground(color);
+		c.setLayout(layout);
+		c.setLayoutData(headerData);
+
+		GridData gd1 = new GridData();
+		gd1.horizontalSpan = 1;
+		gd1.horizontalAlignment = GridData.FILL;
+		gd1.grabExcessHorizontalSpace = true;
+
+		GridData gd2 = new GridData();
+		gd2.horizontalSpan = headerData.horizontalSpan - gd1.horizontalSpan;
+		gd2.horizontalAlignment = GridData.FILL;
+		gd2.grabExcessHorizontalSpace = true;
+
+		Label orLabel;
+		Label label;
+		if (or == SWT.RIGHT) {
+			label = new Label(c, lab);
+			orLabel = new Label(c, or);
+		} else {
+			orLabel = new Label(c, or);
+			label = new Label(c, lab);
+		}
+		label.setText(string);
+		orLabel.setLayoutData(gd2);
+		label.setLayoutData(gd1);
+		return orLabel;
+	}
+
+	private void updatePandL(Label label, double value) {
+		label.setText("(" + value + ")");
+		if (value < 0) {
+			label.setForeground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_RED));
+		} else if (value > 0) {
+			label.setText("(+" + value + ")");
+			label.setForeground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_DARK_GREEN));
+		} else {
+			label.setForeground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_BLACK));
+		}
+
+	}
+
+	private Composite createLabelComposite() {
+		Composite c = new Composite(this, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		c.setLayout(layout);
+		return c;
 	}
 
 	private void createLabel(String text, Color color, GridData headerData,
@@ -175,7 +244,7 @@ public class MarketDataGrid extends MatchViewerWidget implements
 
 	private void initFonts() {
 		this.oddsFont = new Font(this.getDisplay(), "Arial", 10, SWT.BOLD);
-		this.titleFont = new Font(this.getDisplay(), "Arial", 8, SWT.None);
+		this.titleFont = new Font(this.getDisplay(), "Arial", 8, SWT.BOLD);
 	}
 
 	public void updateButtons(ArrayList<Pair<Double, Double>> valueList,
@@ -193,6 +262,21 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		}
 	}
 
+	private void updateOverround(Label label, Label val1, Label val2) {
+		if (val1.getText().length() == 0 || val2.getText().length() == 0) {
+			label.setText("");
+			return;
+		}
+		double pl1 = Double.parseDouble(val1.getText());
+		double pl2 = Double.parseDouble(val1.getText());
+		if (pl1 == 0 || pl2 == 0) {
+			label.setText("");
+			return;
+		}
+		double overround = (1 / pl1 + 1 / pl2) * 100;
+		label.setText(BetsDisplay.DOUBLE_FORMAT.format(overround) + "%");
+	}
+
 	@Override
 	public void handleUpdate(final MOddsMarketData newData) {
 		this.getDisplay().asyncExec(new Runnable() {
@@ -203,6 +287,10 @@ public class MarketDataGrid extends MatchViewerWidget implements
 					updateButtons(newData.getPl1Lay(), p1LayButtons, false);
 					updateButtons(newData.getPl2Back(), p2BackButtons, true);
 					updateButtons(newData.getPl2Lay(), p2LayButtons, false);
+					updateOverround(backOR, p1BackButtons[2].getOdds(),
+							p2BackButtons[2].getOdds());
+					updateOverround(layOR, p1LayButtons[0].getOdds(),
+							p2LayButtons[0].getOdds());
 					double lpm1 = newData
 							.getLastPriceMatched(PlayerEnum.PLAYER1);
 					double lpm2 = newData
@@ -253,6 +341,7 @@ public class MarketDataGrid extends MatchViewerWidget implements
 					MarketDataGrid.this.layout();
 				}
 			}
+
 		});
 	}
 
