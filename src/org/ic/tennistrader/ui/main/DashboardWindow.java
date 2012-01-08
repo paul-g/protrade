@@ -90,6 +90,7 @@ public class DashboardWindow implements MainWindow {
 		dashboardComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 		dashboardComp.setLayout(new FillLayout());
+		loadDashboard("templates/chart-master/dashboard.dat");
 		log.info(display.getClientArea());
 		/*
 		 * dashboard.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
@@ -99,7 +100,6 @@ public class DashboardWindow implements MainWindow {
 		LowerToolBar ltb = new LowerToolBar(shell);
 		ltb.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,
 				1));
-
 	}
 
 	private Layout makeLayout() {
@@ -173,17 +173,17 @@ public class DashboardWindow implements MainWindow {
 		if (dashboard != null) {
 			dashboard.dispose();
 		}
-		dashboard = new Dashboard(shell);
-		dashboard.setParent(dashboardComp);
+		dashboard = new Dashboard(dashboardComp);
 		shell.pack();
+		dashboardComp.pack();
 	}
 
 	public void loadDashboard(String filename) {
-
 		if (dashboard != null) {
 			dashboard.dispose();
 		}
 		dashboard = new Dashboard(dashboardComp, filename);
 		shell.pack();
+		dashboardComp.pack();
 	}
 }

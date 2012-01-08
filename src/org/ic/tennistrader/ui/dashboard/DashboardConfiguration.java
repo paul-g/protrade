@@ -16,10 +16,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.score.StatisticsPanel;
-import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.MatchDataView;
@@ -115,7 +113,7 @@ public class DashboardConfiguration {
 	public void load(String filename) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new FileInputStream(filename));
 
-		Match match = new HistoricalMatch("data/full/fulldataShort.csv");
+		// Match match = new HistoricalMatch("data/full/fulldataShort.csv");
 
 		String resolution = scanner.nextLine();
 		String dimensions[] = resolution.split("x");
@@ -148,19 +146,18 @@ public class DashboardConfiguration {
 			Control widget;
 
 			if (type.equals(WidgetType.DUAL_CHART.toString())) {
-				widget = new DualChartWidget(wc, match);
+				widget = new DualChartWidget(wc);
 				log.info("Added chart");
 			} else if (type.equals(WidgetType.SCORE_PANEL.toString())) {
-				widget = new WimbledonScorePanel(wc, match);
+				widget = new WimbledonScorePanel(wc);
 				log.info("Added score panel");
 			} else if (type.equals(WidgetType.MARKET_GRID.toString())) {
 				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(wc,
-						SWT.NONE, match);
-				DataManager.registerForMatchUpdate(grid, match);
+						SWT.NONE);
 				widget = grid;
 				log.info("Added chart");
 			} else if (type.equals(WidgetType.STATISTICS_PANEL.toString())) {
-				widget = new StatisticsPanel(wc, match);
+				widget = new StatisticsPanel(wc);
 			} else if (type.equals(WidgetType.MATCH_VIEW.toString())) {
 				widget = new MatchDataView(wc, SWT.NONE);
 			} else {
