@@ -25,7 +25,7 @@ import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
-import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
+import org.ic.tennistrader.ui.updatable.MarketDataGrid;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 
@@ -114,7 +114,7 @@ public class PredictionGui extends MatchViewerWidget {
 	 * @param ti
 	 */
 	private void addMarketDataGrid(Composite comp, Match match) {
-		UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(comp,
+		MarketDataGrid grid = new MarketDataGrid(comp,
 				SWT.NONE, match);
 		grid.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true,
 				true, 1, 1));

@@ -16,7 +16,7 @@ import org.ic.tennistrader.ui.richlist.RichListElement;
 import org.ic.tennistrader.ui.richlist.RichListView;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.MatchDataView;
-import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
+import org.ic.tennistrader.ui.updatable.MarketDataGrid;
 import org.ic.tennistrader.ui.widgets.browser.BrowserWidget;
 import org.ic.tennistrader.ui.widgets.video.MatchPlayer;
 
@@ -156,14 +156,14 @@ public class AddWidgetDialog extends RichListDialog {
 			public void handleEvent(Event e) {
 				Match match = getCurrentMatch();
 
-				UpdatableMarketDataGrid grid;
+				MarketDataGrid grid;
 
 				if (match != null) {
-					grid = new UpdatableMarketDataGrid(widgetPlaceholder
+					grid = new MarketDataGrid(widgetPlaceholder
 							.getParent(), SWT.NONE, match);
 					DataManager.registerForMatchUpdate(grid, match);
 				} else {
-					grid = new UpdatableMarketDataGrid(widgetPlaceholder
+					grid = new MarketDataGrid(widgetPlaceholder
 							.getParent(), SWT.NONE);
 				}
 				// NOTE for market data grid, controller is also required

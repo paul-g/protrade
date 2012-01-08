@@ -27,7 +27,7 @@ public class OddsButton {
 	private String CURRENCY = "£";
 
 	private Composite comp;
-	private UpdatableMarketDataGrid dataGrid;
+	private MarketDataGrid dataGrid;
 	private Label odds;
 	private Label amount;
 	private final Display display;
@@ -40,7 +40,7 @@ public class OddsButton {
 	private Image clickImage;
 
 	OddsButton(Composite parent, Color color, Font oddsFont,
-			UpdatableMarketDataGrid dataGrid) {
+			MarketDataGrid dataGrid) {
 		this.dataGrid = dataGrid;
 		comp = new Composite(parent, SWT.BORDER);
 		comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
