@@ -125,8 +125,6 @@ public class Dashboard extends Composite {
 		int oldY = loc.y;
 
 		int newWidth = oldWidth;
-		// int newWidth = oldWidth + dx;
-		// int newHeight = oldHeight + dy;
 		int newHeight = oldHeight;
 
 		int newX = oldX;

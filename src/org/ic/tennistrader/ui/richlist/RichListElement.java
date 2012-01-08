@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Listener;
 
 public class RichListElement extends Composite {
 
-	private List<Listener> infoListeners = new ArrayList<Listener>();
-	private List<Listener> actionListeners = new ArrayList<Listener>();
+	private final List<Listener> infoListeners = new ArrayList<Listener>();
+	private final List<Listener> actionListeners = new ArrayList<Listener>();
 
 	private String description;
 	private String name;
@@ -29,8 +29,8 @@ public class RichListElement extends Composite {
 
 	private static final String DEFAULT_IMAGE_KEY = "DefaultRichListElement";
 	private static final String DEFAULT_IMAGE_PATH = "images/richlist/default.png";
-	private static final int NCOLS = 5;
-	private static final int NROWS = 3;
+	private static final int NCOLS = 4;
+	private static final int NROWS = 4;
 
 	private static final int IMAGE_WIDTH = 150;
 	private static final int IMAGE_HEIGHT = 150;
@@ -39,8 +39,6 @@ public class RichListElement extends Composite {
 			String name) {
 		super(parent, style);
 		init(parent, style, description, name, null);
-		makeDescription();
-
 	}
 
 	public RichListElement(RichListView parent, int style, String description,
@@ -48,14 +46,12 @@ public class RichListElement extends Composite {
 		super(parent, style);
 		init(parent, style, description, name, null);
 		setElementControl(control);
-		makeDescription();
 	}
 
 	public RichListElement(RichListView parent, int style, String description,
 			String name, Image image) {
 		super(parent, style);
 		init(parent, style, description, name, image);
-		makeDescription();
 	}
 
 	public RichListElement(RichListView parent, int style, String description,
@@ -63,7 +59,6 @@ public class RichListElement extends Composite {
 		super(parent, style);
 		init(parent, style, description, name, image);
 		setElementControl(control);
-		makeDescription();
 	}
 
 	private void init(RichListView parentList, int style, String description,
@@ -74,11 +69,12 @@ public class RichListElement extends Composite {
 		setLayout(makeLayout());
 		makeImageControl();
 		makeTitle();
+		makeDescription();
 	}
 
 	private void setElementControl(Control control) {
 		control.setParent(this);
-		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
+		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
 
 	private Control makeDescription() {
@@ -89,7 +85,7 @@ public class RichListElement extends Composite {
 	}
 
 	private Object makeDescriptionLayoutData() {
-		return new GridData(SWT.FILL, SWT.FILL, true, true, NCOLS - 2,
+		return new GridData(SWT.FILL, SWT.FILL, true, true, NCOLS - 1,
 				NROWS - 1);
 	}
 
@@ -101,7 +97,7 @@ public class RichListElement extends Composite {
 	}
 
 	private Object makeTitleLayoutData() {
-		return new GridData(SWT.FILL, SWT.FILL, true, false, NCOLS - 2, 1);
+		return new GridData(SWT.FILL, SWT.FILL, true, false, NCOLS - 1, 1);
 	}
 
 	private Control makeImageControl() {
@@ -109,7 +105,7 @@ public class RichListElement extends Composite {
 		button.setLayoutData(makeImageControlLayoutData());
 		button.setImage(new Image(Display.getCurrent(), image.getImageData()
 				.scaledTo(IMAGE_WIDTH, IMAGE_HEIGHT)));
-
+		button.setToolTipText("More Info...");
 		button.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -121,7 +117,7 @@ public class RichListElement extends Composite {
 	}
 
 	private Object makeImageControlLayoutData() {
-		return new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3);
+		return new GridData(SWT.FILL, SWT.FILL, true, true, 1, NROWS - 1);
 	}
 
 	private Image getDefaultImage() {
