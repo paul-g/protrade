@@ -23,7 +23,7 @@ public class WidgetPlaceholder extends Composite implements SavableWidget {
 		this.widgetContainer = widgetContainer;
 		setLayout(new FillLayout());
 		b = new Button(this, SWT.PUSH);
-		Image image = new Image(Display.getCurrent(), "images/plus.png");
+		Image image = new Image(Display.getCurrent(), "images/toolbar/plus.png");
 		final WidgetContainer wc = widgetContainer;
 		b.setImage(image);
 		b.setText("Add widget");

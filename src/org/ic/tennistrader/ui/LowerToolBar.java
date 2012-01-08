@@ -34,8 +34,8 @@ public class LowerToolBar extends Composite {
 		/* Internet availability */
 		ToolItem widgetItem = new ToolItem(toolbar, SWT.NULL);
 		widgetItem.setToolTipText("Internet Connection");
-		final Image off = new Image(display, "images/connection_lost.png");
-		final Image on = new Image(display, "images/connection_on.png");
+		final Image off = new Image(display, "images/toolbar/connection_lost.png");
+		final Image on = new Image(display, "images/toolbar/connection_on.png");
 		widgetItem.setImage(on);
 
 		/* Memory usage bar */

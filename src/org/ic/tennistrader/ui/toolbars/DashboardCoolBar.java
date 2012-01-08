@@ -26,7 +26,7 @@ public class DashboardCoolBar extends Composite {
 	private CoolItem dashboardItem;
 
 	private CoolItem searchItem;
-
+	
 	private static Logger log = Logger.getLogger(DashboardCoolBar.class);
 
 	public DashboardCoolBar(Composite parent) {
@@ -82,7 +82,7 @@ public class DashboardCoolBar extends Composite {
 		Composite c = new Composite(coolBar, SWT.NONE);
 		c.setLayout(new GridLayout(3, false));
 		Button b = new Button(c, SWT.PUSH);
-		b.setImage(new Image(Display.getCurrent(), "images/plus.png"));
+		b.setImage(new Image(Display.getCurrent(), "images/toolbar/search.png"));
 		b.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, false,
 				true, 1, 1));
 		Text t = new Text(c, SWT.NONE);
@@ -92,12 +92,12 @@ public class DashboardCoolBar extends Composite {
 				1, 1));
 
 		Button x = new Button(c, SWT.PUSH);
-		x.setText("x");
+		x.setImage(new Image(Display.getCurrent(), "images/toolbar/cross.png"));
 		x.setLayoutData(new GridData(GridData.END, GridData.FILL, false, true,
 				1, 1));
 
 		searchItem.setControl(c);
 		searchItem.setPreferredSize(t.computeSize(SWT.DEFAULT, 36));
 	}
-
+	
 }

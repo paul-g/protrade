@@ -45,30 +45,34 @@ public class DashboardToolBar {
 	private void makeFillMenu(Shell shell) {
 		final ToolItem fillItem = new ToolItem(toolbar, SWT.PUSH);
 		fillItem.setToolTipText("Widget Menu");
-		fillItem.setImage(new Image(shell.getDisplay(), "images/plus.png"));
+		fillItem.setImage(new Image(shell.getDisplay(), "images/toolbar/expand.png"));
 	}
 
 	private void makeLockMenu(Shell shell) {
-		final ToolItem redoItem = new ToolItem(toolbar, SWT.PUSH);
+		final ToolItem redoItem = new ToolItem(toolbar, SWT.CHECK);
 		redoItem.setToolTipText("Widget Menu");
-		redoItem.setImage(new Image(shell.getDisplay(), "images/plus.png"));
+		redoItem.setImage(new Image(shell.getDisplay(), "images/toolbar/locked.png"));
 	}
 
 	private void makeUndoRedoMenu(Shell shell) {
 		final ToolItem undoItem = new ToolItem(toolbar, SWT.PUSH);
 		undoItem.setToolTipText("Widget Menu");
-		undoItem.setImage(new Image(shell.getDisplay(), "images/plus.png"));
+		undoItem.setImage(new Image(shell.getDisplay(), "images/toolbar/undo.png"));
 
 		final ToolItem redoItem = new ToolItem(toolbar, SWT.PUSH);
 		redoItem.setToolTipText("Widget Menu");
-		redoItem.setImage(new Image(shell.getDisplay(), "images/plus.png"));
+		redoItem.setImage(new Image(shell.getDisplay(), "images/toolbar/redo.png"));
+	}
+	
+	private void makeBetsMenu(Shell shell) {
+		final ToolItem betsItem = new ToolItem(toolbar, SWT.PUSH);
 	}
 
 	/** New widget button constructor */
 	private void makeNewWidgetMenu(Composite parent, final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.PUSH);
 		widgetItem.setToolTipText("Widget Menu");
-		widgetItem.setImage(new Image(shell.getDisplay(), "images/plus.png"));
+		widgetItem.setImage(new Image(shell.getDisplay(), "images/toolbar/plus.png"));
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
 		widgetDropDown.setData("WIDGETMENU");
 	}
@@ -78,7 +82,7 @@ public class DashboardToolBar {
 		final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 
 		playButtonItem.setToolTipText("Play from a file");
-		Image play = new Image(shell.getDisplay(), "images/play.png");
+		Image play = new Image(shell.getDisplay(), "images/toolbar/play.png");
 		playButtonItem.setImage(play);
 
 		final Menu playDropDown = new Menu(shell, SWT.POP_UP);
@@ -148,7 +152,7 @@ public class DashboardToolBar {
 
 		});
 		playButtonItem.addListener(SWT.Selection, new ToolItemListener(toolbar,
-				playButtonItem, playDropDown));
+				playButtonItem, playDropDown, true));
 	}
 
 	/** Open a new match view */

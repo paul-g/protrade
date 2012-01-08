@@ -178,9 +178,9 @@ public class ProfileToolBar {
 				}
 			});
 			balanceItem.addListener(SWT.Selection, new ToolItemListener(
-					toolbar, balanceItem, balanceDropDown));
+					toolbar, balanceItem, balanceDropDown, false));
 			profileItem.addListener(SWT.Selection, new ToolItemListener(
-					toolbar, profileItem, profileDropDown));
+					toolbar, profileItem, profileDropDown, false));
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
