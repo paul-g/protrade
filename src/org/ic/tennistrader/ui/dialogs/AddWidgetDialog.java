@@ -54,15 +54,17 @@ public class AddWidgetDialog extends RichListDialog {
 			@Override
 			public void handleEvent(Event e) {
 				Match match = getCurrentMatch();
-				MatchPlayer player = new MatchPlayer(
-						widgetPlaceholder.getParent(), SWT.NONE);
+				MatchPlayer player = new MatchPlayer(widgetPlaceholder
+						.getParent(), SWT.NONE);
 				if (match != null)
 					player.setMatch(match);
 				setSelection(player);
 			}
 		});
 		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Watch the match", "Match Player", control);
+				"An integrated video player for watching the match live. For the majority of matches, a live video will be streamed. " +
+				"Watch how the players perform in real to " +
+				"get the whole picture of the match ", "Match Player", control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -76,15 +78,21 @@ public class AddWidgetDialog extends RichListDialog {
 			@Override
 			public void handleEvent(Event e) {
 				Match match = getCurrentMatch();
-				BrowserWidget browser = new BrowserWidget(
-						widgetPlaceholder.getParent(), SWT.NONE);
+				BrowserWidget browser = new BrowserWidget(widgetPlaceholder
+						.getParent(), SWT.NONE);
 				if (match != null)
 					browser.setMatch(match);
 				setSelection(browser);
 			}
 		});
-		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Browse online for statistics", "Browser", control);
+		RichListElement element = new RichListElement(
+				r,
+				SWT.BORDER,
+				"An internet browser to look up tennis statistcal data from the"
+						+ " offical website of the Association of Tennis Professionals (ATP). In a few clicks you can get "
+						+ "all the necessary information about tennis tournaments, such as calendar, rankings and player statistics."
+						+ " It is also possible to browse any other websites of your choice.",
+				"Browser", control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -159,12 +167,12 @@ public class AddWidgetDialog extends RichListDialog {
 				MarketDataGrid grid;
 
 				if (match != null) {
-					grid = new MarketDataGrid(widgetPlaceholder
-							.getParent(), SWT.NONE, match);
+					grid = new MarketDataGrid(widgetPlaceholder.getParent(),
+							SWT.NONE, match);
 					DataManager.registerForMatchUpdate(grid, match);
 				} else {
-					grid = new MarketDataGrid(widgetPlaceholder
-							.getParent(), SWT.NONE);
+					grid = new MarketDataGrid(widgetPlaceholder.getParent(),
+							SWT.NONE);
 				}
 				// NOTE for market data grid, controller is also required
 				setSelection(grid);
