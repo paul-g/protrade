@@ -61,8 +61,11 @@ public class AddWidgetDialog extends RichListDialog {
 				setSelection(composite);
 			}
 		});
-		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Displays match summary", "Match Viewer", control);
+		RichListElement element = new RichListElement(
+				r,
+				SWT.BORDER,
+				"Displays match summary which includes the name of the tournament and the status of the match.",
+				"Match Viewer", control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -85,8 +88,13 @@ public class AddWidgetDialog extends RichListDialog {
 				setSelection(widget);
 			}
 		});
-		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Displays match statistics", "Statistics Panel", control);
+		RichListElement element = new RichListElement(
+				r,
+				SWT.BORDER,
+				"Displays detailed player statistics which include basic player information and historical match/set statistics "
+						+ "obtained from www.tennisinsight.com. "
+						+ "The match/set statistics represents the percentage of the matches/sets/games/points won in the last period  ",
+				"Statistics Panel", control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -104,19 +112,27 @@ public class AddWidgetDialog extends RichListDialog {
 				UpdatableMarketDataGrid grid;
 
 				if (match != null) {
-					grid = new UpdatableMarketDataGrid(
-							widgetPlaceholder.getParent(), SWT.NONE, match);
+					grid = new UpdatableMarketDataGrid(widgetPlaceholder
+							.getParent(), SWT.NONE, match);
 					DataManager.registerForMatchUpdate(grid, match);
 				} else {
-					grid = new UpdatableMarketDataGrid(
-							widgetPlaceholder.getParent(), SWT.NONE);
+					grid = new UpdatableMarketDataGrid(widgetPlaceholder
+							.getParent(), SWT.NONE);
 				}
 				// NOTE for market data grid, controller is also required
 				setSelection(grid);
 			}
 		});
-		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Displays market info and handles bet placing", "Market Grid",
+		RichListElement element = new RichListElement(
+				r,
+				SWT.BORDER,
+				"Displays the current best 3 availalbe odds with the amount available at those odds. "
+						+ "The widget also displays the latest market information such "
+						+ "as the Last Price Matched, the Total Amount Matched and "
+						+ "the Market Overround which gives a measure of the competitiveness of the prices on offer. "
+						+ "The Market Grid handels bet placing. "
+						+ "To bet, you just need to click your preffered odds. The data is fetched from Betfair server at "
+						+ "a speed of 5 requests/second", "Market Grid.",
 				control);
 		element.addInfoListener(new Listener() {
 			@Override
@@ -142,8 +158,14 @@ public class AddWidgetDialog extends RichListDialog {
 				setSelection(widget);
 			}
 		});
-		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"A panel with match scores and inferred probabilities",
+		RichListElement element = new RichListElement(
+				r,
+				SWT.BORDER,
+				"A panel with the current match score. The widget also includes the inferred "
+						+ "probabilities of both players to win the game/set/match."
+						+ "The inferred probabilities are calculated using the Markov chain models that use as "
+						+ "input current match score and player's serve statistics. "
+						+ "The model used is described in a number of academic papers focusing on tennis modelling.",
 				"Score Panel", image, control);
 		element.addInfoListener(new Listener() {
 			@Override
@@ -167,9 +189,17 @@ public class AddWidgetDialog extends RichListDialog {
 				setSelection(widget);
 			}
 		});
-		RichListElement element = new RichListElement(r, SWT.BORDER,
-				"Dual Chart Widget description", "Dual Chart Widget", image,
-				control);
+		RichListElement element = new RichListElement(
+				r,
+				SWT.BORDER,
+				"This widget is composed of two charts. The top chart displays the Back/Lay odds as well as a few technical "
+						+ "indicators such as Moving Average and Predicted Odds. "
+						+ "The Moving Average is calculated as the unweighted mean of the previous 10 odds. "
+						+ "The Predicted Odds are calculated using the Markov Chain model that use as "
+						+ "input current match score and player's serve statistics. "
+						+ "The model used is described in a number of academic papers focusing on tennis modelling. "
+						+ "The bottom chart displays the volume of the matched bets over time.",
+				"Dual Chart Widget", image, control);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
