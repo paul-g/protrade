@@ -1,7 +1,9 @@
 package org.ic.tennistrader.ui.dialogs;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
@@ -16,15 +18,26 @@ public abstract class RichListDialog {
 
 	public RichListDialog() {
 		Display d = Display.getCurrent();
-		dialog = new Shell(d, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		dialog = new Shell(d, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		dialog.setLayout(new FillLayout());
 
-		RichListView r = new RichListView(dialog, SWT.NONE);
+		ScrolledComposite sc = new ScrolledComposite(dialog, SWT.H_SCROLL
+				| SWT.V_SCROLL);
 
+		RichListView r = new RichListView(sc, SWT.NONE);
 		addElements(r);
+		r.pack();
+
+		Rectangle viewBounds = r.getBounds();
+		sc.setExpandHorizontal(true);
+		sc.setExpandVertical(true);
+		sc.setContent(r);
+		sc.setMinSize(viewBounds.width, viewBounds.height);
+
+		dialog.setSize(viewBounds.width,
+				Display.getCurrent().getClientArea().height / 2);
 
 		dialog.open();
-		dialog.pack();
 	}
 
 	protected abstract void addElements(RichListView r);
