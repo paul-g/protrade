@@ -3,18 +3,25 @@ package org.ic.tennistrader.ui.toolbars;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.listener.ToolItemListener;
 
 public class DashboardToolBar {
 	private final ToolBar toolbar;
@@ -40,38 +47,43 @@ public class DashboardToolBar {
 
 		makeFillMenu(shell);
 
+		makeBetsTable(shell);
+
 	}
 
 	private void makeFillMenu(Shell shell) {
 		final ToolItem fillItem = new ToolItem(toolbar, SWT.PUSH);
-		fillItem.setToolTipText("Widget Menu");
+		fillItem.setToolTipText("Expand selected widget");
 		fillItem.setImage(new Image(shell.getDisplay(), "images/toolbar/expand.png"));
 	}
 
 	private void makeLockMenu(Shell shell) {
 		final ToolItem redoItem = new ToolItem(toolbar, SWT.CHECK);
-		redoItem.setToolTipText("Widget Menu");
+		redoItem.setToolTipText("Lock selected widget");
 		redoItem.setImage(new Image(shell.getDisplay(), "images/toolbar/locked.png"));
 	}
 
 	private void makeUndoRedoMenu(Shell shell) {
 		final ToolItem undoItem = new ToolItem(toolbar, SWT.PUSH);
-		undoItem.setToolTipText("Widget Menu");
+		undoItem.setToolTipText("Undo the last action");
 		undoItem.setImage(new Image(shell.getDisplay(), "images/toolbar/undo.png"));
 
 		final ToolItem redoItem = new ToolItem(toolbar, SWT.PUSH);
-		redoItem.setToolTipText("Widget Menu");
+		redoItem.setToolTipText("Redo the last undone action");
 		redoItem.setImage(new Image(shell.getDisplay(), "images/toolbar/redo.png"));
 	}
-	
-	private void makeBetsMenu(Shell shell) {
+
+	private void makeBetsTable(Shell shell) {
 		final ToolItem betsItem = new ToolItem(toolbar, SWT.PUSH);
+		betsItem.setToolTipText("Table of bets");
+		betsItem.setImage(new Image(shell.getDisplay(), "images/toolbar/bets.png"));
+		betsItem.addListener(SWT.Selection, new BetsListener(betsItem));
 	}
 
 	/** New widget button constructor */
 	private void makeNewWidgetMenu(Composite parent, final Shell shell) {
 		final ToolItem widgetItem = new ToolItem(toolbar, SWT.PUSH);
-		widgetItem.setToolTipText("Widget Menu");
+		widgetItem.setToolTipText("New Widget Menu");
 		widgetItem.setImage(new Image(shell.getDisplay(), "images/toolbar/plus.png"));
 		final Menu widgetDropDown = new Menu(shell, SWT.POP_UP);
 		widgetDropDown.setData("WIDGETMENU");
@@ -82,8 +94,7 @@ public class DashboardToolBar {
 		final ToolItem playButtonItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 
 		playButtonItem.setToolTipText("Play from a file");
-		Image play = new Image(shell.getDisplay(), "images/toolbar/play.png");
-		playButtonItem.setImage(play);
+		playButtonItem.setImage(new Image(shell.getDisplay(), "images/toolbar/play.png"));
 
 		final Menu playDropDown = new Menu(shell, SWT.POP_UP);
 
@@ -133,7 +144,7 @@ public class DashboardToolBar {
 
 				FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 				String[] filterNames = new String[] { "CSV Files",
-						"All Files (*)" };
+				"All Files (*)" };
 				String[] filterExtensions = new String[] { "*.csv", "*" };
 				String filterPath = "/";
 				String platform = SWT.getPlatform();
@@ -174,6 +185,49 @@ public class DashboardToolBar {
 	/** Getter for Tool bar */
 	public ToolBar getToolBar() {
 		return toolbar;
+	}
+
+	private class BetsListener implements Listener {
+		private int x,y;
+
+		public BetsListener(ToolItem ti) {
+			Rectangle r = ti.getBounds();
+			x = r.x;
+			y = (int) (r.y + r.height*2.5);
+		}
+
+		@Override
+		public void handleEvent(Event event) {
+			Shell shell = new Shell();
+			shell.setText("Bets Table");
+			shell.setBounds(x, y, 410,200);
+			shell.setLayout(new FillLayout());
+			final Table table = new Table(shell, SWT.NONE);
+			table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+			TableColumn[] column = new TableColumn[7];
+			column[0] = new TableColumn(table, SWT.CENTER);
+			column[0].setText("Match");
+			column[1] = new TableColumn(table, SWT.CENTER);
+			column[1].setText("Player");
+			column[2] = new TableColumn(table, SWT.CENTER);
+			column[2].setText("Bet Type");
+			column[3] = new TableColumn(table, SWT.CENTER);
+			column[3].setText("Odds");
+			column[4] = new TableColumn(table, SWT.CENTER);
+			column[4].setText("Amount");
+			column[5] = new TableColumn(table, SWT.CENTER);
+			column[5].setText("Profit");
+			column[6] = new TableColumn(table, SWT.CENTER);
+			column[6].setText("Liability");
+			TableItem item = new TableItem(table,SWT.NONE);
+			int n = column.length;
+			for (int i = 0; i < n; i++) {
+				item.setText(i, "");
+				column[i].pack();
+			}
+			shell.open();
+		}
 	}
 
 }

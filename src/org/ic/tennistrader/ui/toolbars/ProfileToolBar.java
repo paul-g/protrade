@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.profile.ProfileData;
+import org.ic.tennistrader.listener.ToolItemListener;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 import org.ic.tennistrader.ui.ProfileWindow;
 import org.ic.tennistrader.ui.login.LoginShell;
