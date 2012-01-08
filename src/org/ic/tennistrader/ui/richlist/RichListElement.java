@@ -31,6 +31,7 @@ public class RichListElement extends Composite {
 	private static final String DEFAULT_IMAGE_PATH = "images/richlist/default.png";
 	private static final int NCOLS = 4;
 	private static final int NROWS = 4;
+	private static final int DESCRIPTION_LENGTH = 100;
 
 	private static final int IMAGE_WIDTH = 150;
 	private static final int IMAGE_HEIGHT = 150;
@@ -84,6 +85,7 @@ public class RichListElement extends Composite {
 		return l;
 	}
 
+	
 	private Object makeDescriptionLayoutData() {
 		return new GridData(SWT.FILL, SWT.FILL, true, true, NCOLS - 1,
 				NROWS - 1);

@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -27,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.authentication.BetfairAuthenticator;
+import org.ic.tennistrader.listener.HoverListener;
 import org.pushingpixels.trident.Timeline;
 
 public class LoginShell implements LoginListener {
@@ -293,28 +293,6 @@ public class LoginShell implements LoginListener {
 			polygon[8 * r - 2 * i - 1] = offsetY - y;
 		}
 		return polygon;
-	}
-
-	private class HoverListener implements MouseListener {
-		private Text text;
-
-		public HoverListener ( Text text ) {
-			this.text = text;
-		}
-
-		@Override
-		public void mouseDoubleClick(MouseEvent e) { 
-		}
-
-		@Override
-		public void mouseDown(MouseEvent e) {
-			text.setText("");
-		}
-
-		@Override
-		public void mouseUp(MouseEvent e) {
-		}
-
 	}
 
 	private class TextUpdater implements PaintListener {

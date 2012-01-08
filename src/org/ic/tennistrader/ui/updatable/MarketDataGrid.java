@@ -6,22 +6,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.betting.BetController;
+import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.utils.Pair;
 
-public class UpdatableMarketDataGrid extends MatchViewerWidget implements
+public class MarketDataGrid extends MatchViewerWidget implements
 		UpdatableWidget {
 	private BetController betController;
 	private OddsButton[] p1BackButtons = new OddsButton[3];
@@ -40,13 +41,13 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 	private Font titleFont;
 	private Label player1, player2;
 
-	public UpdatableMarketDataGrid(Composite parent, int style) {
+	public MarketDataGrid(Composite parent, int style) {
 		super(parent, style);
 		init("Player 1", "Player 2");
 
 	}
 
-	public UpdatableMarketDataGrid(Composite parent, int style, Match match) {
+	public MarketDataGrid(Composite parent, int style, Match match) {
 		super(parent, style);
 		this.match = match;
 		String pl1Lastname = match.getPlayerOne().getLastname();
@@ -74,8 +75,7 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 		headerDataSmall.grabExcessHorizontalSpace = true;
 
 		Color oddsColour = Colours.getOddsButtonColor();
-		createLabel("Back", Colours.getBackColor(), headerData,
-				SWT.RIGHT);
+		createLabel("Back", Colours.getBackColor(), headerData, SWT.RIGHT);
 		createLabel("Lay", Colours.getLayColor(), headerData, SWT.NONE);
 		createLabel("LPM", oddsColour, headerDataSmall, SWT.NONE);
 		createLabel("Matched", oddsColour, headerDataSmall, SWT.NONE);
@@ -107,37 +107,36 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 		player.setFont(titleFont);
 		player.setText(playerName);
 
-
 		for (int i = 0; i < 2; i++) {
 			pBackButtons[i] = new OddsButton(this,
 					Colours.getOddsButtonColor(), oddsFont, this);
-			/*
-			 * Composite comp = pBackButtons[i].getComp(); Image
-			 * backBackgroundImage =
-			 * GraphicsUtils.makeGradientBackgroundImage(comp, 150, 150, 150,
-			 * 238, 210, 238 ); Image backClickImage =
-			 * GraphicsUtils.makeGradientBackgroundImage(comp, 84, 139, 84, 84,
-			 * 139, 84); Image backHoverImage =
-			 * GraphicsUtils.makeGradientBackgroundImage(comp, 155, 205, 155,
-			 * 193, 255, 193);
-			 * pBackButtons[i].setBackgroundImage(backBackgroundImage);
-			 * pBackButtons[i].setClickImage(backClickImage);
-			 * pBackButtons[i].setHighlightImage(backHoverImage);
-			 */
+
+			Composite comp = pBackButtons[i].getComp();
+			Image backBackgroundImage = GraphicsUtils
+					.makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210,
+							238);
+			Image backClickImage = GraphicsUtils.makeGradientBackgroundImage(
+					comp, 84, 139, 84, 84, 139, 84);
+			Image backHoverImage = GraphicsUtils.makeGradientBackgroundImage(
+					comp, 155, 205, 155, 193, 255, 193);
+			pBackButtons[i].setBackgroundImage(backBackgroundImage);
+			pBackButtons[i].setClickImage(backClickImage);
+			pBackButtons[i].setHighlightImage(backHoverImage);
+
 		}
 
 		pBackButtons[2] = new OddsButton(this, Colours.getBackColor(),
 				oddsFont, this);
-		pLayButtons[0] = new OddsButton(this, Colours.getLayColor(),
-				oddsFont, this);
+		pLayButtons[0] = new OddsButton(this, Colours.getLayColor(), oddsFont,
+				this);
 
 		for (int i = 1; i < 3; i++)
-			pLayButtons[i] = new OddsButton(this,
-					Colours.getOddsButtonColor(), oddsFont, this);
+			pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(),
+					oddsFont, this);
 
 		for (int i = 0; i < p1MarketInfoButtons.length; i++) {
-			pMarketInfo[i] = new OddsButton(this,
-					Colours.getOddsButtonColor(), oddsFont, this);
+			pMarketInfo[i] = new OddsButton(this, Colours.getOddsButtonColor(),
+					oddsFont, this);
 			pMarketInfo[i].setOdds("             ");
 			pMarketInfo[i].setCurrency("");
 		}
@@ -217,10 +216,12 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 					double mktP2 = matched2 / total * 100;
 
 					p1MarketInfoButtons[2].setOdds(BetsDisplay.DOUBLE_FORMAT
-							.format(mktP1) + "%");
+							.format(mktP1)
+							+ "%");
 					p2MarketInfoButtons[2].setOdds(BetsDisplay.DOUBLE_FORMAT
-							.format(mktP2) + "%");
-					UpdatableMarketDataGrid.this.layout();
+							.format(mktP2)
+							+ "%");
+					MarketDataGrid.this.layout();
 				}
 			}
 		});
@@ -271,7 +272,7 @@ public class UpdatableMarketDataGrid extends MatchViewerWidget implements
 	public void setDisposeListener(DisposeListener listener) {
 		this.addDisposeListener(listener);
 	}
-	
+
 	@Override
 	public void handleBettingMarketEndOFSet() {
 		// TODO Auto-generated method stub

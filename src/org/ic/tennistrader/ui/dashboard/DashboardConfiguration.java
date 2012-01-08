@@ -21,7 +21,7 @@ import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.MatchDataView;
-import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
+import org.ic.tennistrader.ui.updatable.MarketDataGrid;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.SavableWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
@@ -150,7 +150,7 @@ public class DashboardConfiguration {
 				widget = new WimbledonScorePanel(wc);
 				log.info("Added score panel");
 			} else if (type.equals(WidgetType.MARKET_GRID.toString())) {
-				UpdatableMarketDataGrid grid = new UpdatableMarketDataGrid(wc,
+				MarketDataGrid grid = new MarketDataGrid(wc,
 						SWT.NONE);
 				widget = grid;
 				log.info("Added chart");

@@ -65,6 +65,18 @@ public class ProfileToolBar {
 		item.addListener(SWT.Selection, new BetsListener(item));
 	}
 
+	/** Profile button menu constructor */
+	// Display display = shell.getDisplay();
+	// Color green = display.getSystemColor(SWT.COLOR_GREEN);
+	// Color red = display.getSystemColor(SWT.COLOR_RED);
+	// ToolItem it = new ToolItem(toolbar, SWT.NULL);
+	// StyledText profit = new StyledText(toolbar,SWT.CENTER);
+	// profit.setForeground(green);
+	// profit.setText("212");
+	// Label loss = new Label(shell,SWT.CENTER);
+	// loss.setForeground(red);
+	// loss.setText("183");
+
 	private void makeLiabilityItem() {
 		final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setText("Liability: 300£");
