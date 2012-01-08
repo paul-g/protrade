@@ -17,6 +17,7 @@ import org.ic.tennistrader.ui.richlist.RichListView;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.MatchDataView;
 import org.ic.tennistrader.ui.updatable.UpdatableMarketDataGrid;
+import org.ic.tennistrader.ui.widgets.browser.BrowserWidget;
 
 public class AddWidgetDialog extends RichListDialog {
 
@@ -39,11 +40,33 @@ public class AddWidgetDialog extends RichListDialog {
 	@Override
 	protected void addElements(RichListView r) {
 		makeDualChartElement(r);
-
 		makeMarketGridEl(r);
 		makeStatisticsPanelEl(r);
 		makeMatchDataViewEl(r);
 		makeScorePanelEl(r);
+		makeBrowserEl(r);
+	}
+
+	private void makeBrowserEl(RichListView r) {
+		Control control = makeElementControl(new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				Match match = getCurrentMatch();
+				BrowserWidget browser = new BrowserWidget(
+						widgetPlaceholder.getParent(), SWT.NONE);
+				if (match != null)
+					browser.setMatch(match);
+				setSelection(browser);
+			}
+		});
+		RichListElement element = new RichListElement(r, SWT.BORDER,
+				"Browse online for statistics", "Browser", control);
+		element.addInfoListener(new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				System.out.println("Browser INFO");
+			}
+		});
 	}
 
 	private void makeMatchDataViewEl(RichListView r) {
