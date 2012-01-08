@@ -57,11 +57,10 @@ public class OddsButton extends Composite {
 		addClickListener();
 
 		addMouseTrackListener(new MouseTrackAdapter() {
-
+			
 			@Override
 			public void mouseEnter(MouseEvent arg0) {
-				setBackgroundImage(GraphicsUtils.makeGradientBackgroundImage(
-						OddsButton.this, 155, 205, 155, 193, 255, 193));
+				setBackgroundImage(hoverImage);
 			}
 
 			@Override

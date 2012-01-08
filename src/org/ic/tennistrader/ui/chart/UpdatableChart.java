@@ -191,11 +191,13 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		});
 	}
 	
+	/*
 	private void updateMenu() {
 		List<MenuItem> menuItems = new ArrayList<MenuItem>();
 		for (MenuItem mi : menuItems) mi.dispose();
 	}
-
+	*/
+	
 	private void createMenuItem(Menu menu, final SeriesProperties prop) {
 		final MenuItem newMenuItem = new MenuItem(menu, SWT.CHECK);
 		newMenuItem.setText(prop.getFullName());
@@ -272,7 +274,6 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			int b = (i - sampleSize + 1) * z;
 			this.startingIndex = b;
 			for (int a = 0; a < size; a++) {
-				int nr = 0;
 				showXSeries[a] = chartData.getxSeries().get(b + a);
 
 				// TODO display for each series appropriate range of values

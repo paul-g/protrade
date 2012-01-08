@@ -2,8 +2,12 @@ package org.ic.tennistrader.service;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
@@ -31,7 +35,7 @@ public class DataManager {
     // map of updatable widgets waiting for updates from the same betfair event id
     // private static HashMap<Integer, List<UpdatableWidget>> listeners = new HashMap<Integer, List<UpdatableWidget>>();
     // map of updatable widgets waiting for updates from the same match from file
-    private static HashMap<Match, List<UpdatableWidget>> listeners = new HashMap<Match, List<UpdatableWidget>>();
+    private static ConcurrentHashMap<Match, List<UpdatableWidget>> listeners = new ConcurrentHashMap<Match, List<UpdatableWidget>>();
     private static Logger log = Logger.getLogger(DataManager.class);
     private static boolean started = false;
 
@@ -64,13 +68,15 @@ public class DataManager {
         if (listeners.containsKey(match)) {
             widgets = listeners.get(match);
         } else {
-            widgets = new ArrayList<UpdatableWidget>();
+            widgets = Collections.synchronizedList(new ArrayList<UpdatableWidget>());
             /*            
             System.out.println("Going to call set betting fetcher");
             BetfairExchangeHandler.getSetBettingMarketData(match);
             */            
         }
-        widgets.add(widget);
+		synchronized (widgets) {
+			widgets.add(widget);
+		}
         listeners.put(match, widgets);
         
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
@@ -89,7 +95,9 @@ public class DataManager {
             widgets = listeners.get(match);
         }
     	if (widgets != null) {
-    		widgets.remove(widget);
+			synchronized (widgets) {
+				widgets.remove(widget);
+			}
     		if (widgets.size() == 0)
     			removeMatch(match);
     	}
@@ -105,10 +113,12 @@ public class DataManager {
         List<UpdatableWidget> widgets;
         boolean isNewMatch = !listeners.containsKey(match);
         if (isNewMatch)
-            widgets = new ArrayList<UpdatableWidget>();
+            widgets = Collections.synchronizedList(new ArrayList<UpdatableWidget>());
         else
             widgets = listeners.get(match);
-        widgets.add(widget);
+		synchronized (widgets) {
+			widgets.add(widget);
+		}
         listeners.put(match, widgets);
         widget.setDisposeListener(new ThreadDisposeListener(widget, match));
         if(isNewMatch) {
@@ -123,7 +133,9 @@ public class DataManager {
             widgets = listeners.get(match);
         }
     	if (widgets != null) {
-    		widgets.remove(widget);
+			synchronized (widgets) {
+				widgets.remove(widget);
+			}
     		if (widgets.size() == 0) {
     			FracsoftReader<Pair<MOddsMarketData, Score>> fracsoftReaderThread = fileReaders.get(match);
     			//removeMatch(match);
@@ -189,11 +201,23 @@ public class DataManager {
 				isEndOfSet = SetMarketManager.isSetEnd(match, marketData
 						.getSetBettingMarketData());
 			if (listeners.containsKey(match)) {
+				List<UpdatableWidget> widgets = listeners.get(match);
+				synchronized (widgets) {
+					Iterator<UpdatableWidget> i = widgets.iterator();
+					while (i.hasNext()) {
+						UpdatableWidget w = i.next();
+						w.handleUpdate(marketData.getmOddsMarketData());
+						if (isEndOfSet)
+							w.handleBettingMarketEndOFSet();
+					}
+				}
+				/*
 				for (UpdatableWidget w : listeners.get(match)) {
 					w.handleUpdate(marketData.getmOddsMarketData());
 					if (isEndOfSet)
 						w.handleBettingMarketEndOFSet();
 				}
+				*/
 			}  
     	}
     	/*
@@ -216,9 +240,17 @@ public class DataManager {
         	BetManager.setBetsOutcome(match);
         if (listeners.containsKey(match)) {
             List<UpdatableWidget> widgets = listeners.get(match);
+			synchronized (widgets) {
+				Iterator<UpdatableWidget> i = widgets.iterator();
+				while (i.hasNext()) {
+					i.next().handleUpdate(dataScore.first());
+				}
+			}
+			/*
             for (UpdatableWidget w : widgets) {
                 w.handleUpdate(dataScore.first());
             }
+            */
         }
     }
     
@@ -228,9 +260,17 @@ public class DataManager {
 			&& SetMarketManager.isSetEnd(match, marketData) ) {
 				if (listeners.containsKey(match)) {
 		            List<UpdatableWidget> widgets = listeners.get(match);
+		            synchronized (widgets) {
+						Iterator<UpdatableWidget> i = widgets.iterator();
+						while (i.hasNext()) {
+							i.next().handleBettingMarketEndOFSet();
+						}
+					}
+		            /*
 		            for (UpdatableWidget w : widgets) {
 		                w.handleBettingMarketEndOFSet();
 		            }
+		            */
 		        }
 		}
 	}
