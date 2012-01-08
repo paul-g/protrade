@@ -61,7 +61,7 @@ public class ProfileToolBar {
 	private void makeProfitItem() {
 		final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setText("Profit: 100£");
-		item.setToolTipText("Total Liability");
+		item.setToolTipText("Total Profit");
 		item.addListener(SWT.Selection, new BetsListener(item));
 	}
 
