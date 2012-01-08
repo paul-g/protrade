@@ -34,7 +34,6 @@ public class LowerToolBar extends Composite {
 		/* Internet availability */
 		ToolItem widgetItem = new ToolItem(toolbar, SWT.NULL);
 		widgetItem.setToolTipText("Internet Connection");
-		final Image off = new Image(display, "images/toolbar/connection_lost.png");
 		final Image on = new Image(display, "images/toolbar/connection_on.png");
 		widgetItem.setImage(on);
 
@@ -48,8 +47,8 @@ public class LowerToolBar extends Composite {
 		usage.setSelection(100);
 
 		/* Check threads */
-		// createAndStartNetworkCheckThread(shell, widgetItem, off, on);
-		// createUsageBarCheck(shell, usage);
+//		createAndStartNetworkCheckThread(shell, widgetItem, new Image(display, "images/toolbar/connection_lost.png"), on);
+//		createUsageBarCheck(shell, usage);
 
 		// toolbar.setSize(300, 65);
 		// toolbar.pack();
