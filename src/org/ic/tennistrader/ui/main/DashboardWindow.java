@@ -90,7 +90,7 @@ public class DashboardWindow implements MainWindow {
 		dashboardComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 		dashboardComp.setLayout(new FillLayout());
-		loadDashboard("templates/chart-master/dashboard.dat");
+		newDashboard("templates/chart-master/dashboard.dat");
 		log.info(display.getClientArea());
 		/*
 		 * dashboard.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
@@ -169,21 +169,23 @@ public class DashboardWindow implements MainWindow {
 		return dashboard;
 	}
 
-	public void newDashboard() {
-		if (dashboard != null) {
-			dashboard.dispose();
-		}
-		dashboard = new Dashboard(dashboardComp);
+	public void newDashboard(String filename) {
+		closeDashboard();
+		openDashboard(filename);
 		shell.pack();
 		dashboardComp.pack();
 	}
 
-	public void loadDashboard(String filename) {
+	private void openDashboard(String filename) {
+		if (filename != null)
+			dashboard = new Dashboard(dashboardComp, filename);
+		else
+			dashboard = new Dashboard(dashboardComp);
+	}
+
+	private void closeDashboard() {
 		if (dashboard != null) {
 			dashboard.dispose();
 		}
-		dashboard = new Dashboard(dashboardComp, filename);
-		shell.pack();
-		dashboardComp.pack();
 	}
 }

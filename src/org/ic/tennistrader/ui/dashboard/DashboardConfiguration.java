@@ -113,8 +113,6 @@ public class DashboardConfiguration {
 	public void load(String filename) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new FileInputStream(filename));
 
-		// Match match = new HistoricalMatch("data/full/fulldataShort.csv");
-
 		String resolution = scanner.nextLine();
 		String dimensions[] = resolution.split("x");
 		int width = Integer.parseInt(dimensions[0]);

@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.tennistrader.authentication.BetfairAuthenticator;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.ui.dialogs.LiveMatchDialog;
@@ -176,7 +175,7 @@ public class DashboardMenu {
 		loadItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dashboardWindow.loadDashboard("templates/dashboard.dat");
+				dashboardWindow.newDashboard("templates/dashboard.dat");
 			}
 		});
 	}
@@ -193,7 +192,7 @@ public class DashboardMenu {
 		newEmpty.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dashboardWindow.newDashboard();
+				dashboardWindow.newDashboard(null);
 			}
 		});
 
@@ -207,7 +206,7 @@ public class DashboardMenu {
 				ld.show();
 				String s = ld.getSelection();
 				if (s != null) {
-					dashboardWindow.loadDashboard(s);
+					dashboardWindow.newDashboard(s);
 				}
 			}
 		});

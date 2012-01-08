@@ -39,10 +39,11 @@ public class AddWidgetDialog extends RichListDialog {
 	@Override
 	protected void addElements(RichListView r) {
 		makeDualChartElement(r);
-		makeScorePanelEl(r);
+
 		makeMarketGridEl(r);
 		makeStatisticsPanelEl(r);
 		makeMatchDataViewEl(r);
+		makeScorePanelEl(r);
 	}
 
 	private void makeMatchDataViewEl(RichListView r) {

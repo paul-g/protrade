@@ -20,7 +20,7 @@ public abstract class RichListDialog {
 		dialog.setLayout(new FillLayout());
 
 		RichListView r = new RichListView(dialog, SWT.NONE);
-		
+
 		addElements(r);
 
 		dialog.open();
@@ -38,7 +38,7 @@ public abstract class RichListDialog {
 		while (!dialog.isDisposed()) {
 			if (d.readAndDispatch())
 				d.sleep();
-		}	
+		}
 	}
 
 	protected Control makeElementControl(Listener l) {

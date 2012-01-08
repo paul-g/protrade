@@ -16,7 +16,7 @@ import org.ic.tennistrader.ui.richlist.RichListView;
 public class LayoutDialog extends RichListDialog {
 
 	private static final Logger log = Logger.getLogger(LayoutDialog.class);
-	
+
 	private String selection;
 
 	public String getSelection() {
@@ -25,11 +25,12 @@ public class LayoutDialog extends RichListDialog {
 
 	@Override
 	protected void addElements(RichListView r) {
-		List<LayoutDescriptor> layouts = LayoutRegistry.getInstance().getAvailableLayouts();
-		
-		for (LayoutDescriptor ld : layouts){
+		List<LayoutDescriptor> layouts = LayoutRegistry.getInstance()
+				.getAvailableLayouts();
+
+		for (LayoutDescriptor ld : layouts) {
 			final String text = ld.getPath();
-			Control control = makeElementControl( new Listener(){
+			Control control = makeElementControl(new Listener() {
 				@Override
 				public void handleEvent(Event e) {
 					log.info("Layout chosen " + text);
@@ -39,7 +40,8 @@ public class LayoutDialog extends RichListDialog {
 			});
 
 			RichListElement element = new RichListElement(r, SWT.BORDER,
-					ld.getDescription(), ld.getTitle(), ld.getSmallImage(), control);
+					ld.getDescription(), ld.getTitle(), ld.getSmallImage(),
+					control);
 		}
 	}
 }
