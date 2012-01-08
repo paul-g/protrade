@@ -10,28 +10,30 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UpdatableMarketDataGridTest extends DisplayTest{
-    private String filename;
-    private Match match;
-    private Shell shell;
-    
-    @Before
-    public void setUp() {
-    	super.setUp();
-    	shell = new Shell(display, SWT.NONE);
-        filename = "data/test/fracsoft-reader/tso-fed.csv";
-        match = new HistoricalMatch(filename);
-        new UpdatableMarketDataGrid(shell, SWT.NONE, match);
-    }   
-    
-    @After
-    public void tearDown() {
-        DataManager.stopAllThreads();
-        super.tearDown();
-    }
-    
-    @Test
-    public void testStartup() {
-        // init was successfull
-    }
+public class UpdatableMarketDataGridTest extends DisplayTest {
+	private String filename;
+	private Match match;
+	private Shell shell;
+
+	@Override
+	@Before
+	public void setUp() {
+		super.setUp();
+		shell = new Shell(display, SWT.NONE);
+		filename = "data/test/fracsoft-reader/tso-fed.csv";
+		match = new HistoricalMatch(filename);
+		new MarketDataGrid(shell, SWT.NONE, match);
+	}
+
+	@Override
+	@After
+	public void tearDown() {
+		DataManager.stopAllThreads();
+		super.tearDown();
+	}
+
+	@Test
+	public void testStartup() {
+		// init was successfull
+	}
 }
