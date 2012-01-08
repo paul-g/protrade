@@ -1,8 +1,9 @@
 package org.ic.tennistrader.ui.updatable;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -18,91 +19,62 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.OddsButtonNotFoundException;
-import org.ic.tennistrader.ui.betting.BetPlacingShell;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.betting.BetManager;
+import org.ic.tennistrader.ui.GraphicsUtils;
+import org.ic.tennistrader.ui.betting.BetPlacingShell;
 
-public class OddsButton {
+public class OddsButton extends Composite {
+
+	private static final Logger log = Logger.getLogger(OddsButton.class);
 
 	private String CURRENCY = "£";
 
-	private Composite comp;
-	private MarketDataGrid dataGrid;
-	private Label odds;
-	private Label amount;
+	private final MarketDataGrid dataGrid;
+	private final Label odds;
+	private final Label amount;
 	private final Display display;
-	private Color initialColor;
-	private Color clickColor;
-	private Color hoverColor;
 
-	private Image backgroundImage;
-	private Image highlightImage;
+	private Image initialImage;
+	private Image hoverImage;
 	private Image clickImage;
 
-	OddsButton(Composite parent, Color color, Font oddsFont,
+	public OddsButton(Composite parent, Color color, Font oddsFont,
 			MarketDataGrid dataGrid) {
+		super(parent, SWT.BORDER);
 		this.dataGrid = dataGrid;
-		comp = new Composite(parent, SWT.BORDER);
-		comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		initColors(color);
 		this.display = parent.getDisplay();
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.type = SWT.VERTICAL;
 		GridData gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
-		comp.setLayoutData(gd);
-		comp.setLayout(rowLayout);
-		comp.setBackground(color);
+		setLayoutData(gd);
+		setLayout(new RowLayout(SWT.VERTICAL));
 
-		this.initialColor = color;
-
-		this.odds = new Label(comp, SWT.NONE);
-		this.odds.setFont(oddsFont);
-		this.amount = new Label(comp, SWT.NONE);
-		this.amount.setFont(oddsFont);
+		odds = new Label(this, SWT.NONE);
+		odds.setFont(oddsFont);
+		amount = new Label(this, SWT.NONE);
+		amount.setFont(oddsFont);
 
 		addClickListener();
 
-		// final Timeline rolloverTimeline = new Timeline(comp);
-		// rolloverTimeline.addPropertyToInterpolate("backgroundImage",
-		// backgroundImage, highlightImage);
-		// rolloverTimeline.setDuration(100);
-		comp.addMouseTrackListener(new MouseTrackListener() {
+		addMouseTrackListener(new MouseTrackAdapter() {
 
 			@Override
 			public void mouseEnter(MouseEvent arg0) {
-				comp.setBackground(hoverColor);
-				comp.setBackgroundImage(highlightImage);
-				// rolloverTimeline.play();
+				setBackgroundImage(GraphicsUtils.makeGradientBackgroundImage(
+						OddsButton.this, 155, 205, 155, 193, 255, 193));
 			}
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				// if ( !odds.isFocusControl() && !amount.isFocusControl())
-				// rolloverTimeline.playReverse();
-				comp.setBackground(initialColor);
-				comp.setBackgroundImage(backgroundImage);
-			}
-
-			@Override
-			public void mouseHover(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
+				setBackgroundImage(initialImage);
 			}
 		});
 
-		Menu menu = makeMenu(comp);
-		comp.setMenu(menu);
+		Menu menu = makeMenu(this);
+		setMenu(menu);
 		odds.setMenu(menu);
 		amount.setMenu(menu);
-	}
 
-	private void initColors(Color initialColor) {
-		this.initialColor = initialColor;
-		this.clickColor = new org.eclipse.swt.graphics.Color(comp.getDisplay(),
-				84, 139, 84);
-		this.hoverColor = new org.eclipse.swt.graphics.Color(comp.getDisplay(),
-				124, 205, 124);
 	}
 
 	private Menu makeMenu(Composite comp) {
@@ -135,10 +107,6 @@ public class OddsButton {
 		});
 	}
 
-	public void setBackground(Color color) {
-		comp.setBackground(color);
-	}
-
 	void addClickListener() {
 		Listener l = new Listener() {
 			@Override
@@ -153,27 +121,25 @@ public class OddsButton {
 					double initOdds = Double.parseDouble(OddsButton.this
 							.getOdds().getText());
 					BetPlacingShell betPlacingShell = new BetPlacingShell(
-							OddsButton.this.getComp().getDisplay(), dataGrid
-									.getBetController().getMatch(), betPlayer,
-							betType, initOdds, betDetails);
-					Rectangle rect = comp.getClientArea();
+							getDisplay(), dataGrid.getBetController()
+									.getMatch(), betPlayer, betType, initOdds,
+							betDetails);
+					Rectangle rect = getClientArea();
 					betPlacingShell.setLocation(rect.x, rect.y);
 				} catch (OddsButtonNotFoundException obnfe) {
 
 				}
-				comp.setBackgroundImage(clickImage);
-				setBackground(clickColor);
+				setBackgroundImage(clickImage);
 				display.timerExec(100, new Runnable() {
 					@Override
 					public void run() {
-						comp.setBackground(initialColor);
-						// comp.setBackgroundImage(backgroundImage);
+						setBackgroundImage(initialImage);
 					}
 				});
 			}
 		};
 
-		comp.addListener(SWT.MouseUp, l);
+		addListener(SWT.MouseUp, l);
 		odds.addListener(SWT.MouseUp, l);
 		amount.addListener(SWT.MouseUp, l);
 	}
@@ -190,32 +156,26 @@ public class OddsButton {
 		this.amount.setText(CURRENCY + amount);
 	}
 
-	public void setBackgroundImage(Image backgroundImage) {
-		this.backgroundImage = backgroundImage;
-	}
-
-	public void setHighlightImage(Image highlightImage) {
-		this.highlightImage = highlightImage;
-	}
-
-	public void setClickImage(Image clickImage) {
-		this.clickImage = clickImage;
-	}
-
-	public Composite getComp() {
-		return comp;
-	}
-
 	public Label getOdds() {
 		return odds;
-	}
-
-	void layout() {
-		comp.layout();
 	}
 
 	public double getAmount() {
 		String amount = this.amount.getText().substring(1);
 		return Double.parseDouble(amount);
 	}
+
+	public void setInitialBackgroundImage(Image image) {
+		setBackgroundImage(image);
+		this.initialImage = image;
+	}
+
+	public void setHighlightImage(Image highlightImage) {
+		this.hoverImage = highlightImage;
+	}
+
+	public void setClickImage(Image clickImage) {
+		this.clickImage = clickImage;
+	}
+
 }

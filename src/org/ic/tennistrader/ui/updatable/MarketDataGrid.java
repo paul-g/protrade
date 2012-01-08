@@ -14,6 +14,7 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.betting.BetController;
+import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
@@ -105,40 +106,71 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		player.setFont(titleFont);
 		player.setText(playerName);
 
+		makeOtherBackButtons(pBackButtons);
+
+		makeBestBackButton(pBackButtons);
+
+		makeBestLayButton(pBackButtons, pLayButtons);
+
+		makeOherLayButtons(pBackButtons, pLayButtons);
+
+		makeMarketButtons(pBackButtons, pMarketInfo);
+	}
+
+	private void makeOtherBackButtons(OddsButton[] pBackButtons) {
 		for (int i = 0; i < 2; i++) {
 			pBackButtons[i] = new OddsButton(this,
 					Colours.getOddsButtonColor(), oddsFont, this);
-
-			/*
-			 * Composite comp = pBackButtons[i].getComp(); Image
-			 * backBackgroundImage = GraphicsUtils
-			 * .makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210, 238);
-			 * Image backClickImage = GraphicsUtils.makeGradientBackgroundImage(
-			 * comp, 84, 139, 84, 84, 139, 84); Image backHoverImage =
-			 * GraphicsUtils.makeGradientBackgroundImage( comp, 155, 205, 155,
-			 * 193, 255, 193);
-			 * pBackButtons[i].setBackgroundImage(backBackgroundImage);
-			 * pBackButtons[i].setClickImage(backClickImage);
-			 * pBackButtons[i].setHighlightImage(backHoverImage);
-			 */
-
+			pBackButtons[i].pack();
+			pBackButtons[i].setInitialBackgroundImage(GraphicsUtils
+					.makeGradientBackgroundImage(pBackButtons[i], 150, 150,
+							150, 123, 115, 175));
 		}
+	}
 
-		pBackButtons[2] = new OddsButton(this, Colours.getBackColor(),
-				oddsFont, this);
-		pLayButtons[0] = new OddsButton(this, Colours.getLayColor(), oddsFont,
-				this);
-
-		for (int i = 1; i < 3; i++)
-			pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(),
-					oddsFont, this);
-
+	private void makeMarketButtons(OddsButton[] pBackButtons,
+			OddsButton[] pMarketInfo) {
 		for (int i = 0; i < p1MarketInfoButtons.length; i++) {
 			pMarketInfo[i] = new OddsButton(this, Colours.getOddsButtonColor(),
 					oddsFont, this);
 			pMarketInfo[i].setOdds("             ");
 			pMarketInfo[i].setCurrency("");
+			pMarketInfo[i].pack();
+			pMarketInfo[i].setInitialBackgroundImage(GraphicsUtils
+					.makeGradientBackgroundImage(pMarketInfo[i], 150, 150, 150,
+							123, 115, 175));
 		}
+	}
+
+	private void makeOherLayButtons(OddsButton[] pBackButtons,
+			OddsButton[] pLayButtons) {
+		for (int i = 1; i < 3; i++) {
+			pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(),
+					oddsFont, this);
+			pLayButtons[i].pack();
+			pLayButtons[i].setInitialBackgroundImage(GraphicsUtils
+					.makeGradientBackgroundImage(pLayButtons[i], 150, 150, 150,
+							123, 115, 175));
+		}
+	}
+
+	private void makeBestLayButton(OddsButton[] pBackButtons,
+			OddsButton[] pLayButtons) {
+		pLayButtons[0] = new OddsButton(this, Colours.getLayColor(), oddsFont,
+				this);
+		pLayButtons[0].pack();
+		pLayButtons[0].setInitialBackgroundImage(GraphicsUtils
+				.makeGradientBackgroundImage(pLayButtons[0], 150, 150, 150,
+						238, 210, 238));
+	}
+
+	private void makeBestBackButton(OddsButton[] pBackButtons) {
+		pBackButtons[2] = new OddsButton(this, Colours.getBackColor(),
+				oddsFont, this);
+		pBackButtons[2].pack();
+		pBackButtons[2].setInitialBackgroundImage(GraphicsUtils
+				.makeGradientBackgroundImage(pBackButtons[2], 150, 150, 150,
+						166, 166, 166));
 	}
 
 	private void initFonts() {
