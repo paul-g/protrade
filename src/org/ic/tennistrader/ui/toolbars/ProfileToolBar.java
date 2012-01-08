@@ -2,25 +2,17 @@ package org.ic.tennistrader.ui.toolbars;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.TextLayout;
-import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
@@ -70,16 +62,16 @@ public class ProfileToolBar {
 
 	/** Profile button menu constructor */
 	private void makeProfileMenu(Composite parent, final Shell shell) {
-		Display display = shell.getDisplay();
-		Color green = display.getSystemColor(SWT.COLOR_GREEN);
-		Color red = display.getSystemColor(SWT.COLOR_RED);
-		ToolItem it = new ToolItem(toolbar, SWT.NULL);
-		StyledText profit = new StyledText(toolbar,SWT.CENTER);
-		profit.setForeground(green);
-		profit.setText("212");
-		Label loss = new Label(shell,SWT.CENTER);
-		loss.setForeground(red);
-		loss.setText("183");
+//		Display display = shell.getDisplay();
+//		Color green = display.getSystemColor(SWT.COLOR_GREEN);
+//		Color red = display.getSystemColor(SWT.COLOR_RED);
+//		ToolItem it = new ToolItem(toolbar, SWT.NULL);
+//		StyledText profit = new StyledText(toolbar,SWT.CENTER);
+//		profit.setForeground(green);
+//		profit.setText("212");
+//		Label loss = new Label(shell,SWT.CENTER);
+//		loss.setForeground(red);
+//		loss.setText("183");
 	
 		final ToolItem balanceItem = new ToolItem(toolbar, SWT.DROP_DOWN);
 		balanceItem.setToolTipText("Balance");
