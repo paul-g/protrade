@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -35,9 +34,11 @@ public class ProfileToolBar {
 
 	private ProfileWindow profileWindow = null;
 
+	private final Shell shell;
+
 	public ProfileToolBar(Composite parent) {
 
-		final Shell shell = parent.getShell();
+		shell = parent.getShell();
 
 		toolbar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
 
@@ -50,79 +51,47 @@ public class ProfileToolBar {
 			log.error(e.getMessage());
 		}
 
-		makeProfileMenu(parent, shell);
-
-		// Grid for right alignment
-		GridData loginData = new GridData();
-		loginData.horizontalSpan = 1;
-		loginData.horizontalAlignment = SWT.RIGHT;
-		toolbar.setLayoutData(loginData);
+		makeLiabilityItem();
+		makeProfitItem();
+		makeBalanceItem();
+		makeProfileItem();
 
 	}
 
+	private void makeProfitItem() {
+		final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
+		item.setText("Profit: 100£");
+		item.setToolTipText("Total Liability");
+		item.addListener(SWT.Selection, new BetsListener(item));
+	}
+
 	/** Profile button menu constructor */
-	private void makeProfileMenu(Composite parent, final Shell shell) {
-//		Display display = shell.getDisplay();
-//		Color green = display.getSystemColor(SWT.COLOR_GREEN);
-//		Color red = display.getSystemColor(SWT.COLOR_RED);
-//		ToolItem it = new ToolItem(toolbar, SWT.NULL);
-//		StyledText profit = new StyledText(toolbar,SWT.CENTER);
-//		profit.setForeground(green);
-//		profit.setText("212");
-//		Label loss = new Label(shell,SWT.CENTER);
-//		loss.setForeground(red);
-//		loss.setText("183");
-	
-		final ToolItem balanceItem = new ToolItem(toolbar, SWT.DROP_DOWN);
-		balanceItem.setToolTipText("Balance");
+	// Display display = shell.getDisplay();
+	// Color green = display.getSystemColor(SWT.COLOR_GREEN);
+	// Color red = display.getSystemColor(SWT.COLOR_RED);
+	// ToolItem it = new ToolItem(toolbar, SWT.NULL);
+	// StyledText profit = new StyledText(toolbar,SWT.CENTER);
+	// profit.setForeground(green);
+	// profit.setText("212");
+	// Label loss = new Label(shell,SWT.CENTER);
+	// loss.setForeground(red);
+	// loss.setText("183");
 
-		final ToolItem profileItem = new ToolItem(toolbar, SWT.DROP_DOWN);
-		// TODO: this is a slight hack
-		profileItem.setText(Main.username);
-		profileItem.setToolTipText("Profile");
+	private void makeLiabilityItem() {
+		final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
+		item.setText("Liability: 300£");
+		item.setToolTipText("Total Liability");
+		item.addListener(SWT.Selection, new BetsListener(item));
+	}
 
-		try {
-			balanceItem.setText("£"
-					+ profileData.getUkAccountFunds().getBalance());
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
+	/** Profile button menu constructor */
+	private void makeProfileItem() {
 
 		try {
-			final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
-			MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-			ukBalance.setText("GBP");
-			ukBalance.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					balanceItem.setText("£"
-							+ profileData.getUkAccountFunds().getBalance());
-				}
-			});
-
-			MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
-			ausBalance.setText("AUD");
-			ausBalance.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					try {
-						balanceItem
-								.setText("$"
-										+ profileData.getAusAccountFunds()
-												.getBalance());
-					} catch (Exception e1) {
-						log.error(e1.getMessage());
-					}
-				}
-			});
+			final ToolItem profileItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+			// TODO: this is a slight hack
+			profileItem.setText(Main.username);
+			profileItem.setToolTipText("Profile");
 
 			final Menu profileDropDown = new Menu(shell, SWT.POP_UP);
 			MenuItem logout = new MenuItem(profileDropDown, SWT.PUSH);
@@ -189,13 +158,60 @@ public class ProfileToolBar {
 					openPreferencesWindow();
 				}
 			});
-			balanceItem.addListener(SWT.Selection, new ToolItemListener(
-					toolbar, balanceItem, balanceDropDown, false));
 			profileItem.addListener(SWT.Selection, new ToolItemListener(
 					toolbar, profileItem, profileDropDown, false));
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	private Menu makeBalanceItem() {
+		final ToolItem balanceItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+		balanceItem.setToolTipText("Balance");
+
+		try {
+			balanceItem.setText("£"
+					+ profileData.getUkAccountFunds().getBalance());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+
+		final Menu balanceDropDown = new Menu(shell, SWT.POP_UP);
+		MenuItem ukBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+		ukBalance.setText("GBP");
+		ukBalance.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				balanceItem.setText("£"
+						+ profileData.getUkAccountFunds().getBalance());
+			}
+		});
+
+		MenuItem ausBalance = new MenuItem(balanceDropDown, SWT.PUSH);
+		ausBalance.setText("AUD");
+		ausBalance.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					balanceItem.setText("$"
+							+ profileData.getAusAccountFunds().getBalance());
+				} catch (Exception e1) {
+					log.error(e1.getMessage());
+				}
+			}
+		});
+		balanceItem.addListener(SWT.Selection, new ToolItemListener(toolbar,
+				balanceItem, balanceDropDown, false));
+
+		return balanceDropDown;
 	}
 
 	/** Method invoking the Profile Window appearance */

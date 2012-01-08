@@ -6,7 +6,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -16,7 +15,6 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.betting.BetController;
-import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
@@ -174,18 +172,19 @@ public class MarketDataGrid extends MatchViewerWidget implements
 			pBackButtons[i] = new OddsButton(this,
 					Colours.getOddsButtonColor(), oddsFont, this);
 
-//			Composite comp = pBackButtons[i].getComp();
-//			Image backBackgroundImage = GraphicsUtils
-//					.makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210,
-//							238);
-//			Image backClickImage = GraphicsUtils.makeGradientBackgroundImage(
-//					comp, 84, 139, 84, 84, 139, 84);
-//			Image backHoverImage = GraphicsUtils.makeGradientBackgroundImage(
-//					comp, 155, 205, 155, 193, 255, 193);
-//			pBackButtons[i].setBackgroundImage(backBackgroundImage);
-//			pBackButtons[i].setClickImage(backClickImage);
-//			pBackButtons[i].setHighlightImage(backHoverImage);
 
+			/*
+			 * Composite comp = pBackButtons[i].getComp(); Image
+			 * backBackgroundImage = GraphicsUtils
+			 * .makeGradientBackgroundImage(comp, 150, 150, 150, 238, 210, 238);
+			 * Image backClickImage = GraphicsUtils.makeGradientBackgroundImage(
+			 * comp, 84, 139, 84, 84, 139, 84); Image backHoverImage =
+			 * GraphicsUtils.makeGradientBackgroundImage( comp, 155, 205, 155,
+			 * 193, 255, 193);
+			 * pBackButtons[i].setBackgroundImage(backBackgroundImage);
+			 * pBackButtons[i].setClickImage(backClickImage);
+			 * pBackButtons[i].setHighlightImage(backHoverImage);
+			 */
 		}
 
 		pBackButtons[2] = new OddsButton(this, Colours.getBackColor(),
@@ -296,11 +295,9 @@ public class MarketDataGrid extends MatchViewerWidget implements
 					double mktP2 = matched2 / total * 100;
 
 					p1MarketInfoButtons[2].setOdds(BetsDisplay.DOUBLE_FORMAT
-							.format(mktP1)
-							+ "%");
+							.format(mktP1) + "%");
 					p2MarketInfoButtons[2].setOdds(BetsDisplay.DOUBLE_FORMAT
-							.format(mktP2)
-							+ "%");
+							.format(mktP2) + "%");
 					MarketDataGrid.this.layout();
 				}
 			}
