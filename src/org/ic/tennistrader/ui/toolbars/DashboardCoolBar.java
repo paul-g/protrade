@@ -60,7 +60,8 @@ public class DashboardCoolBar extends Composite {
 		ToolBar tb = ptb.getToolBar();
 		tb.pack();
 		Point p = tb.getSize();
-		Point p2 = profileItem.computeSize(p.x, p.y);
+		// TODO: Fix the show up of the profile button
+		Point p2 = profileItem.computeSize(p.x + 10, p.y);
 		profileItem.setControl(tb);
 		profileItem.setPreferredSize(p2);
 
