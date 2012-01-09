@@ -73,7 +73,9 @@ public class ChartData {
 	}
 
 	public void updateData(MOddsMarketData data) {
+		//xSeries = addTime(xSeries, data.getDate());
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
+
 		pl1YSeries = addValue(pl1YSeries, data.getPl1LastMatchedPrice());
 		pl2YSeries = addValue(pl2YSeries, data.getPl2LastMatchedPrice());
 
@@ -105,6 +107,17 @@ public class ChartData {
 		pl2Volume = addVolume(pl2Volume, data.getPlayer2TotalAmountMatched(), 2);
 		setDataSize(pl1YSeries.size());
 		checkScoreEndOfSet();
+	}
+
+	private ArrayList<Date> addTime(ArrayList<Date> xSeries, Date date) {
+		int i = this.getDataSize();
+		if (date == null){
+			if (i == 0) xSeries.add(i, new Date()); 
+			else xSeries.add(i, xSeries.get(i-1));
+		} else {
+			xSeries.add(i,date);
+		}
+		return xSeries;
 	}
 
 	public ArrayList<Integer> getEndOfSets() {

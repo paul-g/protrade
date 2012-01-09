@@ -30,6 +30,7 @@ public class MOddsMarketData {
 		pl1Back = new ArrayList<Pair<Double, Double>>();
 		pl2Lay = new ArrayList<Pair<Double, Double>>();
 		pl2Back = new ArrayList<Pair<Double, Double>>();
+		date = null;
 	}
 
 	public String getPlayer1() {

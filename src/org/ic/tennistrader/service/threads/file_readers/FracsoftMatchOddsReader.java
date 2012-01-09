@@ -2,6 +2,7 @@ package org.ic.tennistrader.service.threads.file_readers;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
@@ -24,6 +25,7 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 	
 	private static Logger log = Logger.getLogger(FracsoftMatchOddsReader.class);
 
+	private static final int TIME_OFFSET = 0;
 	private static final int HEADER_NO_LINES = 3;	
 	private static final int DELAY_OFFSET = 1;
 	private static final int STATUS_OFFSET = 2;
@@ -62,6 +64,8 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 				trim(lines2);
 
 				MOddsMarketData data = new MOddsMarketData();
+				data.setDate(new Date(Long.parseLong(lines1[TIME_OFFSET])));
+				
 				data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));
 				data.setMatchStatus(lines1[STATUS_OFFSET]);
 				// player 1 data

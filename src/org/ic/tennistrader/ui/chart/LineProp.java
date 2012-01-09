@@ -25,7 +25,6 @@ public class LineProp {
 	}
 
 	public Color getColor() {
-		System.out.println(color);
 		return color;
 	}
 
