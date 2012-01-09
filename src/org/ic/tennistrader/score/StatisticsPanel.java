@@ -1,6 +1,9 @@
 package org.ic.tennistrader.score;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
@@ -21,50 +24,50 @@ import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class StatisticsPanel extends MatchViewerWidget implements Listener {
-	
-	private TabFolder tabs;
-	private String pl1Lastname,pl2Lastname;
-	
+
+	private final TabFolder tabs;
+	private final String pl1Lastname, pl2Lastname;
+
 	private Tree tree;
 	private TreeColumn playerOneColumn;
 	private TreeColumn playerTwoColumn;
-	
+
 	private Tree treeSurface;
 	private TreeColumn playerOneColumnSurface;
 	private TreeColumn playerTwoColumnSurface;
 
 	public StatisticsPanel(Composite parent) {
 		super(parent, SWT.NONE);
-		
+
 		setLayout(new FillLayout());
 		tabs = new TabFolder(this, SWT.BORDER);
-		
+
 		pl1Lastname = "Player 1";
-		pl2Lastname = "Player 2";		
-		initH2H(pl1Lastname,pl2Lastname);
-		initSurface(pl1Lastname,pl2Lastname);
-		initTournament(pl1Lastname,pl2Lastname);
+		pl2Lastname = "Player 2";
+		initH2H(pl1Lastname, pl2Lastname);
+		initSurface(pl1Lastname, pl2Lastname);
+		initTournament(pl1Lastname, pl2Lastname);
 	}
 
 	public StatisticsPanel(Composite parent, Match match) {
 		super(parent, SWT.NONE);
-		
+
 		setLayout(new FillLayout());
 		tabs = new TabFolder(this, SWT.BORDER);
-		
+
 		this.match = match;
 		pl1Lastname = match.getPlayerOne().getLastname();
 		pl2Lastname = match.getPlayerTwo().getLastname();
-	    initH2H(pl1Lastname,pl2Lastname);
-	    initSurface(pl1Lastname,pl2Lastname);
-	    initTournament(pl1Lastname,pl2Lastname);
+		initH2H(pl1Lastname, pl2Lastname);
+		initSurface(pl1Lastname, pl2Lastname);
+		initTournament(pl1Lastname, pl2Lastname);
 	}
-	
+
 	private void initH2H(String pl1Lastname, String pl2Lastname) {
-		
+
 		Composite comp = new Composite(tabs, SWT.NONE);
 		comp.setLayout(new FillLayout());
-		TabItem ti = new TabItem(tabs,SWT.NONE);
+		TabItem ti = new TabItem(tabs, SWT.NONE);
 		ti.setText("Head-to-Head statistics");
 		ti.setControl(comp);
 
@@ -74,28 +77,28 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		playerOneColumn = new TreeColumn(tree, SWT.LEFT);
 		playerOneColumn.setText(pl1Lastname);
 		playerOneColumn.setWidth(140);
-		playerOneColumn.setResizable(false);
+		playerOneColumn.setResizable(true);
 
 		TreeColumn midColumn = new TreeColumn(tree, SWT.CENTER);
 		midColumn.setText("VS");
 		midColumn.setWidth(140);
-		midColumn.setResizable(false);
+		midColumn.setResizable(true);
 
 		playerTwoColumn = new TreeColumn(tree, SWT.RIGHT);
 		playerTwoColumn.setText(pl2Lastname);
 		playerTwoColumn.setWidth(140);
-		playerTwoColumn.setResizable(false);
-		
+		playerTwoColumn.setResizable(true);
+
 	}
-	
-	private void initSurface(String pl1Lastname, String pl2Lastname){
-		
+
+	private void initSurface(String pl1Lastname, String pl2Lastname) {
+
 		Composite comp = new Composite(tabs, SWT.NONE);
 		comp.setLayout(new FillLayout());
-		TabItem ti = new TabItem(tabs,SWT.NONE);
+		TabItem ti = new TabItem(tabs, SWT.NONE);
 		ti.setText("Surface Statistics");
 		ti.setControl(comp);
-		
+
 		this.treeSurface = new Tree(comp, SWT.NONE);
 		treeSurface.setHeaderVisible(true);
 
@@ -113,19 +116,19 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		playerTwoColumnSurface.setText(pl2Lastname);
 		playerTwoColumnSurface.setWidth(140);
 		playerTwoColumnSurface.setResizable(false);
-		
+
 	}
-	
+
 	private void initTournament(String pl1Lastname, String pl2Lastname) {
-		
+
 		Composite comp = new Composite(tabs, SWT.NONE);
 		comp.setLayout(new FillLayout());
-		TabItem ti = new TabItem(tabs,SWT.NONE);
+		TabItem ti = new TabItem(tabs, SWT.NONE);
 		ti.setText("Tournament Statistics");
 		ti.setControl(comp);
-		
+
 	}
-	
+
 	public Tree getTree() {
 		return this.tree;
 	}
@@ -246,8 +249,32 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		this.match = match;
 		playerOneColumn.setText(match.getPlayerOne().getLastname());
 		playerTwoColumn.setText(match.getPlayerTwo().getLastname());
-		StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
-		thread.addListener(this);
-		thread.start();
+		String testString = getTestString("data/test/tennisinsight-tso-fed.dat");
+		Player player1 = new Player();
+		Player player2 = new Player();
+		new StatisticsParser(testString, match).parseAndSetStatistics();
+		// StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
+		// thread.addListener(this);
+		// thread.start();
+		handleEvent(new Event());
 	}
+
+	private static String getTestString(String filename) {
+
+		Scanner scanner;
+		String test = "";
+
+		try {
+			scanner = new Scanner(new FileInputStream(filename));
+
+			while (scanner.hasNext()) {
+				test += scanner.nextLine() + "\n";
+			}
+		} catch (FileNotFoundException e) {
+			// log.error(e.getMessage());
+		}
+
+		return test;
+	}
+
 }
