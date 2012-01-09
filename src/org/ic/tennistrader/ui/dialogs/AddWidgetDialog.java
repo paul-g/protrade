@@ -2,6 +2,7 @@ package org.ic.tennistrader.ui.dialogs;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -65,6 +66,7 @@ public class AddWidgetDialog extends RichListDialog {
 				"An integrated video player for watching the match live. For the majority of matches, a live video will be streamed. " +
 				"Watch how the players perform in real to " +
 				"get the whole picture of the match ", "Match Player", control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -74,6 +76,8 @@ public class AddWidgetDialog extends RichListDialog {
 	}
 
 	private void makeBrowserEl(RichListView r) {
+		Image image = new Image(Display.getCurrent(),
+		"images/browser-small.png");
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -92,7 +96,9 @@ public class AddWidgetDialog extends RichListDialog {
 						+ " offical website of the Association of Tennis Professionals (ATP). In a few clicks you can get "
 						+ "all the necessary information about tennis tournaments, such as calendar, rankings and player statistics."
 						+ " It is also possible to browse any other websites of your choice.",
-				"Browser", control);
+				"Browser", image, control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
+		element.setSize(50, 50);
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -121,6 +127,7 @@ public class AddWidgetDialog extends RichListDialog {
 				SWT.BORDER,
 				"Displays match summary which includes the name of the tournament and the status of the match.",
 				"Match Viewer", control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -130,6 +137,8 @@ public class AddWidgetDialog extends RichListDialog {
 	}
 
 	private void makeStatisticsPanelEl(RichListView r) {
+		Image image = new Image(Display.getCurrent(),
+		"images/stats-small.png");
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -149,7 +158,8 @@ public class AddWidgetDialog extends RichListDialog {
 				"Displays detailed player statistics which include basic player information and historical match/set statistics "
 						+ "obtained from www.tennisinsight.com. "
 						+ "The match/set statistics represents the percentage of the matches/sets/games/points won in the last period  ",
-				"Statistics Panel", control);
+				"Statistics Panel", image, control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -159,6 +169,8 @@ public class AddWidgetDialog extends RichListDialog {
 	}
 
 	private void makeMarketGridEl(RichListView r) {
+		Image image = new Image(Display.getCurrent(),
+		"images/market-grid-small.png");
 		Control control = makeElementControl(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -187,8 +199,9 @@ public class AddWidgetDialog extends RichListDialog {
 						+ "the Market Overround which gives a measure of the competitiveness of the prices on offer. "
 						+ "The Market Grid handels bet placing. "
 						+ "To bet, you just need to click your preffered odds. The data is fetched from Betfair server at "
-						+ "a speed of 5 requests/second", "Market Grid.",
+						+ "a speed of 5 requests/second", "Market Grid.", image,
 				control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -222,6 +235,7 @@ public class AddWidgetDialog extends RichListDialog {
 						+ "input current match score and player's serve statistics. "
 						+ "The model used is described in a number of academic papers focusing on tennis modelling.",
 				"Score Panel", image, control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
@@ -255,6 +269,7 @@ public class AddWidgetDialog extends RichListDialog {
 						+ "The model used is described in a number of academic papers focusing on tennis modelling. "
 						+ "The bottom chart displays the volume of the matched bets over time.",
 				"Dual Chart Widget", image, control);
+		element.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
 		element.addInfoListener(new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {

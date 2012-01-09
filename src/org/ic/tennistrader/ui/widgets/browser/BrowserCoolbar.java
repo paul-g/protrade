@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
+import org.ic.tennistrader.ui.toolbars.BrowserToolBar;
 import org.ic.tennistrader.ui.toolbars.DashboardCoolBar;
 import org.ic.tennistrader.ui.toolbars.DashboardToolBar;
 import org.ic.tennistrader.ui.toolbars.ProfileToolBar;
@@ -21,8 +22,6 @@ import org.ic.tennistrader.ui.toolbars.ProfileToolBar;
 public class BrowserCoolbar extends Composite {
 
 	private final CoolBar coolBar;
-
-	private CoolItem profileItem;
 
 	private CoolItem dashboardItem;
 
@@ -37,39 +36,24 @@ public class BrowserCoolbar extends Composite {
 
 		makeDashboardItem();
 		makeSearchItem();
-		makeProfileItem();
 
 		coolBar.pack();
 
 		int searchWidth = Display.getCurrent().getClientArea().width
-				- profileItem.getBounds().width
 				- dashboardItem.getBounds().width;
 
 		log.info("shell width: " + parent.getClientArea().width
 				+ "search box width: " + searchWidth + " profile bar width: "
-				+ profileItem.getBounds().width + " dashboard bar width: "
 				+ dashboardItem.getBounds().width);
 
 		searchItem.setPreferredSize(searchWidth, searchItem.getSize().y);
 		searchItem.setSize(searchWidth, searchItem.getSize().y);
 	}
 
-	private void makeProfileItem() {
-		profileItem = new CoolItem(coolBar, SWT.NONE);
-		ProfileToolBar ptb = new ProfileToolBar(coolBar);
-		ToolBar tb = ptb.getToolBar();
-		tb.pack();
-		Point p = tb.getSize();
-		Point p2 = profileItem.computeSize(p.x, p.y);
-		profileItem.setControl(tb);
-		profileItem.setPreferredSize(p2);
-
-	}
-
 	private void makeDashboardItem() {
 		dashboardItem = new CoolItem(coolBar, SWT.NONE);
-		DashboardToolBar dtb = new DashboardToolBar(coolBar);
-		ToolBar tb = dtb.getToolBar();
+		BrowserToolBar btb = new BrowserToolBar(coolBar);
+		ToolBar tb = btb.getToolbar();
 		tb.pack();
 		Point p = tb.getSize();
 		tb.setSize(p);

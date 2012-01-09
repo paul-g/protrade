@@ -9,6 +9,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -19,28 +21,54 @@ import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class StatisticsPanel extends MatchViewerWidget implements Listener {
-
+	
+	private TabFolder tabs;
+	private String pl1Lastname,pl2Lastname;
+	
 	private Tree tree;
 	private TreeColumn playerOneColumn;
 	private TreeColumn playerTwoColumn;
+	
+	private Tree treeSurface;
+	private TreeColumn playerOneColumnSurface;
+	private TreeColumn playerTwoColumnSurface;
 
 	public StatisticsPanel(Composite parent) {
 		super(parent, SWT.NONE);
-		init(parent, "Player 1", "Player 2");
+		
+		setLayout(new FillLayout());
+		tabs = new TabFolder(this, SWT.BORDER);
+		
+		pl1Lastname = "Player 1";
+		pl2Lastname = "Player 2";		
+		initH2H(pl1Lastname,pl2Lastname);
+		initSurface(pl1Lastname,pl2Lastname);
+		initTournament(pl1Lastname,pl2Lastname);
 	}
 
 	public StatisticsPanel(Composite parent, Match match) {
 		super(parent, SWT.NONE);
-		this.match = match;
-		String pl1Lastname = match.getPlayerOne().getLastname();
-		String pl2Lastname = match.getPlayerTwo().getLastname();
-		init(parent, pl1Lastname, pl2Lastname);
-	}
-
-	private void init(Composite parent, String pl1Lastname, String pl2Lastname) {
+		
 		setLayout(new FillLayout());
+		tabs = new TabFolder(this, SWT.BORDER);
+		
+		this.match = match;
+		pl1Lastname = match.getPlayerOne().getLastname();
+		pl2Lastname = match.getPlayerTwo().getLastname();
+	    initH2H(pl1Lastname,pl2Lastname);
+	    initSurface(pl1Lastname,pl2Lastname);
+	    initTournament(pl1Lastname,pl2Lastname);
+	}
+	
+	private void initH2H(String pl1Lastname, String pl2Lastname) {
+		
+		Composite comp = new Composite(tabs, SWT.NONE);
+		comp.setLayout(new FillLayout());
+		TabItem ti = new TabItem(tabs,SWT.NONE);
+		ti.setText("Head-to-Head statistics");
+		ti.setControl(comp);
 
-		this.tree = new Tree(this, SWT.NONE);
+		this.tree = new Tree(comp, SWT.NONE);
 		tree.setHeaderVisible(true);
 
 		playerOneColumn = new TreeColumn(tree, SWT.LEFT);
@@ -57,8 +85,47 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		playerTwoColumn.setText(pl2Lastname);
 		playerTwoColumn.setWidth(140);
 		playerTwoColumn.setResizable(false);
+		
 	}
+	
+	private void initSurface(String pl1Lastname, String pl2Lastname){
+		
+		Composite comp = new Composite(tabs, SWT.NONE);
+		comp.setLayout(new FillLayout());
+		TabItem ti = new TabItem(tabs,SWT.NONE);
+		ti.setText("Surface Statistics");
+		ti.setControl(comp);
+		
+		this.treeSurface = new Tree(comp, SWT.NONE);
+		treeSurface.setHeaderVisible(true);
 
+		playerOneColumnSurface = new TreeColumn(treeSurface, SWT.LEFT);
+		playerOneColumnSurface.setText(pl1Lastname);
+		playerOneColumnSurface.setWidth(140);
+		playerOneColumnSurface.setResizable(false);
+
+		TreeColumn midColumn = new TreeColumn(treeSurface, SWT.CENTER);
+		midColumn.setText("VS");
+		midColumn.setWidth(140);
+		midColumn.setResizable(false);
+
+		playerTwoColumnSurface = new TreeColumn(treeSurface, SWT.RIGHT);
+		playerTwoColumnSurface.setText(pl2Lastname);
+		playerTwoColumnSurface.setWidth(140);
+		playerTwoColumnSurface.setResizable(false);
+		
+	}
+	
+	private void initTournament(String pl1Lastname, String pl2Lastname) {
+		
+		Composite comp = new Composite(tabs, SWT.NONE);
+		comp.setLayout(new FillLayout());
+		TabItem ti = new TabItem(tabs,SWT.NONE);
+		ti.setText("Tournament Statistics");
+		ti.setControl(comp);
+		
+	}
+	
 	public Tree getTree() {
 		return this.tree;
 	}
