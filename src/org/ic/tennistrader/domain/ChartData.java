@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.score.PredictionCalculator;
 import org.ic.tennistrader.utils.Pair;
 
 public class ChartData {
@@ -77,13 +78,21 @@ public class ChartData {
 		pl2YSeries = addValue(pl2YSeries, data.getPl2LastMatchedPrice());
 
 		/*
-		 * try { double[] result = calcPrediction(new
+		 * try{ double[] result = calcPrediction(new
 		 * PredictionCalculator(match) .calculateOddsWithStaticPWOS(match));
 		 * pl1Predicted = addValue(pl1Predicted, result[0]); pl2Predicted =
 		 * addValue(pl2Predicted, result[1]); } catch (NullPointerException e) {
 		 * // System.out.println("NULL"); }
-		 */
-
+		 */		
+		PredictionCalculator calc = new PredictionCalculator(match);
+		double [] result = {0,0};
+		result = calc.calculateOddsWithStaticPWOS(match);
+		if (result[0] == 0) 
+			result[0] = 0.0001;
+		if (result[1] == 0) 
+			result[1] = 0.0001;
+		pl1Predicted = addValue(pl1Predicted, result[0]); 
+		pl2Predicted = addValue(pl2Predicted, result[1]);
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(), data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(), data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
