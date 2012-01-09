@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -57,31 +59,34 @@ public class ProfileToolBar {
 		makeProfileItem();
 
 	}
-
-	private void makeProfitItem() {
-		final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
-		item.setText("Profit: 100£");
-		item.setToolTipText("Total Profit");
-		item.addListener(SWT.Selection, new BetsListener(item));
+	
+	/** Method for coloured text label creation */
+	private void createColouredText(String text, int color) {
+		// TODO : Terrible workaround, but works for now.
+		Display display = Display.getCurrent();
+		Image image = new Image (display, 7*text.length(), 13);
+		GC gc = new GC (image);
+		gc.setForeground(display.getSystemColor(color));
+		gc.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		gc.drawText(text,0,0,false);
+		gc.dispose();
+		new ToolItem(toolbar, SWT.NONE).setImage(image);
 	}
 
-	/** Profile button menu constructor */
-	// Display display = shell.getDisplay();
-	// Color green = display.getSystemColor(SWT.COLOR_GREEN);
-	// Color red = display.getSystemColor(SWT.COLOR_RED);
-	// ToolItem it = new ToolItem(toolbar, SWT.NULL);
-	// StyledText profit = new StyledText(toolbar,SWT.CENTER);
-	// profit.setForeground(green);
-	// profit.setText("212");
-	// Label loss = new Label(shell,SWT.CENTER);
-	// loss.setForeground(red);
-	// loss.setText("183");
+	/** Profit Item constructor */
+	private void makeProfitItem() {
+		final ToolItem item = new ToolItem(toolbar, SWT.NONE);
+		item.setText("Profit:");
+		item.setToolTipText("Total Profit");
+		createColouredText("£300",SWT.COLOR_DARK_GREEN);
+	}
 
+	/** Liability Item constructor */
 	private void makeLiabilityItem() {
-		final ToolItem item = new ToolItem(toolbar, SWT.DROP_DOWN);
-		item.setText("Liability: 300£");
+		final ToolItem item = new ToolItem(toolbar, SWT.NONE);
+		item.setText("Liability:");
 		item.setToolTipText("Total Liability");
-		item.addListener(SWT.Selection, new BetsListener(item));
+		createColouredText("£100",SWT.COLOR_RED);
 	}
 
 	/** Profile button menu constructor */
