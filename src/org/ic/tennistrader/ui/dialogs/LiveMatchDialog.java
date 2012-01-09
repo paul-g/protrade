@@ -25,6 +25,7 @@ public class LiveMatchDialog extends Dialog {
 		GridLayout layout = (GridLayout) comp.getLayout();
 		layout.numColumns = 1;
 		navigationPanel = new NavigationPanel(comp);
+		this.getShell().setSize(400, 500);
 		return comp;
 	}
 

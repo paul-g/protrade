@@ -160,8 +160,10 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if (!isDisposed())
+				if (!isDisposed()) {
+					UpdatableChart.this.getAxisSet().getYAxis(0).adjustRange();
 					redraw();
+				}
 				if (parent != null && !parent.isDisposed())
 					parent.update();
 			}

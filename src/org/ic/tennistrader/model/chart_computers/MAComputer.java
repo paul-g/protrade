@@ -12,6 +12,16 @@ public class MAComputer extends SeriesComputer {
 		ArrayList<Double> oldValues;
 		if (chartData != null) {
 			if (player.equals(PlayerEnum.PLAYER1)) {
+				oldValues = chartData.getMaPl1();
+			}
+			else {
+				oldValues = chartData.getMaPl2();
+			}
+			values = new double[oldValues.size() - startIndex];
+			for (int i = startIndex; i < oldValues.size(); i++)
+				values[i - startIndex] = oldValues.get(i);
+			/*
+			if (player.equals(PlayerEnum.PLAYER1)) {
 				oldValues = chartData.getPl1YSeries();
 			}
 			else {
@@ -35,6 +45,7 @@ public class MAComputer extends SeriesComputer {
 						+ oldValues.get(i);
 				values[i - startIndex] = sum / 10;
 			}
+			*/
 		}
 		return values;
 	}

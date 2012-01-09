@@ -5,6 +5,7 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -25,6 +26,8 @@ public abstract class RichListDialog {
 				| SWT.V_SCROLL);
 
 		RichListView r = new RichListView(sc, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(1, true);
+		r.setLayout(gridLayout);
 		addElements(r);
 		r.pack();
 

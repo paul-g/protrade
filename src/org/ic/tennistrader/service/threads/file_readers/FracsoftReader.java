@@ -12,7 +12,7 @@ import org.ic.tennistrader.utils.Pair;
 
 public abstract class FracsoftReader<K> extends MatchUpdaterThread {
 	protected Iterator<K> pointer = null;
-	protected int updatesPerSecond = 1;
+	protected int updatesPerSecond = 10;
 	protected int inPlayPointer = -1;
 	protected List<K> matchDataList = new ArrayList<K>();
 	
