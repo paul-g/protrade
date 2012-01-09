@@ -24,7 +24,6 @@ import org.ic.tennistrader.score.PredictionCalculator;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
-import org.ic.tennistrader.utils.Colours;
 
 public class WimbledonScorePanel extends MatchViewerWidget implements
 		ScorePanel {
@@ -34,7 +33,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	private Image im2;
 
 	private static final String[] colLabelText = { "1", "2", "3", "4", "", "",
-			"Sts", "", "Gms", "", "Pts", "" };
+			"", "Sts", "", "Gms", "", "Pts", "" };
 	private final int nCols = colLabelText.length;
 
 	private final List<Label> colLabels = new ArrayList<Label>();
@@ -44,14 +43,16 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	private final static int[] SETS = { 1, 2, 3, 4 };
 
 	private final static int NAME = 5;
-	private final static int PRED_MATCH = 6;
 
-	private final static int SET = 7;
-	private final static int PRED_SET = 8;
-	private final static int GAME = 9;
-	private final static int PRED_GAME = 10;
-	private final static int POINT = 11;
-	private final static int PRED_POINT = 12;
+	private final static int PRED_MATCH = 6;
+	private final static int SERVER = 7;
+
+	private final static int SET = 8;
+	private final static int PRED_SET = 9;
+	private final static int GAME = 10;
+	private final static int PRED_GAME = 11;
+	private final static int POINT = 12;
+	private final static int PRED_POINT = 13;
 
 	private static final String PRED_SIZER = makeSizer(0);
 	private static final String SIZER = makeSizer(0);
@@ -113,6 +114,24 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		dummyLabel(nCols - 5);
 
 		initScoreLabels(PlayerEnum.PLAYER2);
+
+		// TODO: remove this
+		setDummyValues();
+
+	}
+
+	private void setDummyValues() {
+		Map<Integer, Label> pl1Map = labelMap.get(PlayerEnum.PLAYER1);
+		pl1Map.get(1).setText("3");
+		pl1Map.get(2).setText("7");
+		Image ball = new Image(Display.getCurrent(), "images/ball.png");
+		Image ballSmall = new Image(Display.getCurrent(), ball.getImageData()
+				.scaledTo(20, 20));
+
+		Map<Integer, Label> pl2Map = labelMap.get(PlayerEnum.PLAYER2);
+		pl2Map.get(1).setText("6");
+		pl2Map.get(2).setText("6");
+		pl2Map.get(SERVER).setImage(ballSmall);
 	}
 
 	private static String makeSizer(int n) {
@@ -147,6 +166,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		map.put(NAME,
 				makeScoreLabelWithText(this, playername
 						+ makeSizer(nameSize - playername.length())));
+		map.put(SERVER, makeScoreLabelWithText(this, "    "));
 		map.put(PRED_MATCH,
 				makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(
 						display, "Times", 12, SWT.NONE), display
@@ -179,8 +199,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		gd.grabExcessHorizontalSpace = true;
 		Font f = new Font(display, "Times", 14, SWT.BOLD);
 		Label label = new Label(comp, SWT.NONE);
-		// label.setBackgroundImage(im2);
-		label.setBackground(Colours.getScoreLabelBackgroundColor());
+		label.setBackgroundImage(im2);
+		// Tlabel.setBackground(Colours.getScoreLabelBackgroundColor());
 		label.setFont(f);
 		label.setLayoutData(gd);
 		label.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
@@ -193,8 +213,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		Label label = new Label(comp, SWT.NONE);
-		// label.setBackgroundImage(im2);
-		label.setBackground(Colours.getScoreLabelBackgroundColor());
+		label.setBackgroundImage(im2);
+		// label.setBackground(Colours.getScoreLabelBackgroundColor());
 		label.setFont(f);
 		label.setLayoutData(gd);
 		label.setForeground(foreground);
@@ -219,7 +239,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
 		try {
-			double[] result = new PredictionCalculator(this.match).calculate(this.match);
+			double[] result = new PredictionCalculator(this.match)
+					.calculate(this.match);
 			setPlayerPrediction(PredictionCalculator.getP1Data(result),
 					PlayerEnum.PLAYER1);
 			setPlayerPrediction(PredictionCalculator.getP2Data(result),
@@ -236,7 +257,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
 		try {
-			double[] result = new PredictionCalculator(this.match).calculate(this.match);
+			double[] result = new PredictionCalculator(this.match)
+					.calculate(this.match);
 
 			setPlayerPrediction(PredictionCalculator.getP1Data(result),
 					PlayerEnum.PLAYER1);
