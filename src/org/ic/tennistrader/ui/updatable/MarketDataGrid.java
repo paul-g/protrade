@@ -192,11 +192,14 @@ public class MarketDataGrid extends MatchViewerWidget implements
 					Colours.getOddsButtonColor(), oddsFont, this);
 			pBackButtons[i].pack();
 			pBackButtons[i].setInitialBackgroundImage(GraphicsUtils
-					.makeGradientBackgroundImage(pBackButtons[i], Colours
-							.getThemeBasicColor(), Colours.getBackColor()));
-			pBackButtons[0].setHighlightImage(GraphicsUtils
-					.makeGradientBackgroundImage(pBackButtons[0], Colours
-							.getLightBackColor(), Colours.getBackColor()));
+					.makeGradientBackgroundImage(pBackButtons[i],
+							Colours.getThemeBasicColor(),
+							Colours.getBackColor()));
+			pBackButtons[i]
+					.setHighlightImage(GraphicsUtils
+							.makeGradientBackgroundImage(pBackButtons[i],
+									Colours.getLightBackColor(),
+									Colours.getBackColor()));
 		}
 	}
 
@@ -209,9 +212,9 @@ public class MarketDataGrid extends MatchViewerWidget implements
 			pMarketInfo[i].setCurrency("");
 			pMarketInfo[i].pack();
 			pMarketInfo[i].setInitialBackgroundImage(GraphicsUtils
-					.makeGradientBackgroundImage(pMarketInfo[i], Colours
-							.getThemeBasicColor(), Colours
-							.getDarkThemeBasicColor()));
+					.makeGradientBackgroundImage(pMarketInfo[i],
+							Colours.getThemeBasicColor(),
+							Colours.getDarkThemeBasicColor()));
 		}
 	}
 
@@ -221,12 +224,14 @@ public class MarketDataGrid extends MatchViewerWidget implements
 			pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(),
 					oddsFont, this);
 			pLayButtons[i].pack();
-			pLayButtons[i].setInitialBackgroundImage(GraphicsUtils
-					.makeGradientBackgroundImage(pLayButtons[i], Colours
-							.getThemeBasicColor(), Colours.getLayColor()));
-			pLayButtons[0].setHighlightImage(GraphicsUtils
-					.makeGradientBackgroundImage(pLayButtons[0], Colours
-							.getLightLayColor(), Colours.getLayColor()));
+			pLayButtons[i]
+					.setInitialBackgroundImage(GraphicsUtils
+							.makeGradientBackgroundImage(pLayButtons[i],
+									Colours.getThemeBasicColor(),
+									Colours.getLayColor()));
+			pLayButtons[i].setHighlightImage(GraphicsUtils
+					.makeGradientBackgroundImage(pLayButtons[i],
+							Colours.getLightLayColor(), Colours.getLayColor()));
 		}
 	}
 
@@ -236,10 +241,11 @@ public class MarketDataGrid extends MatchViewerWidget implements
 				this);
 		pLayButtons[0].pack();
 		pLayButtons[0].setInitialBackgroundImage(GraphicsUtils
-				.makeGradientBackgroundImage(pLayButtons[0], Colours.getLayColor(), Colours.getDarkLayColor()));
+				.makeGradientBackgroundImage(pLayButtons[0],
+						Colours.getLayColor(), Colours.getDarkLayColor()));
 		pLayButtons[0].setHighlightImage(GraphicsUtils
-				.makeGradientBackgroundImage(pLayButtons[0], Colours
-						.getLightLayColor(), Colours.getLayColor()));
+				.makeGradientBackgroundImage(pLayButtons[0],
+						Colours.getLightLayColor(), Colours.getLayColor()));
 	}
 
 	private void makeBestBackButton(OddsButton[] pBackButtons) {
@@ -247,11 +253,11 @@ public class MarketDataGrid extends MatchViewerWidget implements
 				oddsFont, this);
 		pBackButtons[2].pack();
 		pBackButtons[2].setInitialBackgroundImage(GraphicsUtils
-				.makeGradientBackgroundImage(pBackButtons[2], Colours
-						.getBackColor(), Colours.getDarkBackColor()));
-		pBackButtons[0].setHighlightImage(GraphicsUtils
-				.makeGradientBackgroundImage(pBackButtons[0], Colours
-						.getLightBackColor(), Colours.getBackColor()));
+				.makeGradientBackgroundImage(pBackButtons[2],
+						Colours.getBackColor(), Colours.getDarkBackColor()));
+		pBackButtons[2].setHighlightImage(GraphicsUtils
+				.makeGradientBackgroundImage(pBackButtons[2],
+						Colours.getLightBackColor(), Colours.getBackColor()));
 	}
 
 	private void initFonts() {

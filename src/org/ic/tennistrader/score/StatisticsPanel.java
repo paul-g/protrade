@@ -179,5 +179,8 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		this.match = match;
 		playerOneColumn.setText(match.getPlayerOne().getLastname());
 		playerTwoColumn.setText(match.getPlayerTwo().getLastname());
+		StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
+		thread.addListener(this);
+		thread.start();
 	}
 }
