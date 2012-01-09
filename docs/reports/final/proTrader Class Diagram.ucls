@@ -1,0 +1,269 @@
+<class-diagram version="1.0.6" icons="false" automaticImage="JPEG" always-add-relationships="true" 
+  generalizations="true" realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.connection.BetfairExchangeHandler" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/connection/BetfairExchangeHandler.java" 
+    binary="false">    
+    <position x="133" y="685" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="true" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" 
+    name="org.ic.tennistrader.service.threads.BetfairDataUpdaterThread" project="tennis-trader" 
+    file="/tennis-trader/src/org/ic/tennistrader/service/threads/BetfairDataUpdaterThread.java" binary="false">    
+    <position x="333" y="522" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" 
+    name="org.ic.tennistrader.service.threads.file_readers.FracsoftReader" project="tennis-trader" 
+    file="/tennis-trader/src/org/ic/tennistrader/service/threads/file_readers/FracsoftReader.java" binary="false">    
+    <position x="531" y="507" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" 
+    name="org.ic.tennistrader.service.threads.file_readers.FracsoftSetBettingReader" project="tennis-trader" 
+    file="/tennis-trader/src/org/ic/tennistrader/service/threads/file_readers/FracsoftSetBettingReader.java" 
+    binary="false">    
+    <position x="440" y="675" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="true" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" 
+    name="org.ic.tennistrader.service.threads.file_readers.FracsoftMatchOddsReader" project="tennis-trader" 
+    file="/tennis-trader/src/org/ic/tennistrader/service/threads/file_readers/FracsoftMatchOddsReader.java" 
+    binary="false">    
+    <position x="611" y="682" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="true" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.service.MatchCsvWriter" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/service/MatchCsvWriter.java" binary="false">    
+    <position x="782" y="674" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.service.threads.MatchRecorderThread" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/service/threads/MatchRecorderThread.java" 
+    binary="false">    
+    <position x="783" y="500" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.service.DataManager" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/service/DataManager.java" binary="false">    
+    <position x="532" y="329" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.betting.BetManager" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/betting/BetManager.java" binary="false">    
+    <position x="189" y="186" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.betting.VirtualBetMarketInfo" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/betting/VirtualBetMarketInfo.java" 
+    binary="false">    
+    <position x="-29" y="163" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.model.betting.BetController" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/model/betting/BetController.java" 
+    binary="false">    
+    <position x="308" y="-9" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.betting.BetPlacingShell" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/betting/BetPlacingShell.java" binary="false">    
+    <position x="388" y="147" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="13" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.DualChartWidget" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/DualChartWidget.java" binary="false">    
+    <position x="607" y="16" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="14" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.login.LoginShell" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/login/LoginShell.java" binary="false">    
+    <position x="-57" y="367" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <interface id="15" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.score.ScorePanel" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/score/ScorePanel.java" binary="false">    
+    <position x="678" y="63" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <interface id="16" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.updatable.UpdatableWidget" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/updatable/UpdatableWidget.java" 
+    binary="false">    
+    <position x="602" y="171" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class id="17" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.ScoreUpdateThread" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/ScoreUpdateThread.java" binary="false">    
+    <position x="765" y="358" width="122" height="75"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="18" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.StatisticsUpdateThread" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/StatisticsUpdateThread.java" 
+    binary="false">    
+    <position x="828" y="255" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="19" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.score.ProbabilityPanel" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/score/ProbabilityPanel.java" binary="false">    
+    <position x="760" y="106" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="20" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.widgets.MatchViewerWidget" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/widgets/MatchViewerWidget.java" 
+    binary="false">    
+    <position x="358" y="100" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <realization id="21">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="16"/>  
+  </realization>  
+  <generalization id="22">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <association id="23">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="24" name="dataUpdater"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="27" name="recordersMap"/>      
+      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <dependency id="29">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <association id="30">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="31" name="fileReaders"/>      
+      <multiplicity id="32" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <generalization id="33">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <dependency id="34">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <realization id="35">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="16"/>  
+  </realization>  
+  <generalization id="36">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="37">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="38" name="matchMarketData"/>      
+      <multiplicity id="39" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <generalization id="40">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="20"/>  
+  </generalization>  
+  <dependency id="41">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <association id="42">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="43" name="fileSetReaders"/>      
+      <multiplicity id="44" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="46" name="writer"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <generalization id="48">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="20"/>  
+  </generalization>  
+  <classifier-display autosize="true" package="false" initial-value="false" signature="false" visibility="true">    
+    <attributes public="true" package="false" protected="false" private="false"/>    
+    <operations public="true" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="true"/>
+</class-diagram>
