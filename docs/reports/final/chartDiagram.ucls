@@ -1,0 +1,165 @@
+<class-diagram version="1.0.6" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.SeriesProperties" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/SeriesProperties.java" binary="false">    
+    <position x="635" y="448" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.UpdatableChart" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/UpdatableChart.java" binary="false">    
+    <position x="597" y="302" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.OddsChart" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/OddsChart.java" binary="false">    
+    <position x="418" y="330" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.ChartSettings" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/ChartSettings.java" binary="false">    
+    <position x="754" y="303" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.ChartMenu" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/ChartMenu.java" binary="false">    
+    <position x="520" y="389" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.OverroundChart" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/OverroundChart.java" binary="false">    
+    <position x="433" y="276" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.DualChartWidget" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/DualChartWidget.java" binary="false">    
+    <position x="156" y="327" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="true" private="false"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.ui.chart.ChartSettings.ResultSet" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/ui/chart/ChartSettings.java" binary="false">    
+    <position x="760" y="388" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="false" visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" name="org.ic.tennistrader.domain.ChartData" 
+    project="tennis-trader" file="/tennis-trader/src/org/ic/tennistrader/domain/ChartData.java" binary="false">    
+    <position x="419" y="203" width="-1" height="-1"/>    
+    <display autosize="true" package="false" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="10">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="11" name="smallChart"/>      
+      <multiplicity id="12" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="13">    
+    <bendpoint x="621" y="422"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="14" name="initialSeries"/>      
+      <multiplicity id="15" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="16">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="17" name="largeChart"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="20">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="21" name="propertiesResults"/>      
+      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="24" name="chartData"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="27" name="chartData"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="30" name="seriesItems"/>      
+      <multiplicity id="31" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="33">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="34" name="chartMenu"/>      
+      <multiplicity id="35" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="37" name="chart"/>      
+      <multiplicity id="38" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <nesting id="39">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </nesting>  
+  <classifier-display autosize="true" package="false" initial-value="false" signature="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="true"/>
+</class-diagram>
