@@ -112,6 +112,7 @@ public class SeriesProperties {
 				lineSeries.setSymbolType(lineProp.getSymbolType());
 			} else if (this.chartType.equals(SeriesType.BAR)) {
 				IBarSeries barSeries = (IBarSeries) this.chartSeries;
+				barSeries.setBarColor(lineProp.getColor());
 				barSeries.setBarPadding(lineProp.getBarPadding());
 				barSeries.setYAxisId(lineProp.getyAxisId());
 			}

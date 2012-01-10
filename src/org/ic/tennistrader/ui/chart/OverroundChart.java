@@ -3,25 +3,22 @@ package org.ic.tennistrader.ui.chart;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Slider;
 import org.ic.tennistrader.domain.ChartData;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.model.chart_computers.BackValuesComputer;
 import org.ic.tennistrader.model.chart_computers.OverroundComputer;
 import org.ic.tennistrader.model.chart_computers.VolumeComputer;
 import org.swtchart.IAxis;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeries.SeriesType;
-import org.swtchart.ISeriesSet;
 
 public class OverroundChart extends UpdatableChart {
 	private ILineSeries backOverround;
@@ -67,21 +64,33 @@ public class OverroundChart extends UpdatableChart {
 		//createSeries(pl1Name, pl2Name);
 		
 		chartMenu = new ChartMenu();
+		
+		LineProp prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 		SeriesProperties overround = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER1,
-				"Overround Back", "", new OverroundComputer(), new LineProp());
+				"Overround Back", "", new OverroundComputer(), prop);
 		chartMenu.addSeriesItem(overround);
+		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_MAGENTA));
 		SeriesProperties overroundl = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER2,
-				"Overround Lay", "", new OverroundComputer(), new LineProp());
+				"Overround Lay", "", new OverroundComputer(), prop);
 		chartMenu.addSeriesItem(overroundl);
+		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		SeriesProperties volume1 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER1,
-				"Volume", this.player1Name, new VolumeComputer(), new LineProp());
+				"Volume", this.player1Name, new VolumeComputer(), prop);
 		chartMenu.addSeriesItem(volume1);
+		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		SeriesProperties volume2 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER2,
-				"Volume", this.player2Name, new VolumeComputer(), new LineProp());
+				"Volume", this.player2Name, new VolumeComputer(), prop);
 		chartMenu.addSeriesItem(volume2);
 		
 		//addSeries(new BackValuesComputer(), overround);
