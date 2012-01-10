@@ -235,8 +235,13 @@ public class OverroundChart extends UpdatableChart {
 		// set serieses values
 		showSeries(chartData.getDataSize() - 1, false);
 		if (!isDisposed()) {
-			getAxisSet().getXAxis(0).adjustRange();
-			getAxisSet().getYAxis(0).adjustRange();
+			this.getDisplay().asyncExec(new Runnable(){
+				@Override
+				public void run() {
+					getAxisSet().getXAxis(0).adjustRange();
+					getAxisSet().getYAxis(0).adjustRange();
+				} 				
+			});			
 		}
 	}
 

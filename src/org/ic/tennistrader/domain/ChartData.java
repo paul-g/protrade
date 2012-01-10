@@ -79,13 +79,20 @@ public class ChartData {
 		pl1YSeries = addValue(pl1YSeries, data.getPl1LastMatchedPrice());
 		pl2YSeries = addValue(pl2YSeries, data.getPl2LastMatchedPrice());
 
+		
+		try {
+			double[] result = new PredictionCalculator(match)
+					.calculateOddsWithStaticPWOS(match);
+			pl1Predicted = addValue(pl1Predicted, result[0]);
+			pl2Predicted = addValue(pl2Predicted, result[1]);
+		} catch (NullPointerException e) {
+			// System.out.println("NULL");
+			pl1Predicted = addValue(pl1Predicted,  0.0001);
+			pl2Predicted = addValue(pl2Predicted,  0.0001);
+		}
+		 		
+		
 		/*
-		 * try{ double[] result = calcPrediction(new
-		 * PredictionCalculator(match) .calculateOddsWithStaticPWOS(match));
-		 * pl1Predicted = addValue(pl1Predicted, result[0]); pl2Predicted =
-		 * addValue(pl2Predicted, result[1]); } catch (NullPointerException e) {
-		 * // System.out.println("NULL"); }
-		 */		
 		PredictionCalculator calc = new PredictionCalculator(match);
 		double [] result = {0,0};
 		result = calc.calculateOddsWithStaticPWOS(match);
@@ -95,6 +102,7 @@ public class ChartData {
 			result[1] = 0.0001;
 		pl1Predicted = addValue(pl1Predicted, result[0]); 
 		pl2Predicted = addValue(pl2Predicted, result[1]);
+		*/
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(), data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(), data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
@@ -253,32 +261,17 @@ public class ChartData {
 		return pl1YSeries;
 	}
 
-	public void setPl1YSeries(ArrayList<Double> pl1ySeries) {
-		pl1YSeries = pl1ySeries;
-	}
 
 	public ArrayList<Double> getPl2YSeries() {
 		return pl2YSeries;
-	}
-
-	public void setPl2YSeries(ArrayList<Double> pl2ySeries) {
-		pl2YSeries = pl2ySeries;
 	}
 
 	public ArrayList<Pair<Double, Double>> getPl1Lay() {
 		return pl1Lay;
 	}
 
-	public void setPl1Lay(ArrayList<Pair<Double, Double>> pl1Lay) {
-		this.pl1Lay = pl1Lay;
-	}
-
 	public ArrayList<Pair<Double, Double>> getPl2Lay() {
 		return pl2Lay;
-	}
-
-	public void setPl2Lay(ArrayList<Pair<Double, Double>> pl2Lay) {
-		this.pl2Lay = pl2Lay;
 	}
 
 	public ArrayList<Double> getMaPl1() {

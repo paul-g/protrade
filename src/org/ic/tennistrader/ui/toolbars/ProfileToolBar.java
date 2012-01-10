@@ -1,5 +1,8 @@
 package org.ic.tennistrader.ui.toolbars;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,6 +22,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.Main;
 import org.ic.tennistrader.domain.profile.ProfileData;
 import org.ic.tennistrader.listener.ToolItemListener;
+import org.ic.tennistrader.model.betting.BetManager;
 import org.ic.tennistrader.model.connection.BetfairConnectionHandler;
 import org.ic.tennistrader.ui.ProfileWindow;
 import org.ic.tennistrader.ui.login.LoginShell;
@@ -37,6 +41,13 @@ public class ProfileToolBar {
 	private ProfileWindow profileWindow = null;
 
 	private final Shell shell;
+
+	private ToolItem liabilityToolItem;
+
+	private ToolItem profitToolItem;
+	
+	// temporary, since access to profile toolbar from BetManager is required
+	private static List<ProfileToolBar> profileToolBars = new ArrayList<ProfileToolBar>();;
 
 	public ProfileToolBar(Composite parent) {
 
@@ -57,11 +68,12 @@ public class ProfileToolBar {
 		makeProfitItem();
 		makeBalanceItem();
 		makeProfileItem();
-
+		profileToolBars.add(this);
 	}
 	
-	/** Method for coloured text label creation */
-	private void createColouredText(String text, int color) {
+	/** Method for coloured text label creation 
+	 * @return */
+	private Image createColouredText(String text, int color) {
 		// TODO : Terrible workaround, but works for now.
 		Display display = Display.getCurrent();
 		Image image = new Image (display, 7*text.length(), 13);
@@ -70,7 +82,8 @@ public class ProfileToolBar {
 		gc.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		gc.drawText(text,0,0,false);
 		gc.dispose();
-		new ToolItem(toolbar, SWT.NONE).setImage(image);
+		return image;
+		//new ToolItem(toolbar, SWT.NONE).setImage(image);
 	}
 
 	/** Profit Item constructor */
@@ -78,7 +91,13 @@ public class ProfileToolBar {
 		final ToolItem item = new ToolItem(toolbar, SWT.NONE);
 		item.setText("Profit:");
 		item.setToolTipText("Total Profit");
-		createColouredText("£300",SWT.COLOR_DARK_GREEN);
+		profitToolItem = new ToolItem(toolbar, SWT.NONE);
+		updateProfitToolItem();
+	}
+
+	public void updateProfitToolItem() {
+		profitToolItem.setImage(createColouredText("£"
+				+ BetManager.getTotalMinimalProfit(), SWT.COLOR_DARK_GREEN));
 	}
 
 	/** Liability Item constructor */
@@ -86,7 +105,13 @@ public class ProfileToolBar {
 		final ToolItem item = new ToolItem(toolbar, SWT.NONE);
 		item.setText("Liability:");
 		item.setToolTipText("Total Liability");
-		createColouredText("£100",SWT.COLOR_RED);
+		liabilityToolItem = new ToolItem(toolbar, SWT.NONE);
+		updateLiabilityToolItem();
+	}
+
+	public void updateLiabilityToolItem() {
+		liabilityToolItem.setImage(createColouredText("£"
+				+ BetManager.getTotalLiabiltiy(), SWT.COLOR_RED));
 	}
 
 	/** Profile button menu constructor */
@@ -251,6 +276,13 @@ public class ProfileToolBar {
 
 	public ToolBar getToolBar() {
 		return toolbar;
+	}
+	
+	public static void updateLiabilityAndProfit() {
+		for(ProfileToolBar ptb : profileToolBars) {
+			ptb.updateLiabilityToolItem();
+			ptb.updateProfitToolItem();
+		}
 	}
 
 }

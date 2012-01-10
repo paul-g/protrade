@@ -1,5 +1,6 @@
 package org.ic.tennistrader.model.betting;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
+import org.ic.tennistrader.ui.toolbars.ProfileToolBar;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
 
@@ -20,6 +22,7 @@ public class BetManager {
     private static List<Bet> matchedBets = new ArrayList<Bet>();
     private static List<Bet> unmatchedBets = new ArrayList<Bet>();
     private static Logger log = Logger.getLogger(BetManager.class);
+    private static DecimalFormat twoDForm = new DecimalFormat("#.##");;
     
     public static void placeBet(Match match, PlayerEnum player, BetTypeEnum betType, double odds, double amount) {
         Bet newBet = new Bet(match, player, betType, pair(odds, amount));
@@ -49,6 +52,7 @@ public class BetManager {
 			VirtualBetMarketInfo marketInfo = matchMarketData.get(newBet.getMatch());
 			marketInfo.addFirstPlayerWinnerProfit(newBet.getFirstPlayerWinnerProfit());
 			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());
+			ProfileToolBar.updateLiabilityAndProfit();
 		}
 	}
 
@@ -261,21 +265,21 @@ public class BetManager {
     
     public static double getFirstPlayerWinnerProfit(Match match) {
     	if (matchMarketData.containsKey(match))
-    		return matchMarketData.get(match).getFirstPlayerWinnerProfit();
+    		return Double.valueOf(twoDForm.format(matchMarketData.get(match).getFirstPlayerWinnerProfit()));
     	else
     		return 0.0;
     }
     
     public static double getSecondPlayerWinnerProfit(Match match) {
     	if (matchMarketData.containsKey(match))
-    		return matchMarketData.get(match).getSecondPlayerWinnerProfit();
+    		return Double.valueOf(twoDForm.format(matchMarketData.get(match).getSecondPlayerWinnerProfit()));
     	else
     		return 0.0;
     }
     
     public static double getMatchLiability(Match match) {
     	if (matchMarketData.containsKey(match))
-    		return matchMarketData.get(match).getLiability();
+    		return Double.valueOf(twoDForm.format(matchMarketData.get(match).getLiability()));
     	return 0;
     }
     
@@ -284,7 +288,7 @@ public class BetManager {
     	for (Match match : matchMarketData.keySet()) {
     		totalLiability += matchMarketData.get(match).getLiability();
     	}
-    	return totalLiability;
+    	return Double.valueOf(twoDForm.format(totalLiability));
     }
     
 	public static boolean isValidPrice(Double odds) {
@@ -322,5 +326,17 @@ public class BetManager {
 	public static void setMatchMarketData(
 			ConcurrentHashMap<Match, VirtualBetMarketInfo> matchMarketData) {
 		BetManager.matchMarketData = matchMarketData;
+	}
+	
+	public static double getTotalMinimalProfit() {
+		double profit = 0;
+		for (Match match : matchMarketData.keySet()) {
+			VirtualBetMarketInfo marketInfo = matchMarketData.get(match);
+			profit += (marketInfo.getFirstPlayerWinnerProfit() < marketInfo
+					.getSecondPlayerWinnerProfit()) ? marketInfo
+					.getFirstPlayerWinnerProfit() : marketInfo
+					.getSecondPlayerWinnerProfit();
+		}		
+        return Double.valueOf(twoDForm.format(profit));
 	}
 }

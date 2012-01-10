@@ -1,6 +1,7 @@
 package org.ic.tennistrader.ui.betting;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -320,5 +321,9 @@ public class BetPlacingShell {
 	
 	public Label getErrorLabel() {
 		return errorLabel;
+	}
+	
+	public void addDisposeListener(DisposeListener listener) {
+		this.betShell.addDisposeListener(listener);
 	}
 }

@@ -1,5 +1,7 @@
 package org.ic.tennistrader.ui.dialogs;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -9,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
@@ -185,6 +188,11 @@ public class AddWidgetDialog extends RichListDialog {
 				} else {
 					grid = new MarketDataGrid(widgetPlaceholder.getParent(),
 							SWT.NONE);
+					BetController betController = new BetController(Arrays.asList(grid
+							.getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
+							Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
+									.getP2LayButtons()), match);
+					grid.setBetController(betController);
 				}
 				// NOTE for market data grid, controller is also required
 				setSelection(grid);

@@ -132,10 +132,11 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 
 	@Override
 	public void handleUpdate(final MOddsMarketData newData) {
+		updateData(newData);
 		getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				updateData(newData);
+				
 				/*
 				for (SeriesProperties prop : computerSeries.keySet()) {
 					if (chartData != null) {
@@ -259,7 +260,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	
-	public void showSeries(int i, boolean dragged) {
+	public void showSeries(int i, final boolean dragged) {
 		int size = (i) < sampleSize ? (i) : sampleSize;
 		int seriesNr = computerSeries.size();
 		// ???
@@ -271,30 +272,36 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		int z = i < sampleSize ? 0 : 1;
 		// i - 1 for overround.. ???
 
-		if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
-			// TODO some pow and k for odds chart
-			int b = (i - sampleSize + 1) * z;
-			this.startingIndex = b;
-			for (int a = 0; a < size; a++) {
-				showXSeries[a] = chartData.getxSeries().get(b + a);
+		// TODO some pow and k for odds chart
+		int b = (i - sampleSize + 1) * z;
+		this.startingIndex = b;
+		for (int a = 0; a < size; a++) {
+			showXSeries[a] = chartData.getxSeries().get(b + a);
 
-				// TODO display for each series appropriate range of values
-				
-			}
-			
-			for (SeriesProperties seriesProp : computerSeries.keySet()) {
-				/*
-				seriesProp.getChartSeries().setYSeries(computer.computeValues(seriesProp
-						.getPlayer(), chartData, b));
-						*/
-				this.startingIndex = b;
-				computeValues(seriesProp);
-				seriesProp.getChartSeries().setXDateSeries(showXSeries);
-			}
-			
-			// adjust() ???overround
-			updateDisplay();
+			// TODO display for each series appropriate range of values
+
 		}
+
+		for (SeriesProperties seriesProp : computerSeries.keySet()) {
+			/*
+			 * seriesProp.getChartSeries().setYSeries(computer.computeValues(seriesProp
+			 * .getPlayer(), chartData, b));
+			 */
+			this.startingIndex = b;
+			computeValues(seriesProp);
+			seriesProp.getChartSeries().setXDateSeries(showXSeries);
+		}
+
+		this.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
+					// adjust() ???overround
+					updateDisplay();
+				}
+			}			
+		});
+		
 	}
 	 
 	public String getPlayer1Name() {

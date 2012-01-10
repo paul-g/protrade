@@ -2,6 +2,8 @@ package org.ic.tennistrader.ui.updatable;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Color;
@@ -99,6 +101,7 @@ public class OddsButton extends Composite {
 							.getOdds().getText());
 					BetManager.placeBet(dataGrid.getBetController().getMatch(),
 							betPlayer, betType, initOdds, amount);
+					dataGrid.updateProfits();
 				} catch (OddsButtonNotFoundException odbnfe) {
 
 				}
@@ -110,31 +113,40 @@ public class OddsButton extends Composite {
 		Listener l = new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				try {
-					BetTypeEnum betType = dataGrid.getBetController()
-							.getBetType(OddsButton.this);
-					PlayerEnum betPlayer = dataGrid.getBetController()
-							.getBetPlayer(OddsButton.this);
-					String betDetails = dataGrid.getBetController()
-							.getBettingDetails(OddsButton.this);
-					double initOdds = Double.parseDouble(OddsButton.this
-							.getOdds().getText());
-					BetPlacingShell betPlacingShell = new BetPlacingShell(
-							getDisplay(), dataGrid.getBetController()
-									.getMatch(), betPlayer, betType, initOdds,
-							betDetails);
-					Rectangle rect = getClientArea();
-					betPlacingShell.setLocation(rect.x, rect.y);
-				} catch (OddsButtonNotFoundException obnfe) {
+				if (dataGrid.getMatch() != null) {
+					try {
+						BetTypeEnum betType = dataGrid.getBetController()
+								.getBetType(OddsButton.this);
+						PlayerEnum betPlayer = dataGrid.getBetController()
+								.getBetPlayer(OddsButton.this);
+						String betDetails = dataGrid.getBetController()
+								.getBettingDetails(OddsButton.this);
+						double initOdds = Double.parseDouble(OddsButton.this
+								.getOdds().getText());
+						BetPlacingShell betPlacingShell = new BetPlacingShell(
+								getDisplay(), dataGrid.getBetController()
+										.getMatch(), betPlayer, betType,
+								initOdds, betDetails);
+						betPlacingShell
+								.addDisposeListener(new DisposeListener() {
+									@Override
+									public void widgetDisposed(DisposeEvent arg0) {
+										dataGrid.updateProfits();
+									}
+								});
+						Rectangle rect = getClientArea();
+						betPlacingShell.setLocation(rect.x, rect.y);
+					} catch (OddsButtonNotFoundException obnfe) {
 
-				}
-				setBackgroundImage(clickImage);
-				display.timerExec(100, new Runnable() {
-					@Override
-					public void run() {
-						setBackgroundImage(initialImage);
 					}
-				});
+					setBackgroundImage(clickImage);
+					display.timerExec(100, new Runnable() {
+						@Override
+						public void run() {
+							setBackgroundImage(initialImage);
+						}
+					});
+				}
 			}
 		};
 
