@@ -77,7 +77,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
     private String getStatistics() throws Exception {
 
         // Create a webClient to emulate Firefox browser
-        final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
+        WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3_6);
 
         // Customize all webclient listeners and handlers for no warning/info
         // messages
@@ -120,30 +120,25 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
                 return true;
             }
         });
-
         webClient.setJavaScriptEnabled(true);
-        HtmlPage PageLogin = webClient
-                .getPage("http://www.tennisinsight.com/scoresheet.php");
-        HtmlElement login = (HtmlElement) PageLogin.getElementById("LOGIN")
+  
+        HtmlPage pageLogin = webClient.getPage("http://www.tennisinsight.com");
+        HtmlElement login = (HtmlElement) pageLogin.getElementById("LOGIN")
                 .getElementsByTagName("form").get(0);
-
-        HtmlTextInput name = (HtmlTextInput) PageLogin.getElementsByTagName(
+        HtmlTextInput name = (HtmlTextInput) login.getElementsByTagName(
                 "input").get(0);
         HtmlPasswordInput pass = (HtmlPasswordInput) login
                 .getElementsByTagName("input").get(1);
-        HtmlElement submitButton = (HtmlElement) login.getElementsByAttribute(
-                "img", "onclick", "goForGold()").get(0);
-
+        HtmlElement submitButton = (HtmlElement) login.getElementsByTagName("span").get(0)
+        											  .getElementsByTagName("input").get(0);
         name.setText("radubal2");
         pass.setText("placintacumere");
-
+        
         log.info("Logging in to site");
-
         HtmlPage loggedPage = (HtmlPage) submitButton.click();
         loggedPage.initialize();
-
         log.info("Successfully Logged in to site");
-
+        
         HtmlTextInput player1 = (HtmlTextInput) loggedPage
                 .getElementByName("match_preview_search1");
         HtmlTextInput player2 = (HtmlTextInput) loggedPage
@@ -158,8 +153,9 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         player2.setText(match.getPlayerTwo().toString());
 
         HtmlPage intermPage = (HtmlPage) submitButton2.click();
+        System.out.println(intermPage.asText());
         intermPage.initialize();
-
+       
         HtmlElement btnContinue = (HtmlElement) intermPage
                 .getElementById("addinsight");
         
@@ -176,7 +172,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         // page.initialize();
 
         // webClient.closeAllWindows();
-
         return (page.asText());
     }
 
@@ -188,6 +183,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     @Override
     protected void runBody() {
+    	System.out.println("HEEEEEEEERE");
         log.info(match.getPlayerOne().toString() + " v "
                 + match.getPlayerTwo().toString());
         retries++;
@@ -199,6 +195,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
             // try to get stats
             try {
             	try {
+            		System.out.println("GETTTING STATATATATTAS");
             		page = getStatistics();
             	} catch(Exception e){}
                 log.info("Fetched statistics");

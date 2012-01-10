@@ -24,7 +24,7 @@ public class RealMatch extends Match{
 	    if ( names.length == 2){
 	        this.player1.setLastname(names[0]);
 		    this.player2.setLastname(names[1]);
-		    //System.out.println(player1 + "  --- " + player2 + " --- " + names[0]);
+		    //System.out.println(player1 + "  --- " + player2 + " ---" + names[0]+names[1]);
 	    }
 	    this.eventBetfair = eb;
 		setMarketDatas(new ArrayList<MOddsMarketData>());
