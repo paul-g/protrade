@@ -38,7 +38,7 @@ public class DashboardWindow implements MainWindow {
 	private DashboardToolBar utb;
 	private LowerToolBar ltb;
 
-	private Composite dashboardComp;
+	private static Composite dashboardComp;
 
 	private static Logger log = Logger.getLogger(StandardWindow.class);
 
@@ -180,10 +180,14 @@ public class DashboardWindow implements MainWindow {
 	}
 
 	private void openDashboard(String filename) {
-		if (filename != null)
+
+		if (filename != null) {
 			dashboard = new Dashboard(dashboardComp, filename);
-		else
+			log.info("Opening dashboard from file " + filename);
+		} else {
+			log.info("Opening default dashboard");
 			dashboard = new Dashboard(dashboardComp);
+		}
 	}
 
 	private void closeDashboard() {
@@ -194,5 +198,14 @@ public class DashboardWindow implements MainWindow {
 
 	public static DashboardWindow getInstance() {
 		return INSTANCE;
+	}
+
+	public static Composite getDashboardComp() {
+		return dashboardComp;
+	}
+
+	public static void addEmptyWidgetToCurrentDashboard() {
+		getInstance().getCurrentDashboard().addWidget(0, 0);
+		dashboardComp.pack();
 	}
 }

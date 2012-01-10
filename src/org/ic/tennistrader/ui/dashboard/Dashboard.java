@@ -73,6 +73,7 @@ public class Dashboard extends Composite {
 	}
 
 	public void addWidget(int x, int y) {
+		log.info("Adding widget at x: " + x + " y: " + y);
 		WidgetContainer wc = new WidgetContainer(this, SWT.BORDER,
 				dashboardConfiguration.getDefaultWidgetWidth(),
 				dashboardConfiguration.getDefaultWidgetHeight());

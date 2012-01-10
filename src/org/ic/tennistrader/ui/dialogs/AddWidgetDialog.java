@@ -49,11 +49,14 @@ public class AddWidgetDialog extends RichListDialog {
 	@Override
 	protected void addElements(RichListView r) {
 		makeDualChartElement(r);
-		/*
-		 * makeMarketGridEl(r); makeStatisticsPanelEl(r);
-		 * makeMatchDataViewEl(r); makeScorePanelEl(r); makeBrowserEl(r);
-		 * makeVideoEl(r);
-		 */
+
+		makeMarketGridEl(r);
+		makeStatisticsPanelEl(r);
+		makeMatchDataViewEl(r);
+		makeScorePanelEl(r);
+		makeBrowserEl(r);
+		makeVideoEl(r);
+
 	}
 
 	private void makeVideoEl(RichListView r) {
@@ -197,10 +200,11 @@ public class AddWidgetDialog extends RichListDialog {
 				} else {
 					grid = new MarketDataGrid(widgetPlaceholder.getParent(),
 							SWT.NONE);
-					BetController betController = new BetController(Arrays.asList(grid
-							.getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
-							Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
-									.getP2LayButtons()), match);
+					BetController betController = new BetController(
+							Arrays.asList(grid.getP1BackButtons()),
+							Arrays.asList(grid.getP1LayButtons()),
+							Arrays.asList(grid.getP2BackButtons()),
+							Arrays.asList(grid.getP2LayButtons()), match);
 					grid.setBetController(betController);
 				}
 				// NOTE for market data grid, controller is also required

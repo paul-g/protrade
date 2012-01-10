@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.listener.ToolItemListener;
+import org.ic.tennistrader.ui.dashboard.Dashboard;
 import org.ic.tennistrader.ui.main.DashboardWindow;
 
 public class DashboardToolBar {
@@ -173,8 +174,10 @@ public class DashboardToolBar {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				super.widgetSelected(arg0);
-				DashboardWindow.getInstance().getCurrentDashboard()
-						.addWidget(0, 0);
+				Dashboard d = DashboardWindow.getInstance()
+						.getCurrentDashboard();
+				d.addWidget(0, 0);
+				// DashboardWindow.getInstance().getCurrentDashboard().redraw();
 			}
 		});
 	}
