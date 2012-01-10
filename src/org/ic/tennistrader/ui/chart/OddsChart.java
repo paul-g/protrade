@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Slider;
@@ -26,7 +27,7 @@ import org.swtchart.Range;
 public class OddsChart extends UpdatableChart {
 	/*
 	private IBarSeries endOfSets;
-	
+	/home/corina/workspace
 	private ILineSeries firstSeries, secondSeries, maPl1Series, maPl2Series,
 			pl1Predicted, pl2Predicted;
 	
@@ -120,29 +121,44 @@ public class OddsChart extends UpdatableChart {
 		axisSet.getYAxis(1).setRange(new Range(0, 1));
 		
 		chartMenu = new ChartMenu();
+		
+		LineProp prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 		SeriesProperties player1Back = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER1,
-				"BACK ODDS", this.player1Name, new BackValuesComputer(), new LineProp());
+				"BACK ODDS", this.player1Name, new BackValuesComputer(), prop);
 		chartMenu.addSeriesItem(player1Back);
+		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		SeriesProperties player2Back = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.BACK_ODDS, PlayerEnum.PLAYER2,
-				"BACK ODDS", this.player2Name, new BackValuesComputer(), new LineProp());
+				"BACK ODDS", this.player2Name, new BackValuesComputer(), prop);
 		chartMenu.addSeriesItem(player2Back);
 		
-		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.MOVING_AVERAGE, PlayerEnum.PLAYER1,
-				"MA", this.player1Name, new MAComputer(), new LineProp()));
+				"MA", this.player1Name, new MAComputer(), prop));
+		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.MOVING_AVERAGE, PlayerEnum.PLAYER2,
-				"MA", this.player2Name, new MAComputer(), new LineProp()));
+				"MA", this.player2Name, new MAComputer(), prop));
 		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER1,
-				"Predicted", this.player1Name, new PredictedComputer(), new LineProp()));
+				"Predicted", this.player1Name, new PredictedComputer(), prop));
+		
+		prop = new LineProp();
+		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
 		chartMenu.addSeriesItem(new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.PREDICTED, PlayerEnum.PLAYER2,
-				"Predicted", this.player2Name, new PredictedComputer(), new LineProp()));
+				"Predicted", this.player2Name, new PredictedComputer(), prop));
 		
 		LineProp endOfSetsProp = new LineProp();
 		endOfSetsProp.setyAxisId(1);
