@@ -1,12 +1,12 @@
 package org.ic.tennistrader.ui.dialogs;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
@@ -22,25 +22,30 @@ public abstract class RichListDialog {
 		dialog = new Shell(d, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		dialog.setLayout(new FillLayout());
 
-		ScrolledComposite sc = new ScrolledComposite(dialog, SWT.H_SCROLL
-				| SWT.V_SCROLL);
-
+		/*
+		 * ScrolledComposite sc = new ScrolledComposite(dialog, SWT.H_SCROLL |
+		 * SWT.V_SCROLL);
+		 */
+		Composite sc = new Composite(dialog, SWT.BORDER);
+		sc.setLayout(new FillLayout());
 		RichListView r = new RichListView(sc, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, true);
 		r.setLayout(gridLayout);
 		addElements(r);
+		// dialog.setSize(400, 400);
 		r.pack();
 
 		Rectangle viewBounds = r.getBounds();
-		sc.setExpandHorizontal(true);
-		sc.setExpandVertical(true);
-		sc.setContent(r);
-		sc.setMinSize(viewBounds.width, viewBounds.height);
+		/*
+		 * sc.setExpandHorizontal(true); sc.setExpandVertical(true);
+		 * sc.setContent(r); sc.setMinSize(viewBounds.width, viewBounds.height);
+		 */
 
 		dialog.setSize(viewBounds.width,
 				Display.getCurrent().getClientArea().height / 2);
 
 		dialog.open();
+		dialog.setSize(200, 200);
 	}
 
 	protected abstract void addElements(RichListView r);

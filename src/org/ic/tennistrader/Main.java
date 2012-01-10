@@ -115,7 +115,7 @@ public final class Main {
 
 	private static MainWindow makeDashboardApplicationWindow(
 			final Display display) {
-		return new DashboardWindow(display);
+		return DashboardWindow.getInstance();
 	}
 
 	public static void readAndDecryptConfigFile() {

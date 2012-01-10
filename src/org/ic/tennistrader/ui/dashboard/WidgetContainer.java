@@ -1,5 +1,6 @@
 package org.ic.tennistrader.ui.dashboard;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -10,29 +11,37 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
 public class WidgetContainer extends Composite {
 
-	private int width;
-	private int height;
+	int width;
+	int height;
 
-	private Cursor wCursor;
-	private Cursor eCursor;
-	private Cursor nCursor;
-	private Cursor sCursor;
-	private Cursor nwCursor;
-	private Cursor neCursor;
-	private Cursor swCursor;
-	private Cursor seCursor;
+	private final Cursor wCursor;
+	private final Cursor eCursor;
+	private final Cursor nCursor;
+	private final Cursor sCursor;
+	private final Cursor nwCursor;
+	private final Cursor neCursor;
+	private final Cursor swCursor;
+	private final Cursor seCursor;
 	Cursor dCursor;
+
+	static final Logger log = Logger.getLogger(WidgetContainer.class);
 
 	private static final int BORDER_WIDTH = 10;
 
-	private CornerMenu cornerMenu;
+	private final CornerMenu cornerMenu;
 
-	private Dashboard dashboard;
+	final Dashboard dashboard;
 
 	private Control child;
+	private Menu menu;
+
+	private boolean dettached = false;
 
 	public WidgetContainer(final Dashboard parent, int style, int width,
 			int height) {
@@ -59,24 +68,29 @@ public class WidgetContainer extends Composite {
 		swCursor = display.getSystemCursor(SWT.CURSOR_SIZESW);
 		seCursor = display.getSystemCursor(SWT.CURSOR_SIZESE);
 
-		
 		Listener resizeListener = new WidgetContainerResizeListener(this);
 
 		addListener(SWT.MouseDown, resizeListener);
 		addListener(SWT.MouseUp, resizeListener);
 		addListener(SWT.MouseMove, resizeListener);
-		
+
 		Listener moveListener = new WidgetContainerMoveListener(this);
-		
+
 		addListener(SWT.MouseUp, moveListener);
 		addListener(SWT.MouseDown, moveListener);
-		
+
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDoubleClick(MouseEvent me){
-				dashboard.setMaximizedControl(WidgetContainer.this);
+			public void mouseDoubleClick(MouseEvent me) {
+				dashboard.toggleMaximizedControl(WidgetContainer.this);
 			}
 		});
+
+		makeAndSetMenu();
+	}
+
+	private void makeAndSetMenu() {
+		setMenu(makeAttacheddMenu(this));
 	}
 
 	// pre: component was already drawn
@@ -85,8 +99,8 @@ public class WidgetContainer extends Composite {
 		child = composite;
 		fitChild();
 	}
-	
-	public Control getWidget(){
+
+	public Control getWidget() {
 		return child;
 	}
 
@@ -194,7 +208,7 @@ public class WidgetContainer extends Composite {
 		this.height = height;
 		fitChild();
 	}
-	
+
 	@Override
 	public void setBounds(Rectangle rectangle) {
 		super.setBounds(rectangle);
@@ -202,9 +216,46 @@ public class WidgetContainer extends Composite {
 		this.height = rectangle.height;
 		fitChild();
 	}
-	
-	
-	public Dashboard getDashboard(){
+
+	public Dashboard getDashboard() {
 		return dashboard;
 	}
+
+	public boolean isDettached() {
+		return dettached;
+	}
+
+	public void setDettached(boolean dettached) {
+		this.dettached = dettached;
+		if (dettached)
+			setMenu(makeDettachedMenu(this));
+		else
+			setMenu(makeAttacheddMenu(this));
+	}
+
+	public static Menu makeAttacheddMenu(WidgetContainer widgetContainer) {
+		Menu menu = new Menu(widgetContainer.getShell(), SWT.POP_UP);
+		MenuItem item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Detach");
+		item.addSelectionListener(new DettachListener(widgetContainer));
+		return menu;
+	}
+
+	public static Menu makeDettachedMenu(WidgetContainer widgetContainer) {
+		Shell shell = widgetContainer.getShell();
+		Menu menu = new Menu(shell, SWT.POP_UP);
+		MenuItem item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Reatach");
+		item.addSelectionListener(new AttachListener(widgetContainer));
+		return menu;
+	}
+
+	public boolean resizeEnabled() {
+		return !dashboard.isLocked();
+	}
+
+	public boolean moveEnabled() {
+		return !dashboard.isLocked();
+	}
+
 }

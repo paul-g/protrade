@@ -11,8 +11,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.Match;
 
@@ -24,11 +22,13 @@ public class Dashboard extends Composite {
 			/ DEFAULT_ROW_COUNT;
 	final static int SIZE = 6;
 
-	private static final Logger log = Logger.getLogger(Dashboard.class);
+	static final Logger log = Logger.getLogger(Dashboard.class);
 
 	private DashboardConfiguration dashboardConfiguration;
 
-	private Rectangle clientArea;
+	Rectangle clientArea;
+	private Rectangle boundsBeforeMaximize;
+	private boolean locked;
 
 	public Dashboard(Composite parent) {
 		super(parent, SWT.NONE);
@@ -59,45 +59,26 @@ public class Dashboard extends Composite {
 				+ " default width: "
 				+ dashboardConfiguration.getDefaultWidgetWidth());
 
-		addListener(SWT.Resize, new Listener() {
-
-			@Override
-			public void handleEvent(Event arg0) {
-				Rectangle area = getClientArea();
-
-				log.info("Previous client area " + clientArea + " "
-						+ " new client area" + getClientArea());
-
-				if (clientArea.width != 0 && clientArea.height != 0
-						&& area.width != 0 && area.height != 0) {
-					double heightRatio = (double) clientArea.height
-							/ getClientArea().height;
-					double widthRatio = (double) clientArea.width
-							/ getClientArea().width;
-					scaleWidgets(widthRatio, heightRatio);
-					layoutWidgets();
-				}
-
-				clientArea = area;
-			}
-		});
+		addListener(SWT.Resize, new DashboardResizeListener(this));
 
 	}
 
 	private void addDefaultWidgets() {
 		for (int i = 0; i < DEFAULT_ROW_COUNT; i++) {
 			for (int j = 0; j < DEFAULT_WIDGETS_PER_ROW; j++) {
-				WidgetContainer wc = new WidgetContainer(this, SWT.BORDER,
-						dashboardConfiguration.getDefaultWidgetWidth(),
-						dashboardConfiguration.getDefaultWidgetHeight());
-				placeWidget(wc,
-						j * dashboardConfiguration.getDefaultWidgetWidth(),
-						i * dashboardConfiguration.getDefaultWidgetHeight(),
-						dashboardConfiguration.getDefaultWidgetWidth(),
-						dashboardConfiguration.getDefaultWidgetHeight());
-				wc.setWidget(new WidgetPlaceholder(this, SWT.NONE, wc));
+				addWidget(j * dashboardConfiguration.getDefaultWidgetWidth(), i
+						* dashboardConfiguration.getDefaultWidgetHeight());
 			}
 		}
+	}
+
+	public void addWidget(int x, int y) {
+		WidgetContainer wc = new WidgetContainer(this, SWT.BORDER,
+				dashboardConfiguration.getDefaultWidgetWidth(),
+				dashboardConfiguration.getDefaultWidgetHeight());
+		placeWidget(wc, x, y, dashboardConfiguration.getDefaultWidgetWidth(),
+				dashboardConfiguration.getDefaultWidgetHeight());
+		wc.setWidget(new WidgetPlaceholder(this, SWT.NONE, wc));
 	}
 
 	private void placeWidget(WidgetContainer simpleWidget, int x, int y,
@@ -186,6 +167,7 @@ public class Dashboard extends Composite {
 
 	public void setMaximizedControl(WidgetContainer wc) {
 		Rectangle rect = getClientArea();
+		boundsBeforeMaximize = wc.getBounds();
 		// updateWidgetPosition(wc, rect.x, rect.y);
 		wc.setBounds(rect);
 		wc.moveAbove(null);
@@ -259,5 +241,27 @@ public class Dashboard extends Composite {
 
 	public Match getMatch() {
 		return dashboardConfiguration.getMatch();
+	}
+
+	public void toggleMaximizedControl(WidgetContainer widgetContainer) {
+		if (boundsBeforeMaximize == null) {
+			setMaximizedControl(widgetContainer);
+		} else
+			restoreControl(widgetContainer);
+	}
+
+	public void restoreControl(WidgetContainer widgetContainer) {
+		if (boundsBeforeMaximize != null) {
+			widgetContainer.setBounds(boundsBeforeMaximize);
+			boundsBeforeMaximize = null;
+		}
+	}
+
+	public void lock(boolean locked) {
+		this.locked = locked;
+	}
+
+	public boolean isLocked() {
+		return locked;
 	}
 }

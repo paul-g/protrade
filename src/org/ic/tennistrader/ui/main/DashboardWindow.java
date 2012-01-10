@@ -29,6 +29,9 @@ public class DashboardWindow implements MainWindow {
 
 	private final Display display;
 
+	private static final DashboardWindow INSTANCE = new DashboardWindow(
+			Display.getCurrent());
+
 	private Dashboard dashboard;
 
 	/* ToolBars */
@@ -51,7 +54,7 @@ public class DashboardWindow implements MainWindow {
 		return shell;
 	}
 
-	public DashboardWindow(Display display) {
+	private DashboardWindow(Display display) {
 		this.display = display;
 	}
 
@@ -187,5 +190,9 @@ public class DashboardWindow implements MainWindow {
 		if (dashboard != null) {
 			dashboard.dispose();
 		}
+	}
+
+	public static DashboardWindow getInstance() {
+		return INSTANCE;
 	}
 }
