@@ -15,6 +15,7 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.betting.BetController;
+import org.ic.tennistrader.model.betting.BetManager;
 import org.ic.tennistrader.ui.GraphicsUtils;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
@@ -98,8 +99,11 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		pl2PandL = new Label(pl2Label, SWT.NONE);
 		initLayout(pl2Lastname, player2, p2BackButtons, p2LayButtons,
 				p2MarketInfoButtons, false);
+		updateProfits();
+		/*
 		updatePandL(pl1PandL, 23);
 		updatePandL(pl2PandL, -10);
+		*/
 	}
 
 	private Label createOddsLabel(String string, Color color,
@@ -136,20 +140,34 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		return orLabel;
 	}
 
+	public void updateProfits() {
+		if (this.match != null) {
+			updatePandL(pl1PandL, BetManager
+					.getFirstPlayerWinnerProfit(this.match));
+			updatePandL(pl2PandL, BetManager
+					.getSecondPlayerWinnerProfit(this.match));
+		}
+		/*
+		this.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				MarketDataGrid.this.layout();
+			}			
+		});
+		*/
+	}
+	
 	private void updatePandL(Label label, double value) {
 		label.setText("(" + value + ")");
 		if (value < 0) {
 			label.setForeground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_RED));
-		} else if (value > 0) {
+		} else {
 			label.setText("(+" + value + ")");
 			label.setForeground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_DARK_GREEN));
-		} else {
-			label.setForeground(Display.getCurrent().getSystemColor(
-					SWT.COLOR_BLACK));
 		}
-
+		label.pack();
 	}
 
 	private Composite createLabelComposite() {
@@ -416,12 +434,15 @@ public class MarketDataGrid extends MatchViewerWidget implements
 	}
 
 	@Override
-	public void setMatch(Match match) {
+	public void setMatch(Match match) {		
 		if (match != null) {
+			this.match = match;
+			this.betController.setMatch(match);
 			player1.setText(match.getPlayerOne().getLastname());
 			player1.pack();
 			player2.setText(match.getPlayerTwo().getLastname());
 			player2.pack();
+			updateProfits();
 		}
 	}
 

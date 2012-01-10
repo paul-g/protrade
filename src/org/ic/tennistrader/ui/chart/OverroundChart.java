@@ -1,5 +1,7 @@
 package org.ic.tennistrader.ui.chart;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -92,6 +94,10 @@ public class OverroundChart extends UpdatableChart {
 		yAxis.getTitle().setText(yVolumeTitle);
 		yAxis.getTitle().setFont(
 				new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
+		IAxis xAxis = getAxisSet().getXAxis(0);
+		DateFormat format = new SimpleDateFormat("HH:mm:ss");
+		xAxis.getTick().setFormat(format);
+
 		getAxisSet().getXAxis(0).getTitle().setVisible(false);
 		setBackgroundMode(SWT.INHERIT_DEFAULT);
 		// this.getAxisSet().getXAxis(0).adjustRange();
@@ -229,8 +235,13 @@ public class OverroundChart extends UpdatableChart {
 		// set serieses values
 		showSeries(chartData.getDataSize() - 1, false);
 		if (!isDisposed()) {
-			getAxisSet().getXAxis(0).adjustRange();
-			getAxisSet().getYAxis(0).adjustRange();
+			this.getDisplay().asyncExec(new Runnable(){
+				@Override
+				public void run() {
+					getAxisSet().getXAxis(0).adjustRange();
+					getAxisSet().getYAxis(0).adjustRange();
+				} 				
+			});			
 		}
 	}
 

@@ -29,10 +29,11 @@ public abstract class SeriesComputer {
 			int startIndex) {		
 		ArrayList<Double> ySeries = setYSeries(player, chartData);
 		ArrayList<Pair<Double, Double>> layValues = setLayValues(player, chartData);
-		int size = ySeries.size() - startIndex;
-		double[] errors = new double[size];
+		int size = (ySeries.size() < layValues.size() ? ySeries.size() : layValues.size()) - startIndex;
+		double[] errors = new double[size + 1];
 		for(int i = 0; i < size; i++) {
-			errors[i] = layValues.get(startIndex + i).first() 
+			errors[i] = 
+				layValues.get(startIndex + i).first() 
 			- ySeries.get(startIndex + i);
 		}
 		return errors;
@@ -40,10 +41,10 @@ public abstract class SeriesComputer {
 
 	public double[] computeMinusErrors(PlayerEnum player, ChartData chartData,
 			int startIndex) {
-		int size = chartData.getPl1YSeries().size() - startIndex;
-		double[] errors = new double[size];
 		ArrayList<Double> ySeries = setYSeries(player, chartData);
-		ArrayList<Pair<Double, Double>> layValues = setLayValues(player, chartData);		
+		ArrayList<Pair<Double, Double>> layValues = setLayValues(player, chartData);
+		int size = (ySeries.size() < layValues.size() ? ySeries.size() : layValues.size()) - startIndex;
+		double[] errors = new double[size];
 		for(int i = 0; i < size; i++) {
 			errors[i] = ySeries.get(startIndex + i) - layValues.get(startIndex + i).second();
 		}

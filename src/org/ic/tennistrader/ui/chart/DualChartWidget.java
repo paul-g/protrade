@@ -42,7 +42,7 @@ public class DualChartWidget extends MatchViewerWidget {
 		dualChart.setMatch(match);
 		shell.open();
 
-		while (!shell.isDisposed()) {
+		while (!shell.isDisposed()) { 
 			if (!display.readAndDispatch())
 				display.sleep();
 		}

@@ -1,5 +1,8 @@
 package org.ic.tennistrader.ui.chart;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -102,6 +105,8 @@ public class OddsChart extends UpdatableChart {
 		// this.getAxisSet().adjustRange();
 
 		xAxis.getTick().setVisible(false);
+		DateFormat format = new SimpleDateFormat("HH:mm:ss");
+		xAxis.getTick().setFormat(format);
 
 		IAxis yAxis2 = getAxisSet().getYAxis(1);
 		configureAxis(yAxis2, null, LineStyle.NONE, false);
@@ -266,30 +271,41 @@ public class OddsChart extends UpdatableChart {
 		// set serieses values
 		showSeries(dataSize, false);
 		if (!this.isDisposed()) {
-			try {
-				this.getAxisSet().getXAxis(0).adjustRange();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.getDisplay().asyncExec(new Runnable(){
+				@Override
+				public void run() {
+					try {
+						OddsChart.this.getAxisSet().getXAxis(0).adjustRange();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} 				
+			});
+			
 			// this.getAxisSet().getYAxis(0).adjustRange();
 		}
 	}
 
-	private void updateSlider(int i) {
-		if (i >= sampleSize) {
-			if (slider.getSelection() == slider.getMaximum() - 1) {
-				slider.setMaximum(i + 1);
-				slider.setSelection(i);
-			}
-			slider.setMaximum(i + 1);
-			if (i == sampleSize)
-				slider.setMinimum(sampleSize - 1);
-			updateSlide();
-		} else {
-			slider.setMaximum(i + 1);
-			slider.setMinimum(i);
-			slider.setSelection(i);
-		}
+	private void updateSlider(final int i) {
+		this.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if (i >= sampleSize) {
+					if (slider.getSelection() == slider.getMaximum() - 1) {
+						slider.setMaximum(i + 1);
+						slider.setSelection(i);
+					}
+					slider.setMaximum(i + 1);
+					if (i == sampleSize)
+						slider.setMinimum(sampleSize - 1);
+					updateSlide();
+				} else {
+					slider.setMaximum(i + 1);
+					slider.setMinimum(i);
+					slider.setSelection(i);
+				}
+			}			
+		});		
 	}
 
 	/*

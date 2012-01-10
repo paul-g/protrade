@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,6 +18,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
@@ -152,6 +154,11 @@ public class DashboardConfiguration {
 			} else if (type.equals(WidgetType.MARKET_GRID.toString())) {
 				MarketDataGrid grid = new MarketDataGrid(wc,
 						SWT.NONE);
+				BetController betController = new BetController(Arrays.asList(grid
+						.getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
+						Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
+								.getP2LayButtons()), match);
+				grid.setBetController(betController);
 				widget = grid;
 				log.info("Added chart");
 			} else if (type.equals(WidgetType.STATISTICS_PANEL.toString())) {
