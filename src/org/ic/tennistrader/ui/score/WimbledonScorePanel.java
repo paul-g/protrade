@@ -121,7 +121,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		initScoreLabels(PlayerEnum.PLAYER2);
 		
-		
+
 		//setScores();
 		// TODO: remove this
 		//setDummyValues();
