@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -69,8 +70,25 @@ public class OverroundChart extends UpdatableChart {
 		IAxisSet axisSet = this.getAxisSet();
 		axisSet.createYAxis();
 		IAxis yAxis2 = axisSet.getYAxis(1);
-		yAxis2.setPosition(Position.Secondary);
-		yAxis2.getTitle().setText(yOverroundTitle);
+		
+		Color defaultAxisColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		Font font = new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD);
+		
+		getLegend().setPosition(SWT.BOTTOM);
+		IAxis yAxis = getAxisSet().getYAxis(0);
+		configureAxis(yAxis, yVolumeTitle, font, defaultAxisColor,null);
+		configureAxis(yAxis2, yOverroundTitle, font, defaultAxisColor, Position.Secondary);
+		
+		IAxis xAxis = getAxisSet().getXAxis(0);
+		DateFormat format = new SimpleDateFormat("HH:mm:ss");
+		xAxis.getTick().setFormat(format);
+		xAxis.getTitle().setForeground(defaultAxisColor);
+		xAxis.getTick().setForeground(defaultAxisColor);
+		xAxis.getTitle().setVisible(false);
+		setBackgroundMode(SWT.INHERIT_DEFAULT);
+		
+		
+		
 		
 		LineProp oround = new LineProp();
 		oround.setyAxisId(1);
@@ -107,17 +125,7 @@ public class OverroundChart extends UpdatableChart {
 		
 		
 		// setBackOverround(true);
-		getLegend().setPosition(SWT.BOTTOM);
-		IAxis yAxis = getAxisSet().getYAxis(0);
-		yAxis.getTitle().setText(yVolumeTitle);
-		yAxis.getTitle().setFont(
-				new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
-		IAxis xAxis = getAxisSet().getXAxis(0);
-		DateFormat format = new SimpleDateFormat("HH:mm:ss");
-		xAxis.getTick().setFormat(format);
-
-		getAxisSet().getXAxis(0).getTitle().setVisible(false);
-		setBackgroundMode(SWT.INHERIT_DEFAULT);
+		
 		// this.getAxisSet().getXAxis(0).adjustRange();
 		// this.getAxisSet().adjustRange();
 		// this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
@@ -156,6 +164,15 @@ public class OverroundChart extends UpdatableChart {
 		pl2Volume.setVisible(false);
 	}
 	*/
+
+	private void configureAxis(IAxis axis, String title, Font font,
+			Color defaultAxisColor, Position pos) {
+		if (pos != null) axis.setPosition(pos);
+		axis.getTitle().setText(title);
+		axis.getTitle().setFont(font);
+		axis.getTitle().setForeground(defaultAxisColor);
+		axis.getTick().setForeground(defaultAxisColor);
+	}
 
 	public void visibility(boolean pl1, boolean pl2) {
 		if (isBackOverround || isLayOverround) {

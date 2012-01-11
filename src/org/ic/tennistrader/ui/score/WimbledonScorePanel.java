@@ -83,6 +83,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		int name2Len = match.getPlayer(PlayerEnum.PLAYER2).toString().length();
 
 		init(name1Len, name2Len);
+		scoreThreadStart();
 	}
 
 	private void init(int name1Len, int name2Len) {
@@ -120,7 +121,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		initScoreLabels(PlayerEnum.PLAYER2);
 		
-		scoreThreadStart();
+		
 		//setScores();
 		// TODO: remove this
 		//setDummyValues();
@@ -368,6 +369,6 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		Label pl2Name = labelMap.get(PlayerEnum.PLAYER2).get(NAME);
 		pl2Name.setText(match.getPlayerTwo().toString());
-
+		scoreThreadStart();
 	}
 }
