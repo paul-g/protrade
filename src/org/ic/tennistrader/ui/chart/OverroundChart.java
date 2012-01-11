@@ -16,8 +16,10 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.chart_computers.OverroundComputer;
 import org.ic.tennistrader.model.chart_computers.VolumeComputer;
 import org.swtchart.IAxis;
+import org.swtchart.IAxisSet;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
+import org.swtchart.IAxis.Position;
 import org.swtchart.ISeries.SeriesType;
 
 public class OverroundChart extends UpdatableChart {
@@ -64,22 +66,29 @@ public class OverroundChart extends UpdatableChart {
 		//createSeries(pl1Name, pl2Name);
 		
 		chartMenu = new ChartMenu();
+		IAxisSet axisSet = this.getAxisSet();
+		axisSet.createYAxis();
+		IAxis yAxis2 = axisSet.getYAxis(1);
+		yAxis2.setPosition(Position.Secondary);
+		yAxis2.getTitle().setText(yOverroundTitle);
 		
-		LineProp prop = new LineProp();
-		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+		LineProp oround = new LineProp();
+		oround.setyAxisId(1);
+		oround.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 		SeriesProperties overround = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER1,
-				"Overround Back", "", new OverroundComputer(), prop);
+				"Overround Back", "", new OverroundComputer(), oround);
 		chartMenu.addSeriesItem(overround);
 		
-		prop = new LineProp();
-		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_MAGENTA));
+		oround = new LineProp();
+		oround.setyAxisId(1);
+		oround.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_MAGENTA));
 		SeriesProperties overroundl = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER2,
-				"Overround Lay", "", new OverroundComputer(), prop);
+				"Overround Lay", "", new OverroundComputer(), oround);
 		chartMenu.addSeriesItem(overroundl);
 		
-		prop = new LineProp();
+		LineProp prop = new LineProp();
 		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		SeriesProperties volume1 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER1,
