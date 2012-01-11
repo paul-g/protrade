@@ -22,6 +22,7 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
@@ -43,8 +44,8 @@ public class PredictionGui extends MatchViewerWidget {
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setLayout(new FillLayout());
 
-		Player playerOne = new Player("Rafael", "Nadal");
-		Player playerTwo = new Player("Juan Martin", "Del Potro");
+		Player playerOne = new Player("Ivo", "Minar");
+		Player playerTwo = new Player("Luke", "Saville");
 
 		Match match = new RealMatch("", "", new EventBetfair(
 				"Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
@@ -102,7 +103,11 @@ public class PredictionGui extends MatchViewerWidget {
 		if (match.isInPlay()) {
 			log.info("Live match: starting score update thread");
 			// only start score fetching for live matches
-			//scoreUpdateThread.start();
+			try{
+				scoreUpdateThread.start();
+			} catch (Exception e){
+				match.setScore(new Score());
+			}
 		}
 	}
 

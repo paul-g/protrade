@@ -12,7 +12,7 @@ public abstract class StoppableThread extends Thread{
         log.info("Starting " + this.getClass());
         while(!stop){
             runBody();
-        }        
+        } 
         log.info("Stopped " + this.getClass());
     }
 

@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
@@ -112,20 +113,23 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
         while (iter.hasNext()) {
             ((HtmlElement) iter.next()).setTextContent("\nSERVER");
         }
-
+        
+        String returnStr="";
         // Getting the relevant scores
         Iterator<DomNode> itr = scores.getChildren().iterator();
-        itr.next();
-        HtmlElement elem = (HtmlElement) itr.next();
-
-        Iterator<DomNode> itr2 = elem.getChildren().iterator();
-        DomNode elem2 = (DomNode) itr2.next();
-
-        String string2 = elem2.asText();
+        while(itr.hasNext()){
+        	itr.next();
+        	HtmlElement elem = (HtmlElement) itr.next();
+        	Iterator<DomNode> itr2 = elem.getChildren().iterator();
+        	while(itr2.hasNext()){
+        		DomNode elem2 = (DomNode) itr2.next();
+        		returnStr += elem2.asText();
+        	}
+        }
 
         log.info("Extracted score");
 
-        return string2;
+        return returnStr;
     }
     
   
@@ -133,8 +137,11 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 	protected void runBody() {
 		try {
             String scoreString = extractScores();
-            if (scoreString != null)
+            System.out.println("YYYYYYYYYYYYYYY" + scoreString);
+            if (scoreString != null){
             	new ScoreParser(scoreString, this.match).parseAndSetScores();
+            	//System.out.println("NNNNNNNNNNNNNNNNN" + match.getScoreAsString(PlayerEnum.PLAYER1));
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }

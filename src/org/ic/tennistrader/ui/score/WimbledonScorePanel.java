@@ -14,13 +14,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.score.PredictionCalculator;
+import org.ic.tennistrader.score.ScoreUpdateThread;
+import org.ic.tennistrader.score.SiteParser;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
@@ -114,9 +119,11 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		dummyLabel(nCols - 5);
 
 		initScoreLabels(PlayerEnum.PLAYER2);
-
+		
+		scoreThreadStart();
+		//setScores();
 		// TODO: remove this
-		setDummyValues();
+		//setDummyValues();
 
 	}
 
@@ -233,8 +240,10 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 	@Override
 	public void setScores() {
+		
 		Score score = match.getScore();
-
+		
+		System.out.println("Setting scores");
 		setPlayerScore(score, PlayerEnum.PLAYER1);
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
@@ -250,7 +259,24 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		}
 	}
 
+	public void scoreThreadStart(){
+		ScoreUpdateThread scoreUpdateThread = new ScoreUpdateThread(match);
+		System.out.println("Check is match is live for score fetching");
+		if (match.isInPlay()) {
+			System.out.println("Live match: starting score update thread");
+			// only start score fetching for live matches
+			try{
+				scoreUpdateThread.start();
+			} catch (Exception e){
+				//match.setScore(new Score());
+			}
+			//System.out.println("NNNNNNNNNNNNNNNNN" + match.getScoreAsString(PlayerEnum.PLAYER1));
+		}
+	}
+
 	public void setScores(MOddsMarketData newData) {
+		
+		System.out.println("Setting scores");
 		Score score = match.getScore();
 
 		setPlayerScore(score, PlayerEnum.PLAYER1);

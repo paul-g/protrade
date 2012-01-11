@@ -153,7 +153,7 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
         player2.setText(match.getPlayerTwo().toString());
 
         HtmlPage intermPage = (HtmlPage) submitButton2.click();
-        System.out.println(intermPage.asText());
+        //System.out.println(intermPage.asText());
         intermPage.initialize();
        
         HtmlElement btnContinue = (HtmlElement) intermPage
@@ -183,7 +183,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
 
     @Override
     protected void runBody() {
-    	System.out.println("HEEEEEEEERE");
         log.info(match.getPlayerOne().toString() + " v "
                 + match.getPlayerTwo().toString());
         retries++;
@@ -195,7 +194,6 @@ public class StatisticsUpdateThread extends MatchUpdaterThread {
             // try to get stats
             try {
             	try {
-            		System.out.println("GETTTING STATATATATTAS");
             		page = getStatistics();
             	} catch(Exception e){}
                 log.info("Fetched statistics");

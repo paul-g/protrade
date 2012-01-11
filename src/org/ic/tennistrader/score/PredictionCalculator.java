@@ -221,6 +221,9 @@ public class PredictionCalculator {
 	// Probability of winning a point on service
 	// P (win) = P (noFault)P (win|noFault) + (1 − P (noFault))P (win|Fault)
 	private static double calculatePWOS(Statistics serverStats) {
+		// for the case a player's statistics are not retrieved correctly
+		if (serverStats.getFirstServePercent() >= 1 || serverStats.getFirstServePercent() <=0)
+			return 0.6;
 		return (serverStats.getFirstServePercent()
 				* serverStats.getFirstServeWins() + (1 - serverStats
 				.getFirstServePercent()) * serverStats.getSecondServeWins());
