@@ -120,10 +120,14 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		initScoreLabels(PlayerEnum.PLAYER2);
 		
-		scoreThreadStart();
+		
+		// Not sure if this is where it needs to be called
+		//scoreThreadStart();
+		
+		
 		//setScores();
 		// TODO: remove this
-		//setDummyValues();
+		setDummyValues();
 
 	}
 
