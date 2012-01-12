@@ -56,6 +56,7 @@ public class LowerToolBar extends Composite {
 	}
 
 	/** Method invoking the Internet check thread */
+	@SuppressWarnings("unused")
 	private void createAndStartNetworkCheckThread(final Shell shell,
 			final ToolItem widgetItem, final Image off, final Image on) {
 		new Thread(new Runnable() {
@@ -87,6 +88,7 @@ public class LowerToolBar extends Composite {
 	}
 
 	/** Method invoking the memory usage check */
+	@SuppressWarnings("unused")
 	private void createUsageBarCheck(final Shell shell, final ProgressBar usage) {
 		new Thread(new Runnable() {
 			@Override
