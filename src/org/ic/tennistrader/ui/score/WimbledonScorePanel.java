@@ -14,18 +14,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TreeItem;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.score.PredictionCalculator;
 import org.ic.tennistrader.score.ScoreUpdateThread;
-import org.ic.tennistrader.score.SiteParser;
 import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
@@ -120,11 +116,10 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		dummyLabel(nCols - 5);
 
 		initScoreLabels(PlayerEnum.PLAYER2);
-		
 
-		//setScores();
+		// setScores();
 		// TODO: remove this
-		//setDummyValues();
+		// setDummyValues();
 
 	}
 
@@ -176,29 +171,33 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 						+ makeSizer(nameSize - playername.length())));
 		map.put(SERVER, makeScoreLabelWithText(this, "    "));
 		map.put(PRED_MATCH,
-				makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(
-						display, "Times", 12, SWT.NONE), display
-						.getSystemColor(SWT.COLOR_GREEN)));
+				makeScoreLabelWithText(this, "0%" + PRED_SIZER,
+						makeFont(display),
+						display.getSystemColor(SWT.COLOR_GREEN)));
 
 		map.put(SET, makeScoreLabelWithText(this, " 0 " + SIZER));
 		map.put(PRED_SET,
-				makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(
-						display, "Times", 12, SWT.NONE), display
-						.getSystemColor(SWT.COLOR_GREEN)));
+				makeScoreLabelWithText(this, "0%" + PRED_SIZER,
+						makeFont(display),
+						display.getSystemColor(SWT.COLOR_GREEN)));
 
 		map.put(GAME, makeScoreLabelWithText(this, " 0 " + SIZER));
 		map.put(PRED_GAME,
-				makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(
-						display, "Times", 12, SWT.NONE), display
-						.getSystemColor(SWT.COLOR_GREEN)));
+				makeScoreLabelWithText(this, "0%" + PRED_SIZER,
+						makeFont(display),
+						display.getSystemColor(SWT.COLOR_GREEN)));
 
 		map.put(POINT, makeScoreLabelWithText(this, " 0 " + SIZER));
 		map.put(PRED_POINT,
-				makeScoreLabelWithText(this, "0%" + PRED_SIZER, new Font(
-						display, "Times", 12, SWT.NONE), display
-						.getSystemColor(SWT.COLOR_GREEN)));
+				makeScoreLabelWithText(this, "0%" + PRED_SIZER,
+						makeFont(display),
+						display.getSystemColor(SWT.COLOR_GREEN)));
 
 		labelMap.put(player, map);
+	}
+
+	private Font makeFont(Display display) {
+		return new Font(display, "Times", 12, SWT.NONE);
 	}
 
 	private Label makeScoreLabelWithText(Composite comp, String string) {
@@ -241,9 +240,9 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 	@Override
 	public void setScores() {
-		
+
 		Score score = match.getScore();
-		
+
 		System.out.println("Setting scores");
 		setPlayerScore(score, PlayerEnum.PLAYER1);
 		setPlayerScore(score, PlayerEnum.PLAYER2);
@@ -260,23 +259,24 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		}
 	}
 
-	public void scoreThreadStart(){
+	public void scoreThreadStart() {
 		ScoreUpdateThread scoreUpdateThread = new ScoreUpdateThread(match);
 		System.out.println("Check is match is live for score fetching");
 		if (match.isInPlay()) {
 			System.out.println("Live match: starting score update thread");
 			// only start score fetching for live matches
-			try{
+			try {
 				scoreUpdateThread.start();
-			} catch (Exception e){
-				//match.setScore(new Score());
+			} catch (Exception e) {
+				// match.setScore(new Score());
 			}
-			//System.out.println("NNNNNNNNNNNNNNNNN" + match.getScoreAsString(PlayerEnum.PLAYER1));
+			// System.out.println("NNNNNNNNNNNNNNNNN" +
+			// match.getScoreAsString(PlayerEnum.PLAYER1));
 		}
 	}
 
 	public void setScores(MOddsMarketData newData) {
-		
+
 		System.out.println("Setting scores");
 		Score score = match.getScore();
 

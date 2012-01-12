@@ -44,8 +44,7 @@ public class NavigationPanel {
 
 		GridData gridData = makeLayoutData();
 		folder.setLayoutData(gridData);
-		
-		
+
 		makeLiveMatchesItem();
 
 		makeRecordedMatchesItem();
@@ -63,12 +62,12 @@ public class NavigationPanel {
 
 		Composite composite = new Composite(folder, SWT.NONE);
 		composite.setLayout(new FillLayout());
-		
+
 		searchTree = new SearchTree(composite);
 
 		loadingLabel = new Label(searchTree, SWT.None);
 		loadingLabel.setText("Loading matches...");
-		
+
 		fetchTennisMatches(searchTree.getTree());
 		navigation.setControl(composite);
 
@@ -94,10 +93,12 @@ public class NavigationPanel {
 	}
 
 	// only fetches matches from Betfair
-	private void fetchTennisMatches(final Tree tree) {			
+	private void fetchTennisMatches(final Tree tree) {
 		new Thread() {
+			@Override
 			public void run() {
-				final List<Tournament> tours = BetfairConnectionHandler.getTournamentsData();
+				final List<Tournament> tours = BetfairConnectionHandler
+						.getTournamentsData();
 				tree.getDisplay().asyncExec(new Runnable() {
 					@Override
 					public void run() {
@@ -112,10 +113,10 @@ public class NavigationPanel {
 						}
 						loadingLabel.setVisible(false);
 						tree.layout();
-					}					
+					}
 				});
 			}
-		}.start();		
+		}.start();
 	}
 
 	public CTabFolder getFolder() {

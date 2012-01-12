@@ -2,9 +2,11 @@ package org.ic.tennistrader.ui.dialogs;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.ui.NavigationPanel;
@@ -14,6 +16,12 @@ public class LiveMatchDialog extends Dialog {
 	private static Logger log = Logger.getLogger(LiveMatchDialog.class);
 	private NavigationPanel navigationPanel;
 	private Match selection;
+
+	public static void main(String[] args) {
+		Display display = new Display();
+		Shell shell = new Shell();
+		new LiveMatchDialog(shell).open();
+	}
 
 	public LiveMatchDialog(Shell parentShell) {
 		super(parentShell);
@@ -25,7 +33,11 @@ public class LiveMatchDialog extends Dialog {
 		GridLayout layout = (GridLayout) comp.getLayout();
 		layout.numColumns = 1;
 		navigationPanel = new NavigationPanel(comp);
-		this.getShell().setSize(400, 500);
+		GridData gd = new GridData();
+		gd.widthHint = 500;
+		gd.heightHint = 500;
+		comp.setLayoutData(gd);
+		// this.getShell().setSize(400, 500);
 		return comp;
 	}
 
