@@ -1,24 +1,30 @@
 package org.ic.tennistrader.ui.betting;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.ui.updatable.OddsButton;
 import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.betting.BetManager;
 
-public class BetPlacingShell {
-	private Shell betShell;
+public class BetPlacingShell extends Dialog {
+	private Composite betShell;
 	private Text amountText;
 	private Text oddsText;
 	private Label errorLabel, profitLabel, liabilityLabel;
@@ -34,32 +40,98 @@ public class BetPlacingShell {
 	private String firstPlayerWinnerText;
 	private String secondPlayerWinnerText;
 
-	public BetPlacingShell(Display display, Match match, PlayerEnum betPlayer,
-			BetTypeEnum betType, double initialOdds, String betDetails) {
-		createBetShell(display);
+	private final Match match;
+	private PlayerEnum betPlayer;
+	private BetTypeEnum betType;
+	private String betDetails;
+	private Color color;
 
+	
+	public BetPlacingShell(OddsButton button, Match match,
+			PlayerEnum betPlayer, BetTypeEnum betType, double initialOdds,
+			String betDetails) {
+		super(button.getShell());
+		this.match = match;
+		this.betPlayer = betPlayer;
+		this.betType = betType;
+		this.betDetails = betDetails;
+		this.initialOdds = initialOdds;
+		if (betType.equals(BetTypeEnum.B)) {
+			this.color = Colours.getBackColor();
+		} else {
+			this.color = Colours.getLayColor();
+		}
+
+	}
+
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		this.betShell = (Composite) super.createDialogArea(parent);
+		this.getShell().setBackground(color);
 		setGridLayout();
 		GridData infoGridData = getInfoGridData();
-		GridData gridData = getFirstGridData();
-		GridData gridData2 = getSecondGridData();
+//		GridData gridData = getFirstGridData();
+//		GridData gridData2 = getSecondGridData();
+//
+		createInfoLabel(betType, betDetails, infoGridData, color);
+		createInfoRow(betType,match, betPlayer, initialOdds, infoGridData, color);
+		Label lastRow = new Label(betShell, SWT.NONE);
+		lastRow.setText(betDetails);
+		lastRow.setBackground(color);
+		lastRow.setLayoutData(getGridData7());
+//		createOddsFields(gridData, gridData2);
+//		createAmountFields(gridData, gridData2);
+//		addTextFieldsListeners(match, betType, betPlayer);
+//
+//		createProfitAndLiabilityLabels(betType, infoGridData);
+//		createWinnerProfitLabels(match, betType, betPlayer, infoGridData);
+//
+//		createErrorLabel(infoGridData);
 
-		this.initialOdds = initialOdds;
+		return super.createDialogArea(parent);
+	}
 
-		createInfoLabel(betType, betDetails, infoGridData);
-		createOddsFields(gridData, gridData2);
-		createAmountFields(gridData, gridData2);
-		addTextFieldsListeners(match, betType, betPlayer);
+	private void createInfoRow(BetTypeEnum betType, Match match, PlayerEnum betPlayer,
+			double initialOdds, GridData infoGridData, Color color) {
+		Label name = new Label(betShell, SWT.NONE);
+		name.setText(match.getPlayer(betPlayer).getFirstname() + " " + match.getPlayer(betPlayer).getLastname());
+		name.setBackground(color);
+		name.setLayoutData(infoGridData);
+		Text odds = new Text(betShell, SWT.NONE);
+		odds.setText(initialOdds+"");
+		odds.setBackground(color);
+		Text stake = new Text(betShell, SWT.NONE);
+		stake.setText(100+"");
+		odds.setBackground(color);
+		Label prof = new Label(betShell, SWT.NONE);
+		prof.setText((initialOdds*100-100)+"");
+		prof.setBackground(color);
+	}
 
-		createSubmitButton(match, betPlayer, betType);
-		createCancelButton();
+	@Override
+	protected void okPressed() {
 
-		createProfitAndLiabilityLabels(betType, infoGridData);
-		createWinnerProfitLabels(match, betType, betPlayer, infoGridData);
+		// Display display = betShell.getDisplay();
 
-		createErrorLabel(infoGridData);
+		Double amount, odds;
+		try {
+			amount = Double.parseDouble(amountText.getText());
+		} catch (NumberFormatException nfe) {
+			setErrorText(AMOUNT_NUMBER_EXCEPTION);
+			return;
+		}
+		try {
+			odds = Double.parseDouble(oddsText.getText());
+		} catch (NumberFormatException nfe) {
+			setErrorText(ODDS_NUMBER_EXCEPTION);
+			return;
+		}
+		if (BetManager.isValidPrice(odds)) {
+			BetManager.placeBet(match, betPlayer, betType, odds, amount);
+			betShell.dispose();
+		} else
+			setErrorText(INVALID_PRICE);
 
-		// betShell.pack();
-		betShell.open();
 	}
 
 	private void createWinnerProfitLabels(Match match, BetTypeEnum betType,
@@ -193,66 +265,26 @@ public class BetPlacingShell {
 	}
 
 	private void createInfoLabel(BetTypeEnum betType, String betDetails,
-			GridData infoGridData) {
+			GridData infoGridData, Color c) {
 		Label infoLabel = new Label(betShell, SWT.NONE);
-		infoLabel.setText(betDetails);
-        
-		Display display = betShell.getDisplay();
-        
-		if (betType.equals(BetTypeEnum.B)) {
-
-			infoLabel.setBackground(Colours.getBackColor());
-		} else {
-			infoLabel.setBackground(Colours.getLayColor());
-		}
 		infoLabel.setLayoutData(infoGridData);
-	}
-
-	private void createCancelButton() {
-		Button cancelButton = new Button(betShell, SWT.NONE);
-		cancelButton.setText("Cancel");
-		cancelButton.addListener(SWT.MouseUp, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				betShell.dispose();
-			}
-		});
-	}
-
-	private void createSubmitButton(final Match match,
-			final PlayerEnum betPlayer, final BetTypeEnum betType) {
-		final Button submitButton = new Button(betShell, SWT.NONE);
-		submitButton.setText("Place bet");
-		//Display display = betShell.getDisplay();
+		Label odds = new Label(betShell, SWT.NONE);
+		odds.setText("Your"+"\n"+"odds");
+		Label stake = new Label(betShell, SWT.NONE);
+		stake.setText("Your"+"\n"+"stake");
+		Label profit = new Label(betShell, SWT.NONE);
 		if (betType.equals(BetTypeEnum.B)) {
-			submitButton.setBackground(Colours.getBackColor());
+			infoLabel.setText("Back (Bet for)");
+			profit.setText("Your"+"\n"+"profit");
 		} else {
-			submitButton.setBackground(Colours.getLayColor());
+			infoLabel.setText("Lay (Bet against)");
+			profit.setText("Your"+"\n"+"liability");
 		}
-		submitButton.addListener(SWT.MouseUp, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				Double amount, odds;
-				try {
-					amount = Double.parseDouble(amountText.getText());
-				} catch (NumberFormatException nfe) {
-					setErrorText(AMOUNT_NUMBER_EXCEPTION);
-					return;
-				}
-				try {
-					odds = Double.parseDouble(oddsText.getText());
-				} catch (NumberFormatException nfe) {
-					setErrorText(ODDS_NUMBER_EXCEPTION);
-					return;
-				}
-				if (BetManager.isValidPrice(odds)) {
-					BetManager
-							.placeBet(match, betPlayer, betType, odds, amount);
-					betShell.dispose();
-				} else
-					setErrorText(INVALID_PRICE);
-			}
-		});
+		infoLabel.setBackground(c);
+		odds.setBackground(c);
+		stake.setBackground(c);
+		profit.setBackground(c);
+		
 	}
 
 	protected void setErrorText(String message) {
@@ -264,7 +296,7 @@ public class BetPlacingShell {
 		this.betShell = new Shell(display);
 		betShell.setSize(350, 600);
 		betShell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		betShell.setText("Bet placing");
+		// betShell.setText("Bet placing");
 	}
 
 	private void createAmountFields(GridData gridData, GridData gridData2) {
@@ -290,7 +322,13 @@ public class BetPlacingShell {
 	private GridData getInfoGridData() {
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-		gridData.horizontalSpan = 6;
+		gridData.horizontalSpan = 7;
+		return gridData;
+	}
+	
+	private GridData getGridData7() {
+		GridData gridData = new GridData();
+		gridData.horizontalSpan = 10;
 		return gridData;
 	}
 
@@ -310,7 +348,7 @@ public class BetPlacingShell {
 
 	private void setGridLayout() {
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 6;
+		gridLayout.numColumns = 10;
 		// gridLayout.makeColumnsEqualWidth = true;
 		betShell.setLayout(gridLayout);
 	}
@@ -318,11 +356,11 @@ public class BetPlacingShell {
 	public void setLocation(int x, int y) {
 		betShell.setLocation(x, y);
 	}
-	
+
 	public Label getErrorLabel() {
 		return errorLabel;
 	}
-	
+
 	public void addDisposeListener(DisposeListener listener) {
 		this.betShell.addDisposeListener(listener);
 	}

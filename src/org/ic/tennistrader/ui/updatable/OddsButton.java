@@ -110,6 +110,7 @@ public class OddsButton extends Composite {
 	}
 
 	void addClickListener() {
+		final OddsButton button = this;
 		Listener l = new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -123,19 +124,21 @@ public class OddsButton extends Composite {
 								.getBettingDetails(OddsButton.this);
 						double initOdds = Double.parseDouble(OddsButton.this
 								.getOdds().getText());
-						BetPlacingShell betPlacingShell = new BetPlacingShell(
-								getDisplay(), dataGrid.getBetController()
+						BetPlacingShell betPlacingShell = new BetPlacingShell(button,
+								 dataGrid.getBetController()
 										.getMatch(), betPlayer, betType,
 								initOdds, betDetails);
-						betPlacingShell
-								.addDisposeListener(new DisposeListener() {
-									@Override
-									public void widgetDisposed(DisposeEvent arg0) {
-										dataGrid.updateProfits();
-									}
-								});
+						betPlacingShell.open();
+						
+//						betPlacingShell
+//								.addDisposeListener(new DisposeListener() {
+//									@Override
+//									public void widgetDisposed(DisposeEvent arg0) {
+//										dataGrid.updateProfits();
+//									}
+//								});
 						Rectangle rect = getClientArea();
-						betPlacingShell.setLocation(rect.x, rect.y);
+		//				betPlacingShell.setLocation(rect.x, rect.y);
 					} catch (OddsButtonNotFoundException obnfe) {
 
 					}
