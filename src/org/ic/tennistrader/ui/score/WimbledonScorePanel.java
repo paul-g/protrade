@@ -1,5 +1,7 @@
 package org.ic.tennistrader.ui.score;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +125,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 	}
 
+	@SuppressWarnings("unused")
 	private void setDummyValues() {
 		Map<Integer, Label> pl1Map = labelMap.get(PlayerEnum.PLAYER1);
 		pl1Map.get(1).setText("3");
@@ -197,14 +200,22 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	private Font makeFont(Display display) {
-		return new Font(display, "Times", 12, SWT.NONE);
+		return new Font(display, "Times", (int) (12*displayRatio()), SWT.NONE);
+	}
+	
+	private double displayRatio() {
+		double res = 1;
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Dimension s = toolkit.getScreenSize();
+		if (s.width == 1024 && s.height == 768) res = 0.8;
+		return res;
 	}
 
 	private Label makeScoreLabelWithText(Composite comp, String string) {
 		Display display = getDisplay();
 		GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
-		Font f = new Font(display, "Times", 14, SWT.BOLD);
+		Font f = new Font(display, "Times",(int) (12*displayRatio()), SWT.BOLD);
 		Label label = new Label(comp, SWT.NONE);
 		label.setBackgroundImage(im2);
 		// Tlabel.setBackground(Colours.getScoreLabelBackgroundColor());

@@ -12,7 +12,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.ui.betting.BetsDisplay;
+import org.ic.tennistrader.ui.toolbars.BetsTable;
 import org.ic.tennistrader.ui.toolbars.ProfileToolBar;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
@@ -22,7 +22,8 @@ public class BetManager {
     private static List<Bet> matchedBets = new ArrayList<Bet>();
     private static List<Bet> unmatchedBets = new ArrayList<Bet>();
     private static Logger log = Logger.getLogger(BetManager.class);
-    private static DecimalFormat twoDForm = new DecimalFormat("#.##");;
+    private static DecimalFormat twoDForm = new DecimalFormat("#.##");
+    private static BetsTable bt;
     
     public static void placeBet(Match match, PlayerEnum player, BetTypeEnum betType, double odds, double amount) {
         Bet newBet = new Bet(match, player, betType, pair(odds, amount));
@@ -42,9 +43,8 @@ public class BetManager {
         updatePossibleProfits(newBet);
         
         addMatchedBetAmount(newBet);
-        
-        if (BetsDisplay.getComposite() != null)
-            BetsDisplay.addBet(newBet);            
+        // TODO: New bet to be displayed
+        if (bt != null) bt.refresh();
     }
     
     private static void updatePossibleProfits(Bet newBet) {
@@ -154,7 +154,7 @@ public class BetManager {
 					double availableAmount = getMaxAvailableAmount(bet);
 					if (availableAmount > 0) {
 						matchBet(virtualMarketInfo, availableAmount, bet);
-						BetsDisplay.updateUnmatchedBet(bet);
+						if (bt != null) bt.refresh();
 						if (bet.getUnmatchedValue() == 0)
 							newMatchedBets.add(bet);
 					}
@@ -206,7 +206,7 @@ public class BetManager {
 			for (Bet bet : matchedBets) {
 				if (bet.getMatch().equals(match)) {
 					bet.setProfit(getBetProfit(bet, isBetSuccessful(bet, winner)));
-					BetsDisplay.addSettledBet(bet);
+					bt.refresh();
 				}
 			}
 		} catch (MatchNotFinishedException e1) {
@@ -338,5 +338,17 @@ public class BetManager {
 					.getSecondPlayerWinnerProfit();
 		}		
         return Double.valueOf(twoDForm.format(profit));
+	}
+	
+	public static void setBetsTable(BetsTable betstab) {
+		bt = betstab;
+	}
+	
+	public static List<Bet> getMatchedBetTab() {
+		return matchedBets;
+	}
+	
+	public static List<Bet> getUnmatchedBetTab() {
+		return unmatchedBets;
 	}
 }

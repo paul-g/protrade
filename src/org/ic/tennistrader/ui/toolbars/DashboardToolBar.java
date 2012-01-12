@@ -55,6 +55,7 @@ public class DashboardToolBar {
 		private final String matchOddsPath;
 		private final String setOddsPath;
 
+		@SuppressWarnings("unused")
 		public MatchOpenListener(String matchOddsPath, String setOddsPath) {
 			super();
 			this.matchOddsPath = matchOddsPath;

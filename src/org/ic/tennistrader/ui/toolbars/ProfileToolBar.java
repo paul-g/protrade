@@ -76,7 +76,7 @@ public class ProfileToolBar {
 	private Image createColouredText(String text, int color) {
 		// TODO : Terrible workaround, but works for now.
 		Display display = Display.getCurrent();
-		Image image = new Image (display, 7*(text.length()-1)+3, 13);
+		Image image = new Image (display, 7*(text.length()-1)+2, 13);
 		GC gc = new GC (image);
 		gc.setForeground(display.getSystemColor(color));
 		gc.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
