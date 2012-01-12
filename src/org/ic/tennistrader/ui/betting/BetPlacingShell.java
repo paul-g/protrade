@@ -11,11 +11,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.betting.BetManager;
+import org.ic.tennistrader.utils.Colours;
 
 public class BetPlacingShell {
 	private Shell betShell;
@@ -28,11 +29,22 @@ public class BetPlacingShell {
 	private static final String PROFIT_TEXT = "Your possible profit: ";
 	private static final String LIABILITY_TEXT = "Your possible liability: ";
 	private static final double INITIAL_AMOUNT = 10;
-	private double initialOdds;
+	private final double initialOdds;
 	private Label firstPlayerWinnerSummary;
 	private Label secondPlayerWinnerSummary;
 	private String firstPlayerWinnerText;
 	private String secondPlayerWinnerText;
+
+	public static void main(String args[]) {
+		Display display = new Display();
+		Match m = new HistoricalMatch("data/full/fulldataShort.csv", null);
+		new BetPlacingShell(display, m, PlayerEnum.PLAYER1, BetTypeEnum.B, 0.5,
+				"Bet details");
+		while (!display.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+	}
 
 	public BetPlacingShell(Display display, Match match, PlayerEnum betPlayer,
 			BetTypeEnum betType, double initialOdds, String betDetails) {
@@ -196,9 +208,9 @@ public class BetPlacingShell {
 			GridData infoGridData) {
 		Label infoLabel = new Label(betShell, SWT.NONE);
 		infoLabel.setText(betDetails);
-        
+
 		Display display = betShell.getDisplay();
-        
+
 		if (betType.equals(BetTypeEnum.B)) {
 
 			infoLabel.setBackground(Colours.getBackColor());
@@ -223,7 +235,7 @@ public class BetPlacingShell {
 			final PlayerEnum betPlayer, final BetTypeEnum betType) {
 		final Button submitButton = new Button(betShell, SWT.NONE);
 		submitButton.setText("Place bet");
-		//Display display = betShell.getDisplay();
+		// Display display = betShell.getDisplay();
 		if (betType.equals(BetTypeEnum.B)) {
 			submitButton.setBackground(Colours.getBackColor());
 		} else {
@@ -318,11 +330,11 @@ public class BetPlacingShell {
 	public void setLocation(int x, int y) {
 		betShell.setLocation(x, y);
 	}
-	
+
 	public Label getErrorLabel() {
 		return errorLabel;
 	}
-	
+
 	public void addDisposeListener(DisposeListener listener) {
 		this.betShell.addDisposeListener(listener);
 	}
