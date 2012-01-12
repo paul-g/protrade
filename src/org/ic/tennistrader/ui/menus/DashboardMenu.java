@@ -48,7 +48,9 @@ public class DashboardMenu {
 				lmd.open();
 				Match match = lmd.getSelectedMatch();
 				log.info("Dialog selection " + match);
-				dashboardWindow.getCurrentDashboard().setMatch(match);
+				if (match != null) {
+					dashboardWindow.getCurrentDashboard().setMatch(match);
+				}
 
 			}
 		});

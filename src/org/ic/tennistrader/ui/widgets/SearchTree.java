@@ -131,7 +131,10 @@ public class SearchTree extends Composite {
 	}
 
 	public TreeItem getSelection() {
-		return tree.getSelection()[0];
+		if (tree.getChildren().length > 0)
+			return tree.getSelection()[0];
+		else
+			return null;
 	}
 
 	public Tree getTree() {
