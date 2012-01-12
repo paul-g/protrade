@@ -14,14 +14,14 @@ import org.ic.tennistrader.domain.Bet;
 import org.ic.tennistrader.model.betting.BetManager;
 
 public class BetsTable {
-	private static Shell shell;
-	private static Table table;
-	private static TableColumn[] column = new TableColumn[8];
+	private Shell shell;
+	private Table table;
+	private TableColumn[] column = new TableColumn[9];
 	
 	public BetsTable(int x,int y, final DashboardToolBar dtb) {
 		shell = new Shell();
 		shell.setText("Bets Table");
-		shell.setBounds(x, y, 410, 200);
+		shell.setBounds(x, y, 600, 200);
 		shell.setLayout(new FillLayout());
 		table = new Table(shell, SWT.NONE);
 		table.setHeaderVisible(true);
@@ -39,11 +39,13 @@ public class BetsTable {
 		column[5] = new TableColumn(table, SWT.CENTER);
 		column[5].setText("Unmatched");
 		column[6] = new TableColumn(table, SWT.CENTER);
-		column[6].setText("Profit");
+		column[6].setText("Possible Profit");
 		column[7] = new TableColumn(table, SWT.CENTER);
 		column[7].setText("Liability");
-		refresh();
+		column[8] = new TableColumn(table, SWT.CENTER);
+		column[8].setText("Successful");
 		BetManager.setBetsTable(this);
+		refresh();
 		shell.open();
 		shell.addDisposeListener(new DisposeListener() {
 			@Override
@@ -58,18 +60,26 @@ public class BetsTable {
 		shell.forceActive();
 	}
 	
-	public static void refresh() {
-		for (Bet b : BetManager.getMatchedBetTab()) {
-			add(b);
-		}
-		for (Bet b : BetManager.getUnmatchedBetTab()) {
-			add(b);
-		}
-		for (int i = 0; i < column.length; i++) column[i].pack();
-		shell.redraw();
+	public void refresh() {
+		shell.getDisplay().asyncExec(new Runnable(){
+			@Override
+			public void run() {
+				table.removeAll();
+				for (Bet b : BetManager.getMatchedBetTab()) {
+					add(b);
+				}
+				for (Bet b : BetManager.getUnmatchedBetTab()) {
+					add(b);
+				}
+				for (int i = 0; i < column.length; i++) column[i].pack();
+				shell.redraw();
+				shell.pack();
+				shell.open();
+			} 
+		});
 	}
 	
-	public static void add( Bet bet ) {
+	public void add( Bet bet ) {
 		TableItem item = new TableItem(table,SWT.NONE);
 		item.setText(0, bet.getMatch().getName());
 		item.setText(1, bet.getPlayer().name());
@@ -79,9 +89,15 @@ public class BetsTable {
 		item.setText(5, toS(bet.getUnmatchedValue()));
 		item.setText(6, bet.getProfit() + "");
 		item.setText(7, toS(bet.getPossibleLiability()));
+		if (bet.getProfit() == 0) 
+			item.setText(8, "N/A");
+		else if (bet.getProfit() > 0) 
+			item.setText(8, "Yes");
+		else
+			item.setText(8, "No");
 	}
 	
-	private static String toS (double d) {
+	private String toS (double d) {
 		return Double.valueOf(new DecimalFormat("#.##").format(d))+"";
 	}
 }

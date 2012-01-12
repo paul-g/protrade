@@ -12,7 +12,6 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.ui.betting.BetsDisplay;
 import org.ic.tennistrader.ui.toolbars.BetsTable;
 import org.ic.tennistrader.ui.toolbars.ProfileToolBar;
 import org.ic.tennistrader.utils.Pair;
@@ -44,15 +43,8 @@ public class BetManager {
         updatePossibleProfits(newBet);
         
         addMatchedBetAmount(newBet);
-        
-        if (BetsDisplay.getComposite() != null) {
-            BetsDisplay.addBet(newBet);          
-            // TODO: New bet to be displayed
-            if (bt != null) {
-            	System.out.println("Here its bet");
-            	BetsTable.refresh();
-            }
-        }
+        // TODO: New bet to be displayed
+        if (bt != null) bt.refresh();
     }
     
     private static void updatePossibleProfits(Bet newBet) {
@@ -162,11 +154,9 @@ public class BetManager {
 					double availableAmount = getMaxAvailableAmount(bet);
 					if (availableAmount > 0) {
 						matchBet(virtualMarketInfo, availableAmount, bet);
-						BetsDisplay.updateUnmatchedBet(bet);
+						if (bt != null) bt.refresh();
 						if (bet.getUnmatchedValue() == 0)
 							newMatchedBets.add(bet);
-						// TODO: Update "bet" or just remove and add all again
-						if (bt != null) BetsTable.refresh();
 					}
 				}
 			}
@@ -216,7 +206,7 @@ public class BetManager {
 			for (Bet bet : matchedBets) {
 				if (bet.getMatch().equals(match)) {
 					bet.setProfit(getBetProfit(bet, isBetSuccessful(bet, winner)));
-					BetsDisplay.addSettledBet(bet);
+					bt.refresh();
 				}
 			}
 		} catch (MatchNotFinishedException e1) {
