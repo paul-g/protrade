@@ -44,15 +44,15 @@ public class BetManager {
         addMatchedBetAmount(newBet);
         
         if (BetsDisplay.getComposite() != null)
-            BetsDisplay.addBet(newBet);            
+            BetsDisplay.addBet(newBet);
+        ProfileToolBar.updateLiabilityAndProfit();
     }
     
     private static void updatePossibleProfits(Bet newBet) {
 		if (matchMarketData.containsKey(newBet.getMatch())) {
 			VirtualBetMarketInfo marketInfo = matchMarketData.get(newBet.getMatch());
 			marketInfo.addFirstPlayerWinnerProfit(newBet.getFirstPlayerWinnerProfit());
-			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());
-			ProfileToolBar.updateLiabilityAndProfit();
+			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());			
 		}
 	}
 
@@ -286,6 +286,7 @@ public class BetManager {
     public static double getTotalLiabiltiy() {
     	double totalLiability = 0;
     	for (Match match : matchMarketData.keySet()) {
+    		System.out.println("Adding liability for " + match.toString() + " which is " + matchMarketData.get(match).getLiability());
     		totalLiability += matchMarketData.get(match).getLiability();
     	}
     	return Double.valueOf(twoDForm.format(totalLiability));

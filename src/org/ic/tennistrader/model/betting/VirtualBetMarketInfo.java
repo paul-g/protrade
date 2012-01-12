@@ -104,6 +104,7 @@ public class VirtualBetMarketInfo {
 		if (previousAmount == null)
 			previousAmount = 0.0;
 		this.matchedLayBetsFirstPlayer.put(odds, previousAmount + amount);
+		//System.out.println("Adding liability for first pl" + (odds - 1) * amount);
 		this.firstPlayerWinnerLiability += (odds - 1) * amount;
 	}
 
@@ -116,6 +117,7 @@ public class VirtualBetMarketInfo {
 		if (previousAmount == null)
 			previousAmount = 0.0;
 		this.matchedBackBetsSecondPlayer.put(odds, previousAmount + amount);
+		//System.out.println("Adding liability for first pl" + amount);
 		this.firstPlayerWinnerLiability += amount;
 	}
 

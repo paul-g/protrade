@@ -35,15 +35,15 @@ public class ChartDataTest {
 	@Test
 	public void testAddValue(){
 		chartData.updateData(data);
-		assertEquals(2, chartData.getMaPl1().size());
-		assertEquals(2, chartData.getMaPl2().size());
-		assertEquals(2, chartData.getPl1Lay().size());
-		assertEquals(2, chartData.getPl1YSeries().size());
-		assertEquals(2, chartData.getPl2Lay().size());
-		assertEquals(2, chartData.getPl2YSeries().size());
+		assertEquals(1, chartData.getMaPl1().size());
+		assertEquals(1, chartData.getMaPl2().size());
+		assertEquals(1, chartData.getPl1Lay().size());
+		assertEquals(1, chartData.getPl1YSeries().size());
+		assertEquals(1, chartData.getPl2Lay().size());
+		assertEquals(1, chartData.getPl2YSeries().size());
 		data.getPl1Back().add(pair(1.5,100.0));
 		chartData.updateData(data);
-		assertEquals(3, chartData.getDataSize());
+		assertEquals(2, chartData.getDataSize());
 		
 		
 	}
@@ -60,8 +60,8 @@ public class ChartDataTest {
 		data.setPl1LastMatchedPrice(2.5);
 		chartData.updateData(data);
 		ArrayList<Double> ma = chartData.getMaPl1();
-		double x = ma.get(3);
-		assertTrue(x==1.5);
+		double x = ma.get(2);
+		assertEquals(2, x, Math.pow(10, -5));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class ChartDataTest {
 		//System.out.println(res.get(0).first());
 		//System.out.println(chartData.getPl1Lay().get(0).second());
 		//System.out.println(res.get(0).second());
-		assertEquals(res.size() + 1,chartData.getPl1Lay().size());
+		assertEquals(res.size(),chartData.getPl1Lay().size());
 //		Pair p1 = res.get(0);
 //		Pair p2 = chartData.getPl1Lay().get(0);
 		//assertEquals(p1,p2);
@@ -87,7 +87,7 @@ public class ChartDataTest {
 	@Test
 	public void testDataSize() {
 		chartData.updateData(data);
-		assertEquals(2,chartData.getPl1YSeries().size());
+		assertEquals(1,chartData.getPl1YSeries().size());
 	}
 	
 

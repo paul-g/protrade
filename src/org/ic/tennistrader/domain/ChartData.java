@@ -40,7 +40,8 @@ public class ChartData {
 		} catch (NullPointerException e) {
 			prevNrSets = 0;
 		}
-		dataSize = 1;
+		dataSize = 0;
+		
 		pl1YSeries = new ArrayList<Double>();
 		pl2YSeries = new ArrayList<Double>();
 		pl1Predicted = new ArrayList<Double>();
@@ -56,6 +57,7 @@ public class ChartData {
 		pl2Volume = new ArrayList<Double>();
 		endOfSets = new ArrayList<Integer>();
 
+		/*
 		pl1YSeries.add(0.0);
 		pl2YSeries.add(0.0);
 		pl1Predicted.add(0.0);
@@ -70,6 +72,7 @@ public class ChartData {
 		pl1Volume.add(0.0);
 		pl2Volume.add(0.0);
 		endOfSets.add(0);
+		*/
 	}
 
 	public void updateData(MOddsMarketData data) {

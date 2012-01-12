@@ -10,6 +10,12 @@ public abstract class StoppableThread extends Thread{
     public void run() {
         final Logger log = Logger.getLogger(this.getClass());
         log.info("Starting " + this.getClass());
+        try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         while(!stop){
             runBody();
         } 

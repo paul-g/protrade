@@ -250,13 +250,17 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		playerOneColumn.setText(match.getPlayerOne().getLastname());
 		playerTwoColumn.setText(match.getPlayerTwo().getLastname());
 		//String testString = getTestString("data/test/tennisinsight-tso-fed.dat");
+		
+		/*		
 		Player player1 = new Player();
 		Player player2 = new Player();
+		*/
+		
 		//new StatisticsParser(testString, match).parseAndSetStatistics();
 		StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
 		thread.addListener(this);
 		thread.start();
-		handleEvent(new Event());
+		//handleEvent(new Event());
 	}
 
 	private static String getTestString(String filename) {

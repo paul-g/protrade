@@ -19,6 +19,7 @@ public class MOddsMarketData {
 	private double player2PredictedOdds;
 	private ArrayList<Pair<Double, Double>> pl1Lay, pl1Back, pl2Lay, pl2Back;
 	private Date date;
+	private Date time;
 	private String exchange;
 	private String matchStatus;
 	private String location;
@@ -81,28 +82,12 @@ public class MOddsMarketData {
 		this.pl2Back = pl2Back;
 	}
 
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
 	public String getMatchStatus() {
 		return matchStatus;
 	}
 
 	public void setMatchStatus(String matchStatus) {
 		this.matchStatus = matchStatus;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public String getExchange() {
@@ -221,5 +206,13 @@ public class MOddsMarketData {
 		} else {
 			this.player2PredictedOdds = player2PredictedOdds;
 		}
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
+	public Date getTime() {
+		return time;
 	}
 }
