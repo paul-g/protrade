@@ -97,6 +97,8 @@ public class DashboardToolBar {
 	}
 
 	private final ToolBar toolbar;
+	
+	private BetsTable bets = null;
 
 	private static Logger log = Logger.getLogger(DashboardToolBar.class);
 
@@ -162,7 +164,7 @@ public class DashboardToolBar {
 		betsItem.setToolTipText("Table of bets");
 		betsItem.setImage(new Image(shell.getDisplay(),
 				"images/toolbar/bets.png"));
-		betsItem.addListener(SWT.Selection, new BetsListener(betsItem));
+		betsItem.addListener(SWT.Selection, new BetsListener(betsItem,this));
 	}
 
 	private void makeNewWidgetMenu(Composite parent, final Shell shell) {
@@ -223,6 +225,14 @@ public class DashboardToolBar {
 
 	public ToolBar getToolBar() {
 		return toolbar;
+	}
+	
+	public BetsTable getBetsTable() {
+		return bets;
+	}
+	
+	public void setBetsTable(BetsTable bets) {
+		this.bets = bets;
 	}
 
 }
