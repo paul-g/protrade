@@ -24,7 +24,7 @@ public class BetManager {
     private static List<Bet> unmatchedBets = new ArrayList<Bet>();
     private static Logger log = Logger.getLogger(BetManager.class);
     private static DecimalFormat twoDForm = new DecimalFormat("#.##");
-    private static BetsTable bt = null;
+    private static BetsTable bt;
     
     public static void placeBet(Match match, PlayerEnum player, BetTypeEnum betType, double odds, double amount) {
         Bet newBet = new Bet(match, player, betType, pair(odds, amount));
@@ -47,8 +47,11 @@ public class BetManager {
         
         if (BetsDisplay.getComposite() != null) {
             BetsDisplay.addBet(newBet);          
-            // TODO new bet to be displayed
-            bt.add(newBet);
+            // TODO: New bet to be displayed
+            if (bt != null) {
+            	System.out.println("Here its bet");
+            	BetsTable.refresh();
+            }
         }
     }
     
@@ -160,10 +163,10 @@ public class BetManager {
 					if (availableAmount > 0) {
 						matchBet(virtualMarketInfo, availableAmount, bet);
 						BetsDisplay.updateUnmatchedBet(bet);
-						//TODO update "bet" or just remove and add all again
-						bt.add(bet);
 						if (bet.getUnmatchedValue() == 0)
 							newMatchedBets.add(bet);
+						// TODO: Update "bet" or just remove and add all again
+						if (bt != null) BetsTable.refresh();
 					}
 				}
 			}

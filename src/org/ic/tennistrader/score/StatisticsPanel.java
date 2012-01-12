@@ -256,7 +256,7 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
 		thread.addListener(this);
 		thread.start();
-		handleEvent(new Event());
+		//handleEvent(new Event());
 	}
 
 	private static String getTestString(String filename) {

@@ -208,7 +208,6 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension s = toolkit.getScreenSize();
 		if (s.width == 1024 && s.height == 768) res = 0.8;
-		System.out.println(s.width + " " + s.height + " " + res);
 		return res;
 	}
 
