@@ -62,6 +62,7 @@ public class SeriesProperties {
 
 	public void setChartSeries(ISeries chartSeries) {
 		this.chartSeries = chartSeries;
+		this.chartSeries.setYAxisId(this.lineProp.getyAxisId());
 		this.errorBar = this.chartSeries.getYErrorBar();
 		this.errorBar.setType(ErrorBarType.BOTH);
 		this.errorBar.setVisible(this.visibleErrorBar);

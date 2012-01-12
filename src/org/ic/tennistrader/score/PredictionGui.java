@@ -22,6 +22,7 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
@@ -34,9 +35,7 @@ public class PredictionGui extends MatchViewerWidget {
 	private static Logger log = Logger.getLogger(PredictionGui.class);
 
 	private final ScoreUpdateThread scoreUpdateThread;
-
-	// NOT USED
-	// private StatisticsUpdateThread statisticsUpdateThread;
+	private StatisticsUpdateThread statisticsUpdateThread;
 
 	private final StatisticsPanel st;
 
@@ -45,8 +44,8 @@ public class PredictionGui extends MatchViewerWidget {
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
 		shell.setLayout(new FillLayout());
 
-		Player playerOne = new Player("Rafael", "Nadal");
-		Player playerTwo = new Player("Del Potro", "Juan Martin");
+		Player playerOne = new Player("Ivo", "Minar");
+		Player playerTwo = new Player("Luke", "Saville");
 
 		Match match = new RealMatch("", "", new EventBetfair(
 				"Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
@@ -87,8 +86,8 @@ public class PredictionGui extends MatchViewerWidget {
 
 		addMarketDataGrid(this, match);
 
-		// this.statisticsUpdateThread = new StatisticsUpdateThread(match);
-		// this.statisticsUpdateThread.addListener(st);
+		this.statisticsUpdateThread = new StatisticsUpdateThread(match);
+		this.statisticsUpdateThread.addListener(st);
 
 		this.scoreUpdateThread = new ScoreUpdateThread(match);
 		// Image im = new Image(this.getDisplay(), "images/scoreboard.png" );
@@ -96,14 +95,19 @@ public class PredictionGui extends MatchViewerWidget {
 	}
 
 	public void start() {
-		String statsString = getStatsString("data/test/tennisinsight-tso-fed.dat");
-		new StatisticsParser(statsString, match).parseAndSetStatistics();
-		st.handleEvent(new Event());
-		// statisticsUpdateThread.start();
+		//String statsString = getStatsString("data/test/tennisinsight-tso-fed.dat");
+		//new StatisticsParser(statsString, match).parseAndSetStatistics();
+		//st.handleEvent(new Event());
+		statisticsUpdateThread.start();
+		//st.handleEvent(new Event());
 		if (match.isInPlay()) {
 			log.info("Live match: starting score update thread");
 			// only start score fetching for live matches
-			scoreUpdateThread.start();
+			try{
+				scoreUpdateThread.start();
+			} catch (Exception e){
+				match.setScore(new Score());
+			}
 		}
 	}
 

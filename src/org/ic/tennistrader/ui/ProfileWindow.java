@@ -39,7 +39,7 @@ public class ProfileWindow {
 		/* Shell Layout */
 		shell.setLayout(gl);
 		shell.setText("Profile");
-		shell.setSize(500,500);
+		shell.setSize(500,450);
 		shell.setLocation(1100,80);
 
 		/* Labels and Shell opening */
@@ -133,30 +133,3 @@ public class ProfileWindow {
 		}
 	}
 }
-
-
-/* TEST */
-//addDescriptionLabel(new Image(display,"images/profile/user.png"),3);
-//addLabel("USERNAME","");
-//addLabel("FIRST NAME", "");
-//addLabel("LAST NAME", "");
-//addDescriptionLabel(new Image(display,"images/profile/address.png"),3);
-//addLabel("ADDRESS 1", "");
-//addLabel("ADDRESS 2", "");
-//addLabel("ADDRESS 3", "");
-//addDescriptionLabel(new Image(display,"images/profile/location.png"),3);
-//addLabel("CITY", "");
-//addLabel("POST CODE", "");
-//addLabel("COUNTRY", "");
-//addDescriptionLabel(new Image(display,"images/profile/contacts.png"),3);
-//addLabel("HOME PHONE", "");
-//addLabel("MOBILE PHONE", "");
-//addLabel("E-MAIL ADDRESS","");
-//addDescriptionLabel(new Image(display,"images/profile/deposit.png"),3);
-//addLabel("BETFAIR POINTS","");
-//addLabel("CURRENT BALANCE","");
-//addLabel("AVAILABLE BALANCE","");
-//addDescriptionLabel(new Image(display,"images/profile/credit.png"),3);
-//addLabel("CREDIT LIMIT","");
-//addLabel("EXPOSURE","");
-//addLabel("EXPOSURE LIMIT","");

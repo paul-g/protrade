@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -16,8 +17,10 @@ import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.model.chart_computers.OverroundComputer;
 import org.ic.tennistrader.model.chart_computers.VolumeComputer;
 import org.swtchart.IAxis;
+import org.swtchart.IAxisSet;
 import org.swtchart.IBarSeries;
 import org.swtchart.ILineSeries;
+import org.swtchart.IAxis.Position;
 import org.swtchart.ISeries.SeriesType;
 
 public class OverroundChart extends UpdatableChart {
@@ -64,22 +67,46 @@ public class OverroundChart extends UpdatableChart {
 		//createSeries(pl1Name, pl2Name);
 		
 		chartMenu = new ChartMenu();
+		IAxisSet axisSet = this.getAxisSet();
+		axisSet.createYAxis();
+		IAxis yAxis2 = axisSet.getYAxis(1);
 		
-		LineProp prop = new LineProp();
-		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+		Color defaultAxisColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		Font font = new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD);
+		
+		getLegend().setPosition(SWT.BOTTOM);
+		IAxis yAxis = getAxisSet().getYAxis(0);
+		configureAxis(yAxis, yVolumeTitle, font, defaultAxisColor,null);
+		configureAxis(yAxis2, yOverroundTitle, font, defaultAxisColor, Position.Secondary);
+		
+		IAxis xAxis = getAxisSet().getXAxis(0);
+		DateFormat format = new SimpleDateFormat("HH:mm:ss");
+		xAxis.getTick().setFormat(format);
+		xAxis.getTitle().setForeground(defaultAxisColor);
+		xAxis.getTick().setForeground(defaultAxisColor);
+		xAxis.getTitle().setVisible(false);
+		setBackgroundMode(SWT.INHERIT_DEFAULT);
+		
+		
+		
+		
+		LineProp oround = new LineProp();
+		oround.setyAxisId(1);
+		oround.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 		SeriesProperties overround = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER1,
-				"Overround Back", "", new OverroundComputer(), prop);
+				"Overround Back", "", new OverroundComputer(), oround);
 		chartMenu.addSeriesItem(overround);
 		
-		prop = new LineProp();
-		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_MAGENTA));
+		oround = new LineProp();
+		oround.setyAxisId(1);
+		oround.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_MAGENTA));
 		SeriesProperties overroundl = new SeriesProperties(SeriesType.LINE,
 				MarketSeriesType.OVERROUND, PlayerEnum.PLAYER2,
-				"Overround Lay", "", new OverroundComputer(), prop);
+				"Overround Lay", "", new OverroundComputer(), oround);
 		chartMenu.addSeriesItem(overroundl);
 		
-		prop = new LineProp();
+		LineProp prop = new LineProp();
 		prop.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		SeriesProperties volume1 = new SeriesProperties(SeriesType.BAR,
 				MarketSeriesType.VOLUME, PlayerEnum.PLAYER1,
@@ -98,17 +125,7 @@ public class OverroundChart extends UpdatableChart {
 		
 		
 		// setBackOverround(true);
-		getLegend().setPosition(SWT.BOTTOM);
-		IAxis yAxis = getAxisSet().getYAxis(0);
-		yAxis.getTitle().setText(yVolumeTitle);
-		yAxis.getTitle().setFont(
-				new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD));
-		IAxis xAxis = getAxisSet().getXAxis(0);
-		DateFormat format = new SimpleDateFormat("HH:mm:ss");
-		xAxis.getTick().setFormat(format);
-
-		getAxisSet().getXAxis(0).getTitle().setVisible(false);
-		setBackgroundMode(SWT.INHERIT_DEFAULT);
+		
 		// this.getAxisSet().getXAxis(0).adjustRange();
 		// this.getAxisSet().adjustRange();
 		// this.getAxisSet().getYAxis(0).setRange(new Range(90,110));
@@ -147,6 +164,15 @@ public class OverroundChart extends UpdatableChart {
 		pl2Volume.setVisible(false);
 	}
 	*/
+
+	private void configureAxis(IAxis axis, String title, Font font,
+			Color defaultAxisColor, Position pos) {
+		if (pos != null) axis.setPosition(pos);
+		axis.getTitle().setText(title);
+		axis.getTitle().setFont(font);
+		axis.getTitle().setForeground(defaultAxisColor);
+		axis.getTick().setForeground(defaultAxisColor);
+	}
 
 	public void visibility(boolean pl1, boolean pl2) {
 		if (isBackOverround || isLayOverround) {
