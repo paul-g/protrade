@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolItem;
 
-class BetsListener implements Listener {
+public class BetsListener implements Listener {
 	private int x,y;
 	private DashboardToolBar toolbar;
 	
