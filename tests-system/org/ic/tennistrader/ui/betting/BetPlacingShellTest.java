@@ -21,14 +21,14 @@ public class BetPlacingShellTest extends DisplayTest{
 //    	firstPlayer = new Player("Rafael", "Nadal");
 //    	secondPlayer = new Player("Roger", "Federer");
 //    	match = new HistoricalMatch(firstPlayer, secondPlayer);
-//    	betPlacingShell = new BetPlacingShell(display, match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, "Bet details");    	
+//    	betPlacingShell = new BetPlacingShell(display, match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, "Bet details");
     }
 	
 	@Ignore
 	@Test
 	public void testInitialSetting() {
-//		betPlacingShell = new BetPlacingShell(display, match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, "Bet details");
-//    	assertFalse(betPlacingShell.getErrorLabel().isVisible());
+		//betPlacingShell = new BetPlacingShell(display, match, PlayerEnum.PLAYER1, BetTypeEnum.B, 2.5, "Bet details");
+    	//assertFalse(betPlacingShell.getErrorLabel().isVisible());
 	}
 
 }

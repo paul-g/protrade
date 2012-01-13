@@ -224,14 +224,15 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	private Font makeFont(Display display) {
-		return new Font(display, "Times", (int) (12*displayRatio()), SWT.NONE);
+		return new Font(display, "Times", (int) (12 * displayRatio()), SWT.NONE);
 	}
-	
+
 	private double displayRatio() {
 		double res = 1;
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension s = toolkit.getScreenSize();
-		if (s.width == 1024 && s.height == 768) res = 0.8;
+		if (s.width == 1024 && s.height == 768)
+			res = 0.8;
 		return res;
 	}
 
@@ -239,7 +240,8 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		Display display = getDisplay();
 		GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
-		Font f = new Font(display, "Times",(int) (12*displayRatio()), SWT.BOLD);
+		Font f = new Font(display, "Times", (int) (12 * displayRatio()),
+				SWT.BOLD);
 		Label label = new Label(comp, SWT.NONE);
 		label.setBackgroundImage(im2);
 		// Tlabel.setBackground(Colours.getScoreLabelBackgroundColor());
@@ -279,6 +281,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		// if (match.isInPlay()) {
 		log.info("Live match: starting score update thread");
 		// only start score fetching for live matches
+
 		try {
 			scoreUpdateThread.start();
 		} catch (Exception e) {
@@ -296,23 +299,16 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 				log.info(match.getScore());
 			}
 		});
-
 	}
 
 	@Override
 	public void setScores() {
 
-		log.info("Setting scores");
 		Score score = match.getScore();
 
+		// System.out.println("Setting scores");
 		setPlayerScore(score, PlayerEnum.PLAYER1);
 		setPlayerScore(score, PlayerEnum.PLAYER2);
-
-		try {
-			updatePrediction();
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
 	}
 
 	private void updatePrediction() {

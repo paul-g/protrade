@@ -1,8 +1,8 @@
 package org.ic.tennistrader.model.connection;
 
-
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.*;
+
 
 public class ExchangeAPI {
 
@@ -333,4 +333,31 @@ public class ExchangeAPI {
         return resp.getBetResults().getCancelBetsResult();
 	}
 	*/
+	
+	public static InflatedCompleteMarketPrices getCompleteMarketPrices(Exchange exch, APIContext context, int marketId) throws Exception {
+		// create a request object
+		GetCompleteMarketPricesCompressedReq request = new GetCompleteMarketPricesCompressedReq();
+		request.setHeader(getHeader(context.getToken()));
+		
+		// Set the parameters
+		request.setMarketId(marketId);
+		
+		// Create the message and attach the request to it.
+		GetCompleteMarketPricesCompressed msg = new GetCompleteMarketPricesCompressed();
+		msg.setRequest(request);
+		
+		// Send the request to the Betfair Exchange Service.
+		GetCompleteMarketPricesCompressedResp resp = getStub(exch).getCompleteMarketPricesCompressed(msg).getResult();
+		//context.getUsage().addCall("getCompleteMarketPricesCompressed");
+		
+		// Check the response code and throw an exception if the call failed 
+		if (resp.getErrorCode() != GetCompleteMarketPricesErrorEnum.OK) {
+			throw new IllegalArgumentException("Failed to retrieve data: "+resp.getErrorCode() + " Minor Error:"+resp.getMinorErrorCode()+ " Header Error:"+resp.getHeader().getErrorCode());
+		}
+		
+		// Transfer the response data back to the API Context
+		setHeaderDataToContext(context, resp.getHeader());
+		
+		return new InflatedCompleteMarketPrices(resp.getCompleteMarketPrices());
+	}
 }
