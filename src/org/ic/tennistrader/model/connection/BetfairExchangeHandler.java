@@ -438,7 +438,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 
 	private static ArrayList<Pair<Double, Double>> setLayValues(InflatedCompleteRunner r) {
 		ArrayList<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 3; i < 6; i++) {
 			InflatedCompletePrice p = r.getPrices().get(i);
 			result.add(pair(p.getPrice(), p.getBackAmountAvailable()));
 		}

@@ -254,7 +254,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		Score score = match.getScore();
 
-		System.out.println("Setting scores");
+		//System.out.println("Setting scores");
 		setPlayerScore(score, PlayerEnum.PLAYER1);
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
@@ -288,7 +288,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 	public void setScores(MOddsMarketData newData) {
 
-		System.out.println("Setting scores");
+		//System.out.println("Setting scores");
 		Score score = match.getScore();
 
 		setPlayerScore(score, PlayerEnum.PLAYER1);
