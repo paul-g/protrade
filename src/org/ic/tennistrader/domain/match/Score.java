@@ -248,4 +248,23 @@ public class Score {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return toString(PlayerEnum.PLAYER1) + toString(PlayerEnum.PLAYER2);
+	}
+
+	public String toString(PlayerEnum player) {
+		final int[] scores = getPlayerScores(player);
+
+		StringBuffer scoresString = new StringBuffer();
+
+		for (int i = 0; i < scores.length; i++) {
+			scoresString.append(scores[i] + ",");
+		}
+
+		scoresString.append(getPlayerPoints(player));
+
+		return scoresString.toString();
+	}
 }

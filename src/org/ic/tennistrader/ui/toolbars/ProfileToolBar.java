@@ -88,7 +88,6 @@ public class ProfileToolBar {
 		gc.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		gc.drawText(text, 0, 0, false);
 		gc.dispose();
-		toolbar.redraw();
 		return image;
 	}
 

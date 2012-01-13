@@ -34,7 +34,7 @@ public class WidgetContainer extends Composite {
 
 	private static final int BORDER_WIDTH = 10;
 
-	private final CornerMenu cornerMenu;
+	// private final CornerMenu cornerMenu;
 
 	final Dashboard dashboard;
 
@@ -42,6 +42,8 @@ public class WidgetContainer extends Composite {
 	private Menu menu;
 
 	private boolean dettached = false;
+
+	// private final ScrolledComposite sc;
 
 	public WidgetContainer(final Dashboard parent, int style, int width,
 			int height) {
@@ -53,9 +55,9 @@ public class WidgetContainer extends Composite {
 
 		Display display = parent.getDisplay();
 
-		cornerMenu = new CornerMenu(this, SWT.BORDER);
+		// cornerMenu = new CornerMenu(this, SWT.BORDER);
 
-		addMouseTrackListener(new MenuListener(this, cornerMenu));
+		// addMouseTrackListener(new MenuListener(this, cornerMenu));
 
 		wCursor = display.getSystemCursor(SWT.CURSOR_SIZEW);
 		sCursor = display.getSystemCursor(SWT.CURSOR_SIZES);
@@ -86,6 +88,12 @@ public class WidgetContainer extends Composite {
 			}
 		});
 
+		/*
+		 * sc = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL |
+		 * SWT.V_SCROLL); sc.setLayout(new FillLayout());
+		 * sc.setExpandHorizontal(true); sc.setExpandVertical(true);
+		 */
+
 		makeAndSetMenu();
 	}
 
@@ -94,9 +102,11 @@ public class WidgetContainer extends Composite {
 	}
 
 	// pre: component was already drawn
-	public void setWidget(Control composite) {
-		composite.setParent(this);
-		child = composite;
+	public void setWidget(Control control) {
+		// sc.setContent(control);
+		// sc.setMinSize(control.getBounds().x, control.getBounds().y);
+		control.setParent(this);
+		child = control;
 		fitChild();
 	}
 

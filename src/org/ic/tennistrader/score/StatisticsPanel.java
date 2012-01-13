@@ -253,14 +253,16 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 
 		// new StatisticsParser(testString, match).parseAndSetStatistics();
 		if (match instanceof RealMatch) {
-			StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
-			thread.addListener(this);
-			thread.start();
+			// StatisticsUpdateThread thread = new
+			// StatisticsUpdateThread(match);
+			// thread.addListener(this);
+			// thread.start();
 		} else {
 			String testString = getTestString("data/test/tennisinsight-tso-fed.dat");
 			new StatisticsParser(testString, match).parseAndSetStatistics();
+			handleEvent(new Event());
 		}
-		handleEvent(new Event());
+
 	}
 
 	private static String getTestString(String filename) {

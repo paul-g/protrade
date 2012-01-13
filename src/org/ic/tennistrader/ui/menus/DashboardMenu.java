@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.ui.dialogs.LiveMatchDialog;
 import org.ic.tennistrader.ui.dialogs.ProgressDialog;
 import org.ic.tennistrader.ui.main.DashboardWindow;
@@ -105,6 +106,11 @@ public class DashboardMenu {
 		makeRecordedItem(playDropDown,
 				"Barclays ATP World Tour Finals 2011 Tsonga v Federer - set 3",
 				"data/recorded/tso-fed-set-3.csv");
+
+		makeRecordedItem(
+				playDropDown,
+				"Barclays ATP World Tour Finals 2011 Tsonga v Federer with Fracsoft - set 3",
+				"data/recorded/fracsoft-score.csv");
 
 		MenuItem playItem = new MenuItem(playDropDown, SWT.PUSH);
 		playItem.setText("From File");
@@ -251,9 +257,11 @@ public class DashboardMenu {
 
 			// new Thread(r).start();
 			// pd.open();
-			
-			//dashboardWindow.getCurrentDashboard().setMatch(r.getMatch());
-			
+
+			// dashboardWindow.getCurrentDashboard().setMatch(r.getMatch());
+
+			Match m = new HistoricalMatch(filename, setBettingFilename, pd);
+			m.getScore().setServer(PlayerEnum.PLAYER1);
 			dashboardWindow.getCurrentDashboard().setMatch(
 					new HistoricalMatch(filename, setBettingFilename, pd));
 
