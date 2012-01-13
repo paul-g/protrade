@@ -39,6 +39,7 @@ public class BetPlacingShell extends Dialog {
 	private Label secondPlayerWinnerSummary;
 	private String firstPlayerWinnerText;
 	private String secondPlayerWinnerText;
+	private Label betProfit;
 
 	private final Match match;
 	private PlayerEnum betPlayer;
@@ -46,7 +47,6 @@ public class BetPlacingShell extends Dialog {
 	private String betDetails;
 	private Color color;
 
-	
 	public BetPlacingShell(OddsButton button, Match match,
 			PlayerEnum betPlayer, BetTypeEnum betType, double initialOdds,
 			String betDetails) {
@@ -70,42 +70,46 @@ public class BetPlacingShell extends Dialog {
 		this.getShell().setBackground(color);
 		setGridLayout();
 		GridData infoGridData = getInfoGridData();
-//		GridData gridData = getFirstGridData();
-//		GridData gridData2 = getSecondGridData();
-//
+		// GridData gridData = getFirstGridData();
+		// GridData gridData2 = getSecondGridData();
+		//
 		createInfoLabel(betType, betDetails, infoGridData, color);
-		createInfoRow(betType,match, betPlayer, initialOdds, infoGridData, color);
+		createInfoRow(betType, match, betPlayer, initialOdds, infoGridData,
+				color);
 		Label lastRow = new Label(betShell, SWT.NONE);
 		lastRow.setText(betDetails);
 		lastRow.setBackground(color);
 		lastRow.setLayoutData(getGridData7());
-//		createOddsFields(gridData, gridData2);
-//		createAmountFields(gridData, gridData2);
-//		addTextFieldsListeners(match, betType, betPlayer);
-//
-//		createProfitAndLiabilityLabels(betType, infoGridData);
-//		createWinnerProfitLabels(match, betType, betPlayer, infoGridData);
-//
-//		createErrorLabel(infoGridData);
+		// createOddsFields(gridData, gridData2);
+		// createAmountFields(gridData, gridData2);
+		// addTextFieldsListeners(match, betType, betPlayer);
+		//
+		// createProfitAndLiabilityLabels(betType, infoGridData);
+		// createWinnerProfitLabels(match, betType, betPlayer, infoGridData);
+		//
+		// createErrorLabel(infoGridData);
 
 		return super.createDialogArea(parent);
 	}
 
-	private void createInfoRow(BetTypeEnum betType, Match match, PlayerEnum betPlayer,
-			double initialOdds, GridData infoGridData, Color color) {
+	private void createInfoRow(BetTypeEnum betType, Match match,
+			PlayerEnum betPlayer, double initialOdds, GridData infoGridData,
+			Color color) {
 		Label name = new Label(betShell, SWT.NONE);
-		name.setText(match.getPlayer(betPlayer).getFirstname() + " " + match.getPlayer(betPlayer).getLastname());
+		name.setText(match.getPlayer(betPlayer).getFirstname() + " "
+				+ match.getPlayer(betPlayer).getLastname());
 		name.setBackground(color);
 		name.setLayoutData(infoGridData);
-		Text odds = new Text(betShell, SWT.NONE);
-		odds.setText(initialOdds+"");
-		odds.setBackground(color);
-		Text stake = new Text(betShell, SWT.NONE);
-		stake.setText(100+"");
-		odds.setBackground(color);
-		Label prof = new Label(betShell, SWT.NONE);
-		prof.setText((initialOdds*100-100)+"");
-		prof.setBackground(color);
+		oddsText = new Text(betShell, SWT.NONE);
+		oddsText.setText(initialOdds + "");
+		oddsText.setBackground(color);
+		amountText = new Text(betShell, SWT.NONE);
+		amountText.setText(100 + "");
+		amountText.setBackground(color);
+		betProfit = new Label(betShell, SWT.NONE);
+		betProfit.setText((initialOdds * 100 - 100) + "");
+		betProfit.setBackground(color);
+		addTextFieldsListeners(match, betType, betPlayer);
 	}
 
 	@Override
@@ -131,6 +135,7 @@ public class BetPlacingShell extends Dialog {
 			betShell.dispose();
 		} else
 			setErrorText(INVALID_PRICE);
+		super.okPressed();
 
 	}
 
@@ -180,11 +185,14 @@ public class BetPlacingShell extends Dialog {
 		amountText.addListener(SWT.CHANGED, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				updateProfitAndLiability(betType);
-				updateOverallPossibleProfits(match, betType, betPlayer);
+//				updateProfitAndLiability(betType);
+//				updateOverallPossibleProfits(match, betType, betPlayer);
 				try {
-					Double.parseDouble(amountText.getText());
-					errorLabel.setVisible(false);
+					System.out.println("zdesy");
+					betProfit.setText((Double.parseDouble(amountText.getText()) * Double
+							.parseDouble(oddsText.getText())) + "");
+//					errorLabel.setVisible(false);
+					System.out.println("vishel");
 				} catch (NumberFormatException nfe) {
 					setErrorText(AMOUNT_NUMBER_EXCEPTION);
 					return;
@@ -194,14 +202,16 @@ public class BetPlacingShell extends Dialog {
 		oddsText.addListener(SWT.CHANGED, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				updateProfitAndLiability(betType);
-				updateOverallPossibleProfits(match, betType, betPlayer);
+//				updateProfitAndLiability(betType);
+//				updateOverallPossibleProfits(match, betType, betPlayer);
 				try {
+					double amount = Double.parseDouble(amountText.getText());
 					double odds = Double.parseDouble(oddsText.getText());
-					if (BetManager.isValidPrice(odds))
-						errorLabel.setVisible(false);
-					else
-						setErrorText(INVALID_PRICE);
+					betProfit.setText((amount * odds) + "");
+//					if (BetManager.isValidPrice(odds))
+//						errorLabel.setVisible(false);
+//					else
+//						setErrorText(INVALID_PRICE);
 				} catch (NumberFormatException nfe) {
 					setErrorText(ODDS_NUMBER_EXCEPTION);
 					return;
@@ -269,22 +279,23 @@ public class BetPlacingShell extends Dialog {
 		Label infoLabel = new Label(betShell, SWT.NONE);
 		infoLabel.setLayoutData(infoGridData);
 		Label odds = new Label(betShell, SWT.NONE);
-		odds.setText("Your"+"\n"+"odds");
+		odds.setText("Your" + "\n" + "odds");
 		Label stake = new Label(betShell, SWT.NONE);
-		stake.setText("Your"+"\n"+"stake");
+		stake.setText("Your" + "\n" + "stake");
 		Label profit = new Label(betShell, SWT.NONE);
 		if (betType.equals(BetTypeEnum.B)) {
 			infoLabel.setText("Back (Bet for)");
-			profit.setText("Your"+"\n"+"profit");
+			profit.setText("Your" + "\n" + "profit");
 		} else {
 			infoLabel.setText("Lay (Bet against)");
-			profit.setText("Your"+"\n"+"liability");
+			profit.setText("Your" + "\n" + "liability");
 		}
 		infoLabel.setBackground(c);
 		odds.setBackground(c);
 		stake.setBackground(c);
 		profit.setBackground(c);
-		
+		createErrorLabel(infoGridData);
+
 	}
 
 	protected void setErrorText(String message) {
@@ -325,7 +336,7 @@ public class BetPlacingShell extends Dialog {
 		gridData.horizontalSpan = 7;
 		return gridData;
 	}
-	
+
 	private GridData getGridData7() {
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 10;
