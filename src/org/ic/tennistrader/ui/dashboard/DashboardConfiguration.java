@@ -22,11 +22,12 @@ import org.ic.tennistrader.model.betting.BetController;
 import org.ic.tennistrader.score.StatisticsPanel;
 import org.ic.tennistrader.ui.chart.DualChartWidget;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
-import org.ic.tennistrader.ui.updatable.MatchDataView;
 import org.ic.tennistrader.ui.updatable.MarketDataGrid;
+import org.ic.tennistrader.ui.updatable.MatchDataView;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.SavableWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
+import org.ic.tennistrader.ui.widgets.browser.BrowserWidget;
 
 public class DashboardConfiguration {
 
@@ -152,12 +153,12 @@ public class DashboardConfiguration {
 				widget = new WimbledonScorePanel(wc);
 				log.info("Added score panel");
 			} else if (type.equals(WidgetType.MARKET_GRID.toString())) {
-				MarketDataGrid grid = new MarketDataGrid(wc,
-						SWT.NONE);
-				BetController betController = new BetController(Arrays.asList(grid
-						.getP1BackButtons()), Arrays.asList(grid.getP1LayButtons()),
-						Arrays.asList(grid.getP2BackButtons()), Arrays.asList(grid
-								.getP2LayButtons()), match);
+				MarketDataGrid grid = new MarketDataGrid(wc, SWT.NONE);
+				BetController betController = new BetController(
+						Arrays.asList(grid.getP1BackButtons()),
+						Arrays.asList(grid.getP1LayButtons()),
+						Arrays.asList(grid.getP2BackButtons()),
+						Arrays.asList(grid.getP2LayButtons()), match);
 				grid.setBetController(betController);
 				widget = grid;
 				log.info("Added chart");
@@ -165,6 +166,8 @@ public class DashboardConfiguration {
 				widget = new StatisticsPanel(wc);
 			} else if (type.equals(WidgetType.MATCH_VIEW.toString())) {
 				widget = new MatchDataView(wc, SWT.NONE);
+			} else if (type.equals(WidgetType.BROWSER.toString())) {
+				widget = new BrowserWidget(wc, SWT.NONE);
 			} else {
 				widget = new WidgetPlaceholder(dashboard, SWT.BORDER, wc);
 			}

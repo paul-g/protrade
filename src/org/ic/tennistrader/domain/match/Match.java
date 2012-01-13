@@ -152,4 +152,5 @@ public abstract class Match {
 	public String getStatus() {
 		return isInPlay() ? "In Progress" : "Not In Progress";
 	}
+
 }

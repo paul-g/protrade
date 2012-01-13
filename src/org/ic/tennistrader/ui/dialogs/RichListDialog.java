@@ -25,8 +25,6 @@ public abstract class RichListDialog {
 		ScrolledComposite sc = new ScrolledComposite(dialog, SWT.H_SCROLL
 				| SWT.V_SCROLL);
 
-		// Composite sc = new Composite(dialog, SWT.BORDER);
-		sc.setLayout(new FillLayout());
 		RichListView r = new RichListView(sc, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, true);
 		r.setLayout(gridLayout);
@@ -45,7 +43,6 @@ public abstract class RichListDialog {
 				Display.getCurrent().getClientArea().height / 2);
 
 		dialog.open();
-		dialog.setSize(200, 200);
 	}
 
 	protected abstract void addElements(RichListView r);

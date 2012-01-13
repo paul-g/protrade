@@ -1,11 +1,11 @@
 package org.ic.tennistrader.domain.match;
 
+import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
-
-import static org.ic.tennistrader.domain.match.PlayerEnum.casePlayer;
 
 public class Score {
 
@@ -218,7 +218,7 @@ public class Score {
 		}
 		currentSet = scores.get(maximumSetsPlayed - 1);
 	}
-	
+
 	public void setSetsVariable(int[] playerOneGames, int[] playerTwoGames) {
 		scores.clear();
 		for (int i = 0; i < playerOneGames.length; i++) {
@@ -237,4 +237,15 @@ public class Score {
 			return PlayerEnum.PLAYER2;
 	}
 
+	public int getSetsPlayed() {
+		return getPlayerOneSets() + getPlayerTwoSets();
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Score) {
+			return ((Score) object).toString().equals(toString());
+		}
+		return false;
+	}
 }

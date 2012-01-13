@@ -1,5 +1,7 @@
 package org.ic.tennistrader.ui.widgets.browser;
 
+import java.util.Stack;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -17,6 +19,11 @@ public class BrowserWidget extends MatchViewerWidget {
 
 	private static Logger log = Logger.getLogger(BrowserWidget.class);
 
+	private Browser browser;
+
+	private final Stack<String> historyBack = new Stack<String>();
+	private final Stack<String> historyForward = new Stack<String>();
+
 	public BrowserWidget(Composite parent, int style) {
 		super(parent, style);
 		setLayout(makeLayout());
@@ -24,7 +31,6 @@ public class BrowserWidget extends MatchViewerWidget {
 		bc.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,
 				1));
 
-		final Browser browser;
 		try {
 			browser = new Browser(this, SWT.NONE);
 		} catch (SWTError e) {
@@ -32,7 +38,24 @@ public class BrowserWidget extends MatchViewerWidget {
 			return;
 		}
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		browser.setUrl("http://www.atpworldtour.com/Rankings/Singles.aspx");
+	}
+
+	public void setUrl(String url) {
+		String oldUrl = browser.getUrl();
+		if (oldUrl != null)
+			historyBack.push(oldUrl);
+		if (url != null)
+			browser.setUrl(url);
+	}
+
+	public void back() {
+		if (!historyBack.isEmpty())
+			setUrl(historyForward.push(historyBack.pop()));
+	}
+
+	public void forward() {
+		if (!historyForward.isEmpty())
+			setUrl(historyBack.push(historyForward.pop()));
 	}
 
 	private Layout makeLayout() {
@@ -59,7 +82,6 @@ public class BrowserWidget extends MatchViewerWidget {
 
 	@Override
 	public WidgetType getWidgetType() {
-		// TODO Auto-generated method stub
-		return null;
+		return WidgetType.BROWSER;
 	}
 }
