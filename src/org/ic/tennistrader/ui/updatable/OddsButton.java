@@ -129,7 +129,7 @@ public class OddsButton extends Composite {
 										.getMatch(), betPlayer, betType,
 								initOdds, betDetails);
 						betPlacingShell.open();
-						
+					
 //						betPlacingShell
 //								.addDisposeListener(new DisposeListener() {
 //									@Override
