@@ -251,7 +251,11 @@ public class DashboardMenu {
 
 			// new Thread(r).start();
 			// pd.open();
-			dashboardWindow.getCurrentDashboard().setMatch(r.getMatch());
+			
+			//dashboardWindow.getCurrentDashboard().setMatch(r.getMatch());
+			
+			dashboardWindow.getCurrentDashboard().setMatch(
+					new HistoricalMatch(filename, setBettingFilename, pd));
 
 		}
 	}

@@ -9,7 +9,7 @@ public class PredictedComputer extends SeriesComputer {
 
 	@Override
 	public double[] computeValues(PlayerEnum player, ChartData chartData,
-			int startIndex) {
+			int startIndex, boolean inverted) {
 		double[] values = new double[0];
 		ArrayList<Double> oldValues;
 		if (chartData != null) {
@@ -21,15 +21,20 @@ public class PredictedComputer extends SeriesComputer {
 			}
 			values = new double[oldValues.size() - startIndex];
 			for (int i = startIndex; i < oldValues.size(); i++)
-				values[i - startIndex] = oldValues.get(i);
+				if (inverted)
+					values[i - startIndex] = Math.pow(oldValues.get(i), -1) * 100;
+				else
+					values[i - startIndex] = oldValues.get(i);
 		}
 		return values;
 	}
 
+	/*
 	@Override
 	protected double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	*/
 
 }

@@ -335,6 +335,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		MOddsMarketData modds = new MOddsMarketData();
 		try {
 			if (marketId == -1) {
+				System.out.println("do getEvents");
 				queriesNumber++;
 				GetEventsResp resp = GlobalAPI.getEvents(apiContext,
 						eventBetfair.getBetfairId());
