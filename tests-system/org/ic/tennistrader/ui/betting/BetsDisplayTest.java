@@ -16,8 +16,10 @@ import org.ic.tennistrader.utils.Pair;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.betting.BetManager;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class BetsDisplayTest extends DisplayTest{
 	BetsDisplay betsDisplay;
 	

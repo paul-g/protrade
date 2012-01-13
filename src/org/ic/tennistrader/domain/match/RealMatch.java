@@ -17,6 +17,10 @@ public class RealMatch extends Match{
 	private EventBetfair eventBetfair;
 	private boolean namesSet = false;
 	
+	public boolean isNamesSet() {
+		return namesSet;
+	}
+
 	public RealMatch(String player1, String player2, EventBetfair eb) {
 	    this.score = new Score();
 	    String name = eb.getName();
@@ -71,7 +75,7 @@ public class RealMatch extends Match{
 	
 	public boolean isInPlay(){
         if (this.getLastMarketData() == null)
-            this.addMarketData(BetfairExchangeHandler.getMatchOddsMarketData(this.getEventBetfair()));
+            this.addMarketData(BetfairExchangeHandler.getMatchOddsMarketData(this));
         return this.getLastMarketData().getDelay() > 0;
 	}
 	

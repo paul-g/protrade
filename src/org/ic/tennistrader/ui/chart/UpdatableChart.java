@@ -30,7 +30,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	protected List<SeriesProperties> initialSeries;
 	protected Slider slider;
 	protected final int sampleSize = 200;
-	private int startingIndex = 1;
+	private int startingIndex = 0;
 	private Composite parent;
 	private Menu menu;
 	protected ChartMenu chartMenu;

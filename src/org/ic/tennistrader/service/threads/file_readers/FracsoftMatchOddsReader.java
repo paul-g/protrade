@@ -64,7 +64,8 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 				trim(lines2);
 
 				MOddsMarketData data = new MOddsMarketData();
-				data.setDate(new Date(Long.parseLong(lines1[TIME_OFFSET])));
+				//data.setDate(new Date(Long.parseLong(lines1[TIME_OFFSET])));
+				data.setTime(new Date(Long.parseLong(lines1[TIME_OFFSET])));
 				
 				data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));
 				data.setMatchStatus(lines1[STATUS_OFFSET]);

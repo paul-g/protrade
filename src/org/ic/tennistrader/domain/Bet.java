@@ -121,4 +121,11 @@ public final class Bet {
                 + this.getAmount()
                 + "£ at " + this.getOdds() + "";
     }
+
+	public double getPossibleProfit() {
+		if (this.type.equals(BetTypeEnum.B)) 
+			return this.getOdds() * this.getAmount();
+		else
+			return this.getAmount();
+	}
 }

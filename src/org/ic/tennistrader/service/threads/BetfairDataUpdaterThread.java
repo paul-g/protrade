@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.markets.SetBettingMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.model.connection.BetfairExchangeHandler;
@@ -41,7 +42,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 		List<EventBetfair> events = new ArrayList<EventBetfair>(
 				synchronizedEvents.getEvents());
 		for (EventBetfair eb : events) {
-			// System.out.println("Size of events - " + events.size());
+			System.out.println("Size of events - " + events.size());
 			RealMatch match = matches.get(eb);
 			if (match.isInPlay() || match.getLastMarketData() == null || i == 0) {
 				/*			
@@ -54,19 +55,23 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 					new CompleteMarketData(marketData, setBetting);
 				*/
 				
-				
+				MOddsMarketData marketData = BetfairExchangeHandler
+						.getMatchOddsMarketData(match);
+				SetBettingMarketData setBetting = new SetBettingMarketData();
+
+				CompleteMarketData completeMarketData = new CompleteMarketData(
+						marketData, setBetting);
+				/*
 				CompleteMarketData completeMarketData = 
 					BetfairExchangeHandler.getCompleteMarketData(match);
 				MOddsMarketData marketData = completeMarketData.getmOddsMarketData();
-				if (marketData == null) 
-					System.out.println("E null");
-				
+				*/
 				if (marketData.getPl1Back() != null) {
 					match.addMarketData(marketData);
 				}
 				newMap.put(match, completeMarketData);
 			}
-			i = (i + 1) % 3;
+			i = (i + 1) % 1;
 		}
 		DataManager.handleEvent(newMap);
 		try {

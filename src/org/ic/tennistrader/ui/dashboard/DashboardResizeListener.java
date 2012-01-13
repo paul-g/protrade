@@ -22,7 +22,7 @@ final class DashboardResizeListener implements Listener {
 		Rectangle area = this.dashboard.getClientArea();
 
 		Dashboard.log.info("Previous client area " + this.dashboard.clientArea + " "
-				+ " new client area" + this.dashboard.getClientArea());
+				+ " new client area " + this.dashboard.getClientArea());
 
 		if (this.dashboard.clientArea.width != 0 && this.dashboard.clientArea.height != 0
 				&& area.width != 0 && area.height != 0) {

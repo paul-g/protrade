@@ -58,8 +58,7 @@ public class BetController {
 
 	public String getBettingDetails(OddsButton button)
 			throws OddsButtonNotFoundException {
-		String info = (getBetType(button) == BetTypeEnum.B ? "Back: " : "Lay: ")
-				+ "You are betting on "
+		String info = "You are betting on "
 				+ (getBetPlayer(button).equals(PlayerEnum.PLAYER1) ? match
 						.getPlayerOne().toString() : match.getPlayerTwo()
 						.toString());

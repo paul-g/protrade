@@ -12,7 +12,7 @@ import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.exceptions.MatchNotFinishedException;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
-import org.ic.tennistrader.ui.betting.BetsDisplay;
+import org.ic.tennistrader.ui.toolbars.BetsTable;
 import org.ic.tennistrader.ui.toolbars.ProfileToolBar;
 import org.ic.tennistrader.utils.Pair;
 import static org.ic.tennistrader.utils.Pair.pair;
@@ -22,7 +22,8 @@ public class BetManager {
     private static List<Bet> matchedBets = new ArrayList<Bet>();
     private static List<Bet> unmatchedBets = new ArrayList<Bet>();
     private static Logger log = Logger.getLogger(BetManager.class);
-    private static DecimalFormat twoDForm = new DecimalFormat("#.##");;
+    private static DecimalFormat twoDForm = new DecimalFormat("#.##");
+    private static BetsTable bt;
     
     public static void placeBet(Match match, PlayerEnum player, BetTypeEnum betType, double odds, double amount) {
         Bet newBet = new Bet(match, player, betType, pair(odds, amount));
@@ -43,16 +44,15 @@ public class BetManager {
         
         addMatchedBetAmount(newBet);
         
-        if (BetsDisplay.getComposite() != null)
-            BetsDisplay.addBet(newBet);            
+        if (bt != null) bt.refresh();
+        ProfileToolBar.updateLiabilityAndProfit();
     }
     
     private static void updatePossibleProfits(Bet newBet) {
 		if (matchMarketData.containsKey(newBet.getMatch())) {
 			VirtualBetMarketInfo marketInfo = matchMarketData.get(newBet.getMatch());
 			marketInfo.addFirstPlayerWinnerProfit(newBet.getFirstPlayerWinnerProfit());
-			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());
-			ProfileToolBar.updateLiabilityAndProfit();
+			marketInfo.addSecondPlayerWinnerProfit(newBet.getSecondPlayerWinnerProfit());			
 		}
 	}
 
@@ -154,7 +154,7 @@ public class BetManager {
 					double availableAmount = getMaxAvailableAmount(bet);
 					if (availableAmount > 0) {
 						matchBet(virtualMarketInfo, availableAmount, bet);
-						BetsDisplay.updateUnmatchedBet(bet);
+						if (bt != null) bt.refresh();
 						if (bet.getUnmatchedValue() == 0)
 							newMatchedBets.add(bet);
 					}
@@ -206,7 +206,7 @@ public class BetManager {
 			for (Bet bet : matchedBets) {
 				if (bet.getMatch().equals(match)) {
 					bet.setProfit(getBetProfit(bet, isBetSuccessful(bet, winner)));
-					BetsDisplay.addSettledBet(bet);
+					bt.refresh();
 				}
 			}
 		} catch (MatchNotFinishedException e1) {
@@ -286,6 +286,7 @@ public class BetManager {
     public static double getTotalLiabiltiy() {
     	double totalLiability = 0;
     	for (Match match : matchMarketData.keySet()) {
+    		System.out.println("Adding liability for " + match.toString() + " which is " + matchMarketData.get(match).getLiability());
     		totalLiability += matchMarketData.get(match).getLiability();
     	}
     	return Double.valueOf(twoDForm.format(totalLiability));
@@ -338,5 +339,17 @@ public class BetManager {
 					.getSecondPlayerWinnerProfit();
 		}		
         return Double.valueOf(twoDForm.format(profit));
+	}
+	
+	public static void setBetsTable(BetsTable betstab) {
+		bt = betstab;
+	}
+	
+	public static List<Bet> getMatchedBetTab() {
+		return matchedBets;
+	}
+	
+	public static List<Bet> getUnmatchedBetTab() {
+		return unmatchedBets;
 	}
 }
