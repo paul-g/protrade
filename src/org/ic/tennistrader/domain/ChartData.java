@@ -76,36 +76,14 @@ public class ChartData {
 	}
 
 	public void updateData(MOddsMarketData data) {
-		//xSeries = addTime(xSeries, data.getDate());
+		// xSeries = addTime(xSeries, data.getDate());
 		xSeries.add(this.getDataSize(), Calendar.getInstance().getTime());
 
 		pl1YSeries = addValue(pl1YSeries, data.getPl1LastMatchedPrice());
 		pl2YSeries = addValue(pl2YSeries, data.getPl2LastMatchedPrice());
 
-		
-		try {
-			double[] result = new PredictionCalculator(match)
-					.calculateOddsWithStaticPWOS(match);
-			pl1Predicted = addValue(pl1Predicted, result[0]);
-			pl2Predicted = addValue(pl2Predicted, result[1]);
-		} catch (NullPointerException e) {
-			// System.out.println("NULL");
-			pl1Predicted = addValue(pl1Predicted,  0.0001);
-			pl2Predicted = addValue(pl2Predicted,  0.0001);
-		}
-		 		
-		
-		/*
-		PredictionCalculator calc = new PredictionCalculator(match);
-		double [] result = {0,0};
-		result = calc.calculateOddsWithStaticPWOS(match);
-		if (result[0] == 0) 
-			result[0] = 0.0001;
-		if (result[1] == 0) 
-			result[1] = 0.0001;
-		pl1Predicted = addValue(pl1Predicted, result[0]); 
-		pl2Predicted = addValue(pl2Predicted, result[1]);
-		*/
+		updatePrediction();
+
 		pl1Lay = addLay(pl1Lay, data.getPl1Back(), data.getPl1Lay());
 		pl2Lay = addLay(pl2Lay, data.getPl2Back(), data.getPl2Lay());
 		maPl1 = addMaValue(maPl1, pl1YSeries);
@@ -120,13 +98,28 @@ public class ChartData {
 		checkScoreEndOfSet();
 	}
 
+	private void updatePrediction() {
+		try {
+			double[] result = new PredictionCalculator(match)
+					.calculateOddsWithStaticPWOS(match);
+			pl1Predicted = addValue(pl1Predicted, result[0]);
+			pl2Predicted = addValue(pl2Predicted, result[1]);
+		} catch (NullPointerException e) {
+			// System.out.println("NULL");
+			pl1Predicted = addValue(pl1Predicted, 0.0001);
+			pl2Predicted = addValue(pl2Predicted, 0.0001);
+		}
+	}
+
 	private ArrayList<Date> addTime(ArrayList<Date> xSeries, Date date) {
 		int i = this.getDataSize();
-		if (date == null){
-			if (i == 0) xSeries.add(i, new Date()); 
-			else xSeries.add(i, xSeries.get(i-1));
+		if (date == null) {
+			if (i == 0)
+				xSeries.add(i, new Date());
+			else
+				xSeries.add(i, xSeries.get(i - 1));
 		} else {
-			xSeries.add(i,date);
+			xSeries.add(i, date);
 		}
 		return xSeries;
 	}
@@ -263,7 +256,6 @@ public class ChartData {
 	public ArrayList<Double> getPl1YSeries() {
 		return pl1YSeries;
 	}
-
 
 	public ArrayList<Double> getPl2YSeries() {
 		return pl2YSeries;

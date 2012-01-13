@@ -42,7 +42,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 		List<EventBetfair> events = new ArrayList<EventBetfair>(
 				synchronizedEvents.getEvents());
 		for (EventBetfair eb : events) {
-			System.out.println("Size of events - " + events.size());
+			//System.out.println("Size of events - " + events.size());
 			RealMatch match = matches.get(eb);
 			if (match.isInPlay() || match.getLastMarketData() == null || i == 0) {
 				/*			
@@ -55,8 +55,13 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 					new CompleteMarketData(marketData, setBetting);
 				*/
 				
+				/*
 				MOddsMarketData marketData = BetfairExchangeHandler
 						.getMatchOddsMarketData(match);
+						*/
+				MOddsMarketData marketData = BetfairExchangeHandler
+				.getCompressedMatchOddsMarketData(match);
+		
 				SetBettingMarketData setBetting = new SetBettingMarketData();
 
 				CompleteMarketData completeMarketData = new CompleteMarketData(

@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -36,6 +38,9 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	protected ChartMenu chartMenu;
 	protected String player1Name;
 	protected String player2Name;
+	protected boolean inverted = false;
+	protected String yAxisTitle;
+	protected String yAxisInvertedTitle;
 
 	public UpdatableChart(Composite parent, int style) {
 		super(parent, style);
@@ -71,14 +76,14 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		SeriesComputer seriesComputer = properties.getComputer();
 		properties.getChartSeries().setYSeries(
 				seriesComputer.computeValues(properties.getPlayer(),
-						chartData, startingIndex));
+						chartData, startingIndex, inverted));
 		if (properties.getMarketType().equals(MarketSeriesType.BACK_ODDS)) {
 			properties.getErrorBar().setPlusErrors(
 					seriesComputer.computePlusErrors(properties.getPlayer(),
-							chartData, startingIndex));
+							chartData, startingIndex, inverted));
 			properties.getErrorBar().setMinusErrors(
 					seriesComputer.computeMinusErrors(properties.getPlayer(),
-							chartData, startingIndex));
+							chartData, startingIndex, inverted));
 		}
 	}
 
@@ -163,6 +168,12 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			public void run() {
 				if (!isDisposed()) {
 					UpdatableChart.this.getAxisSet().getYAxis(0).adjustRange();
+					if (inverted)
+						UpdatableChart.this.getAxisSet().getYAxis(0).getTitle()
+								.setText(yAxisInvertedTitle);
+					else
+						UpdatableChart.this.getAxisSet().getYAxis(0).getTitle()
+								.setText(yAxisTitle);
 					redraw();
 				}
 				if (parent != null && !parent.isDisposed())
@@ -179,6 +190,7 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		for(final SeriesProperties prop : chartMenu.getSeriesItems()) {
 			createMenuItem(menu, prop);
 		}
+		
 		MenuItem settingsItem = new MenuItem(menu, SWT.BUTTON1);
 		settingsItem.setText("Settings...");
 		settingsItem.addListener(SWT.Selection, new Listener(){
@@ -192,8 +204,18 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 				csd.open();
 			}
 		});
+		
+		MenuItem invertItem = new MenuItem(menu, SWT.BUTTON1);
+		invertItem.setText("Invert axis");
+		invertItem.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event arg0) {
+				UpdatableChart.this.invertAxis();
+			}			
+		});
 	}
 	
+	protected abstract void invertAxis();
 	/*
 	private void updateMenu() {
 		List<MenuItem> menuItems = new ArrayList<MenuItem>();

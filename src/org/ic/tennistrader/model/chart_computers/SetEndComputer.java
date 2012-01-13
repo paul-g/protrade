@@ -9,7 +9,7 @@ public class SetEndComputer extends SeriesComputer {
 
 	@Override
 	public double[] computeValues(PlayerEnum player, ChartData chartData,
-			int startIndex) {
+			int startIndex, boolean inverted) {
 		int size = chartData.getEndOfSets().size() - startIndex;
 		double[] values = new double[size];
 		for (int i = 0; i < size; i++)
@@ -17,10 +17,12 @@ public class SetEndComputer extends SeriesComputer {
 		return values;
 	}
 
+	/*
 	@Override
 	protected double[] computeValues(ArrayList<Double> oldValues, int startIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	*/
 
 }

@@ -25,7 +25,7 @@ public class DualChartWidget extends MatchViewerWidget {
 	private final OverroundChart smallChart;
 	private ChartData chartData;
 	private Match match;
-	//private ChartSettings window = null;
+	// private ChartSettings window = null;
 
 	private static final Logger log = Logger.getLogger(DualChartWidget.class);
 
@@ -35,14 +35,14 @@ public class DualChartWidget extends MatchViewerWidget {
 
 		shell.setLayout(new FillLayout());
 
-		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv");
+		Match match = new HistoricalMatch("data/fracsoft/fracsoft1.csv", null);
 
-		//new DualChartWidget(shell, match);
+		// new DualChartWidget(shell, match);
 		DualChartWidget dualChart = new DualChartWidget(shell);
 		dualChart.setMatch(match);
 		shell.open();
 
-		while (!shell.isDisposed()) { 
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
@@ -56,8 +56,8 @@ public class DualChartWidget extends MatchViewerWidget {
 		setLayout(new FillLayout());
 
 		SashForm form = new SashForm(this, SWT.VERTICAL);
-		//Composite settingsPanel = new Composite(form, SWT.BORDER);
-		//initSettingsPanel(settingsPanel);
+		// Composite settingsPanel = new Composite(form, SWT.BORDER);
+		// initSettingsPanel(settingsPanel);
 
 		Slider slider = null;
 
@@ -77,8 +77,8 @@ public class DualChartWidget extends MatchViewerWidget {
 		setLayout(new FillLayout());
 
 		SashForm form = new SashForm(this, SWT.VERTICAL);
-		//Composite settingsPanel = new Composite(form, SWT.BORDER);
-		//initSettingsPanel(settingsPanel);
+		// Composite settingsPanel = new Composite(form, SWT.BORDER);
+		// initSettingsPanel(settingsPanel);
 
 		Slider slider = null;
 
@@ -89,7 +89,7 @@ public class DualChartWidget extends MatchViewerWidget {
 				chartData, slider);
 
 		DataManager.registerForMatchUpdate(this, match);
-		
+
 		slider = new Slider(form, SWT.HORIZONTAL);
 		initSlider(slider);
 
@@ -97,25 +97,17 @@ public class DualChartWidget extends MatchViewerWidget {
 	}
 
 	/*
-	private void initSettingsPanel(Composite settingsPanel) {
-		settingsPanel.setLayout(new FillLayout());
-		Button settings = new Button(settingsPanel, SWT.PUSH);
-		settings.setText("Chart settings");
-		settings.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				String namePl1 = match.getPlayerOne().toString();
-				String namePl2 = match.getPlayerTwo().toString();
-				if (window == null || window.isDisposed()) {
-					window = new ChartSettings(Display.getCurrent(),
-							largeChart, namePl1, namePl2);
-				} else {
-					window.forceActive();
-				}
-			}
-		});
-	}
-	*/
+	 * private void initSettingsPanel(Composite settingsPanel) {
+	 * settingsPanel.setLayout(new FillLayout()); Button settings = new
+	 * Button(settingsPanel, SWT.PUSH); settings.setText("Chart settings");
+	 * settings.addListener(SWT.Selection, new Listener() {
+	 * 
+	 * @Override public void handleEvent(Event arg0) { String namePl1 =
+	 * match.getPlayerOne().toString(); String namePl2 =
+	 * match.getPlayerTwo().toString(); if (window == null ||
+	 * window.isDisposed()) { window = new ChartSettings(Display.getCurrent(),
+	 * largeChart, namePl1, namePl2); } else { window.forceActive(); } } }); }
+	 */
 
 	private void initSlider(Slider slider) {
 		slider.setMaximum(1);
@@ -167,6 +159,6 @@ public class DualChartWidget extends MatchViewerWidget {
 		largeChart.setChartData(chartData);
 		smallChart.setMatch(match);
 		smallChart.setChartData(chartData);
-		//DataManager.registerForMatchUpdate(this, match);
+		// DataManager.registerForMatchUpdate(this, match);
 	}
 }

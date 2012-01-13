@@ -84,7 +84,7 @@ public class DashboardToolBar {
 
 		protected void openMatchView(String filename) {
 			if (filename != null) {
-				Match match = new HistoricalMatch(filename);
+				Match match = new HistoricalMatch(filename, null);
 				DashboardWindow.getInstance().getCurrentDashboard()
 						.setMatch(match);
 			}

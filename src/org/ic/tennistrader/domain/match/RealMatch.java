@@ -75,7 +75,7 @@ public class RealMatch extends Match{
 	
 	public boolean isInPlay(){
         if (this.getLastMarketData() == null)
-            this.addMarketData(BetfairExchangeHandler.getMatchOddsMarketData(this));
+            this.addMarketData(BetfairExchangeHandler.getCompressedMatchOddsMarketData(this));
         return this.getLastMarketData().getDelay() > 0;
 	}
 	

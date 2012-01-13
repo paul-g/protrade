@@ -13,10 +13,34 @@ import org.eclipse.swt.widgets.Shell;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.ui.dialogs.LiveMatchDialog;
+import org.ic.tennistrader.ui.dialogs.ProgressDialog;
 import org.ic.tennistrader.ui.main.DashboardWindow;
 import org.ic.tennistrader.ui.main.LayoutDialog;
 
 public class DashboardMenu {
+
+	private final class MatchRunnable implements Runnable {
+		private final String filename;
+		private final ProgressDialog pd;
+		private final String setBettingFilename;
+		private Match match;
+
+		private MatchRunnable(String filename, ProgressDialog pd,
+				String setBettingFilename) {
+			this.filename = filename;
+			this.pd = pd;
+			this.setBettingFilename = setBettingFilename;
+		}
+
+		@Override
+		public void run() {
+			match = new HistoricalMatch(filename, setBettingFilename, pd);
+		}
+
+		public Match getMatch() {
+			return match;
+		}
+	}
 
 	private static final Logger log = Logger.getLogger(DashboardMenu.class);
 
@@ -104,7 +128,7 @@ public class DashboardMenu {
 				dialog.setFilterPath(filterPath);
 				dialog.setFileName("myfile");
 
-				openMatchView(dialog.open());
+				openMatchView(dialog.open(), null);
 			}
 		});
 	}
@@ -129,7 +153,7 @@ public class DashboardMenu {
 		usOpenFinalFullShort.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
-				openMatchView(filePath);
+				openMatchView(filePath, null);
 			}
 		});
 	}
@@ -215,19 +239,24 @@ public class DashboardMenu {
 	}
 
 	/** Open a new match view */
-	private void openMatchView(String filename) {
+	private void openMatchView(final String filename,
+			final String setBettingFilename) {
+		log.info("Opening match view");
+		Match match;
 		if (filename != null) {
-			Match match = new HistoricalMatch(filename);
-			dashboardWindow.getCurrentDashboard().setMatch(match);
+			final ProgressDialog pd = new ProgressDialog(
+					dashboardWindow.getShell());
+			MatchRunnable r = new MatchRunnable(filename, pd,
+					setBettingFilename);
+
+			// new Thread(r).start();
+			// pd.open();
+			
+			//dashboardWindow.getCurrentDashboard().setMatch(r.getMatch());
+			
+			dashboardWindow.getCurrentDashboard().setMatch(
+					new HistoricalMatch(filename, setBettingFilename, pd));
+
 		}
 	}
-
-	/** Open a new match view */
-	private void openMatchView(String filename, String setBettingFilename) {
-		if (filename != null) {
-			Match match = new HistoricalMatch(filename, setBettingFilename);
-			dashboardWindow.getCurrentDashboard().setMatch(match);
-		}
-	}
-
 }

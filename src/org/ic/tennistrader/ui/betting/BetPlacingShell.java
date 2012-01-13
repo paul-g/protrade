@@ -7,7 +7,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -16,13 +15,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.PlayerEnum;
-import org.ic.tennistrader.ui.updatable.OddsButton;
-import org.ic.tennistrader.utils.Colours;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.ic.tennistrader.model.betting.BetManager;
+import org.ic.tennistrader.ui.updatable.OddsButton;
+import org.ic.tennistrader.utils.Colours;
 
 public class BetPlacingShell extends Dialog {
 	private Composite betShell;
@@ -35,7 +33,7 @@ public class BetPlacingShell extends Dialog {
 	private static final String PROFIT_TEXT = "Your possible profit: ";
 	private static final String LIABILITY_TEXT = "Your possible liability: ";
 	private static final double INITIAL_AMOUNT = 10;
-	private double initialOdds;
+	private final double initialOdds;
 	private Label firstPlayerWinnerSummary;
 	private Label secondPlayerWinnerSummary;
 	private String firstPlayerWinnerText;
@@ -46,9 +44,9 @@ public class BetPlacingShell extends Dialog {
 	
 	
 	private final Match match;
-	private PlayerEnum betPlayer;
-	private BetTypeEnum betType;
-	private String betDetails;
+	private final PlayerEnum betPlayer;
+	private final BetTypeEnum betType;
+	private final String betDetails;
 	private Color color;
 
 	public BetPlacingShell(OddsButton button, Match match,
@@ -232,7 +230,7 @@ public class BetPlacingShell extends Dialog {
 
 	private void addTextFieldsListeners(final Match match,
 			final BetTypeEnum betType, final PlayerEnum betPlayer) {
-		amountText.addListener(SWT.CHANGED, new Listener() {
+			amountText.addListener(SWT.CHANGED, new Listener() {
 			@Override
 			public void handleEvent(Event arg0) {
 				// updateProfitAndLiability(betType);

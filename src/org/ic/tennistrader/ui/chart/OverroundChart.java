@@ -64,6 +64,8 @@ public class OverroundChart extends UpdatableChart {
 
 		getTitle().setVisible(false);
 
+		yAxisTitle = yAxisInvertedTitle = yVolumeTitle;
+		
 		//createSeries(pl1Name, pl2Name);
 		
 		chartMenu = new ChartMenu();
@@ -275,6 +277,7 @@ public class OverroundChart extends UpdatableChart {
 				public void run() {
 					getAxisSet().getXAxis(0).adjustRange();
 					getAxisSet().getYAxis(0).adjustRange();
+					getAxisSet().getYAxis(1).adjustRange();
 				} 				
 			});			
 		}
@@ -282,6 +285,12 @@ public class OverroundChart extends UpdatableChart {
 
 	@Override
 	public void handleBettingMarketEndOFSet() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void invertAxis() {
 		// TODO Auto-generated method stub
 		
 	}
