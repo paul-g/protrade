@@ -55,8 +55,13 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 					new CompleteMarketData(marketData, setBetting);
 				*/
 				
+				/*
 				MOddsMarketData marketData = BetfairExchangeHandler
 						.getMatchOddsMarketData(match);
+						*/
+				MOddsMarketData marketData = BetfairExchangeHandler
+				.getCompressedMatchOddsMarketData(match);
+		
 				SetBettingMarketData setBetting = new SetBettingMarketData();
 
 				CompleteMarketData completeMarketData = new CompleteMarketData(

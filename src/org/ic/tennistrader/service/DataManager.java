@@ -83,6 +83,7 @@ public class DataManager {
        
         // start the thread
         if (!started){
+        	System.out.println("Starting betfair thread");
             started = true;
             start();
         }
