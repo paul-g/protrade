@@ -286,7 +286,7 @@ public class BetManager {
     public static double getTotalLiabiltiy() {
     	double totalLiability = 0;
     	for (Match match : matchMarketData.keySet()) {
-    		System.out.println("Adding liability for " + match.toString() + " which is " + matchMarketData.get(match).getLiability());
+    		//System.out.println("Adding liability for " + match.toString() + " which is " + matchMarketData.get(match).getLiability());
     		totalLiability += matchMarketData.get(match).getLiability();
     	}
     	return Double.valueOf(twoDForm.format(totalLiability));
