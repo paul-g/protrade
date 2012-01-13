@@ -24,7 +24,7 @@ public class PredictionCalculatorTest {
 	@Before
 	public void setUp() {
 		String filename = "data/test/fracsoft-reader/tso-fed.csv";
-		match = new HistoricalMatch(filename);
+		match = new HistoricalMatch(filename, null);
 		Statistics statsOne = new Statistics(0.615, 0.781, 0.525);
 		match.getPlayerOne().setStatistics(statsOne);
 		Statistics statsTwo = new Statistics(0.634, 0.785, 0.563);

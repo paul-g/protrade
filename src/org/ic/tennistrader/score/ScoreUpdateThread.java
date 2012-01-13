@@ -6,14 +6,11 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.match.Match;
-import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
-import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.ScriptException;
 import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -23,132 +20,157 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
-public class ScoreUpdateThread extends MatchUpdaterThread {    
-	
+public class ScoreUpdateThread extends MatchUpdaterThread {
+
 	private static Logger log = Logger.getLogger(ScoreUpdateThread.class);
 
-    public ScoreUpdateThread(Match match) {
-        this.match = match;
-    }
+	public ScoreUpdateThread(Match match) {
+		this.match = match;
+	}
 
-    public Score getScore() {
-        return match.getScore();
-    }
+	public Score getScore() {
+		return match.getScore();
+	}
 
-    /*
-     * Gets real-time scores from http://www.livexscores.com/ Emulates a
-     * firefox browser with javascript and AJAX enabled and fetches score
-     * data from website. Finally, it returns the data for further parsing
-     */
-    @SuppressWarnings("serial")
-    public String extractScores() throws Exception {
+	/*
+	 * Gets real-time scores from http://www.livexscores.com/ Emulates a firefox
+	 * browser with javascript and AJAX enabled and fetches score data from
+	 * website. Finally, it returns the data for further parsing
+	 */
+	@SuppressWarnings("serial")
+	public String extractScores() throws Exception {
 
-        // Create a webClient to emulate Firefox browser
-        WebClient webClient = new WebClient();// BrowserVersion.FIREFOX_3_6);
+		// Create a webClient to emulate Firefox browser
+		WebClient webClient = new WebClient();// BrowserVersion.FIREFOX_3_6);
 
-        // Customize all webclient listeners and handlers for no
-        webClient.setIncorrectnessListener(new IncorrectnessListener() {
-            public void notify(String string, Object object) {
-            }
-        });
-        webClient.setCssErrorHandler(new SilentCssErrorHandler());
-        webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
-            public void malformedScriptURL(HtmlPage page, String string,
-                    MalformedURLException exception) {
-            }
+		// Customize all webclient listeners and handlers for no
+		webClient.setIncorrectnessListener(new IncorrectnessListener() {
+			@Override
+			public void notify(String string, Object object) {
+			}
+		});
+		webClient.setCssErrorHandler(new SilentCssErrorHandler());
+		webClient.setJavaScriptErrorListener(new JavaScriptErrorListener() {
 
-            public void loadScriptError(HtmlPage page, URL url,
-                    Exception exception) {
-            }
+			@Override
+			public void timeoutError(HtmlPage arg0, long arg1, long arg2) {
+				// TODO Auto-generated method stub
 
-            public void scriptException(HtmlPage page,
-                    ScriptException exception) {
-            }
+			}
 
-            public void timeoutError(HtmlPage page, long int1, long int2) {
-            }
-        });
-        webClient.setAlertHandler(new AlertHandler() {
-            public void handleAlert(Page page, String message) {
-            }
-        });
-        webClient.setThrowExceptionOnScriptError(false);
-        webClient.setActiveXNative(true);
-        webClient.setCssEnabled(true);
+			@Override
+			public void scriptException(HtmlPage arg0, ScriptException arg1) {
+				// TODO Auto-generated method stub
 
-        webClient
-                .setAjaxController(new NicelyResynchronizingAjaxController() {
-                    @Override
-                    public boolean processSynchron(HtmlPage page,
-                            WebRequest request, boolean async) {
-                        return true;
-                    }
-                });
+			}
 
-        HtmlElement scores = null;
+			@Override
+			public void malformedScriptURL(HtmlPage arg0, String arg1,
+					MalformedURLException arg2) {
+				// TODO Auto-generated method stub
 
-        webClient.waitForBackgroundJavaScript(3000);
-        HtmlPage page = webClient
-                .getPage("http://www.livexscores.com/livescore/tennis");
+			}
 
-        // try 20 times to wait .5 second each for filling the page.
-        for (int i = 0; i < 2; i++) {
-            // page
-            scores = page.getElementById("allzapasy");
+			@Override
+			public void loadScriptError(HtmlPage arg0, URL arg1, Exception arg2) {
+				// TODO Auto-generated method stub
 
-            if (scores.asText() != "") {
-                break;
-            }
-            synchronized (page) {
-                page.wait(500);
-            }
-        }
+			}
+		});
+		// webClient.setJavaScriptErrorListener();
+		/*
+		 * // //webClient.setJavaScriptErrorListener(new
+		 * JavaScriptErrorListener() { public void malformedScriptURL(HtmlPage
+		 * page, String string, MalformedURLException exception) { }
+		 * 
+		 * public void loadScriptError(HtmlPage page, URL url, Exception
+		 * exception) { }
+		 * 
+		 * public void scriptException(HtmlPage page, ScriptException exception)
+		 * { }
+		 * 
+		 * public void timeoutError(HtmlPage page, long int1, long int2) { } });
+		 */
+		/*
+		 * webClient.setAlertHandler(new AlertHandler() {
+		 * 
+		 * @Override public void handleAlert(Page page, String message) { } });
+		 * webClient.setThrowExceptionOnScriptError(false);
+		 * webClient.setActiveXNative(true); webClient.setCssEnabled(true);
+		 */
 
-        scores = page.getElementById("allzapasy");
+		webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
+			@Override
+			public boolean processSynchron(HtmlPage page, WebRequest request,
+					boolean async) {
+				return true;
+			}
+		});
 
-        // Modify tennis balls gif elements of the website to
-        // readable text so as to identify the tennis player serving
-        Iterator<HtmlElement> iter = (scores.getElementsByAttribute("img",
-                "src", "/img/tennisball.gif")).iterator();
-        while (iter.hasNext()) {
-            ((HtmlElement) iter.next()).setTextContent("\nSERVER");
-        }
-        
-        String returnStr="";
-        // Getting the relevant scores
-        Iterator<DomNode> itr = scores.getChildren().iterator();
-        while(itr.hasNext()){
-        	itr.next();
-        	HtmlElement elem = (HtmlElement) itr.next();
-        	Iterator<DomNode> itr2 = elem.getChildren().iterator();
-        	while(itr2.hasNext()){
-        		DomNode elem2 = (DomNode) itr2.next();
-        		returnStr += elem2.asText();
-        	}
-        }
+		HtmlElement scores = null;
 
-        log.info("Extracted score");
+		webClient.waitForBackgroundJavaScript(3000);
+		HtmlPage page = webClient
+				.getPage("http://www.livexscores.com/livescore/tennis");
 
-        return returnStr;
-    }
-    
-  
+		// try 20 times to wait .5 second each for filling the page.
+		for (int i = 0; i < 2; i++) {
+			// page
+			scores = page.getElementById("allzapasy");
+
+			if (scores.asText() != "") {
+				break;
+			}
+			synchronized (page) {
+				page.wait(500);
+			}
+		}
+
+		scores = page.getElementById("allzapasy");
+
+		// Modify tennis balls gif elements of the website to
+		// readable text so as to identify the tennis player serving
+		Iterator<HtmlElement> iter = (scores.getElementsByAttribute("img",
+				"src", "/img/tennisball.gif")).iterator();
+		while (iter.hasNext()) {
+			iter.next().setTextContent("\nSERVER");
+		}
+
+		String returnStr = "";
+		// Getting the relevant scores
+		Iterator<DomNode> itr = scores.getChildren().iterator();
+		while (itr.hasNext()) {
+			itr.next();
+			HtmlElement elem = (HtmlElement) itr.next();
+			Iterator<DomNode> itr2 = elem.getChildren().iterator();
+			while (itr2.hasNext()) {
+				DomNode elem2 = itr2.next();
+				returnStr += elem2.asText();
+			}
+		}
+
+		log.info("Extracted score");
+
+		return returnStr;
+	}
+
 	@Override
 	protected void runBody() {
 		try {
-            String scoreString = extractScores();
-            System.out.println("YYYYYYYYYYYYYYY" + scoreString);
-            if (scoreString != null){
-            	new ScoreParser(scoreString, this.match).parseAndSetScores();
-            	//System.out.println("NNNNNNNNNNNNNNNNN" + match.getScoreAsString(PlayerEnum.PLAYER1));
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        try {
-            Thread.sleep(5000);
-        } catch (Exception e) {
-        }
+			String scoreString = extractScores();
+			System.out.println("YYYYYYYYYYYYYYY" + scoreString);
+			if (scoreString != null) {
+				new ScoreParser(scoreString, this.match).parseAndSetScores();
+				// System.out.println("NNNNNNNNNNNNNNNNN" +
+				// match.getScoreAsString(PlayerEnum.PLAYER1));
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (Exception e) {
+		}
 	}
 
 }

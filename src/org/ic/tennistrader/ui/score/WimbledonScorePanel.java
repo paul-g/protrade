@@ -263,7 +263,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	}
 
 	public void scoreThreadStart() {
-		ScoreUpdateThread scoreUpdateThread = new ScoreUpdateThread(match);
+		final ScoreUpdateThread scoreUpdateThread = new ScoreUpdateThread(match);
 		log.info("Check is match is live for score fetching");
 		// if (match.isInPlay()) {
 		log.info("Live match: starting score update thread");
@@ -276,6 +276,16 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		// System.out.println("NNNNNNNNNNNNNNNNN" +
 		// match.getScoreAsString(PlayerEnum.PLAYER1));
 		// }
+		getDisplay().timerExec(5000, new Runnable() {
+
+			@Override
+			public void run() {
+				log.info("Requesting new score");
+				match.setScore(scoreUpdateThread.getScore());
+				log.info(match.getScore());
+			}
+		});
+
 	}
 
 	@Override
