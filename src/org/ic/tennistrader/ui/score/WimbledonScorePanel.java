@@ -5,19 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
+import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.score.PredictionCalculator;
@@ -40,6 +45,9 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	private final List<Label> colLabels = new ArrayList<Label>();
 
 	private final Map<PlayerEnum, Map<Integer, Label>> labelMap = new HashMap<PlayerEnum, Map<Integer, Label>>();
+
+	private static final Logger log = Logger
+			.getLogger(WimbledonScorePanel.class);
 
 	private final static int[] SETS = { 1, 2, 3, 4 };
 
@@ -65,6 +73,22 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 	public WimbledonScorePanel(Composite parent) {
 		super(parent, SWT.NONE);
 		init(40, 40);
+	}
+
+	public static void main(String args[]) {
+		Display d = new Display();
+		Shell shell = new Shell(d);
+		shell.setLayout(new FillLayout());
+		Match m = new HistoricalMatch("data/fracsoft/fracsof1.csv", null);
+		m.setPlayer1(new Player("David", "Goffin"));
+		m.setPlayer2(new Player("Guillaume", "Rufin"));
+		WimbledonScorePanel wsp = new WimbledonScorePanel(shell, m);
+		shell.open();
+		shell.pack();
+		while (!shell.isDisposed()) {
+			if (!d.readAndDispatch())
+				d.sleep();
+		}
 	}
 
 	public WimbledonScorePanel(Composite parent, Match match) {
@@ -238,64 +262,50 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		return label;
 	}
 
+	public void scoreThreadStart() {
+		ScoreUpdateThread scoreUpdateThread = new ScoreUpdateThread(match);
+		log.info("Check is match is live for score fetching");
+		// if (match.isInPlay()) {
+		log.info("Live match: starting score update thread");
+		// only start score fetching for live matches
+		try {
+			scoreUpdateThread.start();
+		} catch (Exception e) {
+			// match.setScore(new Score());
+		}
+		// System.out.println("NNNNNNNNNNNNNNNNN" +
+		// match.getScoreAsString(PlayerEnum.PLAYER1));
+		// }
+	}
+
 	@Override
 	public void setScores() {
 
-		Score score = match.getScore();
-
-		System.out.println("Setting scores");
-		setPlayerScore(score, PlayerEnum.PLAYER1);
-		setPlayerScore(score, PlayerEnum.PLAYER2);
-
-		try {
-			double[] result = new PredictionCalculator(this.match)
-					.calculate(this.match);
-			setPlayerPrediction(PredictionCalculator.getP1Data(result),
-					PlayerEnum.PLAYER1);
-			setPlayerPrediction(PredictionCalculator.getP2Data(result),
-					PlayerEnum.PLAYER2);
-
-		} catch (Exception e) {
-		}
-	}
-
-	public void scoreThreadStart() {
-		ScoreUpdateThread scoreUpdateThread = new ScoreUpdateThread(match);
-		System.out.println("Check is match is live for score fetching");
-		if (match.isInPlay()) {
-			System.out.println("Live match: starting score update thread");
-			// only start score fetching for live matches
-			try {
-				scoreUpdateThread.start();
-			} catch (Exception e) {
-				// match.setScore(new Score());
-			}
-			// System.out.println("NNNNNNNNNNNNNNNNN" +
-			// match.getScoreAsString(PlayerEnum.PLAYER1));
-		}
-	}
-
-	public void setScores(MOddsMarketData newData) {
-
-		System.out.println("Setting scores");
+		log.info("Setting scores");
 		Score score = match.getScore();
 
 		setPlayerScore(score, PlayerEnum.PLAYER1);
 		setPlayerScore(score, PlayerEnum.PLAYER2);
 
 		try {
-			double[] result = new PredictionCalculator(this.match)
-					.calculate(this.match);
-
-			setPlayerPrediction(PredictionCalculator.getP1Data(result),
-					PlayerEnum.PLAYER1);
-			setPlayerPrediction(PredictionCalculator.getP2Data(result),
-					PlayerEnum.PLAYER2);
-			// newData.setplayer1PredictedOdds(result[8]);
-			// newData.setplayer2PredictedOdds(result[9]);
-
+			updatePrediction();
 		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
+	}
+
+	private void updatePrediction() {
+		log.info("Updating predicted odds");
+		double[] result = new PredictionCalculator(this.match)
+				.calculate(this.match);
+
+		setPlayerPrediction(PredictionCalculator.getP1Data(result),
+				PlayerEnum.PLAYER1);
+		setPlayerPrediction(PredictionCalculator.getP2Data(result),
+				PlayerEnum.PLAYER2);
+		// newData.setplayer1PredictedOdds(result[8]);
+		// newData.setplayer2PredictedOdds(result[9]);
+		log.info("Updated predicted odds");
 	}
 
 	private void setPlayerScore(Score score, PlayerEnum player) {
@@ -340,7 +350,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				setScores(newData);
+				setScores();
 			}
 		});
 	}

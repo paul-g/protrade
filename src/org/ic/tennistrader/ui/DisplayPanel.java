@@ -33,24 +33,25 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	private SashForm chartSash;
 
 	private static final Logger log = Logger.getLogger(DisplayPanel.class);
-	
-    public static void main(String args[]){
 
-    	Display display = new Display();
-        Shell shell = new Shell();
-        shell.setLayout(new FillLayout());
-    	DisplayPanel dp = new DisplayPanel(shell, SWT.NONE);
-    	Match match = new HistoricalMatch("data/test/fracsoft-reader/tso-fed.csv");
-    	dp.addMatchView(match);
-    	shell.open();
-    	display.sleep();
-    	
-    	while(!shell.isDisposed()){
-    		if (!display.readAndDispatch())
-    			display.sleep();
-    	}
-    	display.dispose();
-    }
+	public static void main(String args[]) {
+
+		Display display = new Display();
+		Shell shell = new Shell();
+		shell.setLayout(new FillLayout());
+		DisplayPanel dp = new DisplayPanel(shell, SWT.NONE);
+		Match match = new HistoricalMatch(
+				"data/test/fracsoft-reader/tso-fed.csv", null);
+		dp.addMatchView(match);
+		shell.open();
+		display.sleep();
+
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+	}
 
 	public DisplayPanel(Composite parent, int style) {
 		super(parent, style);
@@ -60,16 +61,17 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 		new PredictionGui(composite, SWT.BORDER, match).start();
 	}
 
+	@Override
 	public void handleMatchSelection(Match match) {
 		addMatchView(match);
 	}
 
 	private void addMatchView(Match match) {
-		//CTabItem[] items = folder.getItems();
+		// CTabItem[] items = folder.getItems();
 		String matchName = match.toString();
 
 		int pos = getTabPosition(matchName);
-        // check new tab has been open
+		// check new tab has been open
 		if (pos == -1) {
 
 			final CTabItem item = addTab(matchName);
@@ -79,11 +81,10 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 
 			SashForm comp = new SashForm(control, SWT.VERTICAL);
 			comp.setLayout(new FillLayout());
-	/*        if (firstTime) {
-				firstTime = false;
-				Image newImage = setColor(item, comp);
-				folder.setSelectionBackground(newImage);
-			}*/
+			/*
+			 * if (firstTime) { firstTime = false; Image newImage =
+			 * setColor(item, comp); folder.setSelectionBackground(newImage); }
+			 */
 
 			addMatchData(comp, match);
 
@@ -92,9 +93,9 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			this.chartSash = new SashForm(comp, SWT.HORIZONTAL);
 			addChart(chartSash, match);
 			addMatchViewer(chartSash);
-			try{
+			try {
 				chartSash.setWeights(new int[] { 70, 30 });
-			} catch (Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -136,15 +137,16 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 	}
 
 	public void addMatchViewer(Composite comp) {
-		Composite videoComposite; 
+		Composite videoComposite;
 		try {
 			final EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-			videoComposite = new Composite(comp, SWT.EMBEDDED	| SWT.NO_BACKGROUND);
+			videoComposite = new Composite(comp, SWT.EMBEDDED
+					| SWT.NO_BACKGROUND);
 			Frame videoFrame = SWT_AWT.new_Frame(videoComposite);
 			Canvas videoSurface = new Canvas();
 			videoSurface.setBackground(java.awt.Color.black);
 			videoFrame.add(videoSurface);
-			//videoComposite.setBounds(100, 100, 450, 200);
+			// videoComposite.setBounds(100, 100, 450, 200);
 			videoComposite.setVisible(true);
 
 			// "mediaPlayer" is a regular vlcj MediaPlayer instance
@@ -161,8 +163,8 @@ public class DisplayPanel extends StandardTabbedWidgetContainer implements
 			label.setText("Video loading failed");
 			label.pack();
 		}
-		//videoComposite.dispose();
-		//comp.getParent().layout();
+		// videoComposite.dispose();
+		// comp.getParent().layout();
 		/*
 		 * 
 		 * final Browser browser; try { browser = new Browser(comp, SWT.NONE); }

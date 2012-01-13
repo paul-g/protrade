@@ -21,7 +21,7 @@ public class UpdatableMarketDataGridTest extends DisplayTest {
 		super.setUp();
 		shell = new Shell(display, SWT.NONE);
 		filename = "data/test/fracsoft-reader/tso-fed.csv";
-		match = new HistoricalMatch(filename);
+		match = new HistoricalMatch(filename, null);
 		new MarketDataGrid(shell, SWT.NONE, match);
 	}
 
