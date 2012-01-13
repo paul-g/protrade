@@ -9,6 +9,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -45,7 +46,7 @@ public class ProfileToolBar {
 	private ToolItem liabilityToolItem;
 
 	private ToolItem profitToolItem;
-	
+
 	// temporary, since access to profile toolbar from BetManager is required
 	private static List<ProfileToolBar> profileToolBars = new ArrayList<ProfileToolBar>();
 
@@ -70,17 +71,22 @@ public class ProfileToolBar {
 		makeProfileItem();
 		profileToolBars.add(this);
 	}
-	
-	/** Method for coloured text label creation 
-	 * @return */
+
+	/**
+	 * Method for coloured text label creation
+	 * 
+	 * @return
+	 */
 	private Image createColouredText(String text, int color) {
-		// TODO : Terrible workaround, but works for now.
 		Display display = Display.getCurrent();
-		Image image = new Image (display, 7*(text.length()-1)+3, 13);
-		GC gc = new GC (image);
+		GC gc = new GC(toolbar);
+		Point p = gc.textExtent(text);
+		Image image = new Image(display, p.x, p.y);
+		gc.dispose();
+		gc = new GC(image);
 		gc.setForeground(display.getSystemColor(color));
 		gc.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		gc.drawText(text,0,0,false);
+		gc.drawText(text, 0, 0, false);
 		gc.dispose();
 		return image;
 	}
@@ -95,8 +101,10 @@ public class ProfileToolBar {
 	}
 
 	public void updateProfitToolItem() {
-		profitToolItem.setImage(createColouredText("£"
-				+ BetManager.getTotalMinimalProfit(), SWT.COLOR_DARK_GREEN));
+		profitToolItem
+				.setImage(createColouredText(
+						"£" + BetManager.getTotalMinimalProfit(),
+						SWT.COLOR_DARK_GREEN));
 	}
 
 	/** Liability Item constructor */
@@ -109,8 +117,8 @@ public class ProfileToolBar {
 	}
 
 	public void updateLiabilityToolItem() {
-		liabilityToolItem.setImage(createColouredText("£"
-				+ BetManager.getTotalLiabiltiy(), SWT.COLOR_RED));
+		liabilityToolItem.setImage(createColouredText(
+				"£" + BetManager.getTotalLiabiltiy(), SWT.COLOR_RED));
 	}
 
 	/** Profile button menu constructor */
@@ -276,9 +284,9 @@ public class ProfileToolBar {
 	public ToolBar getToolBar() {
 		return toolbar;
 	}
-	
+
 	public static void updateLiabilityAndProfit() {
-		for(ProfileToolBar ptb : profileToolBars) {
+		for (ProfileToolBar ptb : profileToolBars) {
 			ptb.updateLiabilityToolItem();
 			ptb.updateProfitToolItem();
 		}

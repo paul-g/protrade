@@ -100,17 +100,7 @@ public abstract class Match {
 	}
 
 	public String getScoreAsString(PlayerEnum player) {
-		final int[] scores = score.getPlayerScores(player);
-
-		StringBuffer scoresString = new StringBuffer();
-
-		for (int i = 0; i < scores.length; i++) {
-			scoresString.append(scores[i] + ",");
-		}
-
-		scoresString.append(score.getPlayerPoints(player));
-
-		return scoresString.toString();
+		return score.toString(player);
 	}
 
 	public void setPlayer1(Player player) {
@@ -152,4 +142,5 @@ public abstract class Match {
 	public String getStatus() {
 		return isInPlay() ? "In Progress" : "Not In Progress";
 	}
+
 }

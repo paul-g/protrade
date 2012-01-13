@@ -11,11 +11,9 @@ public abstract class MatchViewerWidget extends Composite implements
 
 	protected Match match;
 
-	
 	public MatchViewerWidget(Composite arg0, int arg1) {
 		super(arg0, arg1);
-		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
-
+		setBackgroundMode(SWT.INHERIT_DEFAULT);
 	}
 
 	public String getTitle() {
@@ -28,9 +26,9 @@ public abstract class MatchViewerWidget extends Composite implements
 	}
 
 	public void setMatchAndRegisterForUpdates(Match match) {
-		if (this.match != null) 
+		if (this.match != null)
 			DataManager.unregister(this, this.match);
-		//this.match = match;
+		// this.match = match;
 		setMatch(match);
 		DataManager.registerForMatchUpdate(this, match);
 	}
@@ -40,7 +38,7 @@ public abstract class MatchViewerWidget extends Composite implements
 			throw new RuntimeException("No match was set for this widget");
 		DataManager.registerForMatchUpdate(this, match);
 	}
-	
+
 	public Match getMatch() {
 		return match;
 	}

@@ -79,16 +79,17 @@ public class RichListElement extends Composite {
 	}
 
 	private Control makeDescription() {
-		Label l = new Label(this, SWT.BORDER);
+		Label l = new Label(this, SWT.BORDER | SWT.WRAP);
 		l.setText(description);
 		l.setLayoutData(makeDescriptionLayoutData());
 		return l;
 	}
 
-	
 	private Object makeDescriptionLayoutData() {
-		return new GridData(SWT.FILL, SWT.FILL, true, true, NCOLS - 1,
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, NCOLS - 1,
 				NROWS - 1);
+		gd.widthHint = 500;
+		return gd;
 	}
 
 	private Control makeTitle() {

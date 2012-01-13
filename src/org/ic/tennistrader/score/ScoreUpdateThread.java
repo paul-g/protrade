@@ -2,10 +2,15 @@ package org.ic.tennistrader.score;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.ic.tennistrader.domain.match.Match;
+import org.ic.tennistrader.domain.match.PlayerEnum;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.service.threads.MatchUpdaterThread;
 
@@ -21,6 +26,10 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 
 public class ScoreUpdateThread extends MatchUpdaterThread {
+
+	private Score prevScore;
+
+	private final List<Listener> scoreListener = new ArrayList<Listener>();
 
 	private static Logger log = Logger.getLogger(ScoreUpdateThread.class);
 
@@ -77,27 +86,6 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 
 			}
 		});
-		// webClient.setJavaScriptErrorListener();
-		/*
-		 * // //webClient.setJavaScriptErrorListener(new
-		 * JavaScriptErrorListener() { public void malformedScriptURL(HtmlPage
-		 * page, String string, MalformedURLException exception) { }
-		 * 
-		 * public void loadScriptError(HtmlPage page, URL url, Exception
-		 * exception) { }
-		 * 
-		 * public void scriptException(HtmlPage page, ScriptException exception)
-		 * { }
-		 * 
-		 * public void timeoutError(HtmlPage page, long int1, long int2) { } });
-		 */
-		/*
-		 * webClient.setAlertHandler(new AlertHandler() {
-		 * 
-		 * @Override public void handleAlert(Page page, String message) { } });
-		 * webClient.setThrowExceptionOnScriptError(false);
-		 * webClient.setActiveXNative(true); webClient.setCssEnabled(true);
-		 */
 
 		webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
 			@Override
@@ -109,7 +97,7 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 
 		HtmlElement scores = null;
 
-		webClient.waitForBackgroundJavaScript(3000);
+		// webClient.waitForBackgroundJavaScript(3000);
 		HtmlPage page = webClient
 				.getPage("http://www.livexscores.com/livescore/tennis");
 
@@ -158,11 +146,18 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 	protected void runBody() {
 		try {
 			String scoreString = extractScores();
-			System.out.println("YYYYYYYYYYYYYYY" + scoreString);
+			System.out.println("Score thread - Requesting new scores.");
 			if (scoreString != null) {
+				String prevScore = match.getScoreAsString(PlayerEnum.PLAYER1)
+						+ match.getScoreAsString(PlayerEnum.PLAYER2);
 				new ScoreParser(scoreString, this.match).parseAndSetScores();
-				// System.out.println("NNNNNNNNNNNNNNNNN" +
-				// match.getScoreAsString(PlayerEnum.PLAYER1));
+				String newScore = match.getScoreAsString(PlayerEnum.PLAYER1)
+						+ match.getScoreAsString(PlayerEnum.PLAYER2);
+				if (!newScore.equals(prevScore)) {
+					System.out.println("Score changed!: prev: \'" + prevScore
+							+ "\' \'" + newScore + "\'");
+					handleUpdate();
+				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -170,7 +165,17 @@ public class ScoreUpdateThread extends MatchUpdaterThread {
 		try {
 			Thread.sleep(5000);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 	}
 
+	public void addListener(Listener l) {
+		scoreListener.add(l);
+	}
+
+	private void handleUpdate() {
+		for (Listener l : scoreListener) {
+			l.handleEvent(new Event());
+		}
+	}
 }

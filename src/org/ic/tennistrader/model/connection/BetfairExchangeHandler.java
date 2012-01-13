@@ -1,6 +1,9 @@
 package org.ic.tennistrader.model.connection;
 
+import static org.ic.tennistrader.utils.Pair.pair;
+
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 import org.ic.tennistrader.domain.markets.CompleteMarketData;
 import org.ic.tennistrader.domain.markets.EventBetfair;
@@ -20,9 +23,7 @@ import org.ic.tennistrader.model.connection.InflatedCompleteMarketPrices.Inflate
 import org.ic.tennistrader.model.connection.InflatedCompleteMarketPrices.InflatedCompleteRunner;
 import org.ic.tennistrader.model.connection.InflatedMarketPrices.InflatedPrice;
 import org.ic.tennistrader.model.connection.InflatedMarketPrices.InflatedRunner;
-
 import org.ic.tennistrader.utils.Pair;
-import static org.ic.tennistrader.utils.Pair.pair;
 
 public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static Logger log = Logger.getLogger(BetfairExchangeHandler.class);
@@ -76,13 +77,14 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		MOddsMarketData modds = new MOddsMarketData();
 		// marketOdds.getExchangeId() == 1 ? Exchange.UK : Exchange.AUS;
 		Market selectedMarket = null;
+		Exchange exchange = Exchange.AUS;
 		if (getNames) {
-			selectedMarket = ExchangeAPI.getMarket(Exchange.UK, apiContext,
+			selectedMarket = ExchangeAPI.getMarket(exchange, apiContext,
 					marketId);
 		}
-		InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(Exchange.UK,
+		InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(exchange,
 				apiContext, marketId);
-		modds.setExchange(Exchange.UK.toString());
+		modds.setExchange(exchange.toString());
 		// modds.setDate(selectedMarket.getMarketTime().getTime());
 		// modds.setMatchStatus(selectedMarket.getMarketStatus().toString());//prices.getMarketStatus()
 		modds.setMatchStatus(prices.getMarketStatus());
@@ -173,14 +175,14 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		int setBettingMarketId = -1;
 		int mOddsMarketId = -1;
 
-		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
-			if (emb instanceof MarketBetfair
-					&& emb.getName().equals(SET_BETTING_MARKET_NAME))
-				setBettingMarketId = emb.getBetfairId();
-			if (emb instanceof MarketBetfair
-					&& emb.getName().equals(MATCH_ODDS_MARKET_NAME))
-				mOddsMarketId = emb.getBetfairId();
-		}
+		/*
+		 * for (EventMarketBetfair emb : eventBetfair.getChildren()) { if (emb
+		 * instanceof MarketBetfair &&
+		 * emb.getName().equals(SET_BETTING_MARKET_NAME)) setBettingMarketId =
+		 * emb.getBetfairId(); if (emb instanceof MarketBetfair &&
+		 * emb.getName().equals(MATCH_ODDS_MARKET_NAME)) mOddsMarketId =
+		 * emb.getBetfairId(); }
+		 */
 		try {
 			if (setBettingMarketId == -1 || mOddsMarketId == -1) {
 				GetEventsResp resp = GlobalAPI.getEvents(apiContext,
@@ -275,25 +277,24 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 			String bestLay = "";
 			if (r.getLayPrices().size() > 0) {
 				InflatedPrice p = r.getLayPrices().get(0);
-				bestLay = String.format("%,10.2f %s @ %,6.2f", p
-						.getAmountAvailable(), prices.getCurrency(), p
-						.getPrice());
+				bestLay = String.format("%,10.2f %s @ %,6.2f",
+						p.getAmountAvailable(), prices.getCurrency(),
+						p.getPrice());
 			}
 
 			String bestBack = "";
 			if (r.getBackPrices().size() > 0) {
 				InflatedPrice p = r.getBackPrices().get(0);
-				bestBack = String.format("%,10.2f %s @ %,6.2f", p
-						.getAmountAvailable(), prices.getCurrency(), p
-						.getPrice());
+				bestBack = String.format("%,10.2f %s @ %,6.2f",
+						p.getAmountAvailable(), prices.getCurrency(),
+						p.getPrice());
 			}
 
 			msg += (String
-					.format(
-							"%20s (%6d): Matched Amount: %,10.2f, Last Matched: %,6.2f, Best Back %s, Best Lay:%s",
-							marketRunner.getName(), r.getSelectionId(), r
-									.getTotalAmountMatched(), r
-									.getLastPriceMatched(), bestBack, bestLay))
+					.format("%20s (%6d): Matched Amount: %,10.2f, Last Matched: %,6.2f, Best Back %s, Best Lay:%s",
+							marketRunner.getName(), r.getSelectionId(),
+							r.getTotalAmountMatched(), r.getLastPriceMatched(),
+							bestBack, bestLay))
 					+ "\n";
 		}
 		msg += ("") + "\n";
@@ -354,7 +355,8 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 			}
 			// create the string to display the Match Odds
 			if (marketId != -1) {
-				modds = getCompressedMatchOddsData(!match.isNamesSet(), marketId);
+				modds = getCompressedMatchOddsData(!match.isNamesSet(),
+						marketId);
 			}
 		} catch (Exception e) {
 			log.info("Error fetching market info for the match - "
@@ -369,23 +371,24 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		MOddsMarketData modds = new MOddsMarketData();
 		// marketOdds.getExchangeId() == 1 ? Exchange.UK : Exchange.AUS;
 		Market selectedMarket = null;
+		Exchange exchange = Exchange.AUS;
 		if (getNames) {
-			selectedMarket = ExchangeAPI.getMarket(Exchange.UK, apiContext,
+			selectedMarket = ExchangeAPI.getMarket(exchange, apiContext,
 					marketId);
 		}
 		/*
-		InflatedMarketPrices prices = ExchangeAPI.getMarketPrices(Exchange.UK,
-				apiContext, marketId);
-		*/
+		 * InflatedMarketPrices prices =
+		 * ExchangeAPI.getMarketPrices(Exchange.UK, apiContext, marketId);
+		 */
 		InflatedCompleteMarketPrices prices = ExchangeAPI
-				.getCompleteMarketPrices(Exchange.UK, apiContext, marketId);
+				.getCompleteMarketPrices(exchange, apiContext, marketId);
 
-		modds.setExchange(Exchange.UK.toString());
+		modds.setExchange(exchange.toString());
 		// modds.setDate(selectedMarket.getMarketTime().getTime());
 		// modds.setMatchStatus(selectedMarket.getMarketStatus().toString());//prices.getMarketStatus()
-		
-		//modds.setMatchStatus(prices.getMarketStatus()); 
-		
+
+		// modds.setMatchStatus(prices.getMarketStatus());
+
 		// modds.setLocation(selectedMarket.getCountryISO3());
 		modds.setDelay(prices.getInPlayDelay());
 
@@ -421,33 +424,32 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		}
 		return modds;
 	}
-	
+
 	private static ArrayList<Pair<Double, Double>> setBackValues(
 			InflatedCompleteRunner r) {
 		ArrayList<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 2; i >= 0; i--) {
 			InflatedCompletePrice p = r.getPrices().get(i);
-			result.add(pair(p.getPrice(), p.getLayAmountAvailable()));
-		}
-		/*
-		for (InflatedCompletePrice p : r.getPrices()) {
 			result.add(pair(p.getPrice(), p.getBackAmountAvailable()));
 		}
-		*/
+		/*
+		 * for (InflatedCompletePrice p : r.getPrices()) {
+		 * result.add(pair(p.getPrice(), p.getBackAmountAvailable())); }
+		 */
 		return result;
 	}
 
-	private static ArrayList<Pair<Double, Double>> setLayValues(InflatedCompleteRunner r) {
+	private static ArrayList<Pair<Double, Double>> setLayValues(
+			InflatedCompleteRunner r) {
 		ArrayList<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
 		for (int i = 3; i < 6; i++) {
 			InflatedCompletePrice p = r.getPrices().get(i);
 			result.add(pair(p.getPrice(), p.getBackAmountAvailable()));
 		}
 		/*
-		for (InflatedCompletePrice p : r.getPrices()) {
-			result.add(pair(p.getPrice(), p.getLayAmountAvailable()));
-		}
-		*/
+		 * for (InflatedCompletePrice p : r.getPrices()) {
+		 * result.add(pair(p.getPrice(), p.getLayAmountAvailable())); }
+		 */
 		return result;
 	}
 }

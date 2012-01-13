@@ -18,7 +18,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.ic.tennistrader.domain.markets.MOddsMarketData;
@@ -34,7 +36,7 @@ import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 
 public class WimbledonScorePanel extends MatchViewerWidget implements
-		ScorePanel {
+		ScorePanel, Listener {
 	private Table scoreTable;
 	private PlayerEnum server;
 
@@ -82,8 +84,10 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		Shell shell = new Shell(d);
 		shell.setLayout(new FillLayout());
 		Match m = new HistoricalMatch("data/fracsoft/fracsof1.csv", null);
-		m.setPlayer1(new Player("David", "Goffin"));
-		m.setPlayer2(new Player("Guillaume", "Rufin"));
+
+		m.setPlayer1(new Player("Denis", "Kudla"));
+		m.setPlayer2(new Player("Eduardo", "Schwank"));
+
 		WimbledonScorePanel wsp = new WimbledonScorePanel(shell, m);
 		shell.open();
 		shell.pack();
@@ -91,6 +95,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 			if (!d.readAndDispatch())
 				d.sleep();
 		}
+		d.dispose();
 	}
 
 	public WimbledonScorePanel(Composite parent, Match match) {
@@ -154,14 +159,20 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		Map<Integer, Label> pl1Map = labelMap.get(PlayerEnum.PLAYER1);
 		pl1Map.get(1).setText("3");
 		pl1Map.get(2).setText("7");
-		Image ball = new Image(Display.getCurrent(), "images/ball.png");
-		Image ballSmall = new Image(Display.getCurrent(), ball.getImageData()
-				.scaledTo(20, 20));
+		Image ballSmall = getBallImage();
 
 		Map<Integer, Label> pl2Map = labelMap.get(PlayerEnum.PLAYER2);
 		pl2Map.get(1).setText("6");
 		pl2Map.get(2).setText("6");
 		pl2Map.get(SERVER).setImage(ballSmall);
+	}
+
+	private Image getBallImage() {
+		Image ball = new Image(Display.getCurrent(), "images/ball.png");
+		Image ballSmall = new Image(Display.getCurrent(), ball.getImageData()
+				.scaledTo(20, 20));
+		ball.dispose();
+		return ballSmall;
 	}
 
 	private static String makeSizer(int n) {
@@ -283,43 +294,52 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		// only start score fetching for live matches
 
 		try {
+			scoreUpdateThread.addListener(this);
 			scoreUpdateThread.start();
 		} catch (Exception e) {
 			// match.setScore(new Score());
 		}
-		// System.out.println("NNNNNNNNNNNNNNNNN" +
-		// match.getScoreAsString(PlayerEnum.PLAYER1));
-		// }
-		getDisplay().timerExec(5000, new Runnable() {
-
-			@Override
-			public void run() {
-				log.info("Requesting new score");
-				match.setScore(scoreUpdateThread.getScore());
-				log.info(match.getScore());
-			}
-		});
 	}
+
+	private String prevScore = null;
 
 	@Override
 	public void setScores() {
-
-		Score score = match.getScore();
-
-		// System.out.println("Setting scores");
-		setPlayerScore(score, PlayerEnum.PLAYER1);
-		setPlayerScore(score, PlayerEnum.PLAYER2);
+		String score = match.getScore().toString();
+		if (!score.equals(prevScore)) {
+			log.info("Score changed.");
+			setPlayerScore(match.getScore(), PlayerEnum.PLAYER1);
+			setPlayerScore(match.getScore(), PlayerEnum.PLAYER2);
+			updatePrediction();
+		}
+		prevScore = score;
 	}
 
 	private void updatePrediction() {
+		final Display display = getDisplay();
 		log.info("Updating predicted odds");
-		double[] result = new PredictionCalculator(this.match)
-				.calculate(this.match);
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final double[] result = new PredictionCalculator(match)
+						.calculate(match);
+				display.asyncExec(new Runnable() {
 
-		setPlayerPrediction(PredictionCalculator.getP1Data(result),
-				PlayerEnum.PLAYER1);
-		setPlayerPrediction(PredictionCalculator.getP2Data(result),
-				PlayerEnum.PLAYER2);
+					@Override
+					public void run() {
+						setPlayerPrediction(
+								PredictionCalculator.getP1Data(result),
+								PlayerEnum.PLAYER1);
+						setPlayerPrediction(
+								PredictionCalculator.getP2Data(result),
+								PlayerEnum.PLAYER2);
+
+					}
+				});
+			}
+		});
+
+		t.start();
 		// newData.setplayer1PredictedOdds(result[8]);
 		// newData.setplayer2PredictedOdds(result[9]);
 		log.info("Updated predicted odds");
@@ -327,24 +347,30 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 	private void setPlayerScore(Score score, PlayerEnum player) {
 		Map<Integer, Label> labels = labelMap.get(player);
+		for (int i = 1; i <= score.getSetsPlayed(); i++)
+			labels.get(i).setText(
+					Integer.toString(score.getSetScore(i)
+							.getPlayerGames(player)));
 		labels.get(SET).setText(score.getPlayerSets(player) + "");
-		labels.get(GAME)
-				.setText(
-						score.getPlayerScores(player)[score
-								.getPlayerScores(player).length - 1] + "");
+		labels.get(GAME).setText(
+				score.getPlayerScores(player)[score.getSetsPlayed()] + "");
 		labels.get(POINT).setText(score.getPlayerPoints(player) + "");
+		if (player.equals(score.getServer()))
+			labels.get(SERVER).setImage(getBallImage());
+		else
+			labels.get(SERVER).setImage(im2);
 	}
 
 	private void setPlayerPrediction(double[] result, PlayerEnum player) {
 		Map<Integer, Label> labels = labelMap.get(player);
 		labels.get(PRED_POINT).setText(
-				BetsDisplay.DOUBLE_FORMAT.format(result[0]) + "%");
+				BetsDisplay.DOUBLE_FORMAT.format(result[0] * 100) + "%");
 		labels.get(PRED_GAME).setText(
-				BetsDisplay.DOUBLE_FORMAT.format(result[1]) + "%");
+				BetsDisplay.DOUBLE_FORMAT.format(result[1] * 100) + "%");
 		labels.get(PRED_SET).setText(
-				BetsDisplay.DOUBLE_FORMAT.format(result[2]) + "%");
+				BetsDisplay.DOUBLE_FORMAT.format(result[2] * 100) + "%");
 		labels.get(PRED_MATCH).setText(
-				BetsDisplay.DOUBLE_FORMAT.format(result[3]) + "%");
+				BetsDisplay.DOUBLE_FORMAT.format(result[3] * 100) + "%");
 	}
 
 	@Override
@@ -396,6 +422,18 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		Label pl2Name = labelMap.get(PlayerEnum.PLAYER2).get(NAME);
 		pl2Name.setText(match.getPlayerTwo().toString());
-		scoreThreadStart();
+		/*
+		 * if (match instanceof RealMatch) scoreThreadStart();
+		 */
+	}
+
+	@Override
+	public void handleEvent(Event arg0) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				setScores();
+			}
+		});
 	}
 }
