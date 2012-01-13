@@ -28,6 +28,7 @@ import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.PlayerEnum;
+import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.score.PredictionCalculator;
 import org.ic.tennistrader.score.ScoreUpdateThread;
@@ -293,11 +294,13 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		log.info("Live match: starting score update thread");
 		// only start score fetching for live matches
 
-		try {
-			scoreUpdateThread.addListener(this);
-			scoreUpdateThread.start();
-		} catch (Exception e) {
-			// match.setScore(new Score());
+		if (match.isInPlay()) {
+			try {
+				scoreUpdateThread.addListener(this);
+				scoreUpdateThread.start();
+			} catch (Exception e) {
+				// match.setScore(new Score());
+			}
 		}
 	}
 
@@ -422,9 +425,19 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 
 		Label pl2Name = labelMap.get(PlayerEnum.PLAYER2).get(NAME);
 		pl2Name.setText(match.getPlayerTwo().toString());
-		/*
-		 * if (match instanceof RealMatch) scoreThreadStart();
-		 */
+
+		if (match instanceof RealMatch) {
+			// sleep to allow other threads to start faster
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			scoreThreadStart();
+		}
+
 	}
 
 	@Override

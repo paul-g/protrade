@@ -51,7 +51,7 @@ public class MatchPlayer extends MatchViewerWidget {
 							new LinuxVideoSurfaceAdapter()));
 
 			mediaPlayerComponent.getMediaPlayer().playMedia(
-					"/media/6C36C2F636C2BFF6/muzica/fed-tso.wmv");
+					"/paul/home/fed-tso.wmv");
 		} catch (Exception e) {
 			log.info("Failed to start media player: " + e.getMessage());
 			videoComposite = new Composite(this, SWT.NONE);
