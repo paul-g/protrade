@@ -48,12 +48,13 @@ public class BetPlacingShell extends Dialog {
 	private final BetTypeEnum betType;
 	private final String betDetails;
 	private Color color;
+	private OddsButton button;
 
 	public BetPlacingShell(OddsButton button, Match match,
 			PlayerEnum betPlayer, BetTypeEnum betType, double initialOdds,
 			String betDetails) {
 		super(button.getShell());
-
+		this.button = button;
 		this.match = match;
 		this.betPlayer = betPlayer;
 		this.betType = betType;
@@ -82,7 +83,7 @@ public class BetPlacingShell extends Dialog {
 				color, f2);
 		Label lastRow = new Label(betShell, SWT.NONE);
 		lastRow.setText(betDetails);
-		lastRow.setBackground(color);
+		//lastRow.setBackground(color);
 		lastRow.setLayoutData(getGridData10());
 
 		addTextFieldsListeners(match, betType, betPlayer);
@@ -140,20 +141,20 @@ public class BetPlacingShell extends Dialog {
 		Label name = new Label(betShell, SWT.NONE);
 		name.setText(match.getPlayer(betPlayer).getFirstname() + " "
 				+ match.getPlayer(betPlayer).getLastname());
-		name.setBackground(color);
+		//name.setBackground(color);
 		name.setFont(f2);
 		name.setLayoutData(infoGridData);
 		oddsText = new Text(betShell, SWT.NONE);
 		oddsText.setText(initialOdds + "");
 		oddsText.setFont(f2);
-		// oddsText.setBackground(color);
+		oddsText.setBackground(color);
 		amountText = new Text(betShell, SWT.NONE);
-		amountText.setText(100 + "");
+		amountText.setText(10 + "");
 		amountText.setFont(f2);
 		// amountText.setBackground(color);
 		betProfit = new Label(betShell, SWT.NONE);
 		betProfit.setText((initialOdds * 100 - 100) + "");
-		betProfit.setBackground(color);
+		//betProfit.setBackground(color);
 		betProfit.setFont(f2);
 	}
 
@@ -177,6 +178,7 @@ public class BetPlacingShell extends Dialog {
 		}
 		if (BetManager.isValidPrice(odds)) {
 			BetManager.placeBet(match, betPlayer, betType, odds, amount);
+			this.button.getDataGrid().updateProfits();
 		} else
 			setErrorText(INVALID_PRICE);
 		super.okPressed();
@@ -240,6 +242,7 @@ public class BetPlacingShell extends Dialog {
 					double odds = Double.parseDouble(oddsText.getText());
 					betProfit.setText((amount * (odds - 1)) + "");
 					errorLabel.setVisible(false);
+					updateOverallPossibleProfits(match, betType, betPlayer);
 				} catch (NumberFormatException nfe) {
 					setErrorText(AMOUNT_NUMBER_EXCEPTION);
 					return;
@@ -255,8 +258,10 @@ public class BetPlacingShell extends Dialog {
 					double amount = Double.parseDouble(amountText.getText());
 					double odds = Double.parseDouble(oddsText.getText());
 					betProfit.setText((amount * (odds - 1)) + "");
-					if (BetManager.isValidPrice(odds))
+					if (BetManager.isValidPrice(odds)) {
 						errorLabel.setVisible(false);
+						updateOverallPossibleProfits(match, betType, betPlayer);
+					}
 					else
 						setErrorText(INVALID_PRICE);
 				} catch (NumberFormatException nfe) {
@@ -341,10 +346,10 @@ public class BetPlacingShell extends Dialog {
 		odds.setFont(f1);
 		stake.setFont(f1);
 		profit.setFont(f1);
-		infoLabel.setBackground(c);
-		odds.setBackground(c);
-		stake.setBackground(c);
-		profit.setBackground(c);
+		//infoLabel.setBackground(c);
+		//odds.setBackground(c);
+		//stake.setBackground(c);
+		//profit.setBackground(c);
 
 	}
 
@@ -423,9 +428,5 @@ public class BetPlacingShell extends Dialog {
 
 	public Label getErrorLabel() {
 		return errorLabel;
-	}
-
-	public void addDisposeListener(DisposeListener listener) {
-		this.betShell.addDisposeListener(listener);
 	}
 }

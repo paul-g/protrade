@@ -33,6 +33,7 @@ public class OddsButton extends Composite {
 	private String CURRENCY = "£";
 
 	private final MarketDataGrid dataGrid;
+	
 	private final Label odds;
 	private final Label amount;
 	private final Display display;
@@ -129,15 +130,16 @@ public class OddsButton extends Composite {
 										.getMatch(), betPlayer, betType,
 								initOdds, betDetails);
 						betPlacingShell.open();
-					
-//						betPlacingShell
-//								.addDisposeListener(new DisposeListener() {
-//									@Override
-//									public void widgetDisposed(DisposeEvent arg0) {
-//										dataGrid.updateProfits();
-//									}
-//								});
-						Rectangle rect = getClientArea();
+						/*
+						betPlacingShell
+								.addDisposeListener(new DisposeListener() {
+									@Override
+									public void widgetDisposed(DisposeEvent arg0) {
+										dataGrid.updateProfits();
+									}
+								});
+								*/
+						//Rectangle rect = getClientArea();
 		//				betPlacingShell.setLocation(rect.x, rect.y);
 					} catch (OddsButtonNotFoundException obnfe) {
 
@@ -190,6 +192,10 @@ public class OddsButton extends Composite {
 
 	public void setClickImage(Image clickImage) {
 		this.clickImage = clickImage;
+	}
+
+	public MarketDataGrid getDataGrid() {
+		return dataGrid;
 	}
 
 }
