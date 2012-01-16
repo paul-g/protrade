@@ -3,7 +3,7 @@ package org.ic.protrade.service;
 import static org.junit.Assert.*;
 
 import org.ic.protrade.domain.markets.EventBetfair;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.service.threads.BetfairDataUpdaterThread;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class BetfairDataUpdaterTest {
 	@Test
 	public void testOneEvent() {		
 		EventBetfair eb = new EventBetfair("name", 1);
-		RealMatch match = new RealMatch("pl1", "pl2", eb);
+		LiveMatch match = new LiveMatch("pl1", "pl2", eb);
 		betfairDataUpdaterThread.setMatch(match);
 		assertEquals(1, betfairDataUpdaterThread.getEvents().size());
 	}
@@ -41,7 +41,7 @@ public class BetfairDataUpdaterTest {
 		int n = 5;
 		for (int i = 0; i < n; i++) {
 			EventBetfair eb = new EventBetfair("name", i);
-			RealMatch match = new RealMatch("pl1", "pl2", eb);
+			LiveMatch match = new LiveMatch("pl1", "pl2", eb);
 			betfairDataUpdaterThread.setMatch(match);
 		}
 		assertEquals(n, betfairDataUpdaterThread.getEvents().size());

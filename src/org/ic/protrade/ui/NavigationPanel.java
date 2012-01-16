@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ic.protrade.domain.Tournament;
 import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.listener.MatchSelectionListener;
 import org.ic.protrade.model.connection.BetfairConnectionHandler;
 import org.ic.protrade.ui.widgets.SearchTree;
@@ -30,7 +30,7 @@ public class NavigationPanel {
 
 	private final List<MatchSelectionListener> listeners = new ArrayList<MatchSelectionListener>();
 
-	private final HashMap<TreeItem, RealMatch> matchMap = new HashMap<TreeItem, RealMatch>();
+	private final HashMap<TreeItem, LiveMatch> matchMap = new HashMap<TreeItem, LiveMatch>();
 
 	private static SearchTree searchTree;
 
@@ -105,7 +105,7 @@ public class NavigationPanel {
 						for (Tournament t : tours) {
 							TreeItem item = new TreeItem(tree, SWT.NONE);
 							item.setText(t.toString());
-							for (RealMatch m : t.getMatches()) {
+							for (LiveMatch m : t.getMatches()) {
 								TreeItem child = new TreeItem(item, SWT.NONE);
 								child.setText(m.toString());
 								matchMap.put(child, m);

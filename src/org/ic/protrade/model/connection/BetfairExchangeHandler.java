@@ -13,7 +13,7 @@ import org.ic.protrade.domain.markets.MarketBetfair;
 import org.ic.protrade.domain.markets.MarketPrices;
 import org.ic.protrade.domain.markets.MatchScore;
 import org.ic.protrade.domain.markets.SetBettingMarketData;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.model.connection.ExchangeAPI.Exchange;
 import org.ic.protrade.model.connection.InflatedCompleteMarketPrices.InflatedCompletePrice;
 import org.ic.protrade.model.connection.InflatedCompleteMarketPrices.InflatedCompleteRunner;
@@ -32,7 +32,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	private static int queriesNumber = 0;
 
 	// returns the match odds market data info
-	public static MOddsMarketData getMatchOddsMarketData(RealMatch match) {
+	public static MOddsMarketData getMatchOddsMarketData(LiveMatch match) {
 		EventBetfair eventBetfair = match.getEventBetfair();
 		int marketId = -1;
 		queriesNumber++;
@@ -125,7 +125,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	}
 
 	// returns the set betting market data info
-	public static SetBettingMarketData getSetBettingMarketData(RealMatch match) {
+	public static SetBettingMarketData getSetBettingMarketData(LiveMatch match) {
 		queriesNumber++;
 		EventBetfair eventBetfair = match.getEventBetfair();
 		SetBettingMarketData setBettingData = new SetBettingMarketData();
@@ -166,7 +166,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	}
 
 	// returns the match odds and the set betting market data info
-	public static CompleteMarketData getCompleteMarketData(RealMatch match) {
+	public static CompleteMarketData getCompleteMarketData(LiveMatch match) {
 		CompleteMarketData completeMarketData = new CompleteMarketData();
 		EventBetfair eventBetfair = match.getEventBetfair();
 		SetBettingMarketData setBettingData = new SetBettingMarketData();
@@ -218,7 +218,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 		return completeMarketData;
 	}
 
-	private static SetBettingMarketData getSetBettingData(RealMatch match,
+	private static SetBettingMarketData getSetBettingData(LiveMatch match,
 			int setBettingMarketId) throws Exception {
 		SetBettingMarketData setBettingData = new SetBettingMarketData();
 		Market selectedMarket = ExchangeAPI.getMarket(Exchange.UK, apiContext,
@@ -324,7 +324,7 @@ public class BetfairExchangeHandler extends BetfairConnectionHandler {
 	 */
 
 	public static MOddsMarketData getCompressedMatchOddsMarketData(
-			RealMatch match) {
+			LiveMatch match) {
 		EventBetfair eventBetfair = match.getEventBetfair();
 		int marketId = -1;
 		queriesNumber++;

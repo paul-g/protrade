@@ -10,7 +10,7 @@ import org.ic.protrade.domain.markets.CompleteMarketData;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.markets.MatchScore;
 import org.ic.protrade.domain.markets.SetBettingMarketData;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.model.connection.BetfairConnectionHandler;
 import org.ic.protrade.model.connection.BetfairExchangeHandler;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 			assertNotNull(tours);
 			for (Tournament t : tours) {
 				MOddsMarketData data;
-				for (RealMatch m : t.getMatches()) {
+				for (LiveMatch m : t.getMatches()) {
 					data = BetfairExchangeHandler.getMatchOddsMarketData(m);
 					assertNotNull(data);
 					break;
@@ -42,10 +42,10 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 					.getTournamentsData();
 			assertNotNull(tours);
 			for (Tournament t : tours) {
-				RealMatch match = new RealMatch("Federer", "Djokovic", t.getEventBetfair());
+				LiveMatch match = new LiveMatch("Federer", "Djokovic", t.getEventBetfair());
 				SetBettingMarketData data = BetfairExchangeHandler.getSetBettingMarketData(match);
 				assertNotNull(data);
-				for (RealMatch m : t.getMatches()) {
+				for (LiveMatch m : t.getMatches()) {
 					data = BetfairExchangeHandler.getSetBettingMarketData(m);
 					assertNotNull(data);
 					break;
@@ -63,10 +63,10 @@ public class BetfairExchangeHandlerTest extends BetfairConnectionTest{
 					.getTournamentsData();
 			assertNotNull(tours);
 			for (Tournament t : tours) {
-				RealMatch match = new RealMatch("Federer", "Djokovic", t.getEventBetfair());
+				LiveMatch match = new LiveMatch("Federer", "Djokovic", t.getEventBetfair());
 				CompleteMarketData data = BetfairExchangeHandler.getCompleteMarketData(match);
 				assertNotNull(data);
-				for (RealMatch m : t.getMatches()) {
+				for (LiveMatch m : t.getMatches()) {
 					data = BetfairExchangeHandler.getCompleteMarketData(m);
 					assertNotNull(data);
 					break;

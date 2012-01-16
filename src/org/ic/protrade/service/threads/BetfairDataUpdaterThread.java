@@ -10,26 +10,26 @@ import org.ic.protrade.domain.markets.EventBetfair;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.markets.SetBettingMarketData;
 import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.model.connection.BetfairExchangeHandler;
 import org.ic.protrade.service.DataManager;
 
 public class BetfairDataUpdaterThread extends MatchUpdaterThread {
     // private List<EventBetfair> events;
     private BetfairUpdaterEvents synchronizedEvents;
-    private HashMap<EventBetfair, RealMatch> matches;
+    private HashMap<EventBetfair, LiveMatch> matches;
     private int i = 0;
 
     private static Logger log = Logger
             .getLogger(BetfairDataUpdaterThread.class);
 
     public BetfairDataUpdaterThread() {
-        matches = new HashMap<EventBetfair, RealMatch>();
+        matches = new HashMap<EventBetfair, LiveMatch>();
         // events = new ArrayList<EventBetfair>();
         synchronizedEvents = new BetfairUpdaterEvents();
     }
 
-    public void setMatch(RealMatch match) {
+    public void setMatch(LiveMatch match) {
         EventBetfair eventBetfair = match.getEventBetfair();
         matches.put(eventBetfair, match);
         // events.add(eventBetfair);
@@ -43,7 +43,7 @@ public class BetfairDataUpdaterThread extends MatchUpdaterThread {
 				synchronizedEvents.getEvents());
 		for (EventBetfair eb : events) {
 			//System.out.println("Size of events - " + events.size());
-			RealMatch match = matches.get(eb);
+			LiveMatch match = matches.get(eb);
 			if (match.isInPlay() || match.getLastMarketData() == null || i == 0) {
 				/*			
 				MOddsMarketData marketData = BetfairExchangeHandler

@@ -28,7 +28,7 @@ import org.ic.protrade.domain.match.HistoricalMatch;
 import org.ic.protrade.domain.match.Match;
 import org.ic.protrade.domain.match.Player;
 import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.domain.match.Score;
 import org.ic.protrade.score.PredictionCalculator;
 import org.ic.protrade.scrappers.livexscores.ScoreUpdateThread;
@@ -426,7 +426,7 @@ public class WimbledonScorePanel extends MatchViewerWidget implements
 		Label pl2Name = labelMap.get(PlayerEnum.PLAYER2).get(NAME);
 		pl2Name.setText(match.getPlayerTwo().toString());
 
-		if (match instanceof RealMatch) {
+		if (match instanceof LiveMatch) {
 			// sleep to allow other threads to start faster
 			try {
 				Thread.sleep(5000);

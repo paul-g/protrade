@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.match.Match;
 import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.scrappers.SiteParser;
 import org.ic.protrade.scrappers.tennisinsight.StatisticsParser;
 import org.ic.protrade.scrappers.tennisinsight.StatisticsUpdateThread;
@@ -254,7 +254,7 @@ public class StatisticsPanel extends MatchViewerWidget implements Listener {
 		playerOneColumn.setText(match.getPlayerOne().getLastname());
 		playerTwoColumn.setText(match.getPlayerTwo().getLastname());
 
-		if (match instanceof RealMatch) {
+		if (match instanceof LiveMatch) {
 			StatisticsUpdateThread thread = new StatisticsUpdateThread(match);
 			thread.addListener(this);
 			thread.start();

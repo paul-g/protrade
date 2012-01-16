@@ -9,7 +9,7 @@ import org.ic.protrade.domain.Tournament;
 import org.ic.protrade.domain.markets.EventBetfair;
 import org.ic.protrade.domain.markets.EventMarketBetfair;
 import org.ic.protrade.domain.markets.MarketBetfair;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.domain.profile.AccountFunds;
 import org.ic.protrade.domain.profile.ProfileData;
 import org.ic.protrade.exceptions.LoginFailedException;
@@ -58,7 +58,7 @@ public class BetfairConnectionHandler {
 	@SuppressWarnings("unused")
 	private static void printTours(Tournament tournament) {
 	      log.info(tournament.toString());
-	      for (RealMatch m : tournament.getMatches())
+	      for (LiveMatch m : tournament.getMatches())
 	    	  log.info("\t" + m.toString() + " --or-- " + m.getEventBetfair().getName());
 	}	
 	
@@ -137,12 +137,12 @@ public class BetfairConnectionHandler {
 
 	// filter events to get only the list of matches
 	private static void filterMatches(Tournament tournament) {
-		List<RealMatch> matches = new ArrayList<RealMatch>();
+		List<LiveMatch> matches = new ArrayList<LiveMatch>();
 		matches = getMatches(matches, tournament.getEventBetfair());
 		tournament.setMatches(matches);
 	}
 	
-	private static List<RealMatch> getMatches(List<RealMatch> matches, EventBetfair eventBetfair) {
+	private static List<LiveMatch> getMatches(List<LiveMatch> matches, EventBetfair eventBetfair) {
 		for (EventMarketBetfair emb : eventBetfair.getChildren()) {
 			if (emb instanceof EventBetfair) {
 				if (isMatch((EventBetfair)emb)) {
@@ -160,8 +160,8 @@ public class BetfairConnectionHandler {
 		return MatchUtils.isMatch(emb.toString());	
 	}
 	
-	private static RealMatch getMatch(EventBetfair eb) {
-		return new RealMatch("", "", eb);
+	private static LiveMatch getMatch(EventBetfair eb) {
+		return new LiveMatch("", "", eb);
 	}
 	
     public static ProfileData getProfileData() throws Exception {

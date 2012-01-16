@@ -7,7 +7,7 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.domain.match.Score;
 import org.ic.protrade.exceptions.EndOfFracsoftFileException;
 import org.ic.protrade.service.DataManager;
@@ -204,7 +204,7 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 	}
 
 	@Override
-	public void setMatch(RealMatch match) {
+	public void setMatch(LiveMatch match) {
 		this.match = match;
 	}
 

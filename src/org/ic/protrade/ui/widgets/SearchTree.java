@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ic.protrade.authentication.BetfairAuthenticator;
 import org.ic.protrade.domain.Tournament;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.model.connection.BetfairConnectionHandler;
 import org.ic.protrade.utils.Pair;
 
@@ -85,7 +85,7 @@ public class SearchTree extends Composite {
 			TreeItem item = new TreeItem(tree, SWT.NONE);
 			item.setText(t.toString());
 
-			for (RealMatch m : t.getMatches()) {
+			for (LiveMatch m : t.getMatches()) {
 				TreeItem child = new TreeItem(item, SWT.NONE);
 				child.setText(m.toString());
 				// matchMap.put(child, m);

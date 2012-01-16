@@ -12,7 +12,7 @@ import org.ic.protrade.model.connection.BetfairExchangeHandler;
  * @author pg1709
  *
  */
-public class RealMatch extends Match{
+public class LiveMatch extends Match{
     
 	private EventBetfair eventBetfair;
 	private boolean namesSet = false;
@@ -21,7 +21,7 @@ public class RealMatch extends Match{
 		return namesSet;
 	}
 
-	public RealMatch(String player1, String player2, EventBetfair eb) {
+	public LiveMatch(String player1, String player2, EventBetfair eb) {
 	    this.score = new Score();
 	    String name = eb.getName();
 	    String[] names = name.split(" v ");

@@ -21,7 +21,7 @@ import org.ic.protrade.domain.markets.EventMarketBetfair;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.match.Match;
 import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.domain.match.Score;
 import org.ic.protrade.model.betting.BetController;
 import org.ic.protrade.scrappers.livexscores.ScoreUpdateThread;
@@ -49,7 +49,7 @@ public class PredictionGui extends MatchViewerWidget {
 		Player playerOne = new Player("Ivo", "Minar");
 		Player playerTwo = new Player("Luke", "Saville");
 
-		Match match = new RealMatch("", "", new EventBetfair(
+		Match match = new LiveMatch("", "", new EventBetfair(
 				"Nadal v Del Potro", new ArrayList<EventMarketBetfair>(), 1));
 		MOddsMarketData modds = new MOddsMarketData();
 		modds.setDelay(5);

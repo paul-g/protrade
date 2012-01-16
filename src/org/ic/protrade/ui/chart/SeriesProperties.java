@@ -2,7 +2,7 @@ package org.ic.protrade.ui.chart;
 
 import org.eclipse.swt.SWT;
 import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.model.chart_computers.SeriesComputer;
+import org.ic.protrade.model.chartcomputers.SeriesComputer;
 import org.ic.protrade.ui.chart.ChartSettings.ResultSet;
 import org.swtchart.IBarSeries;
 import org.swtchart.IErrorBar;

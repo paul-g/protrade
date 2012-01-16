@@ -1,11 +1,12 @@
-package org.ic.protrade.model.chart_computers;
+package org.ic.protrade.model.chartcomputers;
 
 import java.util.ArrayList;
 
 import org.ic.protrade.domain.ChartData;
 import org.ic.protrade.domain.match.PlayerEnum;
 
-public class VolumeComputer extends SeriesComputer {
+public class PredictedComputer extends SeriesComputer {
+
 	@Override
 	public double[] computeValues(PlayerEnum player, ChartData chartData,
 			int startIndex, boolean inverted) {
@@ -13,25 +14,19 @@ public class VolumeComputer extends SeriesComputer {
 		ArrayList<Double> oldValues;
 		if (chartData != null) {
 			if (player.equals(PlayerEnum.PLAYER1)) {
-				oldValues = chartData.getPl1Volume();
+				oldValues = chartData.getPl1Predicted();
 			}
 			else {
-				oldValues = chartData.getPl2Volume();
+				oldValues = chartData.getPl2Predicted();
 			}
-			int size = oldValues.size() - startIndex;
-			values = new double[size];
-			for (int i = 0; i < size; i++) {
-				values[i] = oldValues.get(i + startIndex);
-			}
+			values = new double[oldValues.size() - startIndex];
+			for (int i = startIndex; i < oldValues.size(); i++)
+				if (inverted)
+					values[i - startIndex] = Math.pow(oldValues.get(i), -1) * 100;
+				else
+					values[i - startIndex] = oldValues.get(i);
 		}
 		return values;
-	}
-
-	//@Override
-	public double[] addValue(PlayerEnum player, ChartData chartData,
-			double player1newValue, double player2newValue) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/*

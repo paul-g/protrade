@@ -14,7 +14,7 @@ import org.ic.protrade.domain.markets.CompleteMarketData;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.markets.SetBettingMarketData;
 import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.domain.match.Score;
 import org.ic.protrade.model.betting.BetManager;
 import org.ic.protrade.model.prediction.SetMarketManager;
@@ -50,7 +50,7 @@ public class DataManager {
 		if (match.isFromFile())
 			registerFromFile(widget, match);
 		else
-			registerLive(widget, (RealMatch) match);
+			registerLive(widget, (LiveMatch) match);
 
 		if (recordersMap.get(match) == null) {
 			// MatchRecorderThread mrt = new MatchRecorderThread(match);
@@ -68,11 +68,11 @@ public class DataManager {
 		if (match.isFromFile())
 			unregisterFromFile(widget, match);
 		else
-			unregisterLive(widget, (RealMatch) match);
+			unregisterLive(widget, (LiveMatch) match);
 	}
 
 	private static void registerLive(final UpdatableWidget widget,
-			final RealMatch match) {
+			final LiveMatch match) {
 		if (dataUpdater == null)
 			dataUpdater = new BetfairDataUpdaterThread();
 		dataUpdater.setMatch(match);
@@ -102,7 +102,7 @@ public class DataManager {
 		}
 	}
 
-	private static void unregisterLive(UpdatableWidget widget, RealMatch match) {
+	private static void unregisterLive(UpdatableWidget widget, LiveMatch match) {
 		// System.out.println("Unregister live entered");
 		List<UpdatableWidget> widgets = null;
 		if (listeners.containsKey(match)) {
@@ -118,7 +118,7 @@ public class DataManager {
 
 	}
 
-	private static void removeMatch(RealMatch match) {
+	private static void removeMatch(LiveMatch match) {
 		listeners.remove(match);
 		dataUpdater.removeEvent(match.getEventBetfair());
 	}

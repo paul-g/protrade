@@ -1,4 +1,4 @@
-package org.ic.protrade.model.chart_computers;
+package org.ic.protrade.model.chartcomputers;
 
 import java.util.ArrayList;
 

@@ -19,7 +19,7 @@ import org.ic.protrade.domain.ChartData;
 import org.ic.protrade.domain.markets.MOddsMarketData;
 import org.ic.protrade.domain.match.Match;
 import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.model.chart_computers.SeriesComputer;
+import org.ic.protrade.model.chartcomputers.SeriesComputer;
 import org.ic.protrade.ui.updatable.UpdatableWidget;
 import org.swtchart.Chart;
 import org.swtchart.IBarSeries;

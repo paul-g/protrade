@@ -8,7 +8,7 @@ import org.ic.protrade.domain.markets.MarketPrices;
 import org.ic.protrade.domain.markets.MatchScore;
 import org.ic.protrade.domain.markets.SetBettingMarketData;
 import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.RealMatch;
+import org.ic.protrade.domain.match.LiveMatch;
 import org.ic.protrade.exceptions.EndOfFracsoftFileException;
 import org.ic.protrade.service.DataManager;
 
@@ -116,7 +116,7 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 	}	
 	
 	@Override
-	public void setMatch(RealMatch match) {
+	public void setMatch(LiveMatch match) {
 		this.match = match;
 	}
 }
