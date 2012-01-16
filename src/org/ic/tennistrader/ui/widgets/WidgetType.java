@@ -1,5 +1,0 @@
-package org.ic.tennistrader.ui.widgets;
-
-public enum WidgetType {
-	DUAL_CHART, MARKET_GRID, MATCH_VIEW, SCORE_PANEL, PREDICTION_GUI, PROBABILITY_PANEL, STATISTICS_PANEL, PLACEHOLDER, BROWSER;
-}
