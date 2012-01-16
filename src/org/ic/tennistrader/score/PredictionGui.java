@@ -24,6 +24,8 @@ import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
 import org.ic.tennistrader.domain.match.Score;
 import org.ic.tennistrader.model.betting.BetController;
+import org.ic.tennistrader.scrappers.livexscores.ScoreUpdateThread;
+import org.ic.tennistrader.scrappers.tennisinsight.StatisticsUpdateThread;
 import org.ic.tennistrader.service.DataManager;
 import org.ic.tennistrader.ui.score.WimbledonScorePanel;
 import org.ic.tennistrader.ui.updatable.MarketDataGrid;

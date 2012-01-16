@@ -21,6 +21,9 @@ import org.ic.tennistrader.domain.markets.MOddsMarketData;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
 import org.ic.tennistrader.domain.match.RealMatch;
+import org.ic.tennistrader.scrappers.SiteParser;
+import org.ic.tennistrader.scrappers.tennisinsight.StatisticsParser;
+import org.ic.tennistrader.scrappers.tennisinsight.StatisticsUpdateThread;
 import org.ic.tennistrader.ui.widgets.MatchViewerWidget;
 import org.ic.tennistrader.ui.widgets.WidgetType;
 

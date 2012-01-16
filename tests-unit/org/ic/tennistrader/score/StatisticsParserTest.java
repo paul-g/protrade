@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.ic.tennistrader.domain.match.HistoricalMatch;
 import org.ic.tennistrader.domain.match.Match;
 import org.ic.tennistrader.domain.match.Player;
+import org.ic.tennistrader.scrappers.tennisinsight.StatisticsParser;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
