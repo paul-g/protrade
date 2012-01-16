@@ -14,11 +14,17 @@ public class LayoutRegistry {
 
 	private LayoutRegistry() {
 		layouts = new ArrayList<LayoutDescriptor>();
+		initComplete();
 		initChartMaster();
 		initPrediction();
 		initVirtualBetting();
 	}
 
+	private void initComplete(){
+		addLayout(new LayoutDescriptor("Complete", "All widget dashboard",
+		"templates/full/"));
+	}
+	
 	private void initChartMaster() {
 		addLayout(new LayoutDescriptor("Chart Master", "Many chart layout",
 				"templates/chart-master/"));
