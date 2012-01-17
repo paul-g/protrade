@@ -1,42 +1,3 @@
-To CHECKOUT project from github:
-
-  mkdir tennis-trader
-  cd tennis-trader
-  git init
-  git remote add origin git@github.com:paul-g/tennis-trader.git
-  git pull -u origin master
-
-
-To RUN you can use Ant (make sure you have it installed properly):
-
-    First create a file called build.properties in the project root.
-    (Simply copy tennis-trader/examples/build.properties.example to tennis-trader/build.properties)
-    Then set lin.ver to either 32 or 64, based on your linux version(32-bit/64-bit) and you're good to go.
-
-   Available targets are:
-    ant clean
-    ant compile - to build all classes under src/ in build/prod/
-    ant run - to run the src.HelloWorld class
-    
-   If everything is OK, you should see a window with a tree list pop up.
-
-
-To COMMIT:
-  
-  NOTE!!!!!! 
-  Please do not commit any local configuration files, build outputs, test outputs etc. to the respository.
-
- ant clean                -> removes build output
- git status               -> shows a list of changed / added files
- git add <file1> <file2>  -> list all the files you want to commit
- git commit -m "<Comment for commit>"
-
-
-To CHECKIN to github:
-  git push -u origin master
-
-
-
 protrade
 =========
 
@@ -87,9 +48,12 @@ ant all       (run a standard build)
 ```
 )
 
-## Done
 
-If everything went well, you should be done at this stage :p
+## Finally
+
+You must also create a file called build.properties in the project root (i.e. under protrade/).
+(Simply copy protrade/examples/build.properties.example to protrade/build.properties)
+Then set lin.ver to either 32 or 64, based on your linux version(32-bit/64-bit) and you're good to go.
 
 # Usage
 
@@ -97,4 +61,10 @@ After installation, to run the project:
 
 `ant run` 
 
-You will be prompted for a Betfair account and password.
+If everything is OK, a login window will appear, prompting you for a Betfair account and password.
+
+
+#Note!
+
+A web site for the latest protrade release is under construction.
+
