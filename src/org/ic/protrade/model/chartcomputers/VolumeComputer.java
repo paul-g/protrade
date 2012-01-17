@@ -2,8 +2,8 @@ package org.ic.protrade.model.chartcomputers;
 
 import java.util.ArrayList;
 
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.domain.ChartData;
-import org.ic.protrade.domain.match.PlayerEnum;
 
 public class VolumeComputer extends SeriesComputer {
 	@Override

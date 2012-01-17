@@ -2,7 +2,7 @@ package org.ic.protrade.domain.match;
 
 import static org.junit.Assert.assertEquals;
 
-import org.ic.protrade.domain.match.SetScore;
+import org.ic.protrade.data.match.SetScore;
 import org.junit.Ignore;
 
 @Ignore

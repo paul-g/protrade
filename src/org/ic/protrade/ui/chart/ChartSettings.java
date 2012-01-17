@@ -3,6 +3,7 @@ package org.ic.protrade.ui.chart;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.swt.SWT;
@@ -22,7 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.swtchart.ILineSeries;
 import org.swtchart.ILineSeries.PlotSymbolType;
 

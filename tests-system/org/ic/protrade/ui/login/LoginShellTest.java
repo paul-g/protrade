@@ -1,5 +1,8 @@
 package org.ic.protrade.ui.login;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -9,12 +12,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.ic.protrade.Main;
 import org.ic.protrade.ui.DisplayTest;
-import org.ic.protrade.ui.login.LoginShell;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 @Ignore
 public class LoginShellTest extends DisplayTest {    

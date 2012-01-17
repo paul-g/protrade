@@ -1,13 +1,8 @@
 package org.ic.protrade.ui.betting;
 
-import static org.junit.Assert.*;
-
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Player;
 import org.ic.protrade.ui.DisplayTest;
-import org.ic.protrade.ui.betting.BetPlacingShell;
-import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

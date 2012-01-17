@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.ic.protrade.domain.Tournament;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.LiveMatch;
+import org.ic.protrade.data.market.connection.BetfairConnectionHandler;
+import org.ic.protrade.data.market.connection.Tournament;
+import org.ic.protrade.data.match.LiveMatch;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.listener.MatchSelectionListener;
-import org.ic.protrade.model.connection.BetfairConnectionHandler;
 import org.ic.protrade.ui.widgets.SearchTree;
 
 public class NavigationPanel {

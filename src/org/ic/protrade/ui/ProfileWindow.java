@@ -8,8 +8,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.ic.protrade.domain.profile.AccountFunds;
-import org.ic.protrade.domain.profile.ProfileData;
+import org.ic.protrade.data.market.connection.AccountFunds;
+import org.ic.protrade.data.market.connection.ProfileData;
 
 public class ProfileWindow {
 	private ProfileData profileData;

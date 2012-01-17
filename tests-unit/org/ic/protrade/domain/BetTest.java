@@ -1,15 +1,14 @@
 package org.ic.protrade.domain;
 
-import org.ic.protrade.domain.Bet;
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.PlayerEnum;
+import static org.ic.protrade.data.utils.Pair.pair;
+import static org.junit.Assert.assertEquals;
+
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Player;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.ic.protrade.utils.Pair.pair;
-import static org.junit.Assert.assertEquals;
 
 public class BetTest {
 	private HistoricalMatch match;
@@ -30,7 +29,7 @@ public class BetTest {
 		assertEquals(27, bet.getPossibleLiability(), Math.pow(10, -5));
 		assertEquals(27, bet.getCurrentLiability(), Math.pow(10, -5));
 	}
-	
+
 	@Test
 	public void testCurrentLiability() {
 		Bet bet = new Bet(match, PlayerEnum.PLAYER1, BetTypeEnum.B, pair(2.5,

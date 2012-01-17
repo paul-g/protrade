@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.domain.match.Score;
-import org.ic.protrade.domain.match.Statistics;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.PlayerEnum;
+import org.ic.protrade.data.match.Score;
+import org.ic.protrade.data.match.Statistics;
 import org.ic.protrade.model.prediction.StatisticMeasures;
 
 public class PredictionCalculator {

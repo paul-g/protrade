@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.listener.ToolItemListener;
 import org.ic.protrade.ui.dashboard.Dashboard;
 import org.ic.protrade.ui.main.DashboardWindow;
@@ -98,7 +98,7 @@ public class DashboardToolBar {
 	}
 
 	private final ToolBar toolbar;
-	
+
 	private BetsTable bets = null;
 
 	private static Logger log = Logger.getLogger(DashboardToolBar.class);
@@ -165,7 +165,7 @@ public class DashboardToolBar {
 		betsItem.setToolTipText("Table of bets");
 		betsItem.setImage(new Image(shell.getDisplay(),
 				"images/toolbar/bets.png"));
-		betsItem.addListener(SWT.Selection, new BetsListener(betsItem,this));
+		betsItem.addListener(SWT.Selection, new BetsListener(betsItem, this));
 	}
 
 	private void makeNewWidgetMenu(Composite parent, final Shell shell) {
@@ -227,11 +227,11 @@ public class DashboardToolBar {
 	public ToolBar getToolBar() {
 		return toolbar;
 	}
-	
+
 	public BetsTable getBetsTable() {
 		return bets;
 	}
-	
+
 	public void setBetsTable(BetsTable bets) {
 		this.bets = bets;
 	}

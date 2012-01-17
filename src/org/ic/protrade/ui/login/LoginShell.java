@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
 import org.ic.protrade.Main;
 import org.ic.protrade.authentication.BetfairAuthenticator;
 import org.ic.protrade.listener.HoverListener;

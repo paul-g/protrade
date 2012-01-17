@@ -9,10 +9,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.domain.match.Score;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.Player;
+import org.ic.protrade.data.match.PlayerEnum;
+import org.ic.protrade.data.match.Score;
 import org.ic.protrade.service.threads.MatchUpdaterThread;
 
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;

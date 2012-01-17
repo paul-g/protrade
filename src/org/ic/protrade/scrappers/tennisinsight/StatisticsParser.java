@@ -3,9 +3,9 @@ package org.ic.protrade.scrappers.tennisinsight;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.Statistics;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.Player;
+import org.ic.protrade.data.match.Statistics;
 import org.ic.protrade.scrappers.SiteParser;
 
 public class StatisticsParser extends SiteParser {

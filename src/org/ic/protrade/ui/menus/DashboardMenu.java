@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.ui.dialogs.LiveMatchDialog;
 import org.ic.protrade.ui.dialogs.ProgressDialog;
 import org.ic.protrade.ui.main.DashboardWindow;
@@ -35,7 +35,7 @@ public class DashboardMenu {
 
 		@Override
 		public void run() {
-			match = new HistoricalMatch(filename, setBettingFilename, pd);
+			match = new HistoricalMatch(filename, setBettingFilename);
 		}
 
 		public Match getMatch() {
@@ -260,10 +260,10 @@ public class DashboardMenu {
 
 			// dashboardWindow.getCurrentDashboard().setMatch(r.getMatch());
 
-			Match m = new HistoricalMatch(filename, setBettingFilename, pd);
+			Match m = new HistoricalMatch(filename, setBettingFilename);
 			m.getScore().setServer(PlayerEnum.PLAYER1);
 			dashboardWindow.getCurrentDashboard().setMatch(
-					new HistoricalMatch(filename, setBettingFilename, pd));
+					new HistoricalMatch(filename, setBettingFilename));
 
 		}
 	}

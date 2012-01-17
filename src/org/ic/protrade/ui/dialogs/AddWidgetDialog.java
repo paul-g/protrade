@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.model.betting.BetController;
 import org.ic.protrade.score.StatisticsPanel;
 import org.ic.protrade.service.DataManager;

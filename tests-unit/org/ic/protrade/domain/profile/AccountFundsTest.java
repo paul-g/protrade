@@ -1,9 +1,10 @@
 package org.ic.protrade.domain.profile;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.ic.protrade.domain.profile.AccountFunds;
+
+import org.ic.protrade.data.market.connection.AccountFunds;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.GetAccountFundsResp;
+import org.junit.Test;
 
 public class AccountFundsTest {
 	@Test

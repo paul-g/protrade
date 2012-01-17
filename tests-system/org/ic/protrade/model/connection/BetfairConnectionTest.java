@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.util.Scanner;
 
 import org.ic.protrade.authentication.Encrypt;
-import org.ic.protrade.model.connection.BetfairConnectionHandler;
+import org.ic.protrade.data.market.connection.BetfairConnectionHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

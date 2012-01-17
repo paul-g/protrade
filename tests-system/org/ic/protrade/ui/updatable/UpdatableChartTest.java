@@ -2,10 +2,10 @@ package org.ic.protrade.ui.updatable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Slider;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.domain.ChartData;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Match;
 import org.ic.protrade.service.DataManager;
 import org.ic.protrade.ui.DisplayTest;
 import org.ic.protrade.ui.chart.OddsChart;

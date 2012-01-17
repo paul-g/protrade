@@ -2,14 +2,11 @@ package org.ic.protrade.ui.updatable;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -19,10 +16,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.exceptions.OddsButtonNotFoundException;
 import org.ic.protrade.model.betting.BetManager;
-import org.ic.protrade.ui.GraphicsUtils;
 import org.ic.protrade.ui.betting.BetPlacingShell;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 

@@ -1,6 +1,6 @@
 package org.ic.protrade.ui.widgets;
 
-import static org.ic.protrade.utils.Pair.pair;
+import static org.ic.protrade.data.utils.Pair.pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +19,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ic.protrade.authentication.BetfairAuthenticator;
-import org.ic.protrade.domain.Tournament;
-import org.ic.protrade.domain.match.LiveMatch;
-import org.ic.protrade.model.connection.BetfairConnectionHandler;
-import org.ic.protrade.utils.Pair;
+import org.ic.protrade.data.market.connection.BetfairConnectionHandler;
+import org.ic.protrade.data.market.connection.Tournament;
+import org.ic.protrade.data.match.LiveMatch;
+import org.ic.protrade.data.utils.Pair;
 
 public class SearchTree extends Composite {
 

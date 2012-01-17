@@ -1,7 +1,7 @@
 package org.ic.protrade.authentication;
 
-import org.ic.protrade.exceptions.LoginFailedException;
-import org.ic.protrade.model.connection.BetfairConnectionHandler;
+import org.ic.protrade.data.exceptions.LoginFailedException;
+import org.ic.protrade.data.market.connection.BetfairConnectionHandler;
 import org.ic.protrade.ui.login.LoginListener;
 import org.ic.protrade.ui.login.LoginResponse;
 import org.ic.protrade.ui.login.LoginShell;

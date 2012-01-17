@@ -1,13 +1,13 @@
 package org.ic.protrade.service;
 
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.Player;
+import static org.junit.Assert.assertEquals;
+
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.Player;
 import org.ic.protrade.service.threads.file_readers.FracsoftMatchOddsReader;
 import org.ic.protrade.service.threads.file_readers.FracsoftSetBettingReader;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class FracsoftReaderTest {
 

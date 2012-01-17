@@ -14,15 +14,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.protrade.domain.markets.EventBetfair;
-import org.ic.protrade.domain.markets.EventMarketBetfair;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.Player;
-import org.ic.protrade.domain.match.LiveMatch;
-import org.ic.protrade.domain.match.Score;
+import org.ic.protrade.data.market.EventBetfair;
+import org.ic.protrade.data.market.EventMarketBetfair;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.LiveMatch;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.Player;
+import org.ic.protrade.data.match.Score;
 import org.ic.protrade.model.betting.BetController;
 import org.ic.protrade.scrappers.livexscores.ScoreUpdateThread;
 import org.ic.protrade.scrappers.tennisinsight.StatisticsUpdateThread;
@@ -37,7 +36,7 @@ public class PredictionGui extends MatchViewerWidget {
 	private static Logger log = Logger.getLogger(PredictionGui.class);
 
 	private final ScoreUpdateThread scoreUpdateThread;
-	private StatisticsUpdateThread statisticsUpdateThread;
+	private final StatisticsUpdateThread statisticsUpdateThread;
 
 	private final StatisticsPanel st;
 
@@ -97,17 +96,18 @@ public class PredictionGui extends MatchViewerWidget {
 	}
 
 	public void start() {
-		//String statsString = getStatsString("data/test/tennisinsight-tso-fed.dat");
-		//new StatisticsParser(statsString, match).parseAndSetStatistics();
-		//st.handleEvent(new Event());
+		// String statsString =
+		// getStatsString("data/test/tennisinsight-tso-fed.dat");
+		// new StatisticsParser(statsString, match).parseAndSetStatistics();
+		// st.handleEvent(new Event());
 		statisticsUpdateThread.start();
-		//st.handleEvent(new Event());
+		// st.handleEvent(new Event());
 		if (match.isInPlay()) {
 			log.info("Live match: starting score update thread");
 			// only start score fetching for live matches
-			try{
+			try {
 				scoreUpdateThread.start();
-			} catch (Exception e){
+			} catch (Exception e) {
 				match.setScore(new Score());
 			}
 		}
@@ -120,8 +120,7 @@ public class PredictionGui extends MatchViewerWidget {
 	 * @param ti
 	 */
 	private void addMarketDataGrid(Composite comp, Match match) {
-		MarketDataGrid grid = new MarketDataGrid(comp,
-				SWT.NONE, match);
+		MarketDataGrid grid = new MarketDataGrid(comp, SWT.NONE, match);
 		grid.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true,
 				true, 1, 1));
 		BetController betController = new BetController(Arrays.asList(grid

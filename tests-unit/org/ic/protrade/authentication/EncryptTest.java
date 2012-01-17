@@ -1,9 +1,8 @@
 package org.ic.protrade.authentication;
 
-import org.ic.protrade.authentication.Encrypt;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class EncryptTest{
     @Test

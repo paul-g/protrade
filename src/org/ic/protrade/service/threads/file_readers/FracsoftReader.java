@@ -1,15 +1,15 @@
 package org.ic.protrade.service.threads.file_readers;
 
-import static org.ic.protrade.utils.Pair.pair;
+import static org.ic.protrade.data.utils.Pair.pair;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import org.ic.protrade.data.utils.Pair;
 import org.ic.protrade.exceptions.EndOfFracsoftFileException;
 import org.ic.protrade.service.threads.MatchUpdaterThread;
-import org.ic.protrade.utils.Pair;
 
 public abstract class FracsoftReader<K> extends MatchUpdaterThread {
 	protected Iterator<K> pointer = null;

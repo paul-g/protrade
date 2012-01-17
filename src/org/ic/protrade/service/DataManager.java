@@ -10,12 +10,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Listener;
-import org.ic.protrade.domain.markets.CompleteMarketData;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.markets.SetBettingMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.LiveMatch;
-import org.ic.protrade.domain.match.Score;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.market.connection.CompleteMarketData;
+import org.ic.protrade.data.market.connection.SetBettingMarketData;
+import org.ic.protrade.data.match.LiveMatch;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.Score;
+import org.ic.protrade.data.utils.Pair;
 import org.ic.protrade.model.betting.BetManager;
 import org.ic.protrade.model.prediction.SetMarketManager;
 import org.ic.protrade.service.threads.BetfairDataUpdaterThread;
@@ -24,7 +25,6 @@ import org.ic.protrade.service.threads.file_readers.FracsoftMatchOddsReader;
 import org.ic.protrade.service.threads.file_readers.FracsoftReader;
 import org.ic.protrade.service.threads.file_readers.FracsoftSetBettingReader;
 import org.ic.protrade.ui.updatable.UpdatableWidget;
-import org.ic.protrade.utils.Pair;
 
 public class DataManager {
 	// one Betfair updater and many Fracsoft updater

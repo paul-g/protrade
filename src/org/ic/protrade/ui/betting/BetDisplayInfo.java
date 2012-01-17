@@ -1,11 +1,12 @@
 package org.ic.protrade.ui.betting;
 
 import java.util.HashMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.ic.protrade.data.match.Player;
 import org.ic.protrade.domain.Bet;
-import org.ic.protrade.domain.match.Player;
 
 public class BetDisplayInfo {
 	private Composite parent;

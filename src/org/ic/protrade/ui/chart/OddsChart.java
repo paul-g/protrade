@@ -2,8 +2,6 @@ package org.ic.protrade.ui.chart;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -13,19 +11,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Slider;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.domain.ChartData;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.PlayerEnum;
 import org.ic.protrade.model.chartcomputers.BackValuesComputer;
 import org.ic.protrade.model.chartcomputers.MAComputer;
 import org.ic.protrade.model.chartcomputers.PredictedComputer;
 import org.ic.protrade.model.chartcomputers.SetEndComputer;
 import org.swtchart.IAxis;
-import org.swtchart.IAxisSet;
 import org.swtchart.IAxis.Position;
-import org.swtchart.ISeries.SeriesType;
+import org.swtchart.IAxisSet;
 import org.swtchart.IAxisTick;
+import org.swtchart.ISeries.SeriesType;
 import org.swtchart.ITitle;
 import org.swtchart.LineStyle;
 import org.swtchart.Range;
@@ -78,7 +76,7 @@ public class OddsChart extends UpdatableChart {
 
 		yAxisTitle = "Decimal Odds";
 		yAxisInvertedTitle = "Implied Odds (%)";
-		
+
 		// setSeriesStyles(pl1Name, pl2Name);
 		createSeries();
 
@@ -89,12 +87,12 @@ public class OddsChart extends UpdatableChart {
 
 		IAxis xAxis = getAxisSet().getXAxis(0);
 		configureAxis(xAxis, xAxisTitle, LineStyle.NONE, false,
-				defaultAxisColor,null, null);
+				defaultAxisColor, null, null);
 
 		Font font = new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD);
 		IAxis yAxis = getAxisSet().getYAxis(0);
 		configureAxis(yAxis, yAxisDecimalTitle, LineStyle.NONE, false,
-				defaultAxisColor,Position.Secondary, font);
+				defaultAxisColor, Position.Secondary, font);
 		yAxis.getTitle().setVisible(true);
 
 		getTitle().setVisible(false);
@@ -187,14 +185,18 @@ public class OddsChart extends UpdatableChart {
 	private void configureAxis(IAxis axis, String title, LineStyle lineStyle,
 			boolean visible, Color defaultAxisColor, Position pos, Font font) {
 		IAxisTick tick = axis.getTick();
-		if (pos != null) axis.setPosition(pos);
-		if (defaultAxisColor != null) tick.setForeground(defaultAxisColor);
+		if (pos != null)
+			axis.setPosition(pos);
+		if (defaultAxisColor != null)
+			tick.setForeground(defaultAxisColor);
 		axis.getGrid().setStyle(lineStyle);
 		ITitle t = axis.getTitle();
-		t.setText(title);		
+		t.setText(title);
 		t.setVisible(false);
-		if (font != null) t.setFont(font);
-		if (defaultAxisColor != null) t.setForeground(defaultAxisColor);
+		if (font != null)
+			t.setFont(font);
+		if (defaultAxisColor != null)
+			t.setForeground(defaultAxisColor);
 	}
 
 	private void initSlider() {
@@ -267,6 +269,7 @@ public class OddsChart extends UpdatableChart {
 	/**
 	 * Populates the chart with the given market data
 	 */
+	@Override
 	protected void updateData(MOddsMarketData data) {
 		// add new market data to the data structures
 		int dataSize = chartData.getDataSize() - 1;
@@ -315,102 +318,69 @@ public class OddsChart extends UpdatableChart {
 	}
 
 	/*
-	 public void showSeries(int i, boolean dragged) { 
-		int seriesNr = 8; 
-		 int size = (i) <
-	 sampleSize ? (i) : sampleSize; Date showXSeries[] = new Date[size];
-	 ArrayList<double[]> dataArray = new ArrayList<double[]>(); for (int k =
-	 0; k < seriesNr; k++) { dataArray.add(k, new double[size]); } int z = i <
-	 sampleSize ? 0 : 1; if (slider.getMaximum() == slider.getSelection() + 1
-	 || dragged) { // variables for updating series according decimal/implied setting
-	  int pow = 1; int k = 1; if (!decimalOdds) { pow = -1; k = 100; }
-	 
-			for (int a = 0; a < size; a++) {
-				int nr = 0;
-				int b = (i - sampleSize + 1) * z + a;
-				showXSeries[a] = chartData.getxSeries().get(b);
-				dataArray.get(nr)[a] = Math.pow(chartData.getPl1YSeries()
-						.get(b), pow)
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = Math.pow(chartData.getPl2YSeries()
-						.get(b), pow)
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl1().get(b),
-						pow)
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = Math.pow(chartData.getMaPl2().get(b),
-						pow)
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1Lay().get(b)
-						.first(), pow) - Math.pow(chartData.getPl1YSeries()
-						.get(b), pow))
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl1YSeries().get(
-						b), pow) - Math.pow(chartData.getPl1Lay().get(b)
-						.second(), pow))
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2Lay().get(b)
-						.first(), pow) - Math.pow(chartData.getPl2YSeries()
-						.get(b), pow))
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = (Math.pow(chartData.getPl2YSeries().get(
-						b), pow) - Math.pow(chartData.getPl2Lay().get(b)
-						.second(), pow))
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = 0; // chartData.endOfSets.get(b);
-				nr++;
-				dataArray.get(nr)[a] = Math.pow(chartData.getPl1Predicted()
-						.get(b), pow)
-						* k;
-				nr++;
-				dataArray.get(nr)[a] = Math.pow(chartData.getPl2Predicted()
-						.get(b), pow)
-						* k;
-
-			}
-	 
-	 /*
-	 firstSeries.setXDateSeries(showXSeries);
-	 firstSeries.setYSeries(dataArray.get(0));
-	 secondSeries.setXDateSeries(showXSeries);
-	 secondSeries.setYSeries(dataArray.get(1));
-	 maPl1Series.setXDateSeries(showXSeries);
-	 maPl1Series.setYSeries(dataArray.get(2));
-	 maPl2Series.setXDateSeries(showXSeries);
-	 Pl2Series.setYSeries(dataArray.get(3));
-	 pl1Spread.setPlusErrors(dataArray.get(4));
-	 pl1Spread.setMinusErrors(dataArray.get(5));
-	 pl2Spread.setPlusErrors(dataArray.get(6));
-	 pl2Spread.setMinusErrors(dataArray.get(7));
-	 endOfSets.setXDateSeries(showXSeries);
-	 endOfSets.setYSeries(dataArray.get(8));
-	 pl1Predicted.setXDateSeries(showXSeries);
-	 pl1Predicted.setYSeries(dataArray.get(9));
-	 pl2Predicted.setXDateSeries(showXSeries);
-	 pl2Predicted.setYSeries(dataArray.get(10)); 
-	 
-	 updateDisplay(); } }
+	 * public void showSeries(int i, boolean dragged) { int seriesNr = 8; int
+	 * size = (i) < sampleSize ? (i) : sampleSize; Date showXSeries[] = new
+	 * Date[size]; ArrayList<double[]> dataArray = new ArrayList<double[]>();
+	 * for (int k = 0; k < seriesNr; k++) { dataArray.add(k, new double[size]);
+	 * } int z = i < sampleSize ? 0 : 1; if (slider.getMaximum() ==
+	 * slider.getSelection() + 1 || dragged) { // variables for updating series
+	 * according decimal/implied setting int pow = 1; int k = 1; if
+	 * (!decimalOdds) { pow = -1; k = 100; }
+	 * 
+	 * for (int a = 0; a < size; a++) { int nr = 0; int b = (i - sampleSize + 1)
+	 * * z + a; showXSeries[a] = chartData.getxSeries().get(b);
+	 * dataArray.get(nr)[a] = Math.pow(chartData.getPl1YSeries() .get(b), pow)
+	 * k; nr++; dataArray.get(nr)[a] = Math.pow(chartData.getPl2YSeries()
+	 * .get(b), pow) k; nr++; dataArray.get(nr)[a] =
+	 * Math.pow(chartData.getMaPl1().get(b), pow) k; nr++; dataArray.get(nr)[a]
+	 * = Math.pow(chartData.getMaPl2().get(b), pow) k; nr++;
+	 * dataArray.get(nr)[a] = (Math.pow(chartData.getPl1Lay().get(b) .first(),
+	 * pow) - Math.pow(chartData.getPl1YSeries() .get(b), pow)) k; nr++;
+	 * dataArray.get(nr)[a] = (Math.pow(chartData.getPl1YSeries().get( b), pow)
+	 * - Math.pow(chartData.getPl1Lay().get(b) .second(), pow)) k; nr++;
+	 * dataArray.get(nr)[a] = (Math.pow(chartData.getPl2Lay().get(b) .first(),
+	 * pow) - Math.pow(chartData.getPl2YSeries() .get(b), pow)) k; nr++;
+	 * dataArray.get(nr)[a] = (Math.pow(chartData.getPl2YSeries().get( b), pow)
+	 * - Math.pow(chartData.getPl2Lay().get(b) .second(), pow)) k; nr++;
+	 * dataArray.get(nr)[a] = 0; // chartData.endOfSets.get(b); nr++;
+	 * dataArray.get(nr)[a] = Math.pow(chartData.getPl1Predicted() .get(b), pow)
+	 * k; nr++; dataArray.get(nr)[a] = Math.pow(chartData.getPl2Predicted()
+	 * .get(b), pow) k;
+	 * 
+	 * }
+	 * 
+	 * /* firstSeries.setXDateSeries(showXSeries);
+	 * firstSeries.setYSeries(dataArray.get(0));
+	 * secondSeries.setXDateSeries(showXSeries);
+	 * secondSeries.setYSeries(dataArray.get(1));
+	 * maPl1Series.setXDateSeries(showXSeries);
+	 * maPl1Series.setYSeries(dataArray.get(2));
+	 * maPl2Series.setXDateSeries(showXSeries);
+	 * Pl2Series.setYSeries(dataArray.get(3));
+	 * pl1Spread.setPlusErrors(dataArray.get(4));
+	 * pl1Spread.setMinusErrors(dataArray.get(5));
+	 * pl2Spread.setPlusErrors(dataArray.get(6));
+	 * pl2Spread.setMinusErrors(dataArray.get(7));
+	 * endOfSets.setXDateSeries(showXSeries);
+	 * endOfSets.setYSeries(dataArray.get(8));
+	 * pl1Predicted.setXDateSeries(showXSeries);
+	 * pl1Predicted.setYSeries(dataArray.get(9));
+	 * pl2Predicted.setXDateSeries(showXSeries);
+	 * pl2Predicted.setYSeries(dataArray.get(10));
+	 * 
+	 * updateDisplay(); } }
 	 */
 
 	// switches between the two odds representations
+	@Override
 	public void invertAxis() {
 		this.inverted = !this.inverted;
 		/*
-		decimalOdds = !decimalOdds;
-		if (decimalOdds)
-			this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
-		else
-			this.getAxisSet().getYAxis(0).getTitle().setText(
-					yAxisFractionalTitle);
-		*/
+		 * decimalOdds = !decimalOdds; if (decimalOdds)
+		 * this.getAxisSet().getYAxis(0).getTitle().setText(yAxisDecimalTitle);
+		 * else this.getAxisSet().getYAxis(0).getTitle().setText(
+		 * yAxisFractionalTitle);
+		 */
 		// TODO commented because of failing test
 		// showSeries(slider.getSelection(), true);
 		updateDisplay();

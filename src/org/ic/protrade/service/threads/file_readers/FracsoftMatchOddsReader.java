@@ -1,19 +1,20 @@
 package org.ic.protrade.service.threads.file_readers;
 
+import static org.ic.protrade.data.utils.Pair.pair;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.Scanner;
+
 import org.apache.log4j.Logger;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.LiveMatch;
-import org.ic.protrade.domain.match.Score;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.LiveMatch;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.Score;
+import org.ic.protrade.data.utils.Pair;
 import org.ic.protrade.exceptions.EndOfFracsoftFileException;
 import org.ic.protrade.service.DataManager;
-import org.ic.protrade.utils.Pair;
-
-import static org.ic.protrade.utils.Pair.pair;
 
 /**
  * Reads data in Fracsoft format from a given file
@@ -21,13 +22,14 @@ import static org.ic.protrade.utils.Pair.pair;
  * @author Paul Grigoras
  * 
  */
-public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData, Score>> {
-	//private FracsoftSetBettingReader setBettingReader = null;
-	
+public class FracsoftMatchOddsReader extends
+		FracsoftReader<Pair<MOddsMarketData, Score>> {
+	// private FracsoftSetBettingReader setBettingReader = null;
+
 	private static Logger log = Logger.getLogger(FracsoftMatchOddsReader.class);
 
 	private static final int TIME_OFFSET = 0;
-	private static final int HEADER_NO_LINES = 3;	
+	private static final int HEADER_NO_LINES = 3;
 	private static final int DELAY_OFFSET = 1;
 	private static final int STATUS_OFFSET = 2;
 	private static final int NAME_OFFSET = 4;
@@ -65,9 +67,9 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 				trim(lines2);
 
 				MOddsMarketData data = new MOddsMarketData();
-				//data.setDate(new Date(Long.parseLong(lines1[TIME_OFFSET])));
+				// data.setDate(new Date(Long.parseLong(lines1[TIME_OFFSET])));
 				data.setTime(new Date(Long.parseLong(lines1[TIME_OFFSET])));
-				
+
 				data.setDelay(Integer.parseInt(lines1[DELAY_OFFSET]));
 				data.setMatchStatus(lines1[STATUS_OFFSET]);
 				// player 1 data
@@ -111,14 +113,14 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 				i++;
 
 			}
-			
+
 			if (inPlayPointer != -1)
 				pointer = matchDataList.listIterator(inPlayPointer);
 			else
-				pointer = matchDataList.iterator();	
+				pointer = matchDataList.iterator();
 		} catch (FileNotFoundException e) {
 			log.error(e.getMessage());
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			System.out.println(i);
 		}
@@ -128,12 +130,11 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 				scanner.close();
 		}
 		/*
-		if (match.getSetBettingFilename() != null) {
-			setBettingReader = new FracsoftSetBettingReader(match, match.getSetBettingFilename());
-		}
-		*/
+		 * if (match.getSetBettingFilename() != null) { setBettingReader = new
+		 * FracsoftSetBettingReader(match, match.getSetBettingFilename()); }
+		 */
 	}
-	
+
 	private RecordedDataFormat detectFormat(String filename) {
 
 		Scanner scanner = null;
@@ -160,7 +161,7 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 
 		return RecordedDataFormat.RECORDED_NO_TOTAL_MATCHED;
 	}
-		
+
 	private void adjustOffsets(RecordedDataFormat format) {
 		int offset = 0;
 
@@ -178,7 +179,7 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 		GAMES_OFFSET -= offset;
 		POINTS_OFFSET -= offset;
 	}
-	
+
 	private int[] getGames(String[] lines) {
 		int[] games = new int[3];
 		for (int i = 0; i < 3; i++) {
@@ -191,7 +192,7 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 	protected void runFileReader() {
 		try {
 			DataManager.handleFileEvent(this.match, getMarketData());
-			//setBettingReader.runFileReader();
+			// setBettingReader.runFileReader();
 		} catch (EndOfFracsoftFileException e1) {
 			DataManager.handleEndOfFile(this.match);
 			this.setStop();
@@ -230,5 +231,5 @@ public class FracsoftMatchOddsReader extends FracsoftReader<Pair<MOddsMarketData
 		}
 
 		return pair(player1, player2);
-	}	
+	}
 }

@@ -1,8 +1,8 @@
 package org.ic.protrade.scrappers.livexscores;
 
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.domain.match.Score;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.PlayerEnum;
+import org.ic.protrade.data.match.Score;
 import org.ic.protrade.scrappers.SiteParser;
 
 public class ScoreParser extends SiteParser {

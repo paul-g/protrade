@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.ic.protrade.domain.markets.MOddsMarketData;
+import org.ic.protrade.data.market.MOddsMarketData;
 import org.ic.protrade.ui.widgets.MatchViewerWidget;
 import org.ic.protrade.ui.widgets.WidgetType;
 

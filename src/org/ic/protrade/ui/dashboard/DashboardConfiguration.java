@@ -17,7 +17,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.model.betting.BetController;
 import org.ic.protrade.score.StatisticsPanel;
 import org.ic.protrade.ui.chart.DualChartWidget;

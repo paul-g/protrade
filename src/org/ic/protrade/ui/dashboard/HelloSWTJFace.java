@@ -1,7 +1,10 @@
 package org.ic.protrade.ui.dashboard;
-import org.eclipse.jface.window.*;
-import org.eclipse.swt.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 
 public class HelloSWTJFace extends ApplicationWindow {
 	public HelloSWTJFace() {

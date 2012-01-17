@@ -11,9 +11,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.PlayerEnum;
+import org.ic.protrade.data.utils.Pair;
 import org.ic.protrade.model.betting.BetController;
 import org.ic.protrade.model.betting.BetManager;
 import org.ic.protrade.ui.GraphicsUtils;
@@ -21,7 +22,6 @@ import org.ic.protrade.ui.betting.BetsDisplay;
 import org.ic.protrade.ui.widgets.MatchViewerWidget;
 import org.ic.protrade.ui.widgets.WidgetType;
 import org.ic.protrade.utils.Colours;
-import org.ic.protrade.utils.Pair;
 
 public class MarketDataGrid extends MatchViewerWidget implements
 		UpdatableWidget {
@@ -101,9 +101,8 @@ public class MarketDataGrid extends MatchViewerWidget implements
 				p2MarketInfoButtons, false);
 		updateProfits();
 		/*
-		updatePandL(pl1PandL, 23);
-		updatePandL(pl2PandL, -10);
-		*/
+		 * updatePandL(pl1PandL, 23); updatePandL(pl2PandL, -10);
+		 */
 	}
 
 	private Label createOddsLabel(String string, Color color,
@@ -142,21 +141,18 @@ public class MarketDataGrid extends MatchViewerWidget implements
 
 	public void updateProfits() {
 		if (this.match != null) {
-			updatePandL(pl1PandL, BetManager
-					.getFirstPlayerWinnerProfit(this.match));
-			updatePandL(pl2PandL, BetManager
-					.getSecondPlayerWinnerProfit(this.match));
+			updatePandL(pl1PandL,
+					BetManager.getFirstPlayerWinnerProfit(this.match));
+			updatePandL(pl2PandL,
+					BetManager.getSecondPlayerWinnerProfit(this.match));
 		}
 		/*
-		this.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				MarketDataGrid.this.layout();
-			}			
-		});
-		*/
+		 * this.getDisplay().asyncExec(new Runnable() {
+		 * 
+		 * @Override public void run() { MarketDataGrid.this.layout(); } });
+		 */
 	}
-	
+
 	private void updatePandL(Label label, double value) {
 		label.setText("(" + value + ")");
 		if (value < 0) {
@@ -209,15 +205,15 @@ public class MarketDataGrid extends MatchViewerWidget implements
 			pBackButtons[i] = new OddsButton(this,
 					Colours.getOddsButtonColor(), oddsFont, this);
 			pBackButtons[i].pack();
-			pBackButtons[i].setInitialBackgroundImage(GraphicsUtils
-					.makeGradientBackgroundImage(pBackButtons[i],
-							Colours.getLightBackColor(),
-							Colours.getBackColor()));
 			pBackButtons[i]
-					.setHighlightImage(GraphicsUtils
+					.setInitialBackgroundImage(GraphicsUtils
 							.makeGradientBackgroundImage(pBackButtons[i],
-									Colours.getDarkBackColor(),
-									Colours.getLightBackColor()));
+									Colours.getLightBackColor(),
+									Colours.getBackColor()));
+			pBackButtons[i].setHighlightImage(GraphicsUtils
+					.makeGradientBackgroundImage(pBackButtons[i],
+							Colours.getDarkBackColor(),
+							Colours.getLightBackColor()));
 		}
 	}
 
@@ -242,14 +238,13 @@ public class MarketDataGrid extends MatchViewerWidget implements
 			pLayButtons[i] = new OddsButton(this, Colours.getOddsButtonColor(),
 					oddsFont, this);
 			pLayButtons[i].pack();
-			pLayButtons[i]
-					.setInitialBackgroundImage(GraphicsUtils
-							.makeGradientBackgroundImage(pLayButtons[i],
-									Colours.getLightLayColor(),
-									Colours.getLayColor()));
+			pLayButtons[i].setInitialBackgroundImage(GraphicsUtils
+					.makeGradientBackgroundImage(pLayButtons[i],
+							Colours.getLightLayColor(), Colours.getLayColor()));
 			pLayButtons[i].setHighlightImage(GraphicsUtils
 					.makeGradientBackgroundImage(pLayButtons[i],
-							Colours.getDarkLayColor(), Colours.getLightLayColor()));
+							Colours.getDarkLayColor(),
+							Colours.getLightLayColor()));
 		}
 	}
 
@@ -273,9 +268,10 @@ public class MarketDataGrid extends MatchViewerWidget implements
 		pBackButtons[2].setInitialBackgroundImage(GraphicsUtils
 				.makeGradientBackgroundImage(pBackButtons[2],
 						Colours.getBackColor(), Colours.getDarkBackColor()));
-		pBackButtons[2].setHighlightImage(GraphicsUtils
-				.makeGradientBackgroundImage(pBackButtons[2],
-						Colours.getDarkBackColor(), Colours.getLightBackColor()));
+		pBackButtons[2]
+				.setHighlightImage(GraphicsUtils.makeGradientBackgroundImage(
+						pBackButtons[2], Colours.getDarkBackColor(),
+						Colours.getLightBackColor()));
 	}
 
 	private void initFonts() {
@@ -434,7 +430,7 @@ public class MarketDataGrid extends MatchViewerWidget implements
 	}
 
 	@Override
-	public void setMatch(Match match) {		
+	public void setMatch(Match match) {
 		if (match != null) {
 			this.match = match;
 			this.betController.setMatch(match);

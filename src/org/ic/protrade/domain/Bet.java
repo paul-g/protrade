@@ -1,71 +1,69 @@
 package org.ic.protrade.domain;
 
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.utils.Pair;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.match.PlayerEnum;
+import org.ic.protrade.data.utils.Pair;
 import org.ic.tennistrader.generated.exchange.BFExchangeServiceStub.BetTypeEnum;
 
 public final class Bet {
-    private Pair<Double, Double> value;
-    private double unmatchedValue;
-    private Match match;
-    private PlayerEnum player;
-    private BetTypeEnum type;
-    private double profit;
-    private double firstPlayerWinnerProfit;
-    private double secondPlayerWinnerProfit;
+	private Pair<Double, Double> value;
+	private double unmatchedValue;
+	private Match match;
+	private PlayerEnum player;
+	private BetTypeEnum type;
+	private double profit;
+	private double firstPlayerWinnerProfit;
+	private double secondPlayerWinnerProfit;
 
-    public Bet(Match m, PlayerEnum p, BetTypeEnum type, Pair<Double, Double> value){
-        setMatch(m);
-        setPlayer(p);
-        setType(type);
-        setValue(value);
-        setProfit(0);
-        setUnmatchedValue(0);
-    }
-    
-    public Match getMatch() {
-        return match;
-    }
+	public Bet(Match m, PlayerEnum p, BetTypeEnum type,
+			Pair<Double, Double> value) {
+		setMatch(m);
+		setPlayer(p);
+		setType(type);
+		setValue(value);
+		setProfit(0);
+		setUnmatchedValue(0);
+	}
 
-    public void setMatch(Match match) {
-        this.match = match;
-    }
+	public Match getMatch() {
+		return match;
+	}
 
-    public PlayerEnum getPlayer() {
-        return player;
-    }
+	public void setMatch(Match match) {
+		this.match = match;
+	}
 
-    public void setPlayer(PlayerEnum player) {
-        this.player = player;
-    }
+	public PlayerEnum getPlayer() {
+		return player;
+	}
 
-    public BetTypeEnum getType() {
-        return type;
-    }
+	public void setPlayer(PlayerEnum player) {
+		this.player = player;
+	}
 
-    public void setType(BetTypeEnum betType) {
-        this.type = betType;
-    }
-    
-    
-    public void setValue(Pair<Double, Double> value) {
-        this.value = value;
-    }
+	public BetTypeEnum getType() {
+		return type;
+	}
 
-    /*
-    public Pair<Double, Double> getValue() {
-        return value;
-    }
-    */
-    
-    public double getAmount() {
-    	return this.value.second();
-    }
-    
-    public double getOdds() {
-    	return this.value.first();
-    }
+	public void setType(BetTypeEnum betType) {
+		this.type = betType;
+	}
+
+	public void setValue(Pair<Double, Double> value) {
+		this.value = value;
+	}
+
+	/*
+	 * public Pair<Double, Double> getValue() { return value; }
+	 */
+
+	public double getAmount() {
+		return this.value.second();
+	}
+
+	public double getOdds() {
+		return this.value.first();
+	}
 
 	public void setProfit(double profit) {
 		this.profit = profit;
@@ -91,39 +89,36 @@ public final class Bet {
 		return secondPlayerWinnerProfit;
 	}
 
-    public void setUnmatchedValue(double unmatchedValue) {
-        this.unmatchedValue = unmatchedValue;
-    }
+	public void setUnmatchedValue(double unmatchedValue) {
+		this.unmatchedValue = unmatchedValue;
+	}
 
-    public double getUnmatchedValue() {
-        return unmatchedValue;
-    }
-    
-    public double getCurrentLiability() {
-    	if (this.type.equals(BetTypeEnum.L))
-    		return (value.first() - 1) * (value.second() - unmatchedValue);
-    	return value.second() - unmatchedValue;
-    }
-    
-    public double getPossibleLiability() {
-    	if (this.type.equals(BetTypeEnum.L))
-    		return (value.first() - 1) * value.second();
-    	return value.second();
-    }
+	public double getUnmatchedValue() {
+		return unmatchedValue;
+	}
 
-    public String getDescription() {
-        return (this.getType() == BetTypeEnum.B ? "Back "
-                : "Lay ")
-                + (this.player.equals(PlayerEnum.PLAYER1) ? this.match
-                        .getPlayerOne().toString() : this.match
-                        .getPlayerTwo().toString())
-                + " for "
-                + this.getAmount()
-                + "£ at " + this.getOdds() + "";
-    }
+	public double getCurrentLiability() {
+		if (this.type.equals(BetTypeEnum.L))
+			return (value.first() - 1) * (value.second() - unmatchedValue);
+		return value.second() - unmatchedValue;
+	}
+
+	public double getPossibleLiability() {
+		if (this.type.equals(BetTypeEnum.L))
+			return (value.first() - 1) * value.second();
+		return value.second();
+	}
+
+	public String getDescription() {
+		return (this.getType() == BetTypeEnum.B ? "Back " : "Lay ")
+				+ (this.player.equals(PlayerEnum.PLAYER1) ? this.match
+						.getPlayerOne().toString() : this.match.getPlayerTwo()
+						.toString()) + " for " + this.getAmount() + "£ at "
+				+ this.getOdds() + "";
+	}
 
 	public double getPossibleProfit() {
-		if (this.type.equals(BetTypeEnum.B)) 
+		if (this.type.equals(BetTypeEnum.B))
 			return this.getOdds() * this.getAmount();
 		else
 			return this.getAmount();

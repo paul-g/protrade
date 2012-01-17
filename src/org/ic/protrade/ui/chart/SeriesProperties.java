@@ -1,14 +1,14 @@
 package org.ic.protrade.ui.chart;
 
 import org.eclipse.swt.SWT;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.model.chartcomputers.SeriesComputer;
 import org.ic.protrade.ui.chart.ChartSettings.ResultSet;
 import org.swtchart.IBarSeries;
 import org.swtchart.IErrorBar;
+import org.swtchart.IErrorBar.ErrorBarType;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeries;
-import org.swtchart.IErrorBar.ErrorBarType;
 import org.swtchart.ISeries.SeriesType;
 
 public class SeriesProperties {

@@ -1,8 +1,8 @@
 package org.ic.protrade.listener;
 
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.Match;
 
 public interface MatchSelectionListener {
-    public void handleMatchSelection(Match match);
+	public void handleMatchSelection(Match match);
 
 }

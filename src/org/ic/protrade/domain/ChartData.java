@@ -1,15 +1,15 @@
 package org.ic.protrade.domain;
 
-import static org.ic.protrade.utils.Pair.pair;
+import static org.ic.protrade.data.utils.Pair.pair;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.Match;
+import org.ic.protrade.data.utils.Pair;
 import org.ic.protrade.score.PredictionCalculator;
-import org.ic.protrade.utils.Pair;
 
 public class ChartData {
 	private ArrayList<Double> pl1YSeries;
@@ -41,7 +41,7 @@ public class ChartData {
 			prevNrSets = 0;
 		}
 		dataSize = 0;
-		
+
 		pl1YSeries = new ArrayList<Double>();
 		pl2YSeries = new ArrayList<Double>();
 		pl1Predicted = new ArrayList<Double>();
@@ -58,21 +58,13 @@ public class ChartData {
 		endOfSets = new ArrayList<Integer>();
 
 		/*
-		pl1YSeries.add(0.0);
-		pl2YSeries.add(0.0);
-		pl1Predicted.add(0.0);
-		pl2Predicted.add(0.0);
-		pl1Lay.add(pair(0.0, 0.0));
-		pl2Lay.add(pair(0.0, 0.0));
-		maPl1.add(0.0);
-		maPl2.add(0.0);
-		xSeries.add(Calendar.getInstance().getTime());
-		backOverround.add(0.0);
-		layOverround.add(0.0);
-		pl1Volume.add(0.0);
-		pl2Volume.add(0.0);
-		endOfSets.add(0);
-		*/
+		 * pl1YSeries.add(0.0); pl2YSeries.add(0.0); pl1Predicted.add(0.0);
+		 * pl2Predicted.add(0.0); pl1Lay.add(pair(0.0, 0.0));
+		 * pl2Lay.add(pair(0.0, 0.0)); maPl1.add(0.0); maPl2.add(0.0);
+		 * xSeries.add(Calendar.getInstance().getTime());
+		 * backOverround.add(0.0); layOverround.add(0.0); pl1Volume.add(0.0);
+		 * pl2Volume.add(0.0); endOfSets.add(0);
+		 */
 	}
 
 	public void updateData(MOddsMarketData data) {

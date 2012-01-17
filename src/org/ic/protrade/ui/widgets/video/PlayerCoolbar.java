@@ -15,8 +15,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.ic.protrade.ui.toolbars.DashboardCoolBar;
-import org.ic.protrade.ui.toolbars.DashboardToolBar;
-import org.ic.protrade.ui.toolbars.ProfileToolBar;
 import org.ic.protrade.ui.toolbars.VideoPlayerToolBar;
 
 public class PlayerCoolbar extends Composite {

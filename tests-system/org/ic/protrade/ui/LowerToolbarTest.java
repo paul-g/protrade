@@ -3,10 +3,8 @@ package org.ic.protrade.ui;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
-import org.ic.protrade.ui.LowerToolBar;
 import org.ic.protrade.ui.main.StandardWindow;
 import org.junit.Before;
 import org.junit.Ignore;

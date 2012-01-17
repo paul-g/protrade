@@ -5,8 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 
-import org.ic.protrade.domain.match.Score;
-import org.ic.protrade.domain.match.SetScore;
+import org.ic.protrade.data.match.Score;
+import org.ic.protrade.data.match.SetScore;
 
 public class RandomDataGenerator {    
     private static BufferedWriter out;

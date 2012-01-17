@@ -1,9 +1,11 @@
 package org.ic.protrade.domain.match;
 
-import org.ic.protrade.domain.match.Score;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import org.ic.protrade.data.match.Score;
+import org.junit.Test;
 
 public class ScoreTest extends ScoringTest {
     

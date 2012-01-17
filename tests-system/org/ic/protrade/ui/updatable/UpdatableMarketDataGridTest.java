@@ -2,11 +2,10 @@ package org.ic.protrade.ui.updatable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.protrade.domain.match.HistoricalMatch;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.HistoricalMatch;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.service.DataManager;
 import org.ic.protrade.ui.DisplayTest;
-import org.ic.protrade.ui.updatable.MarketDataGrid;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

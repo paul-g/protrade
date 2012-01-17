@@ -2,39 +2,33 @@ package org.ic.protrade.model.chartcomputers;
 
 import java.util.ArrayList;
 
+import org.ic.protrade.data.match.PlayerEnum;
+import org.ic.protrade.data.utils.Pair;
 import org.ic.protrade.domain.ChartData;
-import org.ic.protrade.domain.match.PlayerEnum;
-import org.ic.protrade.utils.Pair;
 
 public abstract class SeriesComputer {
-	public abstract double[] computeValues(PlayerEnum player, ChartData chartData,
-			int startIndex, boolean inverted);
-	/*{
-		if (chartData != null) {
-			if (player.equals(PlayerEnum.PLAYER1)) {
-				return computeValues(chartData.getPl1YSeries(), startIndex);
-			}
-			else
-			{
-				return computeValues(chartData.getPl2YSeries(), startIndex);
-			}
-		}
-		return new double[0];
-	}*/
+	public abstract double[] computeValues(PlayerEnum player,
+			ChartData chartData, int startIndex, boolean inverted);
 
 	/*
-	protected abstract double[] computeValues(ArrayList<Double> oldValues,
-			int startIndex);
-	*/
-	
+	 * { if (chartData != null) { if (player.equals(PlayerEnum.PLAYER1)) {
+	 * return computeValues(chartData.getPl1YSeries(), startIndex); } else {
+	 * return computeValues(chartData.getPl2YSeries(), startIndex); } } return
+	 * new double[0]; }
+	 */
+
+	/*
+	 * protected abstract double[] computeValues(ArrayList<Double> oldValues,
+	 * int startIndex);
+	 */
+
 	public double[] computePlusErrors(PlayerEnum player, ChartData chartData,
 			int startIndex, boolean inverted) {
 		ArrayList<Double> ySeries = setYSeries(player, chartData);
 		ArrayList<Pair<Double, Double>> layValues = setLayValues(player,
 				chartData);
 		int size = (ySeries.size() < layValues.size() ? ySeries.size()
-				: layValues.size())
-				- startIndex;
+				: layValues.size()) - startIndex;
 		double[] errors = new double[size + 1];
 		for (int i = 0; i < size; i++) {
 			if (inverted)
@@ -54,8 +48,7 @@ public abstract class SeriesComputer {
 		ArrayList<Pair<Double, Double>> layValues = setLayValues(player,
 				chartData);
 		int size = (ySeries.size() < layValues.size() ? ySeries.size()
-				: layValues.size())
-				- startIndex;
+				: layValues.size()) - startIndex;
 		double[] errors = new double[size];
 		for (int i = 0; i < size; i++) {
 			if (inverted)
@@ -68,14 +61,15 @@ public abstract class SeriesComputer {
 		return errors;
 	}
 
-	private ArrayList<Pair<Double, Double>> setLayValues(PlayerEnum player, ChartData chartData) {
+	private ArrayList<Pair<Double, Double>> setLayValues(PlayerEnum player,
+			ChartData chartData) {
 		if (player.equals(PlayerEnum.PLAYER1)) {
 			return chartData.getPl1Lay();
 		} else {
 			return chartData.getPl2Lay();
 		}
 	}
-	
+
 	private ArrayList<Double> setYSeries(PlayerEnum player, ChartData chartData) {
 		if (player.equals(PlayerEnum.PLAYER1)) {
 			return chartData.getPl1YSeries();
@@ -85,7 +79,7 @@ public abstract class SeriesComputer {
 	}
 
 	/*
-	public abstract double[] addValue(PlayerEnum player, ChartData chartData,
-			double player1newValue, double player2newValue);
-	*/	
+	 * public abstract double[] addValue(PlayerEnum player, ChartData chartData,
+	 * double player1newValue, double player2newValue);
+	 */
 }

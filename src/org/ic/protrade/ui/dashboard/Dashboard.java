@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.Match;
 
 public class Dashboard extends Composite {
 

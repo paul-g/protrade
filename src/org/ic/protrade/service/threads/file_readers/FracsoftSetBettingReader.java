@@ -3,27 +3,31 @@ package org.ic.protrade.service.threads.file_readers;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
 import org.apache.log4j.Logger;
-import org.ic.protrade.domain.markets.MarketPrices;
-import org.ic.protrade.domain.markets.MatchScore;
-import org.ic.protrade.domain.markets.SetBettingMarketData;
-import org.ic.protrade.domain.match.Match;
-import org.ic.protrade.domain.match.LiveMatch;
+import org.ic.protrade.data.MatchScore;
+import org.ic.protrade.data.market.connection.MarketPrices;
+import org.ic.protrade.data.market.connection.SetBettingMarketData;
+import org.ic.protrade.data.match.LiveMatch;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.exceptions.EndOfFracsoftFileException;
 import org.ic.protrade.service.DataManager;
 
-public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketData> {
-	private static Logger log = Logger.getLogger(FracsoftSetBettingReader.class);
-	
+public class FracsoftSetBettingReader extends
+		FracsoftReader<SetBettingMarketData> {
+	private static Logger log = Logger
+			.getLogger(FracsoftSetBettingReader.class);
+
 	private static final int HEADER_NO_LINES = 4;
 	private static final int TIMESTAMP_OFFSET = 0;
 	private static final int DELAY_OFFSET = 1;
-	//private static final int STATUS_OFFSET = 3;
+	// private static final int STATUS_OFFSET = 3;
 	private static final int NAME_OFFSET = 5;
 	private static final int BACK_OFFSET = 6;
 	private static final int LAY_OFFSET = 12;
-	//private static final int AMOUNT_OFFSET = 18;
-	//private static final int LPM_OFFSET = 19;
+
+	// private static final int AMOUNT_OFFSET = 18;
+	// private static final int LPM_OFFSET = 19;
 
 	public FracsoftSetBettingReader(Match match, String filename)
 			throws FileNotFoundException {
@@ -63,9 +67,9 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 							.getMatchScore(lines1[NAME_OFFSET]);
 					if (matchScore.getFirstPlayerLastName().equals(
 							match.getPlayerTwo().getLastname()))
-						matchScore = new MatchScore(matchScore
-								.getSecondPlayerScore(), matchScore
-								.getFirstPlayerScore());
+						matchScore = new MatchScore(
+								matchScore.getSecondPlayerScore(),
+								matchScore.getFirstPlayerScore());
 
 					MarketPrices marketPrices = new MarketPrices();
 					marketPrices.setBackPrices(getOdds(lines1, BACK_OFFSET));
@@ -74,21 +78,20 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 					data.addMatchScoreMarketPrices(matchScore, marketPrices);
 				}
 			}
-			
+
 			if (inPlayPointer != -1)
 				pointer = matchDataList.listIterator(inPlayPointer);
 			else
-				pointer = matchDataList.iterator();			
+				pointer = matchDataList.iterator();
 		} catch (FileNotFoundException e) {
 			log.error(e.getMessage());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			System.out.println(i);
-		}
-		finally {
+		} finally {
 			if (scanner != null)
 				scanner.close();
-		}		
+		}
 	}
 
 	@Override
@@ -97,13 +100,12 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 			// LiveDataFetcher.handleFileEvent(this.match, getMarketData());
 			DataManager.handleSetBettingFileEvent(this.match, getMarketData());
 			/*
-			SetBettingMarketData data = getMarketData();
-			System.out.println("New set betting update");
-			for (MatchScore score : data.getMatchScoreMarketData().keySet()) {
-				System.out.println("for match score " + score.toString()
-						+ ", market " + data.getMatchScoreMarketPrices(score));
-			}
-			*/
+			 * SetBettingMarketData data = getMarketData();
+			 * System.out.println("New set betting update"); for (MatchScore
+			 * score : data.getMatchScoreMarketData().keySet()) {
+			 * System.out.println("for match score " + score.toString() +
+			 * ", market " + data.getMatchScoreMarketPrices(score)); }
+			 */
 		} catch (EndOfFracsoftFileException e1) {
 			// LiveDataFetcher.handleEndOfFile(this.match);
 			this.setStop();
@@ -113,8 +115,8 @@ public class FracsoftSetBettingReader extends FracsoftReader<SetBettingMarketDat
 		} catch (InterruptedException e) {
 			log.info("Fracsoft set betting thread interrupted");
 		}
-	}	
-	
+	}
+
 	@Override
 	public void setMatch(LiveMatch match) {
 		this.match = match;

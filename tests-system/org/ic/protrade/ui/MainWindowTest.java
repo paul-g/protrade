@@ -1,12 +1,13 @@
 package org.ic.protrade.ui;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.ic.protrade.ui.main.MainWindow;
 import org.ic.protrade.ui.main.StandardWindow;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class MainWindowTest extends DisplayTest{
     private MainWindow mw;

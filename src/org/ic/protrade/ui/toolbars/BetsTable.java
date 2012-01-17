@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.domain.Bet;
-import org.ic.protrade.domain.match.PlayerEnum;
 import org.ic.protrade.model.betting.BetManager;
 
 public class BetsTable {

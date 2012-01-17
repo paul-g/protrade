@@ -2,7 +2,7 @@ package org.ic.protrade.ui.widgets;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.ic.protrade.domain.match.Match;
+import org.ic.protrade.data.match.Match;
 import org.ic.protrade.service.DataManager;
 import org.ic.protrade.ui.updatable.UpdatableWidget;
 

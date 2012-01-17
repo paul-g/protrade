@@ -1,11 +1,14 @@
 package org.ic.protrade.model.connection;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
-import org.ic.protrade.domain.Tournament;
-import org.ic.protrade.domain.profile.ProfileData;
-import org.ic.protrade.model.connection.BetfairConnectionHandler;
+import org.ic.protrade.data.market.connection.BetfairConnectionHandler;
+import org.ic.protrade.data.market.connection.ProfileData;
+import org.ic.protrade.data.market.connection.Tournament;
 import org.junit.Ignore;
 import org.junit.Test;
 

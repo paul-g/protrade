@@ -1,8 +1,8 @@
 package org.ic.protrade.ui.score;
 
 import org.eclipse.swt.events.DisposeListener;
-import org.ic.protrade.domain.markets.MOddsMarketData;
-import org.ic.protrade.domain.match.PlayerEnum;
+import org.ic.protrade.data.market.MOddsMarketData;
+import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.ui.updatable.UpdatableWidget;
 
 public interface ScorePanel extends UpdatableWidget {
