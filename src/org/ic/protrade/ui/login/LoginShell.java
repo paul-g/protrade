@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -26,13 +24,12 @@ import org.eclipse.swt.widgets.Text;
 import org.ic.protrade.Main;
 import org.ic.protrade.authentication.BetfairAuthenticator;
 import org.ic.protrade.listener.HoverListener;
-import org.pushingpixels.trident.Timeline;
 
 public class LoginShell implements LoginListener {
 
 	List<Listener> loginSucces = new ArrayList<Listener>();
 
-	private Shell loginShell;
+	private final Shell loginShell;
 
 	public static Logger log = Logger.getLogger(LoginShell.class);
 
@@ -46,9 +43,9 @@ public class LoginShell implements LoginListener {
 
 	/* Bar Text */
 	private TextUpdater textUpdater;
-	
+
 	/* Success/Fail Label */
-	private Label resultLabel;
+	private final Label resultLabel;
 	private Image accept;
 	private Image deny;
 	private boolean visible = false;
@@ -56,14 +53,13 @@ public class LoginShell implements LoginListener {
 	public Shell show() {
 		return loginShell;
 	}
-	
+
 	private final Text username;
 
 	public LoginShell(final Display display) {
 		this.loginShell = new Shell(display, SWT.NO_TRIM);// SWT.TRANSPARENCY_ALPHA);
 		loginShell.setSize(600, 350);
 		loginShell.setBackgroundMode(SWT.INHERIT_FORCE);
-
 
 		final Image loginImg = new Image(loginShell.getDisplay(),
 				"images/login/login.png");
@@ -78,6 +74,7 @@ public class LoginShell implements LoginListener {
 		Listener l = new Listener() {
 			Point origin;
 
+			@Override
 			public void handleEvent(Event e) {
 				switch (e.type) {
 				case SWT.MouseDown:
@@ -119,18 +116,22 @@ public class LoginShell implements LoginListener {
 
 		Button cancelButton = makeCancelButton(display);
 		cancelButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				loginShell.dispose();
 			}
 		});
-		
+
 		login.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
-				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
-				BetfairAuthenticator.checkLogin(username.getText(), password.getText(), LoginShell.this);
+				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(
+						SWT.CURSOR_WAIT));
+				BetfairAuthenticator.checkLogin(username.getText(),
+						password.getText(), LoginShell.this);
 			}
 		});
-		
+
 		resultLabel = makeResultLabel(display);
 
 		// Center the login screen
@@ -169,23 +170,23 @@ public class LoginShell implements LoginListener {
 		addHighlightListener(display, login);
 		return login;
 	}
-	
+
 	private Label makeResultLabel(Display display) {
-		accept = new Image(display,"images/login/shield_accepted.png");
-		deny = new Image(display,"images/login/shield_denied.png");
-		Label result = new Label(this.loginShell,SWT.NONE);
+		accept = new Image(display, "images/login/shield_accepted.png");
+		deny = new Image(display, "images/login/shield_denied.png");
+		Label result = new Label(this.loginShell, SWT.NONE);
 		result.setBounds(500, 162, 75, 75);
 		result.setImage(accept);
 		result.setVisible(false);
 		return result;
 	}
-	
+
 	private void makeProgressBar() {
 		bar = new ProgressBar(loginShell, SWT.SMOOTH);
 		bar.setBounds(50, 305, 500, 20);
 		bar.setToolTipText("Test");
 		bar.setVisible(false);
-		textUpdater = new TextUpdater("",bar);
+		textUpdater = new TextUpdater("", bar);
 		bar.addPaintListener(textUpdater);
 	}
 
@@ -194,29 +195,6 @@ public class LoginShell implements LoginListener {
 		Color last = new org.eclipse.swt.graphics.Color(display, 105, 105, 105);
 
 		button.setForeground(init);
-
-		final Timeline rolloverTimeline = new Timeline(button);
-		rolloverTimeline.addPropertyToInterpolate("foreground", init, last);
-		rolloverTimeline.setDuration(100);
-
-		button.addMouseTrackListener(new MouseTrackListener() {
-
-			@Override
-			public void mouseEnter(MouseEvent arg0) {
-				rolloverTimeline.play();
-
-			}
-
-			@Override
-			public void mouseExit(MouseEvent arg0) {
-				rolloverTimeline.playReverse();
-
-			}
-
-			@Override
-			public void mouseHover(MouseEvent arg0) {
-			}
-		});
 	}
 
 	public void run(final Display display) {
@@ -252,7 +230,7 @@ public class LoginShell implements LoginListener {
 			}
 		}).start();
 	}
-	
+
 	public void dispose() {
 		loginShell.dispose();
 	}
@@ -296,14 +274,14 @@ public class LoginShell implements LoginListener {
 
 	private class TextUpdater implements PaintListener {
 		private String text;
-		private Point point;
+		private final Point point;
 
-		public TextUpdater(String text,ProgressBar pb) {
+		public TextUpdater(String text, ProgressBar pb) {
 			this.text = text;
 			point = pb.getSize();
 		}
 
-		public void setText (String text) {
+		public void setText(String text) {
 			this.text = text;
 		}
 
@@ -312,8 +290,10 @@ public class LoginShell implements LoginListener {
 			FontMetrics fontMetrics = e.gc.getFontMetrics();
 			int width = fontMetrics.getAverageCharWidth() * text.length();
 			int height = fontMetrics.getHeight();
-			e.gc.setForeground(loginShell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-			e.gc.drawString(text, (point.x-width)/2 , (point.y-height)/2, true);
+			e.gc.setForeground(loginShell.getDisplay().getSystemColor(
+					SWT.COLOR_BLACK));
+			e.gc.drawString(text, (point.x - width) / 2,
+					(point.y - height) / 2, true);
 		}
 	}
 
@@ -322,7 +302,7 @@ public class LoginShell implements LoginListener {
 		loginShell.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if (LoginResponse.SUCCESS.equals(loginResponse)){
+				if (LoginResponse.SUCCESS.equals(loginResponse)) {
 					Main.username = username.getText();
 					setSuccessLabel(true);
 					updateResult(SUCCESS);
@@ -331,12 +311,12 @@ public class LoginShell implements LoginListener {
 					setSuccessLabel(false);
 					updateResult(FAIL);
 				}
-				
-				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(SWT.CURSOR_ARROW));
+
+				loginShell.setCursor(loginShell.getDisplay().getSystemCursor(
+						SWT.CURSOR_ARROW));
 			}
 		});
-		
-		
+
 	}
 
 }

@@ -7,8 +7,29 @@
         <dependency org="log4j" name="log4j" rev="1.2.16"/>
         <dependency org="pmd" name="pmd" rev="4.3"/>
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1"/>
-        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.6.1"/>
-        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.6.1"/>
-        <dependency org="org.floggy.3rd.org.eclipse" name="jface" rev="3.3.2.M20080207-0800"/>
+        <!-- <dependency org="swt" name="jface" rev="3.0.1"/> -->
+        <!-- <dependency org="swt" name="swt-linux-gtk" rev="3.0.1"/>
+        <dependency org="swt" name="osgi" rev="3.0.1"/> -->
+        <dependency org="net.sourceforge.htmlunit" name="htmlunit" rev="2.9"/>
+        <dependency org="net.java.dev.jna" name="jna" rev="3.4.0"/>
+        <!-- <dependency org="com.github.insubstantial" name="trident" rev="7.0"/> -->
+        
+        <!-- Axis2 dependencies -->
+        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-java2wsdl" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-saaj" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-metadata" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-xmlbeans" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-clustering" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-jaxws-api" rev="1.4.1"/>
+        <dependency org="org.apache.axis2" name="axis2-spring" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-corba" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-fastinfoset" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-json" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-mtompolicy" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-jaxbri" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-jibx" rev="1.5.1"/>
+        <dependency org="org.apache.axis2" name="axis2-adb-codegen" rev="1.5.1"/>
     </dependencies>
 </ivy-module>
