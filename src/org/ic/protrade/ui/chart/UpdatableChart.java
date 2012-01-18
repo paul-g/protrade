@@ -63,11 +63,8 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		properties.updateSeriesProperties();
 		computerSeries.put(properties, seriesComputer);
 		updateSeriesProperties(properties);
-		// TODO add to chart; make menus with reference to properties
 		if (chartData != null) {
-
 			computeValues(properties);
-			// properties.getChartSeries().setXDateSeries(new Date[]);
 		}
 	}
 
@@ -141,14 +138,6 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			@Override
 			public void run() {
 
-				/*
-				 * for (SeriesProperties prop : computerSeries.keySet()) { if
-				 * (chartData != null) { prop.getChartSeries().setYSeries(
-				 * computerSeries.get(prop).addValue( prop.getPlayer(),
-				 * chartData, newData.getPl1LastMatchedPrice(),
-				 * newData.getPl2LastMatchedPrice()));
-				 * prop.getChartSeries().setXSeries(...); } } updateDisplay();
-				 */
 			}
 		});
 	}
@@ -210,11 +199,6 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 	}
 
 	protected abstract void invertAxis();
-
-	/*
-	 * private void updateMenu() { List<MenuItem> menuItems = new
-	 * ArrayList<MenuItem>(); for (MenuItem mi : menuItems) mi.dispose(); }
-	 */
 
 	private void createMenuItem(Menu menu, final SeriesProperties prop) {
 		final MenuItem newMenuItem = new MenuItem(menu, SWT.CHECK);
@@ -295,10 +279,6 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 		}
 
 		for (SeriesProperties seriesProp : computerSeries.keySet()) {
-			/*
-			 * seriesProp.getChartSeries().setYSeries(computer.computeValues(
-			 * seriesProp .getPlayer(), chartData, b));
-			 */
 			this.startingIndex = b;
 			computeValues(seriesProp);
 			seriesProp.getChartSeries().setXDateSeries(showXSeries);
@@ -308,7 +288,6 @@ public abstract class UpdatableChart extends Chart implements UpdatableWidget {
 			@Override
 			public void run() {
 				if (slider.getMaximum() == slider.getSelection() + 1 || dragged) {
-					// adjust() ???overround
 					updateDisplay();
 				}
 			}
