@@ -1,0 +1,14 @@
+<ivy-module version="2.0">
+    <info organisation="protrade" module="protrade"/>
+    <dependencies>
+        <dependency org="commons-lang" name="commons-lang" rev="2.0" />
+        <dependency org="commons-cli" name="commons-cli" rev="1.0" />
+        <dependency org="junit" name="junit" rev="4.10"/>
+        <dependency org="log4j" name="log4j" rev="1.2.16"/>
+        <dependency org="pmd" name="pmd" rev="4.3"/>
+        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1"/>
+        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.6.1"/>
+        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.6.1"/>
+        <dependency org="org.floggy.3rd.org.eclipse" name="jface" rev="3.3.2.M20080207-0800"/>
+    </dependencies>
+</ivy-module>
