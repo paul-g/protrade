@@ -6,9 +6,6 @@ It connects users to the Betfair exchange (hence requires a Betfair account) and
 The project uses protrade-data (on Github here: https://github.com/paul-g/protrade-data), an API which provides a high level match model and handles the intricacies of fetching all the required information from external sources.
 
 
-## Note! 
-This project will soon be moved to a public repository.
-
 # Installation instructions
 
 The build process uses make and ant.
