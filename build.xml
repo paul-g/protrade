@@ -9,8 +9,10 @@
 	<property file="build.properties" />
 	<property name="lib.dir" value="lib" />
 	<property name="lib.static.dir" value="${lib.dir}/static" />
-	<property name="lib.swt.dir" value="${lib.dir}/swt-${lin.ver}" />
-	<property name="lib.jface.dir" value="${lib.dir}/jface" />
+	<property name="lib.swt.dir" value="${lib.static.dir}/swt-${lin.ver}" />
+	<property name="lib.jface.dir" value="${lib.static.dir}/jface" />
+	<property name="lib.swtbot.dir" value="${lib.static.dir}/swtbot" />
+	
 	<property name="instrumented.dir" value="build/instrumented-classes" />
 
 	<property name="reports.dir" value="${build.dir}/reports" />
@@ -52,7 +54,7 @@
 		<fileset dir="${lib.static.dir}" includes="*.jar" />
 		<fileset dir="${lib.swt.dir}" includes="*.jar" />
 		<fileset dir="${lib.jface.dir}" includes="*.jar" />
-		<fileset dir="lib/swtbot/" includes="*.jar" />
+		<fileset dir="${lib.swtbot.dir}" includes="*.jar" />
 	</path>
 
 	<!-- Create the folders for required for build -->

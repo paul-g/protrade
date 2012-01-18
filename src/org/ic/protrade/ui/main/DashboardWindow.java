@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.protrade.Main;
 import org.ic.protrade.service.DataManager;
 import org.ic.protrade.ui.LowerToolBar;
 import org.ic.protrade.ui.dashboard.Dashboard;
@@ -78,6 +79,7 @@ public class DashboardWindow implements MainWindow {
 		// shell.addListener(SWT.Resize, new
 		// StandardWidgetResizeListener(shell));
 		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		shell.setText(Main.APPLICATION_TITLE);
 
 		DashboardCoolBar dcb = new DashboardCoolBar(shell);
 		dcb.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,

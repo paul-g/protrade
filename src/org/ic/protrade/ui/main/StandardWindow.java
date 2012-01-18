@@ -124,7 +124,7 @@ public class StandardWindow implements MainWindow {
 		// layout.justify = true;
 
 		shell.setLayout(layout);
-		shell.setText(Main.TITLE);
+		shell.setText(Main.APPLICATION_TITLE);
 
 		// Sashform set-up
 		sashForm = new SashForm(shell, SWT.HORIZONTAL);
