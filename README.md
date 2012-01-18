@@ -74,7 +74,7 @@ After installation, to run the project: `ant run`
 
 If everything is OK, a login window will appear, prompting you for a Betfair account and password.
 
-The task `ant run-test` allows bypassing the login to enable the functionalities which do no require a Betfair account.
+The task `ant run-test` allows bypassing the login to enable the functionalities which do not require a Betfair account.
 
 #Note!
 
