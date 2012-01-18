@@ -7,5 +7,6 @@ git-all:
 	ant -logger $(LOGGER) git-all
 clean:
 	ant clean
+	rm -f *.log
 clean-lib:
 	ant clean-lib

@@ -122,6 +122,7 @@
 		<delete dir="${build.test.dir}" />
 		<delete dir="${coverage.report.dir}" />
 		<delete file="cobertura.ser" />
+		<delete file="*.log" />
 	</target>
 
 	<target name="clean-lib">
