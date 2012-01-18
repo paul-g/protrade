@@ -3,6 +3,7 @@ package org.ic.protrade.scrappers.tennisinsight;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.swt.graphics.Image;
 import org.ic.protrade.data.match.Match;
 import org.ic.protrade.data.match.Player;
 import org.ic.protrade.data.match.Statistics;
@@ -32,6 +33,7 @@ public class StatisticsParser extends SiteParser {
 		stats = stats.substring(stats.indexOf("stats\n") + 6, stats.length());
 
 		// Fill get player images
+		stats = getImages(stats);
 		stats = skipLines(stats, 2);
 
 		stats = skipEmptyLines(stats);
@@ -161,5 +163,70 @@ public class StatisticsParser extends SiteParser {
 		String element = stats.substring(0, stats.indexOf('\n'));
 		this.stats = skipLines(stats, 1);
 		return element;
+	}
+
+	private String getImages(String stats) {
+		String player1 = stats.substring(0, stats.indexOf('\n'));
+		// table.getColumn(0).setText(player1);
+		int index = 0;
+		String imagePlayer = "";
+		String cPlayer = player1;
+		while (cPlayer.indexOf(' ') > -1) {
+			imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' '))
+					+ "%20";
+			cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1,
+					cPlayer.length());
+		}
+		imagePlayer += cPlayer;
+
+		Image imgPlayer = getImage("http://www.tennisinsight.com/images/"
+				+ imagePlayer + ".jpg");
+		try {
+			// table.getColumn(0).setImage(imgPlayer);
+			imgPlayer.dispose();
+		} catch (NullPointerException ex) {
+			// table
+			// .getColumn(0)
+			// .setImage(
+			// getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+		}
+		stats = skipLines(stats, 2);
+
+		String player2 = stats.substring(0, stats.indexOf('\n'));
+		// table.getColumn(2).setText(player2);
+		imagePlayer = "";
+		cPlayer = player2;
+		while (cPlayer.indexOf(' ') > -1) {
+			imagePlayer += cPlayer.substring(index, cPlayer.indexOf(' '))
+					+ "%20";
+			cPlayer = cPlayer.substring(cPlayer.indexOf(' ') + 1,
+					cPlayer.length());
+		}
+		imagePlayer += cPlayer;
+
+		imgPlayer = getImage("http://www.tennisinsight.com/images/"
+				+ imagePlayer + ".jpg");
+		try {
+			// table.getColumn(2).setImage(imgPlayer);
+			imgPlayer.dispose();
+		} catch (NullPointerException ex) {
+			// table
+			// .getColumn(2)
+			// .setImage(
+			// getImage("http://www.tennisinsight.com/images/default_thumbnail.jpg"));
+		}
+		return stats;
+	}
+
+	public static Image getImage(String url) {
+		Image img = null;
+		/*
+		 * try { URL web = new URL(url); InputStream stream = web.openStream();
+		 * ImageLoader loader = new ImageLoader(); ImageData imgData =
+		 * loader.load(stream)[0]; img = new Image(Display.getDefault(),
+		 * imgData); } catch (Exception e) { // System.err.println("No image " +
+		 * url + ", " + e); return null; }
+		 */
+		return img;
 	}
 }

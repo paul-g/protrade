@@ -33,7 +33,7 @@ public class LoginShell implements LoginListener {
 
 	public static Logger log = Logger.getLogger(LoginShell.class);
 
-	private static final String TITLE = "Tennis Trader Login";
+	private static final String SHELL_TITLE = Main.APPLICATION_TITLE + " Login";
 
 	public static final String SUCCESS = "Login successful! Please wait...";
 
@@ -98,7 +98,7 @@ public class LoginShell implements LoginListener {
 
 		Rectangle rect = loginShell.getClientArea();
 
-		loginShell.setText(TITLE);
+		loginShell.setText(SHELL_TITLE);
 
 		username = new Text(loginShell, SWT.NONE);
 		username.setToolTipText("Please input your Betfair account login here");

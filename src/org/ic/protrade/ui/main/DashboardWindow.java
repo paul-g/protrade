@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.ic.protrade.Main;
 import org.ic.protrade.service.DataManager;
 import org.ic.protrade.ui.LowerToolBar;
 import org.ic.protrade.ui.dashboard.Dashboard;
@@ -75,14 +76,14 @@ public class DashboardWindow implements MainWindow {
 				display.getClientArea().height);
 		shell.setMaximized(true);
 		shell.setLayout(makeLayout());
-		// shell.addListener(SWT.Resize, new
-		// StandardWidgetResizeListener(shell));
 		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		shell.setText(Main.APPLICATION_TITLE);
 
 		DashboardCoolBar dcb = new DashboardCoolBar(shell);
 		dcb.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,
 				1));
 
+		notifyLoadEvent("Configuring dashboard");
 		log.info("Adding menu");
 		new DashboardMenu(this);
 		log.info("Added menu");
@@ -95,14 +96,13 @@ public class DashboardWindow implements MainWindow {
 		dashboardComp.setLayout(new FillLayout());
 		newDashboard("templates/chart-master/dashboard.dat");
 		log.info(display.getClientArea());
-		/*
-		 * dashboard.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
-		 * 1, 1));
-		 */
+		notifyLoadEvent("Dashboard ready");
+
 		log.info("Added dashboard");
 		LowerToolBar ltb = new LowerToolBar(shell);
 		ltb.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false, 1,
 				1));
+		notifyLoadEvent("Done!");
 	}
 
 	private Layout makeLayout() {

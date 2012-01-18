@@ -17,7 +17,7 @@ import org.ic.protrade.ui.main.StandardWindow;
 
 public final class Main {
 
-	public static final String TITLE = "Tennis Trader";
+	public static final String APPLICATION_TITLE = "proTrade";
 
 	private static final Logger log = Logger.getLogger(Main.class);
 
