@@ -11,7 +11,6 @@ import org.ic.protrade.data.match.Player;
 import org.ic.protrade.data.match.PlayerEnum;
 import org.ic.protrade.data.match.Score;
 import org.ic.protrade.data.match.Statistics;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,11 +28,6 @@ public class PredictionCalculatorTest {
 		match.getPlayerOne().setStatistics(statsOne);
 		Statistics statsTwo = new Statistics(0.634, 0.785, 0.563);
 		match.getPlayerTwo().setStatistics(statsTwo);
-	}
-
-	@After
-	public void tearDown() {
-		match = null;
 	}
 
 	@Test
@@ -278,19 +272,23 @@ public class PredictionCalculatorTest {
 		PredictionCalculator calc = new PredictionCalculator(match);
 
 		// Current game%
-		double winCurGamePlayer2 = Double.parseDouble(df.format(calc
-				.calculateGamePercent(p1, p2, pw2, 1)));
+		double winCurGamePlayer2 = Double.parseDouble(df
+				.format(PredictionCalculator.calculateGamePercent(p1, p2, pw2,
+						1)));
 		double winCurGamePlayer1 = Double.parseDouble(df
 				.format(1 - winCurGamePlayer2));
 		assertEquals(0, Double.compare(winCurGamePlayer1, 0.178));
 		assertEquals(0, Double.compare(winCurGamePlayer2, 0.822));
 
 		// Current set%
-		calc.setPWG(1, calc.calculateGamePercent(p1, p2, pw1, 1));
-		calc.setPWG(0, calc.calculateGamePercent(p2, p1, pw2, 1));
+		calc.setPWG(1,
+				PredictionCalculator.calculateGamePercent(p1, p2, pw1, 1));
+		calc.setPWG(0,
+				PredictionCalculator.calculateGamePercent(p2, p1, pw2, 1));
 		// second player serves
-		double winCurSetPlayer2 = Double.parseDouble(df.format(calc
-				.calculateCurrentSetPercent(4, 4, pw1, pw2, 0)));
+		double winCurSetPlayer2 = Double.parseDouble(df
+				.format(PredictionCalculator.calculateCurrentSetPercent(4, 4,
+						pw1, pw2, 0)));
 		double winCurSetPlayer1 = Double.parseDouble(df
 				.format(1 - winCurSetPlayer2));
 		// System.out.println(winCurSetPlayer2);
@@ -299,8 +297,9 @@ public class PredictionCalculatorTest {
 
 		// Current match%
 		// A 5 set match with final set tiebreak
-		double winCurMatchPlayer2 = Double.parseDouble(df.format(calc
-				.calculateWinMatch(winCurSetPlayer2, 1, 0, pw1, pw2, 0, 5, 1)));
+		double winCurMatchPlayer2 = Double.parseDouble(df
+				.format(PredictionCalculator.calculateWinMatch(
+						winCurSetPlayer2, 1, 0, pw1, pw2, 0, 5, 1)));
 		double winCurMatchPlayer1 = Double.parseDouble(df
 				.format(1 - winCurMatchPlayer2));
 		// System.out.println(winCurMatchPlayer2);

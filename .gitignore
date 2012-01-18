@@ -38,3 +38,7 @@ cobertura.ser
 *.dump
 *.html
 *.pdf
+
+# Libraries #
+#############
+*.jar
