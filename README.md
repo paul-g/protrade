@@ -13,9 +13,6 @@ The Makefile only provides a wrapper for the ant script, so it is not really req
 
 To install ant, follow the instructions here: http://ant.apache.org/.
 
-To list all available tasks:
-`ant -p` 
-
 To install the project:
 
 ## Get the code from Github (i.e. here)
@@ -24,19 +21,25 @@ To install the project:
 mkdir protrade
 cd protrade
 git init
-git remote add origin git@github.com:paul-g/tennis-trader.git
+git remote add origin git@github.com:paul-g/protrade.git
 git pull -u origin master
 ```
 ## Build the project
 
-First option (using make):
+### Create build.properties
+First, create a build.properties files in the project root where you set lin.ver to either 32 or 64, based on your linux version(32-bit/64-bit).
 
 ```
-cd wokspace/protrade-data
+cat "lin.ver=32" > build.properties
+```
+
+To build using make:
+
+```
 make
 ```
 
-Second option (using ant only):
+To build using ant only:
 
 ```
 ant init-ivy  (fetch ivy  - required for managing dependencies)
@@ -47,12 +50,7 @@ ant all       (run a standard build)
 
 ## Finally
 
-### Create build.properties
-You must also create a file called build.properties in the project root (i.e. under protrade/).
 
-For this purpose, simply copy protrade/examples/build.properties.example to protrade/build.properties.
-
-Then set lin.ver to either 32 or 64, based on your linux version(32-bit/64-bit) and you're good to go.
 
 ### Create config.local
 
@@ -66,8 +64,6 @@ password:=yourencryptedpassword
 
 To help encrypt the password, a utility class is provided under:  org.ic.protrade.authentication.Encrypt.java.
 
-A simple task will be added soon.
-
 # Usage
 
 After installation, to run the project: `ant run` 
@@ -75,8 +71,3 @@ After installation, to run the project: `ant run`
 If everything is OK, a login window will appear, prompting you for a Betfair account and password.
 
 The task `ant run-test` allows bypassing the login to enable the functionalities which do not require a Betfair account.
-
-#Note!
-
-A web site for the latest protrade release is under construction.
-
