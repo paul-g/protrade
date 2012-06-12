@@ -28,9 +28,9 @@ git pull -u origin master
 
 ### Create build.properties
 First, create a build.properties files in the project root where you set lin.ver to either 32 or 64, based on your linux version(32-bit/64-bit).
-
+To do this you can run:
 ```
-cat "lin.ver=32" > build.properties
+echo "lin.ver=32" > build.properties
 ```
 
 To build using make:
@@ -64,9 +64,9 @@ password:=yourencryptedpassword
 
 To help encrypt the password, a utility class is provided under:  org.ic.protrade.authentication.Encrypt.java.
 
-# Usage
+# Run
 
-After installation, to run the project: `ant run` 
+Type: `ant run` 
 
 If everything is OK, a login window will appear, prompting you for a Betfair account and password.
 
